@@ -15,10 +15,10 @@
 
 (defmacro with-quat ((prefix quat) &body body)
   `(with-accessors ((,prefix identity)
-                    (,(symbolicate prefix 'w) qw)
-                    (,(symbolicate prefix 'x) qx)
-                    (,(symbolicate prefix 'y) qy)
-                    (,(symbolicate prefix 'z) qz))
+                    (,(make-accessor-symbol prefix 'w) qw)
+                    (,(make-accessor-symbol prefix 'x) qx)
+                    (,(make-accessor-symbol prefix 'y) qy)
+                    (,(make-accessor-symbol prefix 'z) qz))
        ,quat
      ,@body))
 

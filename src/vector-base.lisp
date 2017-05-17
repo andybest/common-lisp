@@ -17,9 +17,9 @@
 
 (defmacro with-vector ((prefix vec) &body body)
   `(with-accessors ((,prefix identity)
-                    (,(symbolicate prefix 'x) vx)
-                    (,(symbolicate prefix 'y) vy)
-                    (,(symbolicate prefix 'z) vz))
+                    (,(make-accessor-symbol prefix 'x) vx)
+                    (,(make-accessor-symbol prefix 'y) vy)
+                    (,(make-accessor-symbol prefix 'z) vz))
        ,vec
      ,@body))
 

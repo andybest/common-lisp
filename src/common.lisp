@@ -3,7 +3,9 @@
 (defconstant +epsilon+ 1e-7)
 
 (eval-when (:compile-toplevel :load-toplevel :execute)
+
   #+sbcl(setf sb-ext:*inline-expansion-limit* 1024)
+
   (defun parse-args (args/types)
     (let ((args)
           (types)
@@ -23,7 +25,11 @@
                   (setf seen-keyword nil))
               (push x args)
               (push x types))))
-      (values (reverse args) (reverse types)))))
+      (values (reverse args) (reverse types))))
+
+  (defun make-accessor-symbol (prefix &rest symbols)
+    (intern (format nil "~:@(~{~A~}~)" (cons prefix symbols))
+            (symbol-package prefix))))
 
 (defmacro defun* (name args/types (&key result inline abbrev) &body body)
   (multiple-value-bind (args types) (parse-args args/types)
