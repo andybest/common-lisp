@@ -11,7 +11,8 @@
   :version "0.1.0"
   :encoding :utf-8
   :long-description #.(uiop:read-file-string (uiop/pathname:subpathname *load-pathname* "README.md"))
-  :depends-on (#:alexandria)
+  :depends-on (#:alexandria
+               #:defstar)
   :pathname "src"
   :serial t
   :components
