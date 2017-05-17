@@ -1,7 +1,7 @@
 (in-package :gamebox-math)
 
 (eval-when (:compile-toplevel :load-toplevel)
-  (defun* matrix-identity! ((matrix matrix)) (:result matrix :abbrev mid!)
+  (defun* matrix-identity! ((matrix matrix)) (:result matrix :inline t :abbrev mid!)
     (with-matrix (m matrix)
       (psetf m00 1.0 m01 0.0 m02 0.0 m03 0.0
              m10 0.0 m11 1.0 m12 0.0 m13 0.0
@@ -9,7 +9,7 @@
              m30 0.0 m31 0.0 m32 0.0 m33 1.0))
     matrix)
 
-  (defun* matrix-identity () (:result matrix :abbrev mid)
+  (defun* matrix-identity () (:result matrix :inline t :abbrev mid)
     (matrix-identity! (matrix)))
 
   (define-constant +identity-matrix+ (matrix-identity) :test #'equalp))
@@ -22,7 +22,7 @@
            m30 4.0 m31 8.0 m32 12.0 m33 16.0)
     m))
 
-(defun* matrix-copy! ((out-matrix matrix) (matrix matrix)) (:result matrix :abbrev mcp!)
+(defun* matrix-copy! ((out-matrix matrix) (matrix matrix)) (:result matrix :inline t :abbrev mcp!)
   (with-matrices ((o out-matrix) (m matrix))
     (psetf o00 m00 o01 m01 o02 m02 o03 m03
            o10 m10 o11 m11 o12 m12 o13 m13
@@ -30,13 +30,13 @@
            o30 m30 o31 m31 o32 m32 o33 m33))
   out-matrix)
 
-(defun* matrix-copy ((matrix matrix)) (:result matrix :abbrev mcp)
+(defun* matrix-copy ((matrix matrix)) (:result matrix :inline t :abbrev mcp)
   (matrix-copy! (matrix) matrix))
 
 (defun* matrix-clamp! ((out-matrix matrix) (matrix matrix) &key
-                       ((min least-negative-single-float) single-float)
-                       ((max most-positive-single-float) single-float))
-    (:result matrix :abbrev mclamp!)
+                       ((min single-float) least-negative-single-float)
+                       ((max single-float) most-positive-single-float))
+    (:result matrix :inline t :abbrev mclamp!)
   (with-matrices ((o out-matrix) (m matrix))
     (psetf o00 (clamp m00 min max) o01 (clamp m01 min max) o02 (clamp m02 min max) o03 (clamp m03 min max)
            o10 (clamp m10 min max) o11 (clamp m11 min max) o12 (clamp m12 min max) o13 (clamp m13 min max)
@@ -45,12 +45,12 @@
   out-matrix)
 
 (defun* matrix-clamp ((matrix matrix) &key
-                      ((min least-negative-single-float) single-float)
-                      ((max most-positive-single-float) single-float))
-    (:result matrix :abbrev mclamp)
+                      ((min single-float) least-negative-single-float)
+                      ((max single-float) most-positive-single-float))
+    (:result matrix :inline t :abbrev mclamp)
   (matrix-clamp! (matrix) matrix :min min :max max))
 
-(defun* matrix*! ((out-matrix matrix) (matrix1 matrix) (matrix2 matrix)) (:result matrix :abbrev m*!)
+(defun* matrix*! ((out-matrix matrix) (matrix1 matrix) (matrix2 matrix)) (:result matrix :inline t :abbrev m*!)
   (with-matrices ((o out-matrix) (a matrix1) (b matrix2))
     (psetf o00 (+ (* a00 b00) (* a01 b10) (* a02 b20) (* a03 b30))
            o01 (+ (* a00 b01) (* a01 b11) (* a02 b21) (* a03 b31))
@@ -70,28 +70,28 @@
            o33 (+ (* a30 b03) (* a31 b13) (* a32 b23) (* a33 b33))))
   out-matrix)
 
-(defun* matrix* ((matrix1 matrix) (matrix2 matrix)) (:result matrix :abbrev m*)
+(defun* matrix* ((matrix1 matrix) (matrix2 matrix)) (:result matrix :inline t :abbrev m*)
   (matrix*! (matrix) matrix1 matrix2))
 
-(defun* matrix-translation-to-vec! ((out-vec vec) (matrix matrix)) (:result vec :abbrev mtr->v!)
+(defun* matrix-translation-to-vec! ((out-vec vec) (matrix matrix)) (:result vec :inline t :abbrev mtr->v!)
   (with-vector (o out-vec)
     (with-matrix (m matrix)
       (psetf ox m03 oy m13 oz m23)))
   out-vec)
 
-(defun* matrix-translation-to-vec ((matrix matrix)) (:result vec :abbrev mtr->v)
+(defun* matrix-translation-to-vec ((matrix matrix)) (:result vec :inline t :abbrev mtr->v)
   (matrix-translation-to-vec! (vec) matrix))
 
-(defun* matrix-translation-from-vec! ((matrix matrix) (vec vec)) (:result matrix :abbrev v->mtr!)
+(defun* matrix-translation-from-vec! ((matrix matrix) (vec vec)) (:result matrix :inline t :abbrev v->mtr!)
   (with-matrix (m matrix)
     (with-vector (v vec)
       (psetf m03 vx m13 vy m23 vz)))
   matrix)
 
-(defun* matrix-translation-from-vec ((vec vec)) (:result matrix :abbrev v->mtr)
+(defun* matrix-translation-from-vec ((vec vec)) (:result matrix :inline t :abbrev v->mtr)
   (matrix-translation-from-vec! (matrix-identity) vec))
 
-(defun* matrix-rotate-local! ((out-matrix matrix) (matrix matrix) (vec vec)) (:result matrix :abbrev mrotl!)
+(defun* matrix-rotate-local! ((out-matrix matrix) (matrix matrix) (vec vec)) (:result matrix :inline t :abbrev mrotl!)
   (macrolet ((rotate-angle (angle s c &body body)
                `(when (> (abs ,angle) +epsilon+)
                   (let ((,s (sin ,angle))
@@ -116,10 +116,10 @@
                                m20 (- s) m21 0.0 m22 c))))))
   out-matrix)
 
-(defun* matrix-rotate-local ((matrix matrix) (vec vec)) (:result matrix :abbrev mrotl)
+(defun* matrix-rotate-local ((matrix matrix) (vec vec)) (:result matrix :inline t :abbrev mrotl)
   (matrix-rotate-local! (matrix-identity) matrix vec))
 
-(defun* matrix-rotate! ((out-matrix matrix) (angle float) (axis vec)) (:result matrix :abbrev mrot!)
+(defun* matrix-rotate! ((out-matrix matrix) (angle float) (axis vec)) (:result matrix :inline t :abbrev mrot!)
   (let* ((c (cos (float angle 1.0)))
          (s (sin (float angle 1.0)))
          (1-c (- 1.0 c))
@@ -138,20 +138,20 @@
                o22 (+ (* vz vz 1-c) c)))))
   out-matrix)
 
-(defun* matrix-rotate ((angle float) (axis vec)) (:result matrix :abbrev mrot)
+(defun* matrix-rotate ((angle float) (axis vec)) (:result matrix :inline t :abbrev mrot)
   (matrix-rotate! (matrix-identity) angle axis))
 
-(defun* matrix-copy-rotation! ((out-matrix matrix) (matrix matrix)) (:result matrix :abbrev mcprot!)
+(defun* matrix-copy-rotation! ((out-matrix matrix) (matrix matrix)) (:result matrix :inline t :abbrev mcprot!)
   (with-matrices ((o out-matrix) (m matrix))
     (psetf o00 m00 o01 m01 o02 m02
            o10 m10 o11 m11 o12 m12
            o20 m20 o21 m21 o22 m22))
   out-matrix)
 
-(defun* matrix-copy-rotation ((matrix matrix)) (:result matrix :abbrev mcprot)
+(defun* matrix-copy-rotation ((matrix matrix)) (:result matrix :inline t :abbrev mcprot)
   (matrix-copy-rotation! (matrix-identity) matrix))
 
-(defun* matrix-rotation-to-vec! ((out-vec vec) (matrix matrix) (axis keyword)) (:result vec :abbrev mrot->v!)
+(defun* matrix-rotation-to-vec! ((out-vec vec) (matrix matrix) (axis keyword)) (:result vec :inline t :abbrev mrot->v!)
   (with-vector (v out-vec)
     (with-matrix (m matrix)
       (ecase axis
@@ -160,10 +160,10 @@
         (:z (psetf vx m02 vy m12 vz m22)))))
   out-vec)
 
-(defun* matrix-rotation-to-vec ((matrix matrix) (axis keyword)) (:result vec :abbrev mrot->v)
+(defun* matrix-rotation-to-vec ((matrix matrix) (axis keyword)) (:result vec :inline t :abbrev mrot->v)
   (matrix-rotation-to-vec! (vec) matrix axis))
 
-(defun* matrix-rotation-from-vec! ((matrix matrix) (vec vec) (axis keyword)) (:result matrix :abbrev v->mrot!)
+(defun* matrix-rotation-from-vec! ((matrix matrix) (vec vec) (axis keyword)) (:result matrix :inline t :abbrev v->mrot!)
   (with-matrix (m matrix)
     (with-vector (v vec)
       (ecase axis
@@ -172,10 +172,10 @@
         (:z (psetf m02 vx m12 vy m22 vz)))))
   matrix)
 
-(defun* matrix-rotation-from-vec ((matrix matrix) (vec vec) (axis keyword)) (:result matrix :abbrev v->mrot)
+(defun* matrix-rotation-from-vec ((matrix matrix) (vec vec) (axis keyword)) (:result matrix :inline t :abbrev v->mrot)
   (matrix-rotation-from-vec! (matrix-copy matrix) vec axis))
 
-(defun* matrix*vec! ((out-vec vec) (matrix matrix) (vec vec)) (:result vec :abbrev m*v!)
+(defun* matrix*vec! ((out-vec vec) (matrix matrix) (vec vec)) (:result vec :inline t :abbrev m*v!)
   (with-vectors ((v vec) (o out-vec))
     (with-matrix (m matrix)
       (psetf ox (+ (* m00 vx) (* m01 vy) (* m02 vz) (* m03 1.0))
@@ -183,10 +183,10 @@
              oz (+ (* m20 vx) (* m21 vy) (* m22 vz) (* m23 1.0)))))
   out-vec)
 
-(defun* matrix*vec ((matrix matrix) (vec vec)) (:result vec :abbrev m*v)
+(defun* matrix*vec ((matrix matrix) (vec vec)) (:result vec :inline t :abbrev m*v)
   (matrix*vec! (vec) matrix vec))
 
-(defun* matrix-transpose! ((out-matrix matrix) (matrix matrix)) (:result matrix :abbrev mtranspose!)
+(defun* matrix-transpose! ((out-matrix matrix) (matrix matrix)) (:result matrix :inline t :abbrev mtranspose!)
   (with-matrix (o (matrix-copy! out-matrix matrix))
     (rotatef o01 o10)
     (rotatef o02 o20)
@@ -196,17 +196,17 @@
     (rotatef o23 o32))
   out-matrix)
 
-(defun* matrix-transpose ((matrix matrix)) (:result matrix :abbrev mtranspose)
+(defun* matrix-transpose ((matrix matrix)) (:result matrix :inline t :abbrev mtranspose)
   (matrix-transpose! (matrix-identity) matrix))
 
 (defun* matrix-orthogonal-p ((matrix matrix)) (:result boolean :abbrev morthop)
   (equalp (matrix* matrix (matrix-transpose matrix)) +identity-matrix+))
 
-(defun* matrix-trace ((matrix matrix)) (:result single-float :abbrev mtrace)
+(defun* matrix-trace ((matrix matrix)) (:result single-float :inline t :abbrev mtrace)
   (with-matrix (m matrix)
     (+ m00 m11 m22 m33)))
 
-(defun* matrix-determinant ((matrix matrix)) (:result single-float :abbrev mdet)
+(defun* matrix-determinant ((matrix matrix)) (:result single-float :inline t :abbrev mdet)
   (with-matrix (m matrix)
     (- (+ (* m00 m11 m22 m33) (* m00 m12 m23 m31) (* m00 m13 m21 m32)
           (* m01 m10 m23 m32) (* m01 m12 m20 m33) (* m01 m13 m22 m30)
@@ -217,7 +217,7 @@
        (* m02 m10 m23 m31) (* m02 m11 m20 m33) (* m02 m13 m21 m30)
        (* m03 m10 m21 m32) (* m03 m11 m22 m30) (* m03 m12 m20 m31))))
 
-(defun* matrix-invert-orthogonal! ((out-matrix matrix) (matrix matrix)) (:result matrix :abbrev minvtortho!)
+(defun* matrix-invert-orthogonal! ((out-matrix matrix) (matrix matrix)) (:result matrix :inline t :abbrev minvtortho!)
   (matrix-copy! out-matrix matrix)
   (with-matrix (o out-matrix)
     (rotatef o10 o01)
@@ -228,7 +228,7 @@
            o23 (+ (* o20 (- o03)) (* o21 (- o13)) (* o22 (- o23)))))
   out-matrix)
 
-(defun* matrix-invert-orthogonal ((matrix matrix)) (:result matrix :abbrev minvtortho)
+(defun* matrix-invert-orthogonal ((matrix matrix)) (:result matrix :inline t :abbrev minvtortho)
   (matrix-invert-orthogonal! (matrix-identity) matrix))
 
 (defun* matrix-invert! ((out-matrix matrix) (matrix matrix)) (:result matrix :abbrev minvt!)
@@ -289,7 +289,8 @@
 (defun* matrix-invert ((matrix matrix)) (:result matrix :abbrev minvt)
   (matrix-invert! (matrix-identity) matrix))
 
-(defun* make-view-matrix! ((out-matrix matrix) (eye vec) (target vec) (up vec)) (:result matrix :abbrev mkview!)
+(defun* make-view-matrix! ((out-matrix matrix) (eye vec) (target vec) (up vec))
+    (:result matrix :inline t :abbrev mkview!)
   (let ((f (vec))
         (s (vec))
         (u (vec))
@@ -307,12 +308,12 @@
         (matrix*! out-matrix translation out-matrix))))
   out-matrix)
 
-(defun* make-view-matrix ((eye vec) (target vec) (up vec)) (:result matrix :abbrev mkview)
+(defun* make-view-matrix ((eye vec) (target vec) (up vec)) (:result matrix :inline t :abbrev mkview)
   (make-view-matrix! (matrix-identity) eye target up))
 
 (defun* make-orthographic-matrix! ((out-matrix matrix) (left single-float) (right single-float) (bottom single-float)
                                    (top single-float) (near single-float) (far single-float))
-    (:result matrix :abbrev mkortho!)
+    (:result matrix :inline t :abbrev mkortho!)
   (let ((right-left (- right left))
         (top-bottom (- top bottom))
         (far-near (- far near)))
@@ -326,11 +327,13 @@
     out-matrix))
 
 (defun* make-orthographic-matrix ((left single-float) (right single-float) (bottom single-float) (top single-float)
-                                  (near single-float) (far single-float)) (:result matrix :abbrev mkortho)
+                                  (near single-float) (far single-float))
+    (:result matrix :inline t :abbrev mkortho)
   (make-orthographic-matrix! (matrix-identity) left right bottom top near far))
 
 (defun* make-perspective-matrix! ((out-matrix matrix) (fov single-float) (aspect single-float) (near single-float)
-                                  (far single-float)) (:result matrix :abbrev mkpersp!)
+                                  (far single-float))
+    (:result matrix :inline t :abbrev mkpersp!)
   (let ((f (/ (tan (/ fov 2))))
         (z (- near far)))
     (with-matrix (m (matrix-identity! out-matrix))
@@ -342,5 +345,5 @@
   out-matrix)
 
 (defun* make-perspective-matrix ((fov single-float) (aspect single-float) (near single-float) (far single-float))
-    (:result matrix :abbrev mkpersp)
+    (:result matrix :inline t :abbrev mkpersp)
   (make-perspective-matrix! (matrix-identity) fov aspect near far))

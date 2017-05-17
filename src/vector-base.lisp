@@ -3,7 +3,7 @@
 (eval-when (:compile-toplevel :load-toplevel)
   (deftype vec () '(simple-array single-float (3)))
 
-  (defun* vec (&optional ((x 0.0) real) ((y 0.0) real) ((z 0.0) real)) (:result vec)
+  (defun* vec (&optional ((x real) 0.0) ((y real) 0.0) ((z real) 0.0)) (:result vec :inline t)
     (make-array 3 :element-type 'single-float
                   :initial-contents (list (float x 1.0) (float y 1.0) (float z 1.0))))
 
@@ -29,10 +29,10 @@
       `(with-vector ,(car binds)
          (with-vectors ,(cdr binds) ,@body))))
 
-(defun* vref ((vec vec) (index (integer 0 2))) (:result single-float)
+(defun* vref ((vec vec) (index (integer 0 2))) (:result single-float :inline t)
   (aref vec index))
 
-(defun* (setf vref) ((value single-float) (vec vec) (index (integer 0 2))) (:result single-float)
+(defun* (setf vref) ((value single-float) (vec vec) (index (integer 0 2))) (:result single-float :inline t)
   (setf (aref vec index) value))
 
 (set-pprint-dispatch

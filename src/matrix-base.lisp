@@ -21,11 +21,11 @@
   (m23 0.0 :type single-float)
   (m33 0.0 :type single-float))
 
-(defun* matrix (&optional ((m00 0.0) real) ((m01 0.0) real) ((m02 0.0) real) ((m03 0.0) real)
-                          ((m10 0.0) real) ((m11 0.0) real) ((m12 0.0) real) ((m13 0.0) real)
-                          ((m20 0.0) real) ((m21 0.0) real) ((m22 0.0) real) ((m23 0.0) real)
-                          ((m30 0.0) real) ((m31 0.0) real) ((m32 0.0) real) ((m33 0.0) real))
-    (:result matrix)
+(defun* matrix (&optional ((m00 real) 0.0) ((m01 real) 0.0) ((m02 real) 0.0) ((m03 real) 0.0)
+                          ((m10 real) 0.0) ((m11 real) 0.0) ((m12 real) 0.0) ((m13 real) 0.0)
+                          ((m20 real) 0.0) ((m21 real) 0.0) ((m22 real) 0.0) ((m23 real) 0.0)
+                          ((m30 real) 0.0) ((m31 real) 0.0) ((m32 real) 0.0) ((m33 real) 0.0))
+    (:result matrix :inline t)
   (make-array 16 :element-type 'single-float
                  :initial-contents (list (float m00 1.0) (float m01 1.0) (float m02 1.0) (float m03 1.0)
                                          (float m10 1.0) (float m11 1.0) (float m12 1.0) (float m13 1.0)
@@ -59,11 +59,11 @@
       `(with-matrix ,(car binds)
          (with-matrices ,(cdr binds) ,@body))))
 
-(defun* mref ((matrix matrix) (row (integer 0 15)) (column (integer 0 15))) (:result single-float)
+(defun* mref ((matrix matrix) (row (integer 0 15)) (column (integer 0 15))) (:result single-float :inline t)
   (aref matrix (+ row (* column 4))))
 
 (defun* (setf mref) ((value single-float) (matrix matrix) (row (integer 0 15)) (column (integer 0 15)))
-    (:result single-float)
+    (:result single-float :inline t)
   (setf (aref matrix (+ row (* column 4))) value))
 
 (set-pprint-dispatch

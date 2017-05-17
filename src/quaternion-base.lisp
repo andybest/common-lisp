@@ -9,7 +9,7 @@
   (y 0.0 :type single-float)
   (z 0.0 :type single-float))
 
-(defun* quat (&optional ((w 1.0) real) ((x 0.0) real) ((y 0.0) real) ((z 0.0) real)) (:result quat)
+(defun* quat (&optional ((w real) 1.0) ((x real) 0.0) ((y real) 0.0) ((z real) 0.0)) (:result quat :inline t)
   (make-array 4 :element-type 'single-float
                 :initial-contents (list (float w 1.0) (float x 1.0) (float y 1.0) (float z 1.0))))
 
@@ -28,10 +28,10 @@
       `(with-quat ,(car binds)
          (with-quats ,(cdr binds) ,@body))))
 
-(defun* qref ((quat quat) (index (integer 0 3))) (:result single-float)
+(defun* qref ((quat quat) (index (integer 0 3))) (:result single-float :inline t)
   (aref quat index))
 
-(defun* (setf qref) ((value single-float) (quat quat) (index (integer 0 3))) (:result single-float)
+(defun* (setf qref) ((value single-float) (quat quat) (index (integer 0 3))) (:result single-float :inline t)
   (setf (aref quat index) value))
 
 (set-pprint-dispatch
