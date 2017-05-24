@@ -75,10 +75,10 @@
            #:quat-from-matrix! #:m->q! #:quat-from-matrix #:m->q
            #:quat-slerp! #:qslerp! #:quat-slerp #:qslerp)
   ;; math
-  (:export #:point-distance
-           #:point-translate! #:point-translate
-           #:point-near-p
-           #:interpolate-transforms! #:interpolate-transforms
+  (:export #:point-distance #:ptdist
+           #:point-translate! #:pttr! #:point-translate #:pttr
+           #:point-near-p #:ptnearp
+           #:interpolate-transforms! #:mslerp! #:interpolate-transforms #:mslerp
            #:line-direction
            #:line-segment-midpoint
            #:line-plane-intersect
