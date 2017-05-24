@@ -98,13 +98,12 @@
   (quat-inverse! (quat) quat))
 
 (defun* quat-rotate! ((out-quat quat) (angle float) (axis vec)) (:result quat :inline t :abbrev qrot!)
-  (let* ((normalized-axis (vec))
+  (let* ((normalized-axis (vec-normalize axis))
          (half-angle (/ (float angle 1.0) 2.0))
          (c (cos half-angle))
          (s (sin half-angle)))
-    (declare (dynamic-extent normalized-axis))
     (with-quat (o out-quat)
-      (with-vector (v (vec-normalize! normalized-axis axis))
+      (with-vector (v normalized-axis)
         (setf ow c
               ox (* vx s)
               oy (* vy s)
