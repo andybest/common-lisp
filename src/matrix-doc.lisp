@@ -114,7 +114,7 @@ Alias: V->MROT!")
 Alias: V->MROT")
 
 (defdoc (matrix*vec! function)
-  "Multiplication of MATRIX and VEC, storing the result in a OUT-VEC.
+  "Multiplication of MATRIX and VEC, storing the result in OUT-VEC.
 Alias: M*V!")
 
 (defdoc (matrix*vec function)
