@@ -200,6 +200,21 @@
 (defun* matrix-orthogonal-p ((matrix matrix)) (:result boolean :abbrev morthop)
   (equalp (matrix* matrix (matrix-transpose matrix)) +identity-matrix+))
 
+(defun* matrix-orthogonalize! ((out-matrix matrix) (matrix matrix)) (:result matrix :inline t :abbrev mortho!)
+  (let* ((x (matrix-rotation-to-vec matrix :x))
+         (y (matrix-rotation-to-vec matrix :y))
+         (z (matrix-rotation-to-vec matrix :z)))
+    (vec-normalize! x x)
+    (vec-normalize! y (vec- y (vec-scale x (vec-dot y x))))
+    (vec-cross! z x y)
+    (matrix-rotation-from-vec! out-matrix x :x)
+    (matrix-rotation-from-vec! out-matrix y :y)
+    (matrix-rotation-from-vec! out-matrix z :z))
+  out-matrix)
+
+(defun* matrix-orthogonalize ((matrix matrix)) (:result matrix :inline t :abbrev mortho)
+  (matrix-orthogonalize! (matrix-identity) matrix))
+
 (defun* matrix-trace ((matrix matrix)) (:result single-float :inline t :abbrev mtrace)
   (with-matrix (m matrix)
     (+ m00 m11 m22 m33)))

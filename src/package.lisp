@@ -47,6 +47,7 @@
            #:matrix*vec! #:m*v! #:matrix*vec #:m*v
            #:matrix-transpose! #:mtranspose! #:matrix-transpose #:mtranspose
            #:matrix-orthogonal-p #:morthop
+           #:matrix-orthogonalize! #:mortho! #:matrix-orthogonalize #:mortho
            #:matrix-trace #:mtrace
            #:matrix-determinant #:mdet
            #:matrix-invert-orthogonal! #:minvtortho! #:matrix-invert-orthogonal #:minvtortho
