@@ -134,6 +134,12 @@ Alias: MTRANSPOSE")
 perpendicular to each other, and of unit length.
 Alias: MORTHOP")
 
+(defdoc (matrix-orthogonalize! function)
+  "Orthogonalize a matrix using the 'modified' Gram-Schidt method (MGS), storing the result in OUT-MATRIX.")
+
+(defdoc (matrix-orthogonalize function)
+  "Orthogonalize a matrix using the 'modified' Gram-Schidt method (MGS), storing the result as a new matrix.")
+
 (defdoc (matrix-trace function)
   "Compute the trace of MATRIX.
 Alias: MTRACE")
