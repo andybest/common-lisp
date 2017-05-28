@@ -39,7 +39,6 @@
            #:matrix*! #:m*! #:matrix* #:m*
            #:matrix-translation-to-vec! #:mtr->v! #:matrix-translation-to-vec #:mtr->v
            #:matrix-translation-from-vec! #:v->mtr! #:matrix-translation-from-vec #:v->mtr
-           #:matrix-rotate-local! #:mrotl! #:matrix-rotate-local #:mrotl
            #:matrix-rotate! #:mrot! #:matrix-rotate #:mrot
            #:matrix-copy-rotation! #:mcprot! #:matrix-copy-rotation #:mcprot
            #:matrix-rotation-to-vec! #:mrot->v! #:matrix-rotation-to-vec #:mrot->v

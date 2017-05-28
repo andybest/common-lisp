@@ -73,20 +73,12 @@ Alias: V->MTR!")
   "Copy the components of VEC, storing the result in the translation column of a new matrix.
 Alias: V->MTR")
 
-(defdoc (matrix-rotate-local! function)
-  "Rotate a matrix in each of 3 dimensions as specified by the vector of radians VEC, storing the result in OUT-MATRIX.
-Alias: MROTL!")
-
-(defdoc (matrix-rotate-local function)
-  "Rotate a matrix in each of 3 dimensions as specified by the vector of radians VEC, storing the result as a new matrix.
-Alias: MROTL")
-
 (defdoc (matrix-rotate! function)
-  "Rotation a matrix around AXIS by ANGLE in radians, storing the result in OUT-MATRIX.
+  "Rotate a matrix in each of 3 dimensions as specified by the vector of radians VEC, storing the result in OUT-MATRIX.
 Alias: MROT!")
 
 (defdoc (matrix-rotate function)
-  "Rotation a matrix around AXIS by ANGLE in radians, storing the result as a new matrix.
+  "Rotate a matrix in each of 3 dimensions as specified by the vector of radians VEC, storing the result as a new matrix.
 Alias: MROT")
 
 (defdoc (matrix-copy-rotation! function)
