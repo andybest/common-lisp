@@ -3,7 +3,10 @@
 (deftype matrix () '(simple-array single-float (16)))
 
 (defstruct (matrix (:type (vector single-float))
-                   (:conc-name nil))
+                   (:constructor %matrix (&optional m00 m01 m02 m03 m10 m11 m12 m13 m20 m21 m22 m23 m30 m31 m32 m33))
+                   (:conc-name nil)
+                   (:copier nil)
+                   (:predicate nil))
   (m00 0.0 :type single-float)
   (m10 0.0 :type single-float)
   (m20 0.0 :type single-float)
@@ -26,11 +29,10 @@
                           ((m20 real) 0.0) ((m21 real) 0.0) ((m22 real) 0.0) ((m23 real) 0.0)
                           ((m30 real) 0.0) ((m31 real) 0.0) ((m32 real) 0.0) ((m33 real) 0.0))
     (:result matrix :inline t)
-  (make-array 16 :element-type 'single-float
-                 :initial-contents (list (float m00 1.0) (float m01 1.0) (float m02 1.0) (float m03 1.0)
-                                         (float m10 1.0) (float m11 1.0) (float m12 1.0) (float m13 1.0)
-                                         (float m20 1.0) (float m21 1.0) (float m22 1.0) (float m23 1.0)
-                                         (float m30 1.0) (float m31 1.0) (float m32 1.0) (float m33 1.0))))
+  (%matrix (float m00 1.0) (float m01 1.0) (float m02 1.0) (float m03 1.0)
+           (float m10 1.0) (float m11 1.0) (float m12 1.0) (float m13 1.0)
+           (float m20 1.0) (float m21 1.0) (float m22 1.0) (float m23 1.0)
+           (float m30 1.0) (float m31 1.0) (float m32 1.0) (float m33 1.0)))
 
 (defmacro with-matrix ((prefix matrix) &body body)
   `(with-accessors ((,prefix identity)

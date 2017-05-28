@@ -73,13 +73,11 @@ Alias: V->MTR!")
   "Copy the components of VEC, storing the result in the translation column of a new matrix.
 Alias: V->MTR")
 
-(defdoc (matrix-rotate! function)
-  "Rotate a matrix in each of 3 dimensions as specified by the vector of radians VEC, storing the result in OUT-MATRIX.
-Alias: MROT!")
+(defdoc (matrix-translate! function)
+  "Translate a matrix by the translation vector VEC, storing the result in OUT-MATRIX.")
 
-(defdoc (matrix-rotate function)
-  "Rotate a matrix in each of 3 dimensions as specified by the vector of radians VEC, storing the result as a new matrix.
-Alias: MROT")
+(defdoc (matrix-translate function)
+  "Translate a matrix by the translation vector VEC, storing the result as a new matrix.")
 
 (defdoc (matrix-copy-rotation! function)
   "Copy the 3x3 rotation components of MATRIX, storing the result in OUT-MATRIX.
@@ -104,6 +102,30 @@ Alias: V->MROT!")
 (defdoc (matrix-rotation-from-vec function)
   "Set a particular rotation AXIS of MATRIX, storing the result as a new matrix.
 Alias: V->MROT")
+
+(defdoc (matrix-rotate! function)
+  "Rotate a matrix in each of 3 dimensions as specified by the vector of radians VEC, storing the result in OUT-MATRIX.
+Alias: MROT!")
+
+(defdoc (matrix-rotate function)
+  "Rotate a matrix in each of 3 dimensions as specified by the vector of radians VEC, storing the result as a new matrix.
+Alias: MROT")
+
+(defdoc (matrix-scale-to-vec! function)
+  "Get the scale components of a matrix, storing the result in OUT-VEC.
+Alias: MSCALE->V!")
+
+(defdoc (matrix-scale-to-vec function)
+  "Get the scale components of a matrix, storing the result as a new vector.
+Alias: MSCALE->V")
+
+(defdoc (matrix-scale-from-vec! function)
+  "Set the scale components of a matrix, storing the result in OUT-MATRIX.
+Alias: V->MSCALE!")
+
+(defdoc (matrix-scale-from-vec function)
+  "Set the scale components of a matrix, storing the result in a new matrix.
+Alias: V->MSCALE")
 
 (defdoc (matrix*vec! function)
   "Multiplication of MATRIX and VEC, storing the result in OUT-VEC.

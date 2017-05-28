@@ -52,22 +52,22 @@
 
 (defun* matrix*! ((out-matrix matrix) (matrix1 matrix) (matrix2 matrix)) (:result matrix :inline t :abbrev m*!)
   (with-matrices ((o out-matrix) (a matrix1) (b matrix2))
-    (psetf o00 (+ (* a00 b00) (* a01 b10) (* a02 b20) (* a03 b30))
-           o01 (+ (* a00 b01) (* a01 b11) (* a02 b21) (* a03 b31))
-           o02 (+ (* a00 b02) (* a01 b12) (* a02 b22) (* a03 b32))
-           o03 (+ (* a00 b03) (* a01 b13) (* a02 b23) (* a03 b33))
-           o10 (+ (* a10 b00) (* a11 b10) (* a12 b20) (* a13 b30))
-           o11 (+ (* a10 b01) (* a11 b11) (* a12 b21) (* a13 b31))
-           o12 (+ (* a10 b02) (* a11 b12) (* a12 b22) (* a13 b32))
-           o13 (+ (* a10 b03) (* a11 b13) (* a12 b23) (* a13 b33))
-           o20 (+ (* a20 b00) (* a21 b10) (* a22 b20) (* a23 b30))
-           o21 (+ (* a20 b01) (* a21 b11) (* a22 b21) (* a23 b31))
-           o22 (+ (* a20 b02) (* a21 b12) (* a22 b22) (* a23 b32))
-           o23 (+ (* a20 b03) (* a21 b13) (* a22 b23) (* a23 b33))
-           o30 (+ (* a30 b00) (* a31 b10) (* a32 b20) (* a33 b30))
-           o31 (+ (* a30 b01) (* a31 b11) (* a32 b21) (* a33 b31))
-           o32 (+ (* a30 b02) (* a31 b12) (* a32 b22) (* a33 b32))
-           o33 (+ (* a30 b03) (* a31 b13) (* a32 b23) (* a33 b33))))
+    (psetf o00 (+ (* a00 b00) (* a10 b01) (* a20 b02) (* a30 b03))
+           o01 (+ (* a01 b00) (* a11 b01) (* a21 b02) (* a31 b03))
+           o02 (+ (* a02 b00) (* a12 b01) (* a22 b02) (* a32 b03))
+           o03 (+ (* a03 b00) (* a13 b01) (* a23 b02) (* a33 b03))
+           o10 (+ (* a00 b10) (* a10 b11) (* a20 b12) (* a30 b13))
+           o11 (+ (* a01 b10) (* a11 b11) (* a21 b12) (* a31 b13))
+           o12 (+ (* a02 b10) (* a12 b11) (* a22 b12) (* a32 b13))
+           o13 (+ (* a03 b10) (* a13 b11) (* a23 b12) (* a33 b13))
+           o20 (+ (* a00 b20) (* a10 b21) (* a20 b22) (* a30 b23))
+           o21 (+ (* a01 b20) (* a11 b21) (* a21 b22) (* a31 b23))
+           o22 (+ (* a02 b20) (* a12 b21) (* a22 b22) (* a32 b23))
+           o23 (+ (* a03 b20) (* a13 b21) (* a23 b22) (* a33 b23))
+           o30 (+ (* a00 b30) (* a10 b31) (* a20 b32) (* a30 b33))
+           o31 (+ (* a01 b30) (* a11 b31) (* a21 b32) (* a31 b33))
+           o32 (+ (* a02 b30) (* a12 b31) (* a22 b32) (* a32 b33))
+           o33 (+ (* a03 b30) (* a13 b31) (* a23 b32) (* a33 b33))))
   out-matrix)
 
 (defun* matrix* ((matrix1 matrix) (matrix2 matrix)) (:result matrix :inline t :abbrev m*)
@@ -88,35 +88,14 @@
       (psetf m03 vx m13 vy m23 vz)))
   matrix)
 
-(defun* matrix-translation-from-vec ((vec vec)) (:result matrix :inline t :abbrev v->mtr)
-  (matrix-translation-from-vec! (matrix-identity) vec))
+(defun* matrix-translation-from-vec ((matrix matrix) (vec vec)) (:result matrix :inline t :abbrev v->mtr)
+  (matrix-translation-from-vec! (matrix-copy matrix) vec))
 
-(defun* matrix-rotate! ((out-matrix matrix) (matrix matrix) (vec vec)) (:result matrix :inline t :abbrev mrot!)
-  (macrolet ((rotate-angle (angle s c &body body)
-               `(when (> (abs ,angle) +epsilon+)
-                  (let ((,s (sin ,angle))
-                        (,c (cos ,angle)))
-                    ,@body
-                    (matrix*! out-matrix m out-matrix)))))
-    (let ((rotation (matrix)))
-      (with-matrix (m (matrix-identity! rotation))
-        (with-vector (v vec)
-          (matrix-copy! out-matrix matrix)
-          (rotate-angle vz s c
-                        (psetf m00 c m01 (- s)
-                               m10 s m11 c))
-          (rotate-angle vx s c
-                        (psetf m00 1.0 m01 0.0 m02 0.0
-                               m10 0.0 m11 c m12 (- s)
-                               m20 0.0 m21 s m22 c))
-          (rotate-angle vy s c
-                        (psetf m00 c m01 0.0 m02 s
-                               m10 0.0 m11 1.0 m12 0.0
-                               m20 (- s) m21 0.0 m22 c))))))
-  out-matrix)
+(defun* matrix-translate! ((out-matrix matrix) (matrix matrix) (vec vec)) (:result matrix :inline t :abbrev mtr!)
+  (matrix*! out-matrix matrix (matrix-translation-from-vec (matrix-identity) vec)))
 
-(defun* matrix-rotate ((matrix matrix) (vec vec)) (:result matrix :inline t :abbrev mrot)
-  (matrix-rotate! (matrix-identity) matrix vec))
+(defun* matrix-translate ((matrix matrix) (vec vec)) (:result matrix :inline t :abbrev mtr)
+  (matrix-translate! (matrix-identity) matrix vec))
 
 (defun* matrix-copy-rotation! ((out-matrix matrix) (matrix matrix)) (:result matrix :inline t :abbrev mcprot!)
   (with-matrices ((o out-matrix) (m matrix))
@@ -151,6 +130,51 @@
 
 (defun* matrix-rotation-from-vec ((matrix matrix) (vec vec) (axis keyword)) (:result matrix :inline t :abbrev v->mrot)
   (matrix-rotation-from-vec! (matrix-copy matrix) vec axis))
+
+(defun* matrix-rotate! ((out-matrix matrix) (matrix matrix) (vec vec)) (:result matrix :inline t :abbrev mrot!)
+  (macrolet ((rotate-angle (angle s c &body body)
+               `(when (> (abs ,angle) +epsilon+)
+                  (let ((,s (sin ,angle))
+                        (,c (cos ,angle)))
+                    ,@body
+                    (matrix*! out-matrix m out-matrix)))))
+    (let ((rotation (matrix)))
+      (with-matrix (m (matrix-identity! rotation))
+        (with-vector (v vec)
+          (matrix-copy! out-matrix matrix)
+          (rotate-angle vz s c
+                        (psetf m00 c m01 (- s)
+                               m10 s m11 c))
+          (rotate-angle vx s c
+                        (psetf m00 1.0 m01 0.0 m02 0.0
+                               m10 0.0 m11 c m12 (- s)
+                               m20 0.0 m21 s m22 c))
+          (rotate-angle vy s c
+                        (psetf m00 c m01 0.0 m02 s
+                               m10 0.0 m11 1.0 m12 0.0
+                               m20 (- s) m21 0.0 m22 c))))))
+  out-matrix)
+
+(defun* matrix-rotate ((matrix matrix) (vec vec)) (:result matrix :inline t :abbrev mrot)
+  (matrix-rotate! (matrix-identity) matrix vec))
+
+(defun* matrix-scale-to-vec! ((out-vec vec) (matrix matrix)) (:result vec :inline t :abbrev mscale->v!)
+  (with-vector (v out-vec)
+    (with-matrix (m matrix)
+      (psetf vx m00 vy m11 vz m22)))
+  out-vec)
+
+(defun* matrix-scale-to-vec ((matrix matrix)) (:result vec :inline t :abbrev mscale->v)
+  (matrix-scale-to-vec! (vec) matrix))
+
+(defun* matrix-scale-from-vec! ((matrix matrix) (vec vec)) (:result matrix :inline t :abbrev v->mscale!)
+  (with-matrix (m matrix)
+    (with-vector (v vec)
+      (psetf m00 vx m11 vy m22 vz)))
+  matrix)
+
+(defun* matrix-scale-from-vec ((matrix matrix) (vec vec)) (:result matrix :inline t :abbrev v->mscale)
+  (matrix-scale-from-vec! (matrix-copy matrix) vec))
 
 (defun* matrix*vec! ((out-vec vec) (matrix matrix) (vec vec)) (:result vec :inline t :abbrev m*v!)
   (with-vectors ((v vec) (o out-vec))

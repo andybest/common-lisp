@@ -3,15 +3,17 @@
 (deftype quat () '(simple-array single-float (4)))
 
 (defstruct (quat (:type (vector single-float))
-                 (:conc-name q))
+                 (:constructor %quat (&optional w x y z))
+                 (:conc-name q)
+                 (:copier nil)
+                 (:predicate nil))
   (w 1.0 :type single-float)
   (x 0.0 :type single-float)
   (y 0.0 :type single-float)
   (z 0.0 :type single-float))
 
 (defun* quat (&optional ((w real) 1.0) ((x real) 0.0) ((y real) 0.0) ((z real) 0.0)) (:result quat :inline t)
-  (make-array 4 :element-type 'single-float
-                :initial-contents (list (float w 1.0) (float x 1.0) (float y 1.0) (float z 1.0))))
+  (%quat (float w 1.0) (float x 1.0) (float y 1.0) (float z 1.0)))
 
 (defmacro with-quat ((prefix quat) &body body)
   `(with-accessors ((,prefix identity)

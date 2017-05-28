@@ -39,10 +39,13 @@
            #:matrix*! #:m*! #:matrix* #:m*
            #:matrix-translation-to-vec! #:mtr->v! #:matrix-translation-to-vec #:mtr->v
            #:matrix-translation-from-vec! #:v->mtr! #:matrix-translation-from-vec #:v->mtr
-           #:matrix-rotate! #:mrot! #:matrix-rotate #:mrot
+           #:matrix-translate! #:mtr! #:matrix-translate #:mtr
            #:matrix-copy-rotation! #:mcprot! #:matrix-copy-rotation #:mcprot
            #:matrix-rotation-to-vec! #:mrot->v! #:matrix-rotation-to-vec #:mrot->v
            #:matrix-rotation-from-vec! #:v->mrot! #:matrix-rotation-from-vec #:v->mrot
+           #:matrix-rotate! #:mrot! #:matrix-rotate #:mrot
+           #:matrix-scale-to-vec! #:mscale->v! #:matrix-scale-to-vec #:mscale->v
+           #:matrix-scale-from-vec! #:v->mscale! #:matrix-scale-from-vec #:v->mscale
            #:matrix*vec! #:m*v! #:matrix*vec #:m*v
            #:matrix-transpose! #:mtranspose! #:matrix-transpose #:mtranspose
            #:matrix-orthogonal-p #:morthop
