@@ -111,6 +111,15 @@ Alias: QINV!")
 Alias: QINV")
 
 (defdoc (quat-rotate! function)
+  "Rotate a quaternion in each of 3 dimensions as specified by the vector of radians VEC, storing the result in OUT-QUAT.
+Alias: QROT!")
+
+(defdoc (quat-rotate function)
+  "Rotate a quaternion in each of 3 dimensions as specified by the vector of radians VEC, storing the result as a new ~
+quaternion.
+Alias: QROT")
+
+(defdoc (quat-rotate! function)
   "Create a quaternion representing an ANGLE of rotation in radians around AXIS, storing the result in OUT-QUAT.
 Alias QROT!")
 
