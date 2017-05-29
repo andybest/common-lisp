@@ -1,4 +1,5 @@
 (defpackage #:gamebox-math
+  (:nicknames #:box.math)
   (:use #:cl
         #:alexandria)
   ;; vectors
