@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/mfiano/gamebox-math.svg?branch=master)](https://travis-ci.org/mfiano/gamebox-math)
+
 # gamebox-math
 
 A high performance math library useful for making games.
