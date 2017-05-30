@@ -10,7 +10,7 @@
 (defun* point-translate ((point vec) (direction vec) (distance single-float)) (:result vec :inline t :abbrev pttr)
   (point-translate! (vec) point direction distance))
 
-(defun* point-near-p ((point1 vec) (point2 vec) &key ((tolerance +epsilon+) single-float))
+(defun* point-near-p ((point1 vec) (point2 vec) &key ((tolerance single-float) +epsilon+))
     (:result boolean :inline t :abbrev ptnearp)
   (< (abs (point-distance point1 point2)) tolerance))
 
