@@ -15,8 +15,6 @@ env:
     - LISP=sbcl-bin
     - LISP=ccl-bin
     - LISP=abcl
-    - LISP=clisp
-    - LISP=ecl
     - LISP=cmucl
     - LISP=alisp
 
