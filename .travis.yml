@@ -30,4 +30,4 @@ cache:
     - $HOME/.config/common-lisp
 
 script:
-  - run-prove gamebox-math-tests.asd
+  - run-prove gamebox-math.tests.asd
