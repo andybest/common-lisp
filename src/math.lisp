@@ -22,7 +22,6 @@
         (v1 (vec))
         (v2 (vec))
         (out-vec (vec)))
-    (declare (dynamic-extent q1 q2 out-quat v1 v2 out-vec))
     (quat-from-matrix! q1 matrix1)
     (quat-from-matrix! q2 matrix2)
     (quat-slerp! out-quat q1 q2 coeff)

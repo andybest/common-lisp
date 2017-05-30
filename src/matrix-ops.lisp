@@ -137,7 +137,7 @@
                   (let ((,s (sin ,angle))
                         (,c (cos ,angle)))
                     ,@body
-                    (matrix*! out-matrix m out-matrix)))))
+                    (matrix*! out-matrix out-matrix m)))))
     (let ((rotation (matrix)))
       (with-matrix (m (matrix-identity! rotation))
         (with-vector (v vec)
