@@ -1,6 +1,6 @@
 (in-package :gamebox-math)
 
-(defdoc (mat structure)
+(defdoc (matrix structure)
   "A 4x4 column-major matrix consisting of column vectors.
 This is a typed structure, which compiles to an actual single-float array, but includes named slots for accessing ~
 components.")
