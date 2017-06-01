@@ -41,6 +41,14 @@ Alias: QCP!")
   "Copy the components of QUAT, storing the result in a new quaternion.
 Alias: QCP")
 
+(defdoc (quat= function)
+  "Check if the components of QUAT1 are equal to the components of QUAT2.
+Alias Q=")
+
+(defdoc (quat~ function)
+  "Check if the components of QUAT1 are approximately equal to the components of QUAT2.
+Alias Q~~")
+
 (defdoc (quat+! function)
   "Quaternion addition of QUAT1 and QUAT2, storing the result in OUT-QUAT.
 Alias: Q+!")

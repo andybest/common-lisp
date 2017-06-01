@@ -12,10 +12,11 @@
     (y 0.0 :type single-float)
     (z 0.0 :type single-float))
 
-  (defun* vec (&optional ((x real) 0.0) ((y real) 0.0) ((z real) 0.0)) (:result vec :inline t)
+  (defun* vec (&optional ((x real) 0) ((y real) 0) ((z real) 0)) (:result vec :inline t)
     (%vec (float x 1.0) (float y 1.0) (float z 1.0)))
 
-  (define-constant +zero-vector+ (vec) :test #'equalp))
+  (define-constant +zero-vector+ (vec) :test #'equalp)
+  (define-constant +0vec+ (vec) :test #'equalp))
 
 (defmacro with-vector ((prefix vec) &body body)
   `(with-accessors ((,prefix identity)

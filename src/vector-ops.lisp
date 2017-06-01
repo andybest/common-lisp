@@ -14,7 +14,7 @@
   (vec-copy! (vec) vec))
 
 (defun* vec-clamp! ((out-vec vec) (vec vec) &key
-                    ((min single-float) least-negative-single-float)
+                    ((min single-float) most-negative-single-float)
                     ((max single-float) most-positive-single-float))
     (:result vec :inline t :abbrev vclamp!)
   (with-vectors ((o out-vec) (v vec))
@@ -24,7 +24,7 @@
   out-vec)
 
 (defun* vec-clamp ((vec vec) &key
-                   ((min single-float) least-negative-single-float)
+                   ((min single-float) most-negative-single-float)
                    ((max single-float) most-positive-single-float))
     (:result vec :inline t :abbrev vclamp)
   (vec-clamp! (vec) vec :min min :max max))
@@ -32,10 +32,7 @@
 (defun* vec-stabilize! ((out-vec vec) (vec vec) &key ((tolerance single-float) +epsilon+))
     (:result vec :inline t :abbrev vstab!)
   (with-vectors ((o out-vec) (v vec))
-    (macrolet ((stabilize (place)
-                 `(if (< (abs ,place) tolerance)
-                      0.0
-                      ,place)))
+    (macrolet ((stabilize (place) `(if (< (abs ,place) tolerance) 0.0 ,place)))
       (psetf ox (stabilize vx)
              oy (stabilize vy)
              oz (stabilize vz))))
@@ -191,7 +188,7 @@
          (zerop vz))))
 
 (defun* vec-direction= ((vec1 vec) (vec2 vec)) (:result boolean :inline t :abbrev vdir=)
-  (> (vec-dot (vec-normalize vec1) (vec-normalize vec2)) (- 1 +epsilon+)))
+  (>= (vec-dot (vec-normalize vec1) (vec-normalize vec2)) (- 1 +epsilon+)))
 
 (defun* vec-parallel-p ((vec1 vec) (vec2 vec)) (:result boolean :inline t :abbrev vparallelp)
   (vec~ (vec-cross vec1 vec2) +zero-vector+))
@@ -205,6 +202,30 @@
 
 (defun* vec-lerp ((vec1 vec) (vec2 vec) (coeff single-float)) (:result vec :inline t :abbrev vlerp)
   (vec-lerp! (vec) vec1 vec2 coeff))
+
+(defun* vec< ((vec1 vec) (vec2 vec)) (:result boolean :inline t :abbrev v<)
+  (with-vectors ((v1 vec1) (v2 vec2))
+    (and (< v1x v2x)
+         (< v1y v2y)
+         (< v1z v2z))))
+
+(defun* vec<= ((vec1 vec) (vec2 vec)) (:result boolean :inline t :abbrev v<=)
+  (with-vectors ((v1 vec1) (v2 vec2))
+    (and (<= v1x v2x)
+         (<= v1y v2y)
+         (<= v1z v2z))))
+
+(defun* vec> ((vec1 vec) (vec2 vec)) (:result boolean :inline t :abbrev v>)
+  (with-vectors ((v1 vec1) (v2 vec2))
+    (and (> v1x v2x)
+         (> v1y v2y)
+         (> v1z v2z))))
+
+(defun* vec>= ((vec1 vec) (vec2 vec)) (:result boolean :inline t :abbrev v>=)
+  (with-vectors ((v1 vec1) (v2 vec2))
+    (and (>= v1x v2x)
+         (>= v1y v2y)
+         (>= v1z v2z))))
 
 (defun* vec-min! ((out-vec vec) (vec1 vec) (vec2 vec)) (:result vec :inline t :abbrev vmin!)
   (with-vectors ((o out-vec) (v1 vec1) (v2 vec2))

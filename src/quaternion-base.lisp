@@ -12,7 +12,7 @@
   (y 0.0 :type single-float)
   (z 0.0 :type single-float))
 
-(defun* quat (&optional ((w real) 1.0) ((x real) 0.0) ((y real) 0.0) ((z real) 0.0)) (:result quat :inline t)
+(defun* quat (&optional ((w real) 1) ((x real) 0) ((y real) 0) ((z real) 0)) (:result quat :inline t)
   (%quat (float w 1.0) (float x 1.0) (float y 1.0) (float z 1.0)))
 
 (defmacro with-quat ((prefix quat) &body body)

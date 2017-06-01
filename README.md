@@ -12,10 +12,6 @@ functions one may need when writing a game.
 
 ## Install
 
-This system is not yet available to be installed automatically
-with [Quicklisp](https://www.quicklisp.org). To manually install using Quicklisp, clone this
-repository into your `local-projects` directory and issue the following in your REPL:
-
 ``` lisp
 (ql:quickload :gamebox-math)
 ```

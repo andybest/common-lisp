@@ -1,6 +1,16 @@
 language: common-lisp
 sudo: false
 
+notifications:
+  irc:
+    channels:
+      - "chat.freenode.net##ht"
+    on_success: change
+    on_failure: always
+    template:
+      - "%{repository_slug} (%{branch}:%{commit}) : %{commit_message}"
+      - "Result: %{result} Details: %{build_url}"
+
 addons:
   apt:
     packages:
@@ -11,8 +21,9 @@ env:
   global:
     - PATH=$HOME/.roswell/bin:$PATH
     - ROSWELL_INSTALL_DIR=$HOME/.roswell
+    - COVERAGE_EXCLUDE=t/
   matrix:
-    - LISP=sbcl-bin
+    - LISP=sbcl-bin COVERALLS=true
     - LISP=ccl-bin
     - LISP=abcl
     - LISP=cmucl

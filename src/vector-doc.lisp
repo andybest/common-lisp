@@ -196,6 +196,22 @@ Alias: VLERP!")
 as a new vector.
 Alias: VLERP")
 
+(defdoc (vec< function)
+  "Check if each component of VEC1 is less than that component of VEC2.
+Alias: V<")
+
+(defdoc (vec<= function)
+  "Check if each component of VEC1 is less than or equal to that component of VEC2.
+Alias: V<=")
+
+(defdoc (vec> function)
+  "Check if each component of VEC1 is greater than that component of VEC2.
+Alias: V>")
+
+(defdoc (vec< function)
+  "Check if each component of VEC1 is greater than or equal to that component of VEC2.
+Alias: V>=")
+
 (defdoc (vec-min! function)
   "Component-wise minimum of VEC1 and VEC2, storing the result in OUT-VEC.
 Alias: VMIN!")

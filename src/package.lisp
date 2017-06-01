@@ -3,7 +3,9 @@
   (:use #:cl
         #:alexandria)
   ;; vectors
-  (:export #:vec #:+zero-vector+ #:with-vector #:with-vectors #:vref
+  (:export #:vec #:with-vector #:with-vectors #:vref
+           #:+zero-vector+ #:+0vec+
+           #:vec-test #:vtest
            #:vec-copy! #:vcp! #:vec-copy #:vcp
            #:vec-clamp! #:vclamp! #:vec-clamp #:vclamp
            #:vec-stabilize! #:vstab! #:vec-stabilize #:vstab
@@ -30,11 +32,19 @@
            #:vec-direction= #:vdir=
            #:vec-parallel-p #:vparallelp
            #:vec-lerp! #:vlerp! #:vec-lerp #:vlerp
+           #:vec< #:v<
+           #:vec<= #:v<=
+           #:vec> #:v>
+           #:vec>= #:v>=
            #:vec-min! #:vmin! #:vec-min #:vmin
            #:vec-max! #:vmax! #:vec-max #:vmax)
   ;; matrices
-  (:export #:matrix #:+identity-matrix+ #:with-matrix #:with-matrices #:mref
+  (:export #:matrix #:with-matrix #:with-matrices #:mref
+           #:+identity-matrix+ #:+mid+
+           #:matrix-test #:mtest
            #:matrix-identity! #:mid! #:matrix-identity #:mid
+           #:matrix= #:m=
+           #:matrix~ #:m~
            #:matrix-copy! #:mcp! #:matrix-copy #:mcp
            #:matrix-clamp! #:mclamp! #:matrix-clamp #:mclamp
            #:matrix*! #:m*! #:matrix* #:m*
@@ -45,8 +55,6 @@
            #:matrix-rotation-to-vec! #:mrot->v! #:matrix-rotation-to-vec #:mrot->v
            #:matrix-rotation-from-vec! #:v->mrot! #:matrix-rotation-from-vec #:v->mrot
            #:matrix-rotate! #:mrot! #:matrix-rotate #:mrot
-           #:matrix-scale-to-vec! #:mscale->v! #:matrix-scale-to-vec #:mscale->v
-           #:matrix-scale-from-vec! #:v->mscale! #:matrix-scale-from-vec #:v->mscale
            #:matrix*vec! #:m*v! #:matrix*vec #:m*v
            #:matrix-transpose! #:mtranspose! #:matrix-transpose #:mtranspose
            #:matrix-orthogonal-p #:morthop
@@ -60,7 +68,10 @@
            #:make-perspective-matrix! #:mkpersp! #:make-perspective-matrix #:mkpersp)
   ;; quaternions
   (:export #:quat #:with-quat #:with-quats #:qref
+           #:+identity-quaternion+ #:+qid+
            #:quat-identity! #:qid! #:quat-identity #:qid
+           #:quat= #:q=
+           #:quat~ #:q~
            #:quat-copy! #:qcp! #:quat-copy #:qcp
            #:quat+! #:q+! #:quat+ #:q+
            #:quat*! #:q*! #:quat* #:q*
