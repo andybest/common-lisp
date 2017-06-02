@@ -1,3 +1,4 @@
+[![Quicklisp](http://quickdocs.org/badge/gamebox-math.svg)](http://quickdocs.org/gamebox-math/)
 [![Build Status](https://travis-ci.org/mfiano/gamebox-math.svg?branch=master)](https://travis-ci.org/mfiano/gamebox-math)
 
 # gamebox-math
