@@ -7,7 +7,7 @@ components.")
 
 (defdoc (with-quat macro)
   "A convenience macro for concisely accessing components of a quaternion.
-Example: (with-quat (q quaternion) qw) would allow accessing the W component of the quaternion as simply the symbol QW.")
+Example: (with-quat (q quat) qw) would allow accessing the W component of the quaternion as simply the symbol QW.")
 
 (defdoc (with-quats macro)
   "A convenience macro for concisely accessing components of multiple quaternions.
@@ -57,6 +57,14 @@ Alias: Q+!")
   "Quaternion addition of QUAT1 and QUAT2, storing the result as a new quaternion.
 Alias: Q+")
 
+(defdoc (dquat-! function)
+  "Quaternion subtraction of QUAT2 from QUAT1, storing the result in OUT-QUAT.
+Alias: Q-!")
+
+(defdoc (dquat- function)
+  "Quaternion subtraction of QUAT2 from QUAT1, storing the result as a new quaternion.
+Alias: Q-")
+
 (defdoc (quat*! function)
   "Quaternion multiplication of QUAT1 and QUAT2, storing the result in OUT-QUAT.
 Alias: Q*!")
@@ -78,7 +86,7 @@ Alias: QSCALE")
 Alias: QCONJ!")
 
 (defdoc (quat-conjugate function)
-  "Calculate the conjugate of QUAT, storing the result in a new quaternion.
+  "Calculate the conjugate of QUAT, storing the result as a new quaternion.
 Alias: QCONJ")
 
 (defdoc (quat-magnitude-squared function)
