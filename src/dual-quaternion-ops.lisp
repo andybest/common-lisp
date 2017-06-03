@@ -81,14 +81,12 @@
 (defun* dquat-conjugate ((dquat dquat)) (:result dquat :abbrev dqconj)
   (dquat-conjugate! (dquat) dquat))
 
-(defun* dquat-magnitude-squared ((dquat dquat)) (:result (values single-float single-float) :abbrev dqmagsq)
+(defun* dquat-magnitude-squared ((dquat dquat)) (:result single-float :abbrev dqmagsq)
   (with-dquat (d dquat)
-    (values (quat-magnitude-squared dr)
-            (* 2 (+ (* drw ddw) (* drx ddx) (* dry ddy) (* drz ddz))))))
+    (quat-magnitude-squared dr)))
 
 (defun* dquat-magnitude ((dquat dquat)) (:result single-float :abbrev dqmag)
-  (multiple-value-bind (r d) (dquat-magnitude-squared dquat)
-    (values (sqrt r) (sqrt d))))
+  (sqrt (dquat-magnitude-squared dquat)))
 
 (defun* dquat-normalize! ((out-dquat dquat) (dquat dquat)) (:result dquat :abbrev dqnormalize!)
   (let ((magnitude (dquat-magnitude dquat)))
