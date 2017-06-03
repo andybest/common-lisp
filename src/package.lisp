@@ -74,8 +74,10 @@
            #:quat~ #:q~
            #:quat-copy! #:qcp! #:quat-copy #:qcp
            #:quat+! #:q+! #:quat+ #:q+
+           #:quat-! #:q-! #:quat- #:q-
            #:quat*! #:q*! #:quat* #:q*
            #:quat-scale! #:qscale! #:quat-scale #:qscale
+           #:quat-cross! #:qcross! #:quat-cross #:qcross
            #:quat-conjugate! #:qconj! #:quat-conjugate #:qconj
            #:quat-magnitude-squared #:qmagsq
            #:quat-magnitude #:qmag
@@ -89,6 +91,34 @@
            #:quat-to-matrix! #:q->m! #:quat-to-matrix #:q->m
            #:quat-from-matrix! #:m->q! #:quat-from-matrix #:m->q
            #:quat-slerp! #:qslerp! #:quat-slerp #:qslerp)
+  ;; dual quaternions
+  (:export #:dquat #:with-dquat #:with-dquats
+           #:+identity-dual-quaternion+ #:+dqid+
+           #:dquat-identity! #:dqid! #:dquat-identity #:dqid
+           #:dquat= #:dq=
+           #:dquat~ #:dq~
+           #:dquat-copy! #:dqcp! #:dquat-copy #:dqcp
+           #:dquat+! #:dq+! #:dquat+ #:dq+
+           #:dquat-! #:dq-! #:dquat- #:dq-
+           #:dquat*! #:dq*! #:dquat* #:dq*
+           #:dquat-scale! #:dqscale! #:dquat-scale #:dqscale
+           #:dquat-conjugate! #:dqconj! #:dquat-conjugate #:dqconj
+           #:dquat-magnitude-squared #:dqmagsq
+           #:dquat-magnitude #:dqmag
+           #:dquat-normalize! #:dqnormalize! #:dquat-normalize #:dqnormalize
+           #:dquat-negate! #:dqneg! #:dquat-negate #:dqneg
+           #:dquat-dot #:dqdot
+           #:dquat-inverse! #:dqinv! #:dquat-inverse #:dqinv
+           #:dquat-translation-to-vec! #:dqtr->v! #:dquat-translation-to-vec #:dqtr->v
+           #:dquat-translation-from-vec! #:v->dqtr! #:dquat-translation-from-vec #:v->dqtr
+           #:dquat-translate! #:dqtr! #:dquat-translate #:dqtr
+           #:dquat-rotation-to-quat! #:dqrot->q! #:dquat-rotation-to-quat #:dqrot->q
+           #:dquat-rotate! #:dqrot! #:dquat-rotate #:dqrot
+           #:dquat-to-matrix! #:dq->m! #:dquat-to-matrix #:dq->m
+           #:dquat-to-screw-parameters #:dq->screw
+           #:dquat-from-screw-parameters! #:screw->dq! #:dquat-from-screw-parameters #:screw->dq
+           #:dquat-sclerp! #:dqsclerp! #:dquat-sclerp #:dqsclerp
+           #:dquat-nlerp! #:dqnlerp! #:dquat-nlerp #:dqnlerp)
   ;; math
   (:export #:point-distance #:ptdist
            #:point-translate! #:pttr! #:point-translate #:pttr
