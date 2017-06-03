@@ -4,6 +4,8 @@
 
 (eval-when (:compile-toplevel :load-toplevel :execute)
 
+  #+sbcl(setf sb-ext:*inline-expansion-limit* 1024)
+
   (defun make-accessor-symbol (prefix &rest symbols)
     (intern (format nil "~:@(~{~A~}~)" (cons prefix symbols))
             (symbol-package prefix))))
