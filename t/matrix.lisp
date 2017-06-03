@@ -109,9 +109,8 @@
   (is m33 -16))
 
 (diag "identity")
-(with-matrices ((ma (mid))
-                (r (matrix 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1)))
-  (is ma r)
+(with-matrices ((m (mid)) (r (matrix 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1)))
+  (is m r)
   (is +mid+ r))
 
 (diag "copy")

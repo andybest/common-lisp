@@ -1,6 +1,3 @@
-;;;; Implements dual quaternion math.
-;;;; This is probably not completely correct, and definitely not tested enough to be exported - use with caution.
-
 (in-package :gamebox-math)
 
 (eval-when (:compile-toplevel :load-toplevel)

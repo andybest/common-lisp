@@ -14,4 +14,5 @@
   ((:file "package")
    (:test-file "vector")
    (:test-file "matrix")
-   (:test-file "quaternion")))
+   (:test-file "quaternion")
+   (:test-file "dual-quaternion")))
