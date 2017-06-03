@@ -12,7 +12,7 @@
     (y 0.0 :type single-float)
     (z 0.0 :type single-float))
 
-  (defun* vec (&optional ((x real) 0) ((y real) 0) ((z real) 0)) (:result vec :inline t)
+  (defun* vec (&optional ((x real) 0) ((y real) 0) ((z real) 0)) (:result vec)
     (%vec (float x 1.0) (float y 1.0) (float z 1.0)))
 
   (define-constant +zero-vector+ (vec) :test #'equalp)
@@ -20,9 +20,9 @@
 
 (defmacro with-vector ((prefix vec) &body body)
   `(with-accessors ((,prefix identity)
-                    (,(make-accessor-symbol prefix 'x) vx)
-                    (,(make-accessor-symbol prefix 'y) vy)
-                    (,(make-accessor-symbol prefix 'z) vz))
+                    (,(symbolicate prefix 'x) vx)
+                    (,(symbolicate prefix 'y) vy)
+                    (,(symbolicate prefix 'z) vz))
        ,vec
      ,@body))
 
@@ -32,10 +32,10 @@
       `(with-vector ,(car binds)
          (with-vectors ,(cdr binds) ,@body))))
 
-(defun* vref ((vec vec) (index (integer 0 2))) (:result single-float :inline t)
+(defun* vref ((vec vec) (index (integer 0 2))) (:result single-float)
   (aref vec index))
 
-(defun* (setf vref) ((value single-float) (vec vec) (index (integer 0 2))) (:result single-float :inline t)
+(defun* (setf vref) ((value single-float) (vec vec) (index (integer 0 2))) (:result single-float)
   (setf (aref vec index) value))
 
 (set-pprint-dispatch
