@@ -18,10 +18,10 @@
     (and (quat= d1r d2r)
          (quat= d1d d2d))))
 
-(defun* dquat~ ((dquat1 dquat) (dquat2 dquat)) (:result boolean :abbrev dq~)
+(defun* dquat~ ((dquat1 dquat) (dquat2 dquat) &key ((tolerance single-float) +epsilon+)) (:result boolean :abbrev dq~)
   (with-dquats ((d1 dquat1) (d2 dquat2))
-    (and (quat~ d1r d2r)
-         (quat~ d1d d2d))))
+    (and (quat~ d1r d2r :tolerance tolerance)
+         (quat~ d1d d2d :tolerance tolerance))))
 
 (defun* dquat-copy! ((out-dquat dquat) (dquat dquat)) (:result dquat :abbrev dqcp!)
   (with-dquats ((o out-dquat) (d dquat))
