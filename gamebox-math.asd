@@ -27,5 +27,7 @@
    (:file "quaternion-base")
    (:file "quaternion-ops")
    (:file "quaternion-doc")
+   (:file "dual-quaternion-base")
+   (:file "dual-quaternion-ops")
    (:file "math")
    (:file "math-doc")))
