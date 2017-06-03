@@ -33,14 +33,6 @@ Alias: QID!")
   "Create an identity quaternion.
 Alias: QID")
 
-(defdoc (quat-copy! function)
-  "Copy the components of QUAT, storing the result in OUT-QUAT.
-Alias: QCP!")
-
-(defdoc (quat-copy function)
-  "Copy the components of QUAT, storing the result in a new quaternion.
-Alias: QCP")
-
 (defdoc (quat= function)
   "Check if the components of QUAT1 are equal to the components of QUAT2.
 Alias Q=")
@@ -48,6 +40,14 @@ Alias Q=")
 (defdoc (quat~ function)
   "Check if the components of QUAT1 are approximately equal to the components of QUAT2.
 Alias Q~~")
+
+(defdoc (quat-copy! function)
+  "Copy the components of QUAT, storing the result in OUT-QUAT.
+Alias: QCP!")
+
+(defdoc (quat-copy function)
+  "Copy the components of QUAT, storing the result in a new quaternion.
+Alias: QCP")
 
 (defdoc (quat+! function)
   "Quaternion addition of QUAT1 and QUAT2, storing the result in OUT-QUAT.
@@ -57,11 +57,11 @@ Alias: Q+!")
   "Quaternion addition of QUAT1 and QUAT2, storing the result as a new quaternion.
 Alias: Q+")
 
-(defdoc (dquat-! function)
+(defdoc (quat-! function)
   "Quaternion subtraction of QUAT2 from QUAT1, storing the result in OUT-QUAT.
 Alias: Q-!")
 
-(defdoc (dquat- function)
+(defdoc (quat- function)
   "Quaternion subtraction of QUAT2 from QUAT1, storing the result as a new quaternion.
 Alias: Q-")
 
@@ -80,6 +80,14 @@ Alias: QSCALE!")
 (defdoc (quat-scale function)
   "Quaternion scalar multiplication of QUAT by SCALAR, storing the result as a new quaternion.
 Alias: QSCALE")
+
+(defdoc (quat-cross! function)
+  "Compute the cross product of QUAT1 and QUAT2, storing the result in OUT-QUAT.
+Alias: QCROSS!")
+
+(defdoc (quat-cross! function)
+  "Compute the cross product of QUAT1 and QUAT2, storing the result as a new quaternion.
+Alias: QCROSS")
 
 (defdoc (quat-conjugate! function)
   "Calculate the conjugate of QUAT, storing the result in OUT-QUAT.
