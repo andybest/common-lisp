@@ -1,7 +1,11 @@
 (in-package :gamebox-math)
 
+(deftype dquat () '(simple-array quat (2)))
+
 (defstruct (dquat (:constructor dquat (&optional real dual))
-                  (:conc-name dq-))
+                  (:conc-name dq-)
+                  (:copier nil)
+                  (:predicate nil))
   (real (quat 1 0 0 0) :type quat)
   (dual (quat 0 0 0 0) :type quat))
 

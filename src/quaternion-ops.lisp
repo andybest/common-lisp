@@ -21,10 +21,10 @@
 
 (defun* quat~ ((quat1 quat) (quat2 quat) &key ((tolerance single-float) +epsilon+)) (:result boolean :abbrev q~)
   (with-quats ((q1 quat1) (q2 quat2))
-    (and (< (abs (- q1w q2w)) tolerance)
-         (< (abs (- q1x q2x)) tolerance)
-         (< (abs (- q1y q2y)) tolerance)
-         (< (abs (- q1z q2z)) tolerance))))
+    (and (~ q1w q2w tolerance)
+         (~ q1x q2x tolerance)
+         (~ q1y q2y tolerance)
+         (~ q1z q2z tolerance))))
 
 (defun* quat-copy! ((out-quat quat) (quat quat)) (:result quat :abbrev qcp!)
   (with-quats ((o out-quat) (q quat))
@@ -145,8 +145,8 @@
              ox (+ (* sx cy cz) (* cx sy sz))
              oy (- (* cx sy cz) (* sx cy sz))
              oz (+ (* sx sy cz) (* cx cy sz)))
-      (quat*! out-quat out-quat q))
-    out-quat))
+      (quat*! out-quat out-quat quat)))
+  (values quat out-quat))
 
 (defun* quat-rotate ((quat quat) (vec vec)) (:result quat :abbrev qrot)
   (quat-rotate! (quat) quat vec))
@@ -163,7 +163,7 @@
 (defun* quat-from-vec! ((out-quat quat) (vec vec)) (:result quat :abbrev v->q!)
   (with-quat (q out-quat)
     (with-vector (v vec)
-      (setf qw 1.0 qx vx qy vy qz vz)))
+      (setf qw 0.0 qx vx qy vy qz vz)))
   out-quat)
 
 (defun* quat-from-vec ((vec vec)) (:result quat :abbrev v->q)

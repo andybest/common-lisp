@@ -81,6 +81,24 @@
 (defun* dquat-conjugate ((dquat dquat)) (:result dquat :abbrev dqconj)
   (dquat-conjugate! (dquat) dquat))
 
+(defun* dquat-conjugate-translation! ((out-dquat dquat) (dquat dquat)) (:result dquat :abbrev dqconjtr!)
+  (with-dquats ((o out-dquat) (d dquat))
+    (quat-conjugate! or dr)
+    (psetf odw (- ddw) odx ddx ody ddy odz ddz))
+  out-dquat)
+
+(defun* dquat-conjugate-translation ((dquat dquat)) (:result dquat :abbrev dqconjtr)
+  (dquat-conjugate-translation! (dquat) dquat))
+
+(defun* dquat-sandwich! ((out-dquat dquat) (dquat1 dquat) (dquat2 dquat)) (:result dquat :abbrev dqsandwich!)
+  (let ((dquat2 (dqnormalize dquat2)))
+    (dquat*! out-dquat
+             (dquat* dquat2 dquat1)
+             (dquat-conjugate-translation dquat2))))
+
+(defun* dquat-sandwich ((dquat1 dquat) (dquat2 dquat)) (:result dquat :abbrev dqsandwich)
+  (dquat-sandwich! (dquat) dquat1 dquat2))
+
 (defun* dquat-magnitude-squared ((dquat dquat)) (:result single-float :abbrev dqmagsq)
   (with-dquat (d dquat)
     (quat-magnitude-squared dr)))

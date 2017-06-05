@@ -64,9 +64,9 @@
 
 (defun* vec~ ((vec1 vec) (vec2 vec) &key ((tolerance single-float) +epsilon+)) (:result boolean :abbrev v~)
   (with-vectors ((v1 vec1) (v2 vec2))
-    (and (< (abs (- v1x v2x)) tolerance)
-         (< (abs (- v1y v2y)) tolerance)
-         (< (abs (- v1z v2z)) tolerance))))
+    (and (~ v1x v2x tolerance)
+         (~ v1y v2y tolerance)
+         (~ v1z v2z tolerance))))
 
 (defun* vec+! ((out-vec vec) (vec1 vec) (vec2 vec)) (:result vec :abbrev v+!)
   (with-vectors ((o out-vec) (v1 vec1) (v2 vec2))

@@ -4,11 +4,7 @@
 
 (eval-when (:compile-toplevel :load-toplevel :execute)
 
-  #+sbcl(setf sb-ext:*inline-expansion-limit* 1024)
-
-  (defun make-accessor-symbol (prefix &rest symbols)
-    (intern (format nil "~:@(~{~A~}~)" (cons prefix symbols))
-            (symbol-package prefix))))
+  #+sbcl(setf sb-ext:*inline-expansion-limit* 1024))
 
 (defmacro defun* (fname arglist (&key result inline abbrev) &body body)
   (flet ((make-def (fname)
@@ -24,3 +20,6 @@
   (let ((type (if (eq type 'macro) 'function type)))
     `(setf (documentation ',object ',type)
            (format nil ,@body))))
+
+(defun* ~ ((a real) (b real) (tolerance single-float)) (:result boolean)
+  (< (abs (- a b)) tolerance))
