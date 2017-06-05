@@ -137,7 +137,7 @@
   (quat-inverse! (quat) quat))
 
 (defun* quat-rotate! ((out-quat quat) (quat quat) (vec vec)) (:result quat :abbrev qrot!)
-  (with-quat (o out-quat)
+  (with-quats ((o out-quat) (q (qcp quat)))
     (with-vectors ((v (vscale vec 0.5))
                    (c (vec (cos vx) (cos vy) (cos vz)))
                    (s (vec (sin vx) (sin vy) (sin vz))))
@@ -145,7 +145,7 @@
              ox (+ (* sx cy cz) (* cx sy sz))
              oy (- (* cx sy cz) (* sx cy sz))
              oz (+ (* sx sy cz) (* cx cy sz)))
-      (quat*! out-quat quat out-quat))
+      (quat*! out-quat out-quat q))
     out-quat))
 
 (defun* quat-rotate ((quat quat) (vec vec)) (:result quat :abbrev qrot)
