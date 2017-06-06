@@ -103,6 +103,8 @@
            #:dquat*! #:dq*! #:dquat* #:dq*
            #:dquat-scale! #:dqscale! #:dquat-scale #:dqscale
            #:dquat-conjugate! #:dqconj! #:dquat-conjugate #:dqconj
+           #:dquat-conjugate-full! #:dqconjf! #:dquat-conjugate-full #:dqconjf
+           #:dquat-apply! #:dqapply! #:dqual-apply #:dqapply
            #:dquat-magnitude-squared #:dqmagsq
            #:dquat-magnitude #:dqmag
            #:dquat-normalize! #:dqnormalize! #:dquat-normalize #:dqnormalize
