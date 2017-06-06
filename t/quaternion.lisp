@@ -2,7 +2,7 @@
 
 (setf *default-test-function* #'equalp)
 
-(plan 99)
+(plan 102)
 
 (diag "structure")
 (is-type +qid+ '(simple-array single-float (4)))
@@ -189,7 +189,7 @@
     (is o r)
     (is (q->v q) r)))
 (with-vector (v (vec 0.2571392 0.19932675 -0.025900126))
-  (with-quats ((r (quat 1 vx vy vz))
+  (with-quats ((r (quat 0 vx vy vz))
                (o (quat)))
     (is (v->q! o v) r)
     (is o r)
@@ -198,7 +198,8 @@
 (diag "matrix conversion")
 (with-quats ((q (qrot +qid+ (vec (/ pi 3))))
              (qo (quat)))
-  (with-matrices ((r (matrix 1 0 0 0 0 0.5 -0.86602545 0 0 0.86602545 0.5 0 0 0 0 1))
+  (with-matrices ((r (matrix 1 0 0 0 0 0.5 -0.86602545 0 0 0.86602545 0.5 0 0 0
+                             0 1))
                   (mo (mid)))
     (ok (m~ (q->m! mo q) r))
     (ok (m~ mo r))
