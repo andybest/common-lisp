@@ -45,8 +45,9 @@
   (is d2dx 15)
   (is d2dy 16)
   (is d2dz 17)
-  (psetf d1rw 10.0 d1rx 20.0 d1ry 30.0 d1rz 40.0 d1dw 50.0 d1dx 60.0 d1dy 70.0 d1dz 80.0
-         d2rw 100.0 d2rx 200.0 d2ry 300.0 d2rz 400.0 d2dw 500.0 d2dx 600.0 d2dy 700.0 d2dz 800.0)
+  (psetf d1rw 10.0 d1rx 20.0 d1ry 30.0 d1rz 40.0 d1dw 50.0 d1dx 60.0 d1dy 70.0
+         d1dz 80.0 d2rw 100.0 d2rx 200.0 d2ry 300.0 d2rz 400.0 d2dw 500.0 d2dx
+         600.0 d2dy 700.0 d2dz 800.0)
   (is d1rw 10)
   (is d1rx 20)
   (is d1ry 30)
@@ -123,7 +124,7 @@
 (diag "translation conversion")
 (with-dquats ((d (dquat (quat 0.8660254 0.5 0 0)
                         (quat -2.0669873 4.580127 16.160254 7.9903812)))
-              (rd (dquat (quat 1 0 0 0) (quat 0.5 5.0 10.0 15.0)))
+              (rd (dquat (quat 1 0 0 0) (quat 0.0 5.0 10.0 15.0)))
               (od (dquat)))
   (with-vectors ((rv (vec 10 20 30))
                  (ov (vec)))
@@ -143,7 +144,8 @@
 (diag "matrix conversion")
 (with-dquat (d (dquat (quat 0.8660254 0.5 0 0)
                       (quat -2.0669873 4.580127 16.160254 7.9903812)))
-  (with-matrices ((r (matrix 1 0 0 10 0 0.5 -0.8660254 20 0 0.8660254 0.5 30 0 0 0 1))
+  (with-matrices ((r (matrix 1 0 0 10 0 0.5 -0.8660254 20 0 0.8660254 0.5 30 0 0
+                             0 1))
                   (o (mid)))
     (ok (m~ (dq->m! o d) r :tolerance 1e-5))
     (ok (m~ o r :tolerance 1e-5))
