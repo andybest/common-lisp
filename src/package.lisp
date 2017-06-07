@@ -115,8 +115,10 @@
            #:dquat-translation-from-vec! #:v->dqtr! #:dquat-translation-from-vec #:v->dqtr
            #:dquat-translate! #:dqtr! #:dquat-translate #:dqtr
            #:dquat-rotation-to-quat! #:dqrot->q! #:dquat-rotation-to-quat #:dqrot->q
+           #:dquat-rotation-from-quat! #:q->dqrot! #:dquat-rotation-from-quat #:q->dqrot
            #:dquat-rotate! #:dqrot! #:dquat-rotate #:dqrot
            #:dquat-to-matrix! #:dq->m! #:dquat-to-matrix #:dq->m
+           #:dquat-from-matrix! #:m->dq! #:dquat-from-matrix #:m->dq
            #:dquat-to-screw-parameters #:dq->screw
            #:dquat-from-screw-parameters! #:screw->dq! #:dquat-from-screw-parameters #:screw->dq
            #:dquat-sclerp! #:dqsclerp! #:dquat-sclerp #:dqsclerp

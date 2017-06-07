@@ -192,6 +192,16 @@
 (defun* dquat-rotation-to-quat ((dquat dquat)) (:result quat :abbrev dqrot->q)
   (dquat-rotation-to-quat! (quat) dquat))
 
+(defun* dquat-rotation-from-quat! ((out-dquat dquat) (quat quat))
+    (:result dquat :abbrev q->dqrot!)
+  (with-dquat (o out-dquat)
+    (with-quat (q quat)
+      (psetf orw qw orx qx ory qy orz qz odw 0.0 odx 0.0 ody 0.0 odz 0.0)))
+  out-dquat)
+
+(defun* dquat-rotation-from-quat ((quat quat)) (:result dquat :abbrev q->dqrot)
+  (dquat-rotation-from-quat! (dquat) quat))
+
 (defun* dquat-rotate! ((out-dquat dquat) (dquat dquat) (vec vec))
     (:result dquat :abbrev dqrot!)
   (with-dquats ((o out-dquat) (d dquat))
@@ -212,6 +222,18 @@
 
 (defun* dquat-to-matrix ((dquat dquat)) (:result matrix :abbrev dq->m)
   (dquat-to-matrix! (matrix-identity) dquat))
+
+(defun* dquat-from-matrix! ((out-dquat dquat) (matrix matrix))
+    (:result dquat :abbrev m->dq!)
+  (with-dquat (o out-dquat)
+    (let ((rot (dquat-rotation-from-quat
+                (quat-from-matrix matrix)))
+          (tr (v->dqtr (mtr->v matrix))))
+      (dquat*! out-dquat tr rot)))
+  out-dquat)
+
+(defun* dquat-from-matrix ((matrix matrix)) (:result dquat :abbrev m->dq)
+  (dquat-from-matrix! (dquat) matrix))
 
 (defun* dquat-to-screw-parameters ((dquat dquat))
     (:result (values single-float single-float vec vec) :abbrev dq->screw)
