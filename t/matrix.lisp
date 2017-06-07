@@ -295,7 +295,7 @@
 
 (diag "view matrix")
 (with-matrices ((o (mid))
-                (r (matrix -0.7071068 0 0.7071068 -1 0 1 0 0 -0.7071068 0 -0.7071068 0 0 0 0 1)))
+                (r (matrix -0.7071068 0 -0.7071068 -1 0 1 0 0 0.7071068 0 -0.7071068 0 0 0 0 1)))
   (ok (m~ (mkview! o (vec 1 0 0) (vec 0 0 1) (vec 0 1 0)) r))
   (ok (m~ o r))
   (ok (m~ (mkview (vec 1 0 0) (vec 0 0 1) (vec 0 1 0)) r))
