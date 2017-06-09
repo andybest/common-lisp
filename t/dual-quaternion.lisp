@@ -66,7 +66,7 @@
   (is d2dz 800))
 
 (diag "identity")
-(with-dquats ((d (dqid)) (r (dquat (quat 1 0 0 0) (quat 0 0 0 0))))
+(with-dquats ((d (dqid)) (r (dquat (qid) (quat))))
   (is d r)
   (is +dqid+ r))
 
@@ -103,7 +103,7 @@
   (is (dqnormalize! o d) r)
   (is o r)
   (is (dqnormalize d) r)
-  (is (dqnormalize (dquat (quat 2 0 0 0) (quat 0 0 0 0))) +dqid+))
+  (is (dqnormalize (dquat (quat 2 0 0 0) (quat))) +dqid+))
 
 (diag "negate")
 (pass "redundant")

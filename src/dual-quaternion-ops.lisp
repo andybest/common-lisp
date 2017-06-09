@@ -33,7 +33,7 @@
   out-dquat)
 
 (defun* dquat-copy ((dquat dquat)) (:result dquat :abbrev dqcp)
-  (dquat-copy! (dquat) dquat))
+  (dquat-copy! (dquat-identity) dquat))
 
 (defun* dquat+! ((out-dquat dquat) (dquat1 dquat) (dquat2 dquat))
     (:result dquat :abbrev dq+!)
@@ -43,7 +43,7 @@
   out-dquat)
 
 (defun* dquat+ ((dquat1 dquat) (dquat2 dquat)) (:result dquat :abbrev dq+)
-  (dquat+! (dquat) dquat1 dquat2))
+  (dquat+! (dquat-identity) dquat1 dquat2))
 
 (defun* dquat-! ((out-dquat dquat) (dquat1 dquat) (dquat2 dquat))
     (:result dquat :abbrev dq-!)
@@ -53,7 +53,7 @@
   out-dquat)
 
 (defun* dquat- ((dquat1 dquat) (dquat2 dquat)) (:result dquat :abbrev dq-)
-  (dquat-! (dquat) dquat1 dquat2))
+  (dquat-! (dquat-identity) dquat1 dquat2))
 
 (defun* dquat*! ((out-dquat dquat) (dquat1 dquat) (dquat2 dquat))
     (:result dquat :abbrev dq*!)
@@ -67,7 +67,7 @@
   out-dquat)
 
 (defun* dquat* ((dquat1 dquat) (dquat2 dquat)) (:result dquat :abbrev dq*)
-  (dquat*! (dquat) dquat1 dquat2))
+  (dquat*! (dquat-identity) dquat1 dquat2))
 
 (defun* dquat-scale! ((out-dquat dquat) (dquat dquat) (scalar single-float))
     (:result dquat :abbrev dqscale!)
@@ -78,7 +78,7 @@
 
 (defun* dquat-scale ((dquat dquat) (scalar single-float))
     (:result dquat :abbrev dqscale)
-  (dquat-scale! (dquat) dquat scalar))
+  (dquat-scale! (dquat-identity) dquat scalar))
 
 (defun* dquat-conjugate! ((out-dquat dquat) (dquat dquat))
     (:result dquat :abbrev dqconj!)
@@ -88,7 +88,7 @@
   out-dquat)
 
 (defun* dquat-conjugate ((dquat dquat)) (:result dquat :abbrev dqconj)
-  (dquat-conjugate! (dquat) dquat))
+  (dquat-conjugate! (dquat-identity) dquat))
 
 (defun* dquat-conjugate-full! ((out-dquat dquat) (dquat dquat))
     (:result dquat :abbrev dqconjf!)
@@ -98,7 +98,7 @@
   out-dquat)
 
 (defun* dquat-conjugate-full ((dquat dquat)) (:result dquat :abbrev dqconjf)
-  (dquat-conjugate-full! (dquat) dquat))
+  (dquat-conjugate-full! (dquat-identity) dquat))
 
 (defun* dquat-apply! ((out-dquat dquat) (dquat1 dquat) (dquat2 dquat))
     (:result dquat :abbrev dqapply!)
@@ -109,7 +109,7 @@
 
 (defun* dquat-apply ((dquat1 dquat) (dquat2 dquat))
     (:result dquat :abbrev dqapply)
-  (dquat-apply! (dquat) dquat1 dquat2))
+  (dquat-apply! (dquat-identity) dquat1 dquat2))
 
 (defun* dquat-magnitude-squared ((dquat dquat))
     (:result single-float :abbrev dqmagsq)
@@ -127,14 +127,14 @@
   out-dquat)
 
 (defun* dquat-normalize ((dquat dquat)) (:result dquat :abbrev dqnormalize)
-  (dquat-normalize! (dquat) dquat))
+  (dquat-normalize! (dquat-identity) dquat))
 
 (defun* dquat-negate! ((out-dquat dquat) (dquat dquat))
     (:result dquat :abbrev dqneg!)
   (dquat-scale! out-dquat dquat -1.0))
 
 (defun* dquat-negate ((dquat dquat)) (:result dquat :abbrev dqneg)
-  (dquat-negate! (dquat) dquat))
+  (dquat-negate! (dquat-identity) dquat))
 
 (defun* dquat-dot ((dquat1 dquat) (dquat2 dquat))
     (:result single-float :abbrev dqdot)
@@ -149,7 +149,7 @@
   out-dquat)
 
 (defun* dquat-inverse ((dquat dquat)) (:result dquat :abbrev dqinv)
-  (dquat-inverse! (dquat) dquat))
+  (dquat-inverse! (dquat-identity) dquat))
 
 (defun* dquat-translation-to-vec! ((out-vec vec) (dquat dquat))
     (:result vec :abbrev dqtr->v!)
@@ -195,12 +195,12 @@
 (defun* dquat-rotation-from-quat! ((out-dquat dquat) (quat quat))
     (:result dquat :abbrev q->dqrot!)
   (with-dquat (o out-dquat)
-    (with-quat (q quat)
-      (psetf orw qw orx qx ory qy orz qz odw 0.0 odx 0.0 ody 0.0 odz 0.0)))
+    (qcp! or quat)
+    (qzero! od))
   out-dquat)
 
 (defun* dquat-rotation-from-quat ((quat quat)) (:result dquat :abbrev q->dqrot)
-  (dquat-rotation-from-quat! (dquat) quat))
+  (dquat-rotation-from-quat! (dquat-identity) quat))
 
 (defun* dquat-rotate! ((out-dquat dquat) (dquat dquat) (vec vec))
     (:result dquat :abbrev dqrot!)
@@ -209,7 +209,7 @@
   out-dquat)
 
 (defun* dquat-rotate ((dquat dquat) (vec vec)) (:result dquat :abbrev dqrot)
-  (dquat-rotate! (dquat) dquat vec))
+  (dquat-rotate! (dquat-identity) dquat vec))
 
 (defun* dquat-to-matrix! ((out-matrix matrix) (dquat dquat))
     (:result matrix :abbrev dq->m!)
@@ -228,12 +228,13 @@
   (with-dquat (o out-dquat)
     (let ((rot (dquat-rotation-from-quat
                 (quat-from-matrix matrix)))
-          (tr (v->dqtr (mtr->v matrix))))
+          (tr (dquat-translation-from-vec
+               (matrix-translation-to-vec matrix))))
       (dquat*! out-dquat tr rot)))
   out-dquat)
 
 (defun* dquat-from-matrix ((matrix matrix)) (:result dquat :abbrev m->dq)
-  (dquat-from-matrix! (dquat) matrix))
+  (dquat-from-matrix! (dquat-identity) matrix))
 
 (defun* dquat-to-screw-parameters ((dquat dquat))
     (:result (values single-float single-float vec vec) :abbrev dq->screw)
@@ -266,7 +267,7 @@
 (defun* dquat-from-screw-parameters ((angle single-float) (pitch single-float)
                                      (direction vec) (moment vec))
     (:result dquat :abbrev screw->dq)
-  (dquat-from-screw-parameters! (dquat) angle pitch direction moment))
+  (dquat-from-screw-parameters! (dquat-identity) angle pitch direction moment))
 
 (defun* dquat-sclerp! ((out-dquat dquat) (dquat1 dquat) (dquat2 dquat)
                        (coeff single-float))
@@ -279,7 +280,7 @@
 
 (defun* dquat-sclerp ((dquat1 dquat) (dquat2 dquat) (coeff single-float))
     (:result dquat :abbrev dqsclerp)
-  (dquat-sclerp! (dquat) dquat1 dquat2 coeff))
+  (dquat-sclerp! (dquat-identity) dquat1 dquat2 coeff))
 
 (defun* dquat-nlerp! ((out-dquat dquat) (dquat1 dquat) (dquat2 dquat)
                       (coeff single-float))
@@ -288,4 +289,4 @@
 
 (defun* dquat-nlerp ((dquat1 dquat) (dquat2 dquat) (coeff single-float))
     (:result dquat :abbrev dqnlerp)
-  (dquat-nlerp! (dquat) dquat1 dquat2 coeff))
+  (dquat-nlerp! (dquat-identity) dquat1 dquat2 coeff))

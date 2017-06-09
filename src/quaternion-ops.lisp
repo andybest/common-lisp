@@ -12,6 +12,14 @@
   (define-constant +identity-quaternion+ (quat-identity) :test #'equalp)
   (define-constant +qid+ (quat-identity) :test #'equalp))
 
+(defun* quat-zero! ((quat quat)) (:result quat :abbrev qzero!)
+  (with-quat (q quat)
+    (psetf qw 0.0 qx 0.0 qy 0.0 qz 0.0))
+  quat)
+
+(defun* quat-zero () (:result quat :abbrev qzero)
+  (quat))
+
 (defun* quat= ((quat1 quat) (quat2 quat)) (:result boolean :abbrev q=)
   (with-quats ((q1 quat1) (q2 quat2))
     (and (= q1w q2w)
@@ -34,7 +42,7 @@
   out-quat)
 
 (defun* quat-copy ((quat quat)) (:result quat :abbrev qcp)
-  (quat-copy! (quat) quat))
+  (quat-copy! (quat-identity) quat))
 
 (defun* quat+! ((out-quat quat) (quat1 quat) (quat2 quat))
     (:result quat :abbrev q+!)
@@ -46,7 +54,7 @@
   out-quat)
 
 (defun* quat+ ((quat1 quat) (quat2 quat)) (:result quat :abbrev q+)
-  (quat+! (quat) quat1 quat2))
+  (quat+! (quat-identity) quat1 quat2))
 
 (defun* quat-! ((out-quat quat) (quat1 quat) (quat2 quat))
     (:result quat :abbrev q-!)
@@ -58,7 +66,7 @@
   out-quat)
 
 (defun* quat- ((quat1 quat) (quat2 quat)) (:result quat :abbrev q-)
-  (quat-! (quat) quat1 quat2))
+  (quat-! (quat-identity) quat1 quat2))
 
 (defun* quat*! ((out-quat quat) (quat1 quat) (quat2 quat))
     (:result quat :abbrev q*!)
@@ -70,7 +78,7 @@
   out-quat)
 
 (defun* quat* ((quat1 quat) (quat2 quat)) (:result quat :abbrev q*)
-  (quat*! (quat) quat1 quat2))
+  (quat*! (quat-identity) quat1 quat2))
 
 (defun* quat-scale! ((out-quat quat) (quat quat) (scalar single-float))
     (:result quat :abbrev qscale!)
@@ -83,7 +91,7 @@
 
 (defun* quat-scale ((quat quat) (scalar single-float))
     (:result quat :abbrev qscale)
-  (quat-scale! (quat) quat scalar))
+  (quat-scale! (quat-identity) quat scalar))
 
 (defun* quat-cross! ((out-quat quat) (quat1 quat) (quat2 quat))
     (:result quat :abbrev qcross!)
@@ -94,7 +102,7 @@
    0.5))
 
 (defun* quat-cross ((quat1 quat) (quat2 quat)) (:result quat :abbrev qcross)
-  (quat-cross! (quat) quat1 quat2))
+  (quat-cross! (quat-identity) quat1 quat2))
 
 (defun* quat-conjugate! ((out-quat quat) (quat quat))
     (:result quat :abbrev qconj!)
@@ -106,7 +114,7 @@
   out-quat)
 
 (defun* quat-conjugate ((quat quat)) (:result quat :abbrev qconj)
-  (quat-conjugate! (quat) quat))
+  (quat-conjugate! (quat-identity) quat))
 
 (defun* quat-magnitude-squared ((quat quat))
     (:result single-float :abbrev qmagsq)
@@ -124,13 +132,13 @@
   out-quat)
 
 (defun* quat-normalize ((quat quat)) (:result quat :abbrev qnormalize)
-  (quat-normalize! (quat) quat))
+  (quat-normalize! (quat-identity) quat))
 
 (defun* quat-negate! ((out-quat quat) (quat quat)) (:result quat :abbrev qneg!)
   (quat-scale! out-quat quat -1.0))
 
 (defun* quat-negate ((quat quat)) (:result quat :abbrev qneg)
-  (quat-negate! (quat) quat))
+  (quat-negate! (quat-identity) quat))
 
 (defun* quat-dot ((quat1 quat) (quat2 quat)) (:result single-float :abbrev qdot)
   (with-quats ((q1 quat1) (q2 quat2))
@@ -145,7 +153,7 @@
   out-quat)
 
 (defun* quat-inverse ((quat quat)) (:result quat :abbrev qinv)
-  (quat-inverse! (quat) quat))
+  (quat-inverse! (quat-identity) quat))
 
 (defun* quat-rotate! ((out-quat quat) (quat quat) (vec vec))
     (:result quat :abbrev qrot!)
@@ -161,7 +169,7 @@
   out-quat)
 
 (defun* quat-rotate ((quat quat) (vec vec)) (:result quat :abbrev qrot)
-  (quat-rotate! (quat) quat vec))
+  (quat-rotate! (quat-identity) quat vec))
 
 (defun* quat-to-vec! ((out-vec vec) (quat quat)) (:result vec :abbrev q->v!)
   (with-vector (v out-vec)
@@ -256,7 +264,7 @@
   out-quat)
 
 (defun* quat-from-matrix ((matrix matrix)) (:result quat :abbrev m->q)
-  (quat-from-matrix! (quat) matrix))
+  (quat-from-matrix! (quat-identity) matrix))
 
 (defun* quat-slerp! ((out-quat quat) (quat1 quat) (quat2 quat)
                      (coeff single-float))
@@ -286,4 +294,4 @@
 
 (defun* quat-slerp ((quat1 quat) (quat2 quat) (coeff single-float))
     (:result quat :abbrev qslerp)
-  (quat-slerp! (quat) quat1 quat2 coeff))
+  (quat-slerp! (quat-identity) quat1 quat2 coeff))

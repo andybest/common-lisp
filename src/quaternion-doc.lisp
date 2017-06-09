@@ -33,6 +33,15 @@ Alias: QID!")
   "Create an identity quaternion.
 Alias: QID")
 
+(defdoc (quat-zero! function)
+  "Set each component of QUAT to zero.
+Alias: QZERO!")
+
+(defdoc (quat-zero function)
+  "Create a new zero quaternion. This is the same as calling #'QUAT with no ~
+arguments.
+Alias: QZERO")
+
 (defdoc (quat= function)
   "Check if the components of QUAT1 are equal to the components of QUAT2.
 Alias Q=")

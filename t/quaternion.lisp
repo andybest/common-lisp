@@ -9,7 +9,7 @@
 (is-type (quat) '(simple-array single-float (4)))
 
 (diag "accessors")
-(is (qref (quat) 0) 1)
+(is (qref (quat) 0) 0)
 (is (qref (quat) 1) 0)
 (is (qref (quat) 2) 0)
 (is (qref (quat) 3) 0)
@@ -58,7 +58,7 @@
              (q2 (quat 1e-8 1e-8 1e-8 1e-8)))
   (ok (q= q1 q1))
   (ok (q~ (q+ q1 q2) q1))
-  (ok (q~ q2 (quat 0 0 0 0))))
+  (ok (q~ q2 (quat))))
 
 (diag "copy")
 (with-quats ((q (quat 0.34003425 -0.4920528 0.8754709 0.6535034)) (o (quat)))

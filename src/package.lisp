@@ -70,6 +70,7 @@
   (:export #:quat #:with-quat #:with-quats #:qref
            #:+identity-quaternion+ #:+qid+
            #:quat-identity! #:qid! #:quat-identity #:qid
+           #:quat-zero! #:qzero! #:quat-zero #:qzero
            #:quat= #:q=
            #:quat~ #:q~
            #:quat-copy! #:qcp! #:quat-copy #:qcp

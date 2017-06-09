@@ -7,8 +7,8 @@
                   (:conc-name dq-)
                   (:copier nil)
                   (:predicate nil))
-  (real (quat 1 0 0 0) :type quat)
-  (dual (quat 0 0 0 0) :type quat))
+  (real (quat) :type quat)
+  (dual (quat) :type quat))
 
 (defmacro with-dquat ((prefix dquat) &body body)
   `(with-quats ((,prefix ,dquat)
