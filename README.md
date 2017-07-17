@@ -7,9 +7,10 @@ A high performance math library useful for making games.
 
 ## Overview
 
-A library written in portable Common Lisp, providing support for common math functions related to
-game development. Supported are 3-component vectors, 4x4 matrices, quaternions, and other high-level
-functions one may need when writing a game.
+A library written in portable Common Lisp, providing support for common math
+functions related to game development. Supported are 3-component vectors, 4x4
+matrices, quaternions, and other high-level functions one may need when writing
+a game.
 
 ## Install
 
