@@ -96,23 +96,26 @@
                      (list id x y w h)))))
 
 (defun load-image (file)
-  (opticl:read-image-file file))
+  (let ((image (opticl:read-image-file file)))
+    (values image
+            (array-dimension image 0)
+            (array-dimension image 1))))
 
 (defun collect-rects (path &key recursivep)
   (let ((rects))
     (fs-utils:map-files
      path
-     (lambda (x)
-       (destructuring-bind (w h &rest ignore) (array-dimensions (load-image x))
-         (declare (ignore ignore))
-         (push (list x w h) rects)))
+     (lambda (file)
+       (multiple-value-bind (data w h) (load-image file)
+         (declare (ignore data))
+         (push (list file w h) rects)))
      :recursivep recursivep)
     (nreverse rects)))
 
 (defun write-data (data out-file)
-  (let ((data-file (make-pathname :defaults out-file :type "sexp"))
+  (let ((out-file (make-pathname :defaults out-file :type "sexp"))
         (data (sort data #'string< :key (lambda (x) (getf x :id)))))
-    (with-open-file (out data-file
+    (with-open-file (out out-file
                          :direction :output
                          :if-exists :supersede
                          :if-does-not-exist :create)
