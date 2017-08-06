@@ -4,7 +4,7 @@ A spritesheet packer for games.
 
 ## Overview
 
-This simple utility will pack images into a larger spritesheet, suitable for game development. It uses the 'maxrects' algorithm as described here: http://clb.demon.fi/files/RectangleBinPack.pdf
+This simple utility will pack images into a larger spritesheet, suitable for game development. It uses the 'maxrects' algorithm as described [here](http://clb.demon.fi/files/RectangleBinPack.pdf).
 
 ## Install
 
