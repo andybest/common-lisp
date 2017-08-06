@@ -4,7 +4,7 @@ A spritesheet packer for games.
 
 ## Overview
 
-This simple utility will pack images into a larger spritesheet, suitable for game development.
+This simple utility will pack images into a larger spritesheet, suitable for game development. It uses the 'maxrects' algorithm as described here: http://clb.demon.fi/files/RectangleBinPack.pdf
 
 ## Install
 
@@ -18,10 +18,14 @@ repository into your `local-projects` directory and issue the following in your 
 
 ## Usage
 
+Create a spritesheet with the following:
+
 ``` lisp
-(let ((rects (collect-rects #p"/path/to/sprites" :recursivep t)))
-  (make-atlas rects :out-file #p"/path/to/output" :width 1024 :height 1024))
+(let ((rects (collect-rects #p"/path/to/image/files" :recursivep t)))
+  (make-atlas rects :out-file #p"/path/to/spritesheet.png" :width 1024 :height 1024))
 ```
+
+This will write an image to disk, as well as a metadata file of the same name with the extension ".sexp".
 
 ## License
 
