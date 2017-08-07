@@ -4,5 +4,5 @@
   (:nicknames #:box.packer)
   (:use #:cl
         #:alexandria)
-  (:export #:collect-rects
-           #:make-atlas))
+  (:export #:make-atlas
+           #:make-atlas-from-directory))

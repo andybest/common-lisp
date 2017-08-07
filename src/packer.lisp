@@ -82,18 +82,22 @@
       (values rect (resolve-free-rects rect free-rects)))))
 
 (defun sort-rects (rects)
-  (flet ((sort-by (list fn)
-           (stable-sort list #'> :key (lambda (x) (apply fn (rest x))))))
+  (labels ((apply-fn (fn rect)
+             (destructuring-bind (file id w h) rect
+               (declare (ignore file id))
+               (funcall fn w h)))
+           (sort-by (rects fn)
+             (stable-sort rects #'> :key (lambda (x) (apply-fn fn x)))))
     (sort-by (sort-by rects #'min) #'max)))
 
 (defun pack-rects (rects width height)
   (loop :with free-rects = (list (list 0 0 width height))
-        :for (id rect-width rect-height) :in (sort-rects rects)
+        :for (file id rect-width rect-height) :in (sort-rects rects)
         :collect (multiple-value-bind (rect new-free-rects)
                      (place-rect rect-width rect-height free-rects)
                    (setf free-rects new-free-rects)
                    (with-rect (x y w h) rect
-                     (list id x y w h)))))
+                     (list file id x y w h)))))
 
 (defun load-image (file)
   (let ((image (opticl:read-image-file file)))
@@ -101,18 +105,23 @@
             (array-dimension image 0)
             (array-dimension image 1))))
 
-(defun collect-rects (path &key recursivep)
-  (let ((rects))
+(defun collect-files (path &key recursivep)
+  (let ((files))
     (fs-utils:map-files
      path
-     (lambda (file)
-       (multiple-value-bind (data w h) (load-image file)
-         (declare (ignore data))
-         (push (list file w h) rects)))
+     (lambda (x) (push (cons x (make-id path x)) files))
      :recursivep recursivep)
-    (nreverse rects)))
+    files))
 
-(defun write-data (data out-file)
+(defun make-rects (files)
+  (let ((rects))
+    (loop :for (file . id) :in files
+          :do (multiple-value-bind (data w h) (load-image file)
+                (declare (ignore data))
+                (push (list file id w h) rects)))
+    rects))
+
+(defun write-metadata (data out-file)
   (let ((out-file (make-pathname :defaults out-file :type "sexp"))
         (data (sort data #'string< :key (lambda (x) (getf x :id)))))
     (with-open-file (out out-file
@@ -121,14 +130,32 @@
                          :if-does-not-exist :create)
       (write data :stream out))))
 
-(defun make-atlas (rects &key out-file width height)
+(defun make-id (root file)
+  (namestring
+   (make-pathname
+    :defaults
+    (uiop/pathname:enough-pathname
+     file
+     (uiop/pathname:ensure-directory-pathname root))
+    :type nil)))
+
+(defun make-atlas (file-specs &key out-file width height)
   (loop :with atlas = (opticl:make-8-bit-rgba-image width height)
-        :for (file x y w h) :in (pack-rects rects width height)
-        :for id = (pathname-name file)
+        :with rects = (make-rects file-specs)
+        :for (file id x y w h) :in (pack-rects rects width height)
         :for sprite = (opticl:coerce-image (load-image file) 'opticl:rgba-image)
         :do (opticl:do-pixels (i j) sprite
               (setf (opticl:pixel atlas (+ i x) (+ j y))
                     (opticl:pixel sprite i j)))
         :collect (list :id id :x x :y y :w w :h h) :into data
-        :finally (opticl:write-image-file out-file atlas)
-                 (return (write-data data out-file))))
+        :finally (return
+                   (values
+                    (write-metadata data out-file)
+                    (opticl:write-image-file out-file atlas)))))
+
+(defun make-atlas-from-directory (path &key recursivep out-file width height)
+  (let ((file-specs (collect-files path :recursivep recursivep)))
+    (make-atlas file-specs
+                :out-file out-file
+                :width width
+                :height height)))
