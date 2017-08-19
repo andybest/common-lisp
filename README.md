@@ -23,7 +23,7 @@ A spritesheet is created from a collection of smaller files. To tell this librar
 - Automatically scan for files in the current directory, and add them to a spritesheet:
 
 ``` lisp
-(make-atlas-from-directory #p"/home/user/sprites"
+(make-atlas-from-directory "/home/user/sprites"
                            :out-file #p"/tmp/spritesheet.png"
                            :width 1024
                            :height 1024)
@@ -32,7 +32,7 @@ A spritesheet is created from a collection of smaller files. To tell this librar
 - Automatically scan for files in the current directory recursively, and add them to a spritesheet:
 
 ``` lisp
-(make-atlas-from-directory #p"/home/user/sprites"
+(make-atlas-from-directory "/home/user/sprites"
                            :recursivep t
                            :out-file #p"/tmp/spritesheet.png"
                            :width 1024

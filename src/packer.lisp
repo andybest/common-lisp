@@ -10,7 +10,7 @@
     (min (- w width) (- h height))))
 
 (defun find-free-rect (width height rects)
-  (loop :with min-rect = (car rects)
+  (loop :with min-rect = (first rects)
         :with min-delta = (delta-weight width height min-rect)
         :for rect :in (rest rects)
         :for current-delta = (delta-weight width height rect)
