@@ -50,9 +50,9 @@ Example use:
 )
 
 (with-vectors ((v1 foo-vector)
-               (v2 bar-vector)
+               (v2 bar-vector))
   ;; symbol accessors for any number of vectors can now be used
-))
+)
 ```
 
 Quats use x, y, z, w; matrices use 00 to 33; dquats are like quats except with r and d
