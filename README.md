@@ -40,17 +40,22 @@ Each of the above data types also have several ways of accessing their members.
 Vecs, quats, and matrices can be accessed by index with the functions `vref`, `qref`,
 and `mref`, respectively. Macros for locally binding members to symbols are available
 under the names `with-X` where `X` is `vector`, `quat`, `dquat`, `matrix`,
-or their plural forms. Example use:
+or their plural forms.
+
+Example use:
+
 ```lisp
 (with-vector (v my-vector)
-  ; symbols vx, vy, and vz now available as accessors
+  ;; symbols vx, vy, and vz now available as accessors
 )
+
 (with-vectors ((v1 foo-vector)
-              (v2 bar-vector)
+               (v2 bar-vector)
               ...)
-  ; symbol accessors for any number of vectors can now be used
+  ;; symbol accessors for any number of vectors can now be used
 )
 ```
+
 Quats use x, y, z, w; matrices use 00 to 33; dquats are like quats except with r and d
 added to the front of the member names, for the real and the dual part respectively.
 
