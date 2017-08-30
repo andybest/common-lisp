@@ -51,7 +51,7 @@ Example use:
 
 (with-vectors ((v1 foo-vector)
                (v2 bar-vector)
-              ...)
+  ...)
   ;; symbol accessors for any number of vectors can now be used
 )
 ```
