@@ -38,7 +38,7 @@ also without the dash. For example, `(vec)` produces a fresh vector.
 
 Each of the above data types also have several ways of accessing their members.
 Vecs, quats, and matrices can be accessed by index with the functions `vref`, `qref`,
-and `mref`, respectively. Macros for locally binding members to symbols is available
+and `mref`, respectively. Macros for locally binding members to symbols are available
 under the names `with-X` where `X` is `vector`, `quat`, `dquat`, `matrix`,
 or their plural forms. Example use:
 ```lisp
