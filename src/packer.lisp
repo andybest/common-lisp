@@ -10,6 +10,7 @@
     (min (- w width) (- h height))))
 
 (defun find-free-rect (width height rects)
+  (unless rects (error "Cannot pack anymore rectangles."))
   (loop :with min-rect = (first rects)
         :with min-delta = (delta-weight width height min-rect)
         :for rect :in (rest rects)
