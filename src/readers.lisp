@@ -10,25 +10,25 @@
     (fast-io:fast-read-sequence octet-vector *byte-buffer*)
     (funcall processor octet-vector)))
 
-(defun read-uint-be (byte-count)
+(defun read-uint-be (byte-count &key (processor #'identity))
   (let ((value 0))
     (loop :for i :from (* (1- byte-count) 8) :downto 0 :by 8
           :for byte = (fast-io:fast-read-byte *byte-buffer*)
           :do (setf (ldb (byte 8 i) value) byte))
-    value))
+    (funcall processor value)))
 
-(defun read-uint-le (byte-count)
+(defun read-uint-le (byte-count &key (processor #'identity))
   (let ((value 0))
     (loop :for i :below (* byte-count 8) :by 8
           :for byte = (fast-io:fast-read-byte *byte-buffer*)
           :do (setf (ldb (byte 8 i) value) byte))
-    value))
+    (funcall processor value)))
 
-(defun read-int-be (byte-count)
-  (%sign-extend (read-uint-be byte-count) byte-count))
+(defun read-int-be (byte-count &key (processor #'identity))
+  (%sign-extend (read-uint-be byte-count :processor processor) byte-count))
 
-(defun read-int-le (byte-count)
-  (%sign-extend (read-uint-le byte-count) byte-count))
+(defun read-int-le (byte-count &key (processor #'identity))
+  (%sign-extend (read-uint-le byte-count :processor processor) byte-count))
 
 (defun read-string (&key bytes (encoding :ascii) (processor #'identity)
                       null-terminated)

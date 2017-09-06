@@ -19,5 +19,5 @@
   ((:file "package")
    (:file "common")
    (:file "processors")
-   (:file "operations")
+   (:file "readers")
    (:file "object")))
