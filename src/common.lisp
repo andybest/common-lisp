@@ -1,7 +1,5 @@
 (in-package :parsley)
 
-(deftype u1 () '(unsigned-byte 8))
-
 (defun %uncompress-octets (octet-vector compression-scheme)
   (chipz:decompress nil compression-scheme octet-vector
                     :buffer-size (* (length octet-vector) 2)))

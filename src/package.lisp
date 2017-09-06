@@ -2,13 +2,15 @@
 
 (defpackage #:parsley
   (:use #:cl)
-  (:export #:load-stream
-           #:load-file
-           #:parse
+  (:export #:*byte-buffer*
            #:octets=
            #:read-bytes
            #:read-uint-be
            #:read-uint-le
            #:read-int-be
            #:read-int-le
-           #:read-string))
+           #:read-string
+           #:uncompress-bzip2
+           #:uncompress-gzip
+           #:uncompress-zlib
+           #:uncompress-deflate))
