@@ -1,5 +1,5 @@
 (asdf:defsystem #:parsley
-  :description ""
+  :description "A toolset for parsing binary data formats."
   :author ("Michael Fiano <michael.fiano@gmail.com>")
   :maintainer "Michael Fiano <michael.fiano@gmail.com>"
   :license "MIT"

@@ -1,19 +1,21 @@
 # new-project
 
-TODO
+A toolset for parsing binary data formats.
 
 ## Overview
 
-TODO
+Currently, this just defines some common readers for primitive binary data
+types. This project is of pre-alpha status, and its API or scope may change
+drastically at any time.
 
 ## Install
 
-This system is not yet available to be installed automatically with Quicklisp. To manually install
-using Quicklisp, clone this repository into your local-projects directory and issue the following in
-your REPL:
+This system is not yet available to be installed automatically with Quicklisp.
+To manually install using Quicklisp, clone this repository into your
+local-projects directory and issue the following in your REPL:
 
 ```lisp
-(ql:quickload :new-project)
+(ql:quickload :parsley)
 ```
 
 ## Usage
