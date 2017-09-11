@@ -8,10 +8,6 @@ This simple utility will pack images into a larger spritesheet, suitable for gam
 
 ## Install
 
-This system is not yet available to be installed automatically
-with [Quicklisp](https://www.quicklisp.org). To manually install using Quicklisp, clone this
-repository into your `local-projects` directory and issue the following in your REPL:
-
 ``` lisp
 (ql:quickload :gamebox-sprite-packer)
 ```
