@@ -1,11 +1,11 @@
-# new-project
+# parsley
 
 A toolset for parsing binary data formats.
 
 ## Overview
 
 Currently, this just defines some common readers for primitive binary data
-types. This project is of pre-alpha status, and its API or scope may change
+types. This project is of alpha status, and its API or scope may change
 drastically at any time.
 
 ## Install
@@ -17,10 +17,6 @@ local-projects directory and issue the following in your REPL:
 ```lisp
 (ql:quickload :parsley)
 ```
-
-## Usage
-
-TODO
 
 ## License
 
