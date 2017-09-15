@@ -106,12 +106,12 @@
             (array-dimension image 0)
             (array-dimension image 1))))
 
-(defun collect-files (path &key recursivep)
+(defun collect-files (path &key recursive)
   (let ((files))
     (fs-utils:map-files
      path
      (lambda (x) (push (cons x (make-id path x)) files))
-     :recursivep recursivep)
+     :recursive recursive)
     files))
 
 (defun make-rects (files)
@@ -123,7 +123,7 @@
     rects))
 
 (defun write-metadata (data out-file)
-  (let ((out-file (make-pathname :defaults out-file :type "sexp"))
+  (let ((out-file (make-pathname :defaults out-file :type "spec"))
         (data (sort data #'string< :key (lambda (x) (getf x :id)))))
     (with-open-file (out out-file
                          :direction :output
@@ -140,8 +140,8 @@
      (uiop/pathname:ensure-directory-pathname root))
     :type nil)))
 
-(defun normalize-coords (x y w h &key width height normalizep)
-  (if normalizep
+(defun normalize-coords (x y w h &key width height normalize)
+  (if normalize
       (let ((x (float (/ x width)))
             (y (float (/ y height)))
             (w (float (/ w width)))
@@ -149,14 +149,14 @@
         (list x (+ x w) y (+ y h) w h))
       (list x (+ x w) y (+ y h) w h)))
 
-(defun make-atlas (file-specs &key out-file width height normalizep)
+(defun make-atlas (file-specs &key out-file width height normalize)
   (loop :with atlas = (opticl:make-8-bit-rgba-image width height)
         :with rects = (make-rects file-specs)
         :for (file id x y w h) :in (pack-rects rects width height)
         :for (x1 x2 y1 y2 nw nh) = (normalize-coords x y w h
                                                          :width width
                                                          :height height
-                                                         :normalizep normalizep)
+                                                         :normalize normalize)
         :for sprite = (opticl:coerce-image (load-image file) 'opticl:rgba-image)
         :do (opticl:do-pixels (i j) sprite
               (setf (opticl:pixel atlas (+ i x) (+ j y))
@@ -167,11 +167,11 @@
                     (write-metadata data out-file)
                     (opticl:write-image-file out-file atlas)))))
 
-(defun make-atlas-from-directory (path &key recursivep out-file width height
-                                         normalizep)
-  (let ((file-specs (collect-files path :recursivep recursivep)))
+(defun make-atlas-from-directory (path &key recursive out-file width height
+                                         normalize)
+  (let ((file-specs (collect-files path :recursive recursive)))
     (make-atlas file-specs
                 :out-file out-file
                 :width width
                 :height height
-                :normalizep normalizep)))
+                :normalize normalize)))
