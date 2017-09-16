@@ -146,22 +146,22 @@
             (y (float (/ y height)))
             (w (float (/ w width)))
             (h (float (/ h height))))
-        (list x (+ x w) y (+ y h) w h))
-      (list x (+ x w) y (+ y h) w h)))
+        (list x (+ x w) y (+ y h)))
+      (list x (+ x w) y (+ y h))))
 
 (defun make-atlas (file-specs &key out-file width height normalize)
   (loop :with atlas = (opticl:make-8-bit-rgba-image width height)
         :with rects = (make-rects file-specs)
         :for (file id x y w h) :in (pack-rects rects width height)
-        :for (x1 x2 y1 y2 nw nh) = (normalize-coords x y w h
-                                                         :width width
-                                                         :height height
-                                                         :normalize normalize)
+        :for (x1 x2 y1 y2) = (normalize-coords x y w h
+                                               :width width
+                                               :height height
+                                               :normalize normalize)
         :for sprite = (opticl:coerce-image (load-image file) 'opticl:rgba-image)
         :do (opticl:do-pixels (i j) sprite
               (setf (opticl:pixel atlas (+ i x) (+ j y))
                     (opticl:pixel sprite i j)))
-        :collect (list :id id :x1 x1 :x2 x2 :y1 y1 :y2 y2 :w nw :h nh) :into data
+        :collect (list :id id :x1 x1 :x2 x2 :y1 y1 :y2 y2) :into data
         :finally (return
                    (values
                     (write-metadata data out-file)
