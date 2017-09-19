@@ -100,12 +100,6 @@
                    (with-rect (x y w h) rect
                      (list file id x y w h)))))
 
-(defun load-image (file)
-  (let ((image (opticl:read-image-file file)))
-    (values image
-            (array-dimension image 0)
-            (array-dimension image 1))))
-
 (defun collect-files (path &key recursive)
   (let ((files))
     (fs-utils:map-files
@@ -115,12 +109,9 @@
     files))
 
 (defun make-rects (files)
-  (let ((rects))
-    (loop :for (file . id) :in files
-          :do (multiple-value-bind (data w h) (load-image file)
-                (declare (ignore data))
-                (push (list file id w h) rects)))
-    rects))
+  (loop :for (file . id) :in files
+        :for image = (pngload:load-file file :decode nil)
+        :collect (list file id (pngload:height image) (pngload:width image))))
 
 (defun write-metadata (data out-file)
   (let ((out-file (make-pathname :defaults out-file :type "spec"))

@@ -14,6 +14,7 @@
                        (uiop/pathname:subpathname *load-pathname* "README.md"))
   :depends-on (#:uiop
                #:alexandria
+               #:pngload
                #:opticl
                #:fs-utils)
   :pathname "src"
