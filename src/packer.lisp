@@ -97,9 +97,7 @@
         :collect (multiple-value-bind (rect new-free-rects)
                      (place-rect rect-width rect-height free-rects)
                    (setf free-rects new-free-rects)
-                   (list file id rect)
-                   #++(with-rect (x y w h) rect
-                     (list file id x y w h)))))
+                   (list file id rect))))
 
 (defun collect-files (path &key recursive)
   (let ((files))
