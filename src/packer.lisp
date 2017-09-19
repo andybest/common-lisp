@@ -97,7 +97,8 @@
         :collect (multiple-value-bind (rect new-free-rects)
                      (place-rect rect-width rect-height free-rects)
                    (setf free-rects new-free-rects)
-                   (with-rect (x y w h) rect
+                   (list file id rect)
+                   #++(with-rect (x y w h) rect
                      (list file id x y w h)))))
 
 (defun collect-files (path &key recursive)
@@ -131,28 +132,34 @@
      (uiop/pathname:ensure-directory-pathname root))
     :type nil)))
 
-(defun normalize-coords (x y w h &key width height normalize)
-  (if normalize
-      (let ((x (float (/ x width)))
-            (y (float (/ y height)))
-            (w (float (/ w width)))
-            (h (float (/ h height))))
-        (list x (+ x w) y (+ y h)))
-      (list x (+ x w) y (+ y h))))
+(defun make-coords (rect width height normalize)
+  (flet ((%make-coords (x y w h)
+           (list :x1 x :y1 y :x2 (+ x w) :y2 (+ y h))))
+    (destructuring-bind (x y w h) rect
+      (if normalize
+          (let ((x (float (/ x width)))
+                (y (float (/ y height)))
+                (w (float (/ w width)))
+                (h (float (/ h height))))
+            (%make-coords x y w h))
+          (%make-coords x y w h)))))
+
+(defun write-sprite (atlas sprite rect)
+  (let ((sprite (opticl:coerce-image sprite 'opticl:rgba-image)))
+    (destructuring-bind (x y w h) rect
+      (declare (ignore w h))
+      (opticl:do-pixels (i j) sprite
+        (setf (opticl:pixel atlas (+ i x) (+ j y))
+              (opticl:pixel sprite i j))))))
 
 (defun make-atlas (file-specs &key out-file width height normalize)
   (loop :with atlas = (opticl:make-8-bit-rgba-image width height)
         :with rects = (make-rects file-specs)
-        :for (file id x y w h) :in (pack-rects rects width height)
-        :for (x1 x2 y1 y2) = (normalize-coords x y w h
-                                               :width width
-                                               :height height
-                                               :normalize normalize)
-        :for sprite = (opticl:coerce-image (load-image file) 'opticl:rgba-image)
-        :do (opticl:do-pixels (i j) sprite
-              (setf (opticl:pixel atlas (+ i x) (+ j y))
-                    (opticl:pixel sprite i j)))
-        :collect (list :id id :x1 x1 :x2 x2 :y1 y1 :y2 y2) :into data
+        :for (file id rect) :in (pack-rects rects width height)
+        :for sprite = (load-image file)
+        :for coords = (make-coords rect width height normalize)
+        :do (write-sprite atlas sprite rect)
+        :collect `(:id ,id ,@coords) :into data
         :finally (return
                    (values
                     (write-metadata data out-file)
