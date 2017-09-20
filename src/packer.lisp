@@ -132,7 +132,7 @@
 
 (defun make-coords (rect width height normalize)
   (flet ((%make-coords (x y w h)
-           (list :x1 x :y1 y :x2 (+ x w) :y2 (+ y h))))
+           (list :x x :y y :w w :h h)))
     (destructuring-bind (x y w h) rect
       (if normalize
           (let ((x (float (/ x width)))
@@ -154,7 +154,7 @@
   (loop :with atlas = (opticl:make-8-bit-rgba-image width height)
         :with rects = (make-rects file-specs)
         :for (file id rect) :in (pack-rects rects width height)
-        :for sprite = (load-image file)
+        :for sprite = (opticl:read-png-file file)
         :for coords = (make-coords rect width height normalize)
         :do (write-sprite atlas sprite rect)
         :collect `(:id ,id ,@coords) :into data
