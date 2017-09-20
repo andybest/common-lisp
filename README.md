@@ -94,6 +94,11 @@ You can also supply the `:normalize` argument to `make-atlas` or
 `make-atlas-from-directory` to map pixels to the [0..1] domain when writing the
 resulting metadata file. This is useful for use with OpenGL texture coordinates.
 
+Lastly, you can optionally supply the `:flip-y` argument to `make-atlas` or
+`make-atlas-from-directory` to flip the Y axis when writing coordinates to the
+metadata file. This is useful when using OpenGL which assumes the origin is at
+the bottom-left.
+
 ## License
 
 Copyright © 2017 Michael Fiano <michael.fiano@gmail.com>.
