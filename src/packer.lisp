@@ -134,6 +134,23 @@
         :for height = (pngload:height image)
         :collect (rect file id 0 0 width height)))
 
+(defun add-padding (rects padding)
+  (when (and padding (plusp padding))
+    (loop for r in rects
+          do (incf (slot-value r 'w) padding)
+             (incf (slot-value r 'h) padding)))
+  rects)
+
+(defun remove-padding (rects padding)
+  (when (and padding (plusp padding))
+    (loop with p1 = (floor padding 2)
+          with p2 = (- padding p1)
+          for r in rects
+          do (incf (slot-value r 'x) p1)
+             (incf (slot-value r 'y) p1)
+             (decf (slot-value r 'w) p2)
+             (decf (slot-value r 'h) p2)))
+  rects)
 (defgeneric make-coords (rect width height normalize flip-y)
   (:method (rect width height normalize flip-y)
     (with-slots (x y w h) rect
@@ -163,10 +180,11 @@
                          :if-does-not-exist :create)
       (write data :stream out))))
 
-(defun make-atlas (file-specs &key out-file width height normalize flip-y)
+(defun make-atlas (file-specs &key out-file width height normalize flip-y
+                                (padding 0))
   (loop :with atlas = (opticl:make-8-bit-rgba-image width height)
-        :with rects = (make-rects file-specs)
-        :for rect :in (pack-rects rects width height)
+        :with rects = (add-padding (make-rects file-specs) padding)
+        :for rect :in (remove-padding (pack-rects rects width height) padding)
         :for sprite = (opticl:read-png-file (file rect))
         :for coords = (make-coords rect width height normalize flip-y)
         :do (write-sprite atlas sprite rect)
@@ -177,11 +195,12 @@
                     (opticl:write-image-file out-file atlas)))))
 
 (defun make-atlas-from-directory (path &key recursive out-file width height
-                                         normalize flip-y)
+                                         normalize flip-y (padding 0))
   (let ((file-specs (collect-files path :recursive recursive)))
     (make-atlas file-specs
                 :out-file out-file
                 :width width
                 :height height
                 :normalize normalize
-                :flip-y flip-y)))
+                :flip-y flip-y
+                :padding padding)))
