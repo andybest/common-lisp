@@ -187,13 +187,13 @@ Alias: VDIR=")
 Alias: VPARALLELP")
 
 (defdoc (vec-lerp! function)
-  "Perform a linear interpolation between VEC1 and VEC2 by the interpolation coefficient COEFF, storing the result ~
-in OUT-VEC.
+  "Perform a linear interpolation between VEC1 and VEC2 by the interpolation ~
+coefficient COEFF, storing the result in OUT-VEC.
 Alias: VLERP!")
 
 (defdoc (vec-lerp function)
-  "Perform a linear interpolation between VEC1 and VEC2 by the interpolation coefficient COEFF, storing the result ~
-as a new vector.
+  "Perform a linear interpolation between VEC1 and VEC2 by the interpolation ~
+coefficient COEFF, storing the result as a new vector.
 Alias: VLERP")
 
 (defdoc (vec< function)
@@ -201,7 +201,8 @@ Alias: VLERP")
 Alias: V<")
 
 (defdoc (vec<= function)
-  "Check if each component of VEC1 is less than or equal to that component of VEC2.
+  "Check if each component of VEC1 is less than or equal to that component of ~
+VEC2.
 Alias: V<=")
 
 (defdoc (vec> function)
@@ -209,7 +210,8 @@ Alias: V<=")
 Alias: V>")
 
 (defdoc (vec< function)
-  "Check if each component of VEC1 is greater than or equal to that component of VEC2.
+  "Check if each component of VEC1 is greater than or equal to that component ~
+of VEC2.
 Alias: V>=")
 
 (defdoc (vec-min! function)

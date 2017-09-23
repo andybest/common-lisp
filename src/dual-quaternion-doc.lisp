@@ -1,17 +1,20 @@
 (in-package :gamebox-math)
 
 (defdoc (quat structure)
-  "A pair of quaternions used to describe a rotation and translation in 3-dimensions.")
+  "A pair of quaternions used to describe a rotation and translation in ~
+3-dimensions.")
 
 (defdoc (with-dquat macro)
   "A convenience macro for concisely accessing components of a dual quaternion.
-Example: (with-dquat (d dquat) (values drw ddw)) would allow accessing the W components of the real and dual parts of ~
-a dual quaternion as simply the symbols DRW and DDW.")
+Example: (with-dquat (d dquat) (values drw ddw)) would allow accessing the W ~
+components of the real and dual parts of a dual quaternion as simply the ~
+symbols DRW and DDW.")
 
 (defdoc (with-dquats macro)
-  "A convenience macro for concisely accessing components of multiple dual quaternions.
-Example: (with-dquats ((a dquat1) (b dquat2)) (values arw brw)) would access the W component of dquat1, and the W ~
-component of dquaternion.")
+  "A convenience macro for concisely accessing components of multiple dual ~
+quaternions.
+Example: (with-dquats ((a dquat1) (b dquat2)) (values arw brw)) would access ~
+the W component of dquat1, and the W component of dquaternion.")
 
 (defdoc (dquat function)
   "Create a new dual quaternion.")
@@ -29,7 +32,8 @@ Alias: DQID")
 Alias DQ=")
 
 (defdoc (dquat~ function)
-  "Check if the components of DQUAT1 are approximately equal to the components of DQUAT2.
+  "Check if the components of DQUAT1 are approximately equal to the components ~
+of DQUAT2.
 Alias DQ~~")
 
 (defdoc (dquat-copy! function)
@@ -41,35 +45,43 @@ Alias: DQCP!")
 Alias: DQCP")
 
 (defdoc (dquat+! function)
-  "Dual quaternion addition of DQUAT1 and DQUAT2, storing the result in OUT-DQUAT.
+  "Dual quaternion addition of DQUAT1 and DQUAT2, storing the result in ~
+OUT-DQUAT.
 Alias: DQ+!")
 
 (defdoc (dquat+ function)
-  "Dual quaternion addition of DQUAT1 and DQUAT2, storing the result as a new dual quaternion.
+  "Dual quaternion addition of DQUAT1 and DQUAT2, storing the result as a new ~
+dual quaternion.
 Alias: DQ+")
 
 (defdoc (dquat-! function)
-  "Dual quaternion subtraction of DQUAT2 from DQUAT1, storing the result in OUT-DQUAT.
+  "Dual quaternion subtraction of DQUAT2 from DQUAT1, storing the result in ~
+OUT-DQUAT.
 Alias: DQ-!")
 
 (defdoc (dquat- function)
-  "Dual quaternion subtraction of DQUAT2 from DQUAT1, storing the result as a new dual quaternion.
+  "Dual quaternion subtraction of DQUAT2 from DQUAT1, storing the result as a ~
+new dual quaternion.
 Alias: DQ-")
 
 (defdoc (dquat*! function)
-  "Dual quaternion multiplication of DQUAT1 and DQUAT2, storing the result in OUT-DQUAT.
+  "Dual quaternion multiplication of DQUAT1 and DQUAT2, storing the result in ~
+OUT-DQUAT.
 Alias: DQ*!")
 
 (defdoc (dquat* function)
-  "Dual quaternion multiplication of DQUAT1 and DQUAT2, storing the result as a new dual quaternion.
+  "Dual quaternion multiplication of DQUAT1 and DQUAT2, storing the result as a ~
+new dual quaternion.
 Alias: DQ*")
 
 (defdoc (dquat-scale! function)
-  "Dual quaternion scalar multiplication of DQUAT by SCALAR, storing the result in OUT-DQUAT.
+  "Dual quaternion scalar multiplication of DQUAT by SCALAR, storing the result ~
+in OUT-DQUAT.
 Alias: DQSCALE!")
 
 (defdoc (dquat-scale function)
-  "Dual quaternion scalar multiplication of DQUAT by SCALAR, storing the result as a new dual quaternion.
+  "Dual quaternion scalar multiplication of DQUAT by SCALAR, storing the result ~
+as a new dual quaternion.
 Alias: DQSCALE")
 
 (defdoc (dquat-conjugate! function)
@@ -81,20 +93,24 @@ Alias: DQCONJ!")
 Alias: DQCONJ")
 
 (defdoc (dquat-magnitude-squared function)
-  "Compute the magnitude (also known as length or Euclidean norm) of the real part of DQUAT. This results in a squared ~
+  "Compute the magnitude (also known as length or Euclidean norm) of the real ~
+part of DQUAT. This results in a squared ~
 value, which is cheaper to compute.
 Alias: DQMAGSQ")
 
 (defdoc (dquat-magnitude function)
-  "Compute the magnitude (also known as length or Euclidean norm) of the real part of DQUAT.
+  "Compute the magnitude (also known as length or Euclidean norm) of the real ~
+part of DQUAT.
 Alias: DQMAG")
 
 (defdoc (dquat-normalize! function)
-  "Normalize a dual quaternion so its real part has a magnitude of 1.0, storing the result in OUT-DQUAT.
+  "Normalize a dual quaternion so its real part has a magnitude of 1.0, storing ~
+the result in OUT-DQUAT.
 Alias: DQNORMALIZE!")
 
 (defdoc (dquat-normalize function)
-  "Normalize a dual quaternion so its real part has a magnitude of 1.0, storing the result as a new dual quaternion.
+  "Normalize a dual quaternion so its real part has a magnitude of 1.0, storing ~
+the result as a new dual quaternion.
 Alias: DQNORMALIZE")
 
 (defdoc (dquat-negate! function)
@@ -114,31 +130,38 @@ Alias: DQDOT")
 Alias: DQINV!")
 
 (defdoc (dquat-inverse function)
-  "Compute the multiplicative inverse of DQUAT, storing the result as a new dual quaternion.
+  "Compute the multiplicative inverse of DQUAT, storing the result as a new ~
+dual quaternion.
 Alias: DQINV")
 
 (defdoc (dquat-translation-to-vec! function)
-  "Decode the translation in the dual part of a dual quaternion, storing the result in OUT-VEC.
+  "Decode the translation in the dual part of a dual quaternion, storing the ~
+result in OUT-VEC.
 Alias: DQTR->V!")
 
 (defdoc (dquat-translation-to-vec function)
-  "Decode the translation in the dual part of a dual quaternion, storing the result as a new vector.
+  "Decode the translation in the dual part of a dual quaternion, storing the ~
+result as a new vector.
 Alias: DQTR->V")
 
 (defdoc (dquat-translation-from-vec! function)
-  "Encode a translation vector into a dual quaternion, storing the result in OUT-DQUAT.
+  "Encode a translation vector into a dual quaternion, storing the result in ~
+OUT-DQUAT.
 Alias: V->DQTR!")
 
 (defdoc (dquat-translation-from-vec function)
-  "Encode a translation vector into a dual quaternion, storing the result in a new dual quaternion.
+  "Encode a translation vector into a dual quaternion, storing the result in a ~
+new dual quaternion.
 Alias: V->DQTR")
 
 (defdoc (dquat-translate! function)
-  "Translate a quaternion in each of 3 dimensions as specified by VEC, storing the result in OUT-DQUAT.
+  "Translate a quaternion in each of 3 dimensions as specified by VEC, storing ~
+the result in OUT-DQUAT.
 Alias: DQTR!")
 
 (defdoc (dquat-translate function)
-  "Translate a quaternion in each of 3 dimensions as specified by VEC, storing the result as a new dual quaternion.
+  "Translate a quaternion in each of 3 dimensions as specified by VEC, storing ~
+the result as a new dual quaternion.
 Alias: DQTR")
 
 (defdoc (dquat-rotation-to-quat! function)
@@ -150,12 +173,14 @@ Alias: DQROT->Q!")
 Alias: DQROT->Q")
 
 (defdoc (dquat-rotate! function)
-  "Rotate a dual quaternion in each of 3 dimensions as specified by the vector of radians VEC, storing the result in ~
+  "Rotate a dual quaternion in each of 3 dimensions as specified by the vector ~
+of radians VEC, storing the result in ~
 OUT-DQUAT.
 Alias: DQROT!")
 
 (defdoc (dquat-rotate function)
-  "Rotate a dual quaternion in each of 3 dimensions as specified by the vector of radians VEC, storing the result as a ~
+  "Rotate a dual quaternion in each of 3 dimensions as specified by the vector ~
+of radians VEC, storing the result as a ~
 new dual quaternion.
 Alias: DQROT")
 
@@ -172,29 +197,35 @@ Alias: DQ->M")
 Alias: dq->screw")
 
 (defdoc (dquat-from-screw-parameters! function)
-  "Convert a set of 6 screw parameters to a dual quaternion, storing the result in OUT-DQUAT.
+  "Convert a set of 6 screw parameters to a dual quaternion, storing the result ~
+in OUT-DQUAT.
 Alias: screw->dq!")
 
 (defdoc (dquat-from-screw-parameters function)
-  "Convert a set of 6 screw parameters to a dual quaternion, storing the result as a new dual quaternion.
+  "Convert a set of 6 screw parameters to a dual quaternion, storing the result ~
+as a new dual quaternion.
 Alias: screw->dq")
 
 (defdoc (dquat-sclerp! function)
-  "Perform a screw spherical linear interpolation between DQUAT1 and DQUAT2 by the interpolation coefficient COEFF, ~
+  "Perform a screw spherical linear interpolation between DQUAT1 and DQUAT2 by ~
+the interpolation coefficient COEFF, ~
 storing the result in OUT-DQUAT.
 Alias: DQSCLERP!")
 
 (defdoc (dquat-sclerp function)
-  "Perform a screw spherical linear interpolation between DQUAT1 and DQUAT2 by the interpolation coefficient COEFF, ~
+  "Perform a screw spherical linear interpolation between DQUAT1 and DQUAT2 by ~
+the interpolation coefficient COEFF, ~
 storing the result as a new dual quaternion.
 Alias: DQSCLERP")
 
 (defdoc (dquat-nlerp! function)
-  "Perform a normalized linear interpolation between DQUAT1 and DQUAT2 by the interpolation coefficient COEFF, storing ~
+  "Perform a normalized linear interpolation between DQUAT1 and DQUAT2 by the ~
+interpolation coefficient COEFF, storing ~
 the result in OUT-DQUAT.
 Alias: DQNLERP!")
 
 (defdoc (dquat-nlerp function)
-  "Perform a normalized linear interpolation between DQUAT1 and DQUAT2 by the interpolation coefficient COEFF, storing ~
+  "Perform a normalized linear interpolation between DQUAT1 and DQUAT2 by the ~
+interpolation coefficient COEFF, storing ~
 the result as a new dual quaternion.
 Alias: DQNLERP")

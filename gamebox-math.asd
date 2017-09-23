@@ -8,9 +8,10 @@
   :homepage "https://github.com/mfiano/gamebox-math"
   :bug-tracker "https://github.com/mfiano/gamebox-math/issues"
   :source-control (:git "git@github.com:mfiano/gamebox-math.git")
-  :version "1.0.0"
+  :version "1.0.1"
   :encoding :utf-8
-  :long-description #.(uiop:read-file-string (uiop/pathname:subpathname *load-pathname* "README.md"))
+  :long-description #.(uiop:read-file-string
+                       (uiop/pathname:subpathname *load-pathname* "README.md"))
   :depends-on (#:alexandria
                #:defstar)
   :pathname "src"

@@ -41,6 +41,7 @@
   ;; matrices
   (:export #:matrix #:with-matrix #:with-matrices #:mref
            #:+identity-matrix+ #:+mid+
+           #:zero-matrix #:0matrix
            #:matrix-test #:mtest
            #:matrix-identity! #:mid! #:matrix-identity #:mid
            #:matrix= #:m=

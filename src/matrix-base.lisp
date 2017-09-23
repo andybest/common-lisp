@@ -3,7 +3,10 @@
 (deftype matrix () '(simple-array single-float (16)))
 
 (defstruct (matrix (:type (vector single-float))
-                   (:constructor %matrix (&optional m00 m01 m02 m03 m10 m11 m12 m13 m20 m21 m22 m23 m30 m31 m32 m33))
+                   (:constructor %matrix (m00 m01 m02 m03
+                                          m10 m11 m12 m13
+                                          m20 m21 m22 m23
+                                          m30 m31 m32 m33))
                    (:conc-name nil)
                    (:copier nil)
                    (:predicate nil))
@@ -24,10 +27,12 @@
   (m23 0.0 :type single-float)
   (m33 0.0 :type single-float))
 
-(defun* matrix (&optional ((m00 real) 0) ((m01 real) 0) ((m02 real) 0) ((m03 real) 0)
-                          ((m10 real) 0) ((m11 real) 0) ((m12 real) 0) ((m13 real) 0)
-                          ((m20 real) 0) ((m21 real) 0) ((m22 real) 0) ((m23 real) 0)
-                          ((m30 real) 0) ((m31 real) 0) ((m32 real) 0) ((m33 real) 0))
+(defun* matrix (&optional ((m00 real) 0) ((m01 real) 0) ((m02 real) 0)
+                          ((m03 real) 0) ((m10 real) 0) ((m11 real) 0)
+                          ((m12 real) 0) ((m13 real) 0) ((m20 real) 0)
+                          ((m21 real) 0) ((m22 real) 0) ((m23 real) 0)
+                          ((m30 real) 0) ((m31 real) 0) ((m32 real) 0)
+                          ((m33 real) 0))
     (:result matrix)
   (%matrix (float m00 1.0) (float m01 1.0) (float m02 1.0) (float m03 1.0)
            (float m10 1.0) (float m11 1.0) (float m12 1.0) (float m13 1.0)
@@ -61,10 +66,12 @@
       `(with-matrix ,(car binds)
          (with-matrices ,(cdr binds) ,@body))))
 
-(defun* mref ((matrix matrix) (row (integer 0 15)) (column (integer 0 15))) (:result single-float)
+(defun* mref ((matrix matrix) (row (integer 0 15)) (column (integer 0 15)))
+    (:result single-float)
   (aref matrix (+ row (* column 4))))
 
-(defun* (setf mref) ((value single-float) (matrix matrix) (row (integer 0 15)) (column (integer 0 15)))
+(defun* (setf mref) ((value single-float) (matrix matrix) (row (integer 0 15))
+                     (column (integer 0 15)))
     (:result single-float)
   (setf (aref matrix (+ row (* column 4))) value))
 

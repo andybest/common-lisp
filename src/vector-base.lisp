@@ -35,7 +35,8 @@
 (defun* vref ((vec vec) (index (integer 0 2))) (:result single-float)
   (aref vec index))
 
-(defun* (setf vref) ((value single-float) (vec vec) (index (integer 0 2))) (:result single-float)
+(defun* (setf vref) ((value single-float) (vec vec) (index (integer 0 2)))
+    (:result single-float)
   (setf (aref vec index) value))
 
 (set-pprint-dispatch

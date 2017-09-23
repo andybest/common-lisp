@@ -29,7 +29,8 @@
     (:result vec :abbrev vclamp)
   (vec-clamp! (vec) vec :min min :max max))
 
-(defun* vec-stabilize! ((out-vec vec) (vec vec) &key ((tolerance single-float) +epsilon+))
+(defun* vec-stabilize! ((out-vec vec) (vec vec) &key ((tolerance single-float)
+                                                      +epsilon+))
     (:result vec :abbrev vstab!)
   (with-vectors ((o out-vec) (v vec))
     (macrolet ((stabilize (place) `(if (< (abs ,place) tolerance) 0.0 ,place)))
@@ -38,7 +39,8 @@
              oz (stabilize vz))))
   out-vec)
 
-(defun* vec-stabilize ((vec vec) &key ((tolerance single-float) +epsilon+)) (:result vec :abbrev vstab)
+(defun* vec-stabilize ((vec vec) &key ((tolerance single-float) +epsilon+))
+    (:result vec :abbrev vstab)
   (vec-stabilize! (vec) vec :tolerance tolerance))
 
 (defun* vec-zero! ((vec vec)) (:result vec :abbrev vzero!)
@@ -62,7 +64,8 @@
          (= v1y v2y)
          (= v1z v2z))))
 
-(defun* vec~ ((vec1 vec) (vec2 vec) &key ((tolerance single-float) +epsilon+)) (:result boolean :abbrev v~)
+(defun* vec~ ((vec1 vec) (vec2 vec) &key ((tolerance single-float) +epsilon+))
+    (:result boolean :abbrev v~)
   (with-vectors ((v1 vec1) (v2 vec2))
     (and (~ v1x v2x tolerance)
          (~ v1y v2y tolerance)
@@ -88,7 +91,8 @@
 (defun* vec- ((vec1 vec) (vec2 vec)) (:result vec :abbrev v-)
   (vec-! (vec) vec1 vec2))
 
-(defun* vec-hadamard*! ((out-vec vec) (vec1 vec) (vec2 vec)) (:result vec :abbrev vhad*!)
+(defun* vec-hadamard*! ((out-vec vec) (vec1 vec) (vec2 vec))
+    (:result vec :abbrev vhad*!)
   (with-vectors ((o out-vec) (v1 vec1) (v2 vec2))
     (psetf ox (* v1x v2x)
            oy (* v1y v2y)
@@ -98,7 +102,8 @@
 (defun* vec-hadamard* ((vec1 vec) (vec2 vec)) (:result vec :abbrev vhad*)
   (vec-hadamard*! (vec) vec1 vec2))
 
-(defun* vec-hadamard/! ((out-vec vec) (vec1 vec) (vec2 vec)) (:result vec :abbrev vhad/!)
+(defun* vec-hadamard/! ((out-vec vec) (vec1 vec) (vec2 vec))
+    (:result vec :abbrev vhad/!)
   (with-vectors ((o out-vec) (v1 vec1) (v2 vec2))
     (psetf ox (if (zerop v2x) 0.0 (/ v1x v2x))
            oy (if (zerop v2y) 0.0 (/ v1y v2y))
@@ -108,7 +113,8 @@
 (defun* vec-hadamard/ ((vec1 vec) (vec2 vec)) (:result vec :abbrev vhad/)
   (vec-hadamard/! (vec) vec1 vec2))
 
-(defun* vec-scale! ((out-vec vec) (vec vec) (scalar single-float)) (:result vec :abbrev vscale!)
+(defun* vec-scale! ((out-vec vec) (vec vec) (scalar single-float))
+    (:result vec :abbrev vscale!)
   (with-vectors ((o out-vec) (v vec))
     (psetf ox (* vx scalar)
            oy (* vy scalar)
@@ -128,7 +134,8 @@
 (defun* vec-magnitude ((vec vec)) (:result single-float :abbrev vmag)
   (sqrt (vec-magnitude-squared vec)))
 
-(defun* vec-normalize! ((out-vec vec) (vec vec)) (:result vec :abbrev vnormalize!)
+(defun* vec-normalize! ((out-vec vec) (vec vec))
+    (:result vec :abbrev vnormalize!)
   (let ((magnitude (vec-magnitude vec)))
     (unless (zerop magnitude)
       (vec-scale! out-vec vec (/ magnitude))))
@@ -163,7 +170,8 @@
 (defun* vec-negate ((vec vec)) (:result vec :abbrev vneg)
   (vec-negate! (vec) vec))
 
-(defun* vec-cross! ((out-vec vec) (vec1 vec) (vec2 vec)) (:result vec :abbrev vcross!)
+(defun* vec-cross! ((out-vec vec) (vec1 vec) (vec2 vec))
+    (:result vec :abbrev vcross!)
   (with-vectors ((o out-vec) (v1 vec1) (v2 vec2))
     (psetf ox (- (* v1y v2z) (* v1z v2y))
            oy (- (* v1z v2x) (* v1x v2z))
@@ -173,7 +181,8 @@
 (defun* vec-cross ((vec1 vec) (vec2 vec)) (:result vec :abbrev vcross)
   (vec-cross! (vec) vec1 vec2))
 
-(defun* vec-box ((vec1 vec) (vec2 vec) (vec3 vec)) (:result single-float :abbrev vbox)
+(defun* vec-box ((vec1 vec) (vec2 vec) (vec3 vec))
+    (:result single-float :abbrev vbox)
   (vec-dot (vec-cross vec1 vec2) vec3))
 
 (defun* vec-angle ((vec1 vec) (vec2 vec)) (:result single-float :abbrev vangle)
@@ -193,14 +202,16 @@
 (defun* vec-parallel-p ((vec1 vec) (vec2 vec)) (:result boolean :abbrev vparallelp)
   (vec~ (vec-cross vec1 vec2) +zero-vector+))
 
-(defun* vec-lerp! ((out-vec vec) (vec1 vec) (vec2 vec) (coeff single-float)) (:result vec :abbrev vlerp!)
+(defun* vec-lerp! ((out-vec vec) (vec1 vec) (vec2 vec) (coeff single-float))
+    (:result vec :abbrev vlerp!)
   (with-vectors ((o out-vec) (v1 vec1) (v2 vec2))
     (psetf ox (lerp coeff v1x v2x)
            oy (lerp coeff v1y v2y)
            oz (lerp coeff v1z v2z)))
   out-vec)
 
-(defun* vec-lerp ((vec1 vec) (vec2 vec) (coeff single-float)) (:result vec :abbrev vlerp)
+(defun* vec-lerp ((vec1 vec) (vec2 vec) (coeff single-float))
+    (:result vec :abbrev vlerp)
   (vec-lerp! (vec) vec1 vec2 coeff))
 
 (defun* vec< ((vec1 vec) (vec2 vec)) (:result boolean :abbrev v<)
@@ -227,7 +238,8 @@
          (>= v1y v2y)
          (>= v1z v2z))))
 
-(defun* vec-min! ((out-vec vec) (vec1 vec) (vec2 vec)) (:result vec :abbrev vmin!)
+(defun* vec-min! ((out-vec vec) (vec1 vec) (vec2 vec))
+    (:result vec :abbrev vmin!)
   (with-vectors ((o out-vec) (v1 vec1) (v2 vec2))
     (psetf ox (min v1x v2x)
            oy (min v1y v2y)
@@ -237,7 +249,8 @@
 (defun* vec-min ((vec1 vec) (vec2 vec)) (:result vec :abbrev vmin)
   (vec-min! (vec) vec1 vec2))
 
-(defun* vec-max! ((out-vec vec) (vec1 vec) (vec2 vec)) (:result vec :abbrev vmax!)
+(defun* vec-max! ((out-vec vec) (vec1 vec) (vec2 vec))
+    (:result vec :abbrev vmax!)
   (with-vectors ((o out-vec) (v1 vec1) (v2 vec2))
     (psetf ox (max v1x v2x)
            oy (max v1y v2y)

@@ -2,25 +2,27 @@
 
 (defdoc (quat structure)
   "A 4-dimensional complex number used to describe a rotation in 3-dimensions.
-This is a typed structure, which compiles to an actual single-float array, but includes named slots for accessing ~
-components.")
+This is a typed structure, which compiles to an actual single-float array, but ~
+includes named slots for accessing components.")
 
 (defdoc (with-quat macro)
   "A convenience macro for concisely accessing components of a quaternion.
-Example: (with-quat (q quat) qw) would allow accessing the W component of the quaternion as simply the symbol QW.")
+Example: (with-quat (q quat) qw) would allow accessing the W component of the ~
+quaternion as simply the symbol QW.")
 
 (defdoc (with-quats macro)
-  "A convenience macro for concisely accessing components of multiple quaternions.
-Example: (with-quats ((a quaternion1) (b quaternion2)) (values ax by)) would access the X component of quaternion1, ~
-and the Y component of quaternion2.")
+  "A convenience macro for concisely accessing components of multiple ~
+quaternions.
+Example: (with-quats ((a quaternion1) (b quaternion2)) (values ax by)) would ~
+access the X component of quaternion1, and the Y component of quaternion2.")
 
 (defdoc (qref function)
-  "A virtualized quaternion component reader. Use this instead of AREF to prevent unintended behavior should ordering ~
-of a quaternion ever change.")
+  "A virtualized quaternion component reader. Use this instead of AREF to ~
+prevent unintended behavior should ordering of a quaternion ever change.")
 
 (defdoc ((setf qref) function)
-  "A virtualized quaternion component writer. Use this instead of (SETF AREF) to prevent unintended behavior should ~
-ordering of a quaternion ever change.")
+  "A virtualized quaternion component writer. Use this instead of (SETF AREF) ~
+to prevent unintended behavior should ordering of a quaternion ever change.")
 
 (defdoc (quat function)
   "Create a new quaternion.")
@@ -47,7 +49,8 @@ Alias: QZERO")
 Alias Q=")
 
 (defdoc (quat~ function)
-  "Check if the components of QUAT1 are approximately equal to the components of QUAT2.
+  "Check if the components of QUAT1 are approximately equal to the components ~
+of QUAT2.
 Alias Q~~")
 
 (defdoc (quat-copy! function)
@@ -63,7 +66,8 @@ Alias: QCP")
 Alias: Q+!")
 
 (defdoc (quat+ function)
-  "Quaternion addition of QUAT1 and QUAT2, storing the result as a new quaternion.
+  "Quaternion addition of QUAT1 and QUAT2, storing the result as a new ~
+quaternion.
 Alias: Q+")
 
 (defdoc (quat-! function)
@@ -71,7 +75,8 @@ Alias: Q+")
 Alias: Q-!")
 
 (defdoc (quat- function)
-  "Quaternion subtraction of QUAT2 from QUAT1, storing the result as a new quaternion.
+  "Quaternion subtraction of QUAT2 from QUAT1, storing the result as a new ~
+quaternion.
 Alias: Q-")
 
 (defdoc (quat*! function)
@@ -79,15 +84,18 @@ Alias: Q-")
 Alias: Q*!")
 
 (defdoc (quat* function)
-  "Quaternion multiplication of QUAT1 and QUAT2, storing the result as a new quaternion.
+  "Quaternion multiplication of QUAT1 and QUAT2, storing the result as a new ~
+quaternion.
 Alias: Q*")
 
 (defdoc (quat-scale! function)
-  "Quaternion scalar multiplication of QUAT by SCALAR, storing the result in OUT-QUAT.
+  "Quaternion scalar multiplication of QUAT by SCALAR, storing the result in ~
+OUT-QUAT.
 Alias: QSCALE!")
 
 (defdoc (quat-scale function)
-  "Quaternion scalar multiplication of QUAT by SCALAR, storing the result as a new quaternion.
+  "Quaternion scalar multiplication of QUAT by SCALAR, storing the result as a ~
+new quaternion.
 Alias: QSCALE")
 
 (defdoc (quat-cross! function)
@@ -95,7 +103,8 @@ Alias: QSCALE")
 Alias: QCROSS!")
 
 (defdoc (quat-cross! function)
-  "Compute the cross product of QUAT1 and QUAT2, storing the result as a new quaternion.
+  "Compute the cross product of QUAT1 and QUAT2, storing the result as a new ~
+quaternion.
 Alias: QCROSS")
 
 (defdoc (quat-conjugate! function)
@@ -107,8 +116,8 @@ Alias: QCONJ!")
 Alias: QCONJ")
 
 (defdoc (quat-magnitude-squared function)
-  "Compute the magnitude (also known as length or Euclidean norm) of QUAT. This results in a squared value, which is ~
-cheaper to compute.
+  "Compute the magnitude (also known as length or Euclidean norm) of QUAT. This ~
+results in a squared value, which is cheaper to compute.
 Alias: QMAGSQ")
 
 (defdoc (quat-magnitude function)
@@ -116,11 +125,13 @@ Alias: QMAGSQ")
 Alias: QMAG")
 
 (defdoc (quat-normalize! function)
-  "Normalize a quaternion so it has a magnitude of 1.0, storing the result in OUT-QUAT.
+  "Normalize a quaternion so it has a magnitude of 1.0, storing the result in ~
+OUT-QUAT.
 Alias: QNORMALIZE!")
 
 (defdoc (quat-normalize function)
-  "Normalize a quaternion so it has a magnitude of 1.0, storing the result as a new quaternion.
+  "Normalize a quaternion so it has a magnitude of 1.0, storing the result as a ~
+new quaternion.
 Alias: QNORMALIZE")
 
 (defdoc (quat-negate! function)
@@ -140,25 +151,28 @@ Alias: QDOT")
 Alias: QINV!")
 
 (defdoc (quat-inverse function)
-  "Compute the multiplicative inverse of QUAT, storing the result as a new quaternion.
+  "Compute the multiplicative inverse of QUAT, storing the result as a new ~
+quaternion.
 Alias: QINV")
 
 (defdoc (quat-rotate! function)
-  "Rotate a quaternion in each of 3 dimensions as specified by the vector of radians VEC, storing the result in OUT-QUAT.
+  "Rotate a quaternion in each of 3 dimensions as specified by the vector of ~
+radians VEC, storing the result in OUT-QUAT.
 Alias: QROT!")
 
 (defdoc (quat-rotate function)
-  "Rotate a quaternion in each of 3 dimensions as specified by the vector of radians VEC, storing the result as a new ~
-quaternion.
+  "Rotate a quaternion in each of 3 dimensions as specified by the vector of ~
+radians VEC, storing the result as a new quaternion.
 Alias: QROT")
 
 (defdoc (quat-rotate! function)
-  "Create a quaternion representing an ANGLE of rotation in radians around AXIS, storing the result in OUT-QUAT.
+  "Create a quaternion representing an ANGLE of rotation in radians around ~
+AXIS, storing the result in OUT-QUAT.
 Alias QROT!")
 
 (defdoc (quat-rotate function)
-  "Create a quaternion representing an ANGLE of rotation in radians around AXIS, storing the result as a new ~
-quaternion.
+  "Create a quaternion representing an ANGLE of rotation in radians around ~
+AXIS, storing the result as a new quaternion.
 Alias: QROT")
 
 (defdoc (quat-to-vec! function)
@@ -194,11 +208,11 @@ Alias M->Q!")
 Alias: M->Q")
 
 (defdoc (quat-slerp! function)
-  "Perform a spherical linear interpolation between QUAT1 and QUAT2 by the interpolation coefficient COEFF, storing ~
-the result in OUT-QUAT.
+  "Perform a spherical linear interpolation between QUAT1 and QUAT2 by the ~
+interpolation coefficient COEFF, storing the result in OUT-QUAT.
 Alias: QSLERP!")
 
 (defdoc (quat-slerp function)
-  "Perform a spherical linear interpolation between QUAT1 and QUAT2 by the interpolation coefficient COEFF, storing ~
-the result as a new quaternion.
+  "Perform a spherical linear interpolation between QUAT1 and QUAT2 by the ~
+interpolation coefficient COEFF, storing the result as a new quaternion.
 Alias: QSLERP")

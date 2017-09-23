@@ -131,9 +131,11 @@
 
 (diag "multiplication")
 (with-matrices ((ma (mtest))
-                (mb (matrix 10 50 90 130 20 60 100 140 30 70 110 150 40 80 120 160))
+                (mb (matrix 10 50 90 130 20 60 100 140 30 70 110 150 40 80 120
+                            160))
                 (mc +mid+)
-                (r (matrix 90 202 314 426 100 228 356 484 110 254 398 542 120 280 440 600))
+                (r (matrix 90 202 314 426 100 228 356 484 110 254 398 542 120 280
+                           440 600))
                 (rot-x (mrot +mid+ (vec (/ pi 3) 0 0)))
                 (rot-y (mrot +mid+ (vec 0 (/ pi 4) 0)))
                 (rot-xy (mrot +mid+ (vec (/ pi 3) (/ pi 4) 0)))
@@ -168,7 +170,8 @@
 (diag "translate")
 (with-matrices ((m (mrot +mid+ (vec (/ pi 3))))
                 (o (mid))
-                (r (matrix 1 0 0 5 0 0.5 -0.86602545 10 0 0.86602545 0.5 15 0 0 0 1)))
+                (r (matrix 1 0 0 5 0 0.5 -0.86602545 10 0 0.86602545 0.5 15 0 0 0
+                           1)))
   (with-vector (v (vec 5 10 15))
     (ok (m~ (mtr! o m v) r))
     (ok (m~ o r))
@@ -220,9 +223,12 @@
 (with-matrices ((omx (mid))
                 (omy (mid))
                 (omz (mid))
-                (rmx (matrix 1 0 0 0 0 0.5 -0.86602545 0 0 0.86602545 0.5 0 0 0 0 1))
-                (rmy (matrix 0.5 0 0.86602545 0 0 1 0 0 -0.86602545 0 0.5 0 0 0 0 1))
-                (rmz (matrix 0.5 -0.86602545 0 0 0.86602545 0.5 0 0 0 0 1 0 0 0 0 1)))
+                (rmx (matrix 1 0 0 0 0 0.5 -0.86602545 0 0 0.86602545 0.5 0 0 0 0
+                             1))
+                (rmy (matrix 0.5 0 0.86602545 0 0 1 0 0 -0.86602545 0 0.5 0 0 0 0
+                             1))
+                (rmz (matrix 0.5 -0.86602545 0 0 0.86602545 0.5 0 0 0 0 1 0 0 0 0
+                             1)))
   (with-vectors ((vx (vec (/ pi 3) 0 0))
                  (vy (vec 0 (/ pi 3) 0))
                  (vz (vec 0 0 (/ pi 3))))
@@ -265,7 +271,8 @@
 (ok (morthop (mrot +mid+ (vec (/ pi 6)))))
 
 (diag "orthogonalization")
-(with-matrices ((m (matrix 0 1 -0.12988785 1.0139829 0 0 0.3997815 -0.027215311 1 0 0.5468181 0.18567966 0 0 0 0))
+(with-matrices ((m (matrix 0 1 -0.12988785 1.0139829 0 0 0.3997815 -0.027215311 1
+                           0 0.5468181 0.18567966 0 0 0 0))
                 (o (mid))
                 (r (matrix 0 1 0 0 0 0 1 0 1 0 0 0 0 0 0 1)))
   (is (mortho! o m) r)
@@ -295,7 +302,8 @@
 
 (diag "view matrix")
 (with-matrices ((o (mid))
-                (r (matrix -0.7071068 0 -0.7071068 -1 0 1 0 0 0.7071068 0 -0.7071068 0 0 0 0 1)))
+                (r (matrix -0.7071068 0 -0.7071068 -1 0 1 0 0 0.7071068 0
+                           -0.7071068 0 0 0 0 1)))
   (ok (m~ (mkview! o (vec 1 0 0) (vec 0 0 1) (vec 0 1 0)) r))
   (ok (m~ o r))
   (ok (m~ (mkview (vec 1 0 0) (vec 0 0 1) (vec 0 1 0)) r))
@@ -309,7 +317,8 @@
   (is (mkortho -20 20 -10 10 0 1000) r))
 
 (diag "perspective projection matrix")
-(with-matrices ((r (matrix 0.97427857 0 0 0 0 1.7320508 0 0 0 0 -1.002002 -2.002002 0 0 -1 1))
+(with-matrices ((r (matrix 0.97427857 0 0 0 0 1.7320508 0 0 0 0 -1.002002
+                           -2.002002 0 0 -1 1))
                 (o (mid)))
   (is (mkpersp! o (/ pi 3) (/ 16 9) 1 1000) r)
   (is o r)

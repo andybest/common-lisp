@@ -12,7 +12,8 @@
   (y 0.0 :type single-float)
   (z 0.0 :type single-float))
 
-(defun* quat (&optional ((w real) 0) ((x real) 0) ((y real) 0) ((z real) 0)) (:result quat)
+(defun* quat (&optional ((w real) 0) ((x real) 0) ((y real) 0) ((z real) 0))
+    (:result quat)
   (%quat (float w 1.0) (float x 1.0) (float y 1.0) (float z 1.0)))
 
 (defmacro with-quat ((prefix quat) &body body)
@@ -33,7 +34,8 @@
 (defun* qref ((quat quat) (index (integer 0 3))) (:result single-float)
   (aref quat index))
 
-(defun* (setf qref) ((value single-float) (quat quat) (index (integer 0 3))) (:result single-float)
+(defun* (setf qref) ((value single-float) (quat quat) (index (integer 0 3)))
+    (:result single-float)
   (setf (aref quat index) value))
 
 (set-pprint-dispatch
