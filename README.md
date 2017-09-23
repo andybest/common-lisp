@@ -20,7 +20,40 @@ a game.
 
 ## Usage
 
-Refer to the documentation strings in the code.
+This library should be fairly self-explanatory to anyone familiar with linear algebra
+and each symbol has a documentation string containing more detail.
+
+The library follows a certain naming convention.
+Functions having to do with vectors, points, lines, quaternions, dual quaternions,
+and matrices are prefixed, respectively, with `vec-`, `point-`, `line-`, `quat-`,
+`dquat-`, and `matrix-`. Some functions do not include the dash, notably addition,
+subtraction, multiplication, and comparison functions. Each function has two variants,
+one destructive and one consing. The destructing ones use `!` as a postfix.
+
+Most functions also have an abbreviated name, these are mentioned in respective function's
+documentation string.
+
+Constructor functions for each of the above data types have the names listed above,
+also without the dash. For example, `(vec)` produces a fresh vector.
+
+Each of the above data types also have several ways of accessing their members.
+Vecs, quats, and matrices can be accessed by index with the functions `vref`, `qref`,
+and `mref`, respectively. Macros for locally binding members to symbols are available
+under the names `with-X` where `X` is `vector`, `quat`, `dquat`, `matrix`,
+or their plural forms.
+
+Example use:
+
+```lisp
+(with-vector (v my-vector)
+  ;; symbols vx, vy, and vz are now available as accessors
+)
+
+(with-vectors ((v1 foo-vector)
+               (v2 bar-vector))
+  ;; symbol accessors for any number of vectors can now be used
+)
+```
 
 ## License
 
