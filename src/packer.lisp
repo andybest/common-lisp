@@ -136,21 +136,22 @@
 
 (defun add-padding (rects padding)
   (when (and padding (plusp padding))
-    (loop for r in rects
-          do (incf (slot-value r 'w) padding)
-             (incf (slot-value r 'h) padding)))
+    (loop :for rect :in rects
+          :do (incf (slot-value rect 'w) padding)
+              (incf (slot-value rect 'h) padding)))
   rects)
 
 (defun remove-padding (rects padding)
   (when (and padding (plusp padding))
-    (loop with p1 = (floor padding 2)
-          with p2 = (- padding p1)
-          for r in rects
-          do (incf (slot-value r 'x) p1)
-             (incf (slot-value r 'y) p1)
-             (decf (slot-value r 'w) p2)
-             (decf (slot-value r 'h) p2)))
+    (loop :with p1 = (floor padding 2)
+          :with p2 = (- padding p1)
+          :for rect :in rects
+          :do (incf (slot-value rect 'x) p1)
+              (incf (slot-value rect 'y) p1)
+              (decf (slot-value rect 'w) p2)
+              (decf (slot-value rect 'h) p2)))
   rects)
+
 (defgeneric make-coords (rect width height normalize flip-y)
   (:method (rect width height normalize flip-y)
     (with-slots (x y w h) rect
