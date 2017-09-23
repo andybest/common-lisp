@@ -34,12 +34,16 @@
                           ((m30 real) 0) ((m31 real) 0) ((m32 real) 0)
                           ((m33 real) 0))
     (:result matrix)
+  "Create a new matrix."
   (%matrix (float m00 1.0) (float m01 1.0) (float m02 1.0) (float m03 1.0)
            (float m10 1.0) (float m11 1.0) (float m12 1.0) (float m13 1.0)
            (float m20 1.0) (float m21 1.0) (float m22 1.0) (float m23 1.0)
            (float m30 1.0) (float m31 1.0) (float m32 1.0) (float m33 1.0)))
 
 (defmacro with-matrix ((prefix matrix) &body body)
+  "A convenience macro for concisely accessing components of a matrix.
+Example: (with-matrix (m matrix) 23) would allow accessing row 2/column 3 of the
+matrix as simply the symbol M23."
   `(with-accessors ((,prefix identity)
                     (,(symbolicate prefix "00") m00)
                     (,(symbolicate prefix "01") m01)
@@ -61,6 +65,9 @@
      ,@body))
 
 (defmacro with-matrices (binds &body body)
+  "A convenience macro for concisely accessing components of multiple matrices.
+Example: (with-matrices ((a matrix1) (b matrix2)) (values a12 b31)) would access
+row 1/column 2 of matrix1, and row 3/column 1 of matrix2."
   (if (null binds)
       `(progn ,@body)
       `(with-matrix ,(car binds)
@@ -68,11 +75,15 @@
 
 (defun* mref ((matrix matrix) (row (integer 0 15)) (column (integer 0 15)))
     (:result single-float)
+  "A virtualized matrix component reader. Use this instead of AREF to prevent
+unintended behavior should ordering of a matrix ever change."
   (aref matrix (+ row (* column 4))))
 
 (defun* (setf mref) ((value single-float) (matrix matrix) (row (integer 0 15))
                      (column (integer 0 15)))
     (:result single-float)
+  "A virtualized matrix component writer. Use this instead of (SETF AREF) to
+prevent unintended behavior should ordering of a matrix ever change."
   (setf (aref matrix (+ row (* column 4))) value))
 
 (set-pprint-dispatch
