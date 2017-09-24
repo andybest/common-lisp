@@ -16,7 +16,7 @@
 
   (defun* matrix-identity () (:result matrix :abbrev mid)
     "Create an identity matrix."
-    (matrix-identity! (zero-matrix)))
+    (%matrix 1.0 0.0 0.0 0.0 0.0 1.0 0.0 0.0 0.0 0.0 1.0 0.0 0.0 0.0 0.0 1.0))
 
   (define-constant +identity-matrix+ (matrix-identity) :test #'equalp)
   (define-constant +mid+ (matrix-identity) :test #'equalp))
@@ -225,21 +225,20 @@ VEC, storing the result in OUT-MATRIX."
                         (,c (cos ,angle)))
                     ,@body
                     (matrix*! out-matrix out-matrix m)))))
-    (let ((rotation (zero-matrix)))
-      (with-matrix (m (matrix-identity! rotation))
-        (with-vector (v vec)
-          (matrix-copy! out-matrix matrix)
-          (rotate-angle vz s c
-                        (psetf m00 c m01 (- s)
-                               m10 s m11 c))
-          (rotate-angle vx s c
-                        (psetf m00 1.0 m01 0.0 m02 0.0
-                               m10 0.0 m11 c m12 (- s)
-                               m20 0.0 m21 s m22 c))
-          (rotate-angle vy s c
-                        (psetf m00 c m01 0.0 m02 s
-                               m10 0.0 m11 1.0 m12 0.0
-                               m20 (- s) m21 0.0 m22 c))))))
+    (with-matrix (m (matrix-identity))
+      (with-vector (v vec)
+        (matrix-copy! out-matrix matrix)
+        (rotate-angle vz s c
+                      (psetf m00 c m01 (- s)
+                             m10 s m11 c))
+        (rotate-angle vx s c
+                      (psetf m00 1.0 m01 0.0 m02 0.0
+                             m10 0.0 m11 c m12 (- s)
+                             m20 0.0 m21 s m22 c))
+        (rotate-angle vy s c
+                      (psetf m00 c m01 0.0 m02 s
+                             m10 0.0 m11 1.0 m12 0.0
+                             m20 (- s) m21 0.0 m22 c)))))
   out-matrix)
 
 (defun* matrix-rotate ((matrix matrix) (vec vec)) (:result matrix :abbrev mrot)
