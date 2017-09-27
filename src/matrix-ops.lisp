@@ -323,7 +323,7 @@ length."
 
 (defun* matrix-orthogonalize! ((out-matrix matrix) (matrix matrix))
     (:result matrix :abbrev mortho!)
-  "Orthogonalize a matrix using the 'modified' Gram-Schidt method (MGS), storing
+  "Orthogonalize a matrix using the 'modified' Gram-Schmidt method (MGS), storing
 the result in OUT-MATRIX."
   (let* ((x (matrix-rotation-to-vec matrix :x))
          (y (matrix-rotation-to-vec matrix :y))
@@ -337,7 +337,7 @@ the result in OUT-MATRIX."
   out-matrix)
 
 (defun* matrix-orthogonalize ((matrix matrix)) (:result matrix :abbrev mortho)
-  "Orthogonalize a matrix using the 'modified' Gram-Schidt method (MGS), storing
+  "Orthogonalize a matrix using the 'modified' Gram-Schmidt method (MGS), storing
 the result as a new matrix."
   (matrix-orthogonalize! (matrix-identity) matrix))
 
