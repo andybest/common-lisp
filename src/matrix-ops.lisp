@@ -161,7 +161,8 @@ new matrix."
     (:result matrix :abbrev mtr!)
   "Translate a matrix by the translation vector VEC, storing the result in
 OUT-MATRIX."
-  (matrix*! out-matrix (matrix-translation-from-vec (matrix-identity) vec) matrix))
+  (matrix*! out-matrix (matrix-translation-from-vec (matrix-identity) vec)
+            matrix))
 
 (defun* matrix-translate ((matrix matrix) (vec vec)) (:result matrix :abbrev mtr)
   "Translate a matrix by the translation vector VEC, storing the result as a new
@@ -245,6 +246,44 @@ VEC, storing the result in OUT-MATRIX."
   "Rotate a matrix in each of 3 dimensions as specified by the vector of radians
 VEC, storing the result as a new matrix."
   (matrix-rotate! (matrix-identity) matrix vec))
+
+(defun* matrix-scale-to-vec! ((out-vec vec) (matrix matrix))
+    (:result vec :abbrev mscale->v!)
+  "Copy the components in the scaling part of MATRIX, storing the result in
+OUT-VEC."
+  (with-vector (o out-vec)
+    (with-matrix (m matrix)
+      (psetf ox m00 oy m11 oz m22)))
+  out-vec)
+
+(defun* matrix-scale-to-vec ((matrix matrix)) (:result vec :abbrev mscale->v)
+  "Copy the components in the scaling part of MATRIX, storing the result as a new
+vector."
+  (matrix-scale-to-vec! (vec) matrix))
+
+(defun* matrix-scale-from-vec! ((matrix matrix) (vec vec))
+    (:result matrix :abbrev v->mscale!)
+  "Copy the components of VEC, storing the result in the diagonal scaling part of
+MATRIX."
+  (with-matrix (m matrix)
+    (with-vector (v vec)
+      (psetf m00 vx m11 vy m22 vz)))
+  matrix)
+
+(defun* matrix-scale-from-vec ((matrix matrix) (vec vec))
+    (:result matrix :abbrev v->mscale)
+  "Copy the components of VEC, storing the result in the diagonal scaling part of
+a new matrix."
+  (matrix-scale-from-vec! (matrix-copy matrix) vec))
+
+(defun* matrix-scale! ((out-matrix matrix) (matrix matrix) (vec vec))
+    (:result matrix :abbrev mscale!)
+  "Scale a matrix by the scaling vector VEC, storing the result in OUT-MATRIX."
+  (matrix*! out-matrix (matrix-scale-from-vec (matrix-identity) vec) matrix))
+
+(defun* matrix-scale ((matrix matrix) (vec vec)) (:result matrix :abbrev mscale)
+  "Scale a matrix by the scaling vector VEC, storing the result as a new matrix."
+  (matrix-scale! (matrix-identity) matrix vec))
 
 (defun* matrix*vec! ((out-vec vec) (matrix matrix) (vec vec))
     (:result vec :abbrev m*v!)

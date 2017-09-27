@@ -2,7 +2,7 @@
 
 (setf *default-test-function* #'equalp)
 
-(plan 166)
+(plan 169)
 
 (diag "structure")
 (let ((*print-pretty* nil))
@@ -241,6 +241,15 @@
     (ok (m~ (mrot +mid+ vx) rmx))
     (ok (m~ (mrot +mid+ vy) rmy))
     (ok (m~ (mrot +mid+ vz) rmz))))
+
+(diag "scaling")
+(with-matrices ((m (matrix 10 0 0 0 0 20 0 0 0 0 30 0 0 0 0 1))
+                (o (mid))
+                (s (matrix 10 0 0 0 0 40 0 0 0 0 90 0 0 0 0 1)))
+  (with-vector (v (vec 1 2 3))
+    (ok (m= (mscale! o m v) s))
+    (ok (m= o s))
+    (is (mscale->v (mscale +mid+ v)) v)))
 
 (diag "matrix * vector multiplication")
 (with-matrices ((m (mrot +mid+ (vec (/ pi 3) 0 0))))
