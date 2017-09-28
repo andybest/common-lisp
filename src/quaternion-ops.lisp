@@ -324,8 +324,8 @@ radians VEC, storing the result as a new quaternion."
     (:result quat :abbrev qslerp!)
   "Perform a spherical linear interpolation between QUAT1 and QUAT2 by the
 interpolation coefficient COEFF, storing the result in OUT-QUAT."
-  (with-quats ((o out-quat) (q1 (quat-normalize quat1))
-               (q2 (quat-normalize quat2)))
+  (with-quats ((o out-quat) (q1 quat1)
+               (q2 quat2))
     (let ((dot (quat-dot q1 q2))
           (q2 q2))
       (when (minusp dot)
@@ -344,7 +344,6 @@ interpolation coefficient COEFF, storing the result in OUT-QUAT."
                    ox (+ (* q1x scale1) (* q2x scale2))
                    oy (+ (* q1y scale1) (* q2y scale2))
                    oz (+ (* q1z scale1) (* q2z scale2)))))))
-  (quat-normalize! out-quat out-quat)
   out-quat)
 
 (defun* quat-slerp ((quat1 quat) (quat2 quat) (coeff single-float))
