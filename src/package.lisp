@@ -132,7 +132,7 @@
   (:export #:point-distance #:ptdist
            #:point-translate! #:pttr! #:point-translate #:pttr
            #:point-near-p #:ptnearp
-           #:interpolate-transforms! #:mslerp! #:interpolate-transforms #:mslerp
+           #:interpolate-matrices! #:mslerp! #:interpolate-matrices #:mslerp
            #:line-direction
            #:line-segment-midpoint
            #:line-plane-intersect

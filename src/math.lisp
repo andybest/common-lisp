@@ -22,8 +22,8 @@ vector."
   "Check if POINT1 is within TOLERANCE distance from POINT2."
   (< (abs (point-distance point1 point2)) tolerance))
 
-(defun* interpolate-transforms! ((out-matrix matrix) (matrix1 matrix)
-                                 (matrix2 matrix) (coeff single-float))
+(defun* interpolate-matrices! ((out-matrix matrix) (matrix1 matrix)
+                               (matrix2 matrix) (coeff single-float))
     (:result matrix :abbrev mslerp!)
   "Interpolate between the transformations MATRIX1 and MATRIX2 by COEFF, storing
 the result in OUT-MATRIX."
@@ -43,12 +43,12 @@ the result in OUT-MATRIX."
     (matrix-translation-from-vec! out-matrix out-vec)
     out-matrix))
 
-(defun* interpolate-transforms ((matrix1 matrix) (matrix2 matrix)
-                                (coeff single-float))
+(defun* interpolate-matrices ((matrix1 matrix) (matrix2 matrix)
+                              (coeff single-float))
     (:result matrix :abbrev mslerp)
   "Interpolate between the transformations MATRIX1 and MATRIX2 by COEFF, storing
 the result as a new matrix."
-  (interpolate-transforms! (zero-matrix) matrix1 matrix2 coeff))
+  (interpolate-matrices! (zero-matrix) matrix1 matrix2 coeff))
 
 (defun* line-direction ((line-point1 vec) (line-point2 vec)) (:result vec)
   "Calculate the direction of the line denoted by LINE-POINT1 and LINE-POINT2."
