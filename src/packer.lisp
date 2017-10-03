@@ -143,13 +143,12 @@
 
 (defun remove-padding (rects padding)
   (when (and padding (plusp padding))
-    (loop :with p1 = (floor padding 2)
-          :with p2 = (- padding p1)
+    (loop :with padding/2 = (floor padding 2)
           :for rect :in rects
-          :do (incf (slot-value rect 'x) p1)
-              (incf (slot-value rect 'y) p1)
-              (decf (slot-value rect 'w) p2)
-              (decf (slot-value rect 'h) p2)))
+          :do (incf (slot-value rect 'x) padding/2)
+              (incf (slot-value rect 'y) padding/2)
+              (decf (slot-value rect 'w) padding)
+              (decf (slot-value rect 'h) padding)))
   rects)
 
 (defgeneric make-coords (rect width height normalize flip-y)
