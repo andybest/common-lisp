@@ -16,6 +16,8 @@ game development. It uses the 'maxrects' algorithm as described
 
 ## Usage
 
+### Pack Sprites into a Spritesheet
+
 A spritesheet is created from a collection of smaller files. To tell this
 library which files you would like packed, you can do this one of three ways:
 
@@ -102,6 +104,28 @@ the bottom-left.
 Lastly, you can also supply the `:padding` argument to `make-atlas` or
 `make-atlas-from-directory` to specify the amount of padding in pixels
 separating each sprite in the atlas.
+
+### Unpacking Sprites from a Spritesheet
+
+You can perform the reverse operation, and reconstruct the original individual
+sprite images given a spritesheet's image and metadata files.
+
+```lisp
+(unpack-atlas #p"/tmp/spritesheet.png"
+              :out-path #p"/tmp/sprites/"
+              :denormalize nil
+              :flip-y nil)
+```
+
+This will unpack all the sprites in `/tmp/spritesheet.png` to the directory
+`/tmp/sprites/`, assuming the metadata file `/tmp/spritesheet.spec` exists.
+
+You can optionally supply `:denormalize t` if the metadata was created with
+normalized floats rather than pixel integers.
+
+You can also supply the `:flip-y t` option if the metadata was written with the
+Y axis flipped.
+
 
 ## License
 

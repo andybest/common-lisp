@@ -5,4 +5,5 @@
   (:use #:cl
         #:alexandria)
   (:export #:make-atlas
-           #:make-atlas-from-directory))
+           #:make-atlas-from-directory
+           #:unpack-atlas))

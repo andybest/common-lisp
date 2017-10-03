@@ -8,7 +8,7 @@
   :homepage "https://github.com/mfiano/gamebox-sprite-packer"
   :bug-tracker "https://github.com/mfiano/gamebox-sprite-packer/issues"
   :source-control (:git "https://github.com/mfiano/sprite-packer.git")
-  :version "1.0.4"
+  :version "1.0.5"
   :encoding :utf-8
   :long-description #.(uiop:read-file-string
                        (uiop/pathname:subpathname *load-pathname* "README.md"))
@@ -20,4 +20,5 @@
   :pathname "src"
   :serial t
   :components ((:file "package")
-               (:file "packer")))
+               (:file "packer")
+               (:file "unpacker")))
