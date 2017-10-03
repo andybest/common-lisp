@@ -164,7 +164,7 @@
               :w (float (/ w width))
               :h (float (/ h height)))))))
 
-(defun write-sprite (atlas sprite rect)
+(defun write-atlas (atlas sprite rect)
   (let ((sprite (opticl:coerce-image sprite 'opticl:rgba-image)))
     (with-slots (x y) rect
       (opticl:do-pixels (i j) sprite
@@ -187,7 +187,7 @@
         :for rect :in (remove-padding (pack-rects rects width height) padding)
         :for sprite = (opticl:read-png-file (file rect))
         :for coords = (make-coords rect width height normalize flip-y)
-        :do (write-sprite atlas sprite rect)
+        :do (write-atlas atlas sprite rect)
         :collect `(:id ,(id rect) ,@coords) :into data
         :finally (return
                    (values
