@@ -2,8 +2,15 @@
 
 (defpackage #:parsley
   (:use #:cl)
-  (:export #:*byte-buffer*
+  (:export #:*buffer*
+           #:buffer-bytes
+           #:buffer-bits
+           #:buffer-sequence
+           #:buffer-stream
+           #:buffer-position
+           #:with-buffer-read
            #:octets=
+           #:read-bits
            #:read-bytes
            #:read-uint-be
            #:read-uint-le

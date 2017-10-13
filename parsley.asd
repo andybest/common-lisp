@@ -11,12 +11,14 @@
   :long-description #.(uiop:read-file-string
                        (uiop/pathname:subpathname *load-pathname* "README.md"))
   :depends-on (#:fast-io
+               #:bitio
                #:chipz
                #:babel)
   :pathname "src"
   :serial t
   :components
   ((:file "package")
+   (:file "buffer")
    (:file "common")
    (:file "processors")
    (:file "readers")))

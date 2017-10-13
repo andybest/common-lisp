@@ -1,42 +1,61 @@
 (in-package :parsley)
 
-(defvar *byte-buffer*)
-
 (defun octets= (octet-vector octet-list)
   (equalp octet-vector (fast-io:octets-from octet-list)))
 
-(defun read-bytes (count &key (processor #'identity))
+(defun read-bits (count &key (processor #'identity))
+  (funcall processor (bitio:read-bits (buffer-bits) count)))
+
+(defun read-bytes (count &key (bits-per-byte 8) (processor #'identity))
   (let ((octet-vector (fast-io:make-octet-vector count)))
-    (fast-io:fast-read-sequence octet-vector *byte-buffer*)
+    (bitio:read-bytes (buffer-bits)
+                      octet-vector
+                      :byte-width bits-per-byte)
     (funcall processor octet-vector)))
 
-(defun read-uint-be (byte-count &key (processor #'identity))
-  (let ((value 0))
-    (loop :for i :from (* (1- byte-count) 8) :downto 0 :by 8
-          :for byte = (fast-io:fast-read-byte *byte-buffer*)
-          :do (setf (ldb (byte 8 i) value) byte))
+(defun read-uint-be (byte-count &key (bits-per-byte 8) (processor #'identity))
+  (let ((value (bitio:read-integer
+                (buffer-bits)
+                :byte-endian :be
+                :byte-width bits-per-byte
+                :num-bytes byte-count
+                :unsignedp t)))
     (funcall processor value)))
 
-(defun read-uint-le (byte-count &key (processor #'identity))
-  (let ((value 0))
-    (loop :for i :below (* byte-count 8) :by 8
-          :for byte = (fast-io:fast-read-byte *byte-buffer*)
-          :do (setf (ldb (byte 8 i) value) byte))
+(defun read-uint-le (byte-count &key (bits-per-byte 8) (processor #'identity))
+  (let ((value (bitio:read-integer
+                (buffer-bits)
+                :byte-endian :le
+                :byte-width bits-per-byte
+                :num-bytes byte-count
+                :unsignedp t)))
     (funcall processor value)))
 
-(defun read-int-be (byte-count &key (processor #'identity))
-  (%sign-extend (read-uint-be byte-count :processor processor) byte-count))
+(defun read-int-be (byte-count &key (bits-per-byte 8) (processor #'identity))
+  (let ((value (bitio:read-integer
+                (buffer-bits)
+                :byte-endian :be
+                :byte-width bits-per-byte
+                :num-bytes byte-count
+                :unsignedp nil)))
+    (funcall processor value)))
 
-(defun read-int-le (byte-count &key (processor #'identity))
-  (%sign-extend (read-uint-le byte-count :processor processor) byte-count))
+(defun read-int-le (byte-count &key (bits-per-byte 8) (processor #'identity))
+  (let ((value (bitio:read-integer
+                (buffer-bits)
+                :byte-endian :le
+                :byte-width bits-per-byte
+                :num-bytes byte-count
+                :unsignedp nil)))
+    (funcall processor value)))
 
 (defun read-string (&key bytes (encoding :ascii) (processor #'identity)
-                      null-terminated)
+                      null-terminated-p)
   (let ((octet-vector (fast-io:make-octet-vector
-                       (%string-length bytes null-terminated))))
-    (fast-io:fast-read-sequence octet-vector *byte-buffer*)
-    (when null-terminated
-      (fast-io:fast-read-byte *byte-buffer*))
+                       (%string-length bytes null-terminated-p))))
+    (fast-io:fast-read-sequence octet-vector (buffer-bytes))
+    (when null-terminated-p
+      (fast-io:fast-read-byte (buffer-bytes)))
     (babel:octets-to-string
      (funcall processor octet-vector)
      :encoding encoding)))
