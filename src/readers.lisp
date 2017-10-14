@@ -4,17 +4,16 @@
   (equalp octet-vector (fast-io:octets-from octet-list)))
 
 (defun read-bits (count &key (processor #'identity))
-  (funcall processor (bitio:read-bits (buffer-bits) count :be)))
+  (funcall processor (bitio:read-bits (buffer-bits) count)))
 
 (defun read-bytes (count &key (bits-per-byte 8) (processor #'identity))
   (let ((octet-vector (fast-io:make-octet-vector count)))
-    (bitio:read-bytes (buffer-bits) octet-vector :be bits-per-byte)
+    (bitio:read-bytes (buffer-bits) octet-vector :byte-width bits-per-byte)
     (funcall processor octet-vector)))
 
 (defun read-uint-be (byte-count &key (bits-per-byte 8) (processor #'identity))
   (let ((value (bitio:read-integer
                 (buffer-bits)
-                :bit-endian :be
                 :byte-endian :be
                 :num-bytes byte-count
                 :byte-width bits-per-byte
@@ -24,7 +23,6 @@
 (defun read-uint-le (byte-count &key (bits-per-byte 8) (processor #'identity))
   (let ((value (bitio:read-integer
                 (buffer-bits)
-                :bit-endian :be
                 :byte-endian :le
                 :num-bytes byte-count
                 :byte-width bits-per-byte
@@ -34,7 +32,6 @@
 (defun read-int-be (byte-count &key (bits-per-byte 8) (processor #'identity))
   (let ((value (bitio:read-integer
                 (buffer-bits)
-                :bit-endian :be
                 :byte-endian :be
                 :num-bytes byte-count
                 :byte-width bits-per-byte
@@ -44,7 +41,6 @@
 (defun read-int-le (byte-count &key (bits-per-byte 8) (processor #'identity))
   (let ((value (bitio:read-integer
                 (buffer-bits)
-                :bit-endian :be
                 :byte-endian :le
                 :num-bytes byte-count
                 :byte-width bits-per-byte
