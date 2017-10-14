@@ -20,4 +20,5 @@
            #:uncompress-bzip2
            #:uncompress-gzip
            #:uncompress-zlib
-           #:uncompress-deflate))
+           #:uncompress-deflate
+           #:split-string))
