@@ -11,8 +11,3 @@
 
 (defun uncompress-deflate (octet-vector)
   (%uncompress-octets octet-vector 'chipz:deflate))
-
-(defun split-string (string delimiter)
-  (let ((pos (position delimiter string)))
-    (list (subseq string 0 pos)
-          (subseq string (1+ pos)))))

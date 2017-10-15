@@ -13,3 +13,8 @@
                     (position 0 octet-vector :start start :end end)
                     end)))
     (- index start)))
+
+(defun split-string (string delimiter)
+  (let ((pos (position delimiter string)))
+    (list (subseq string 0 pos)
+          (subseq string (1+ pos)))))
