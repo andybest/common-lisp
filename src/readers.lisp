@@ -54,7 +54,6 @@
     (fast-io:fast-read-sequence octet-vector (buffer-bytes))
     (when null-terminated-p
       (fast-io:fast-read-byte (buffer-bytes)))
-    (funcall processor
-             (babel:octets-to-string
-              octet-vector
-              :encoding encoding))))
+    (babel:octets-to-string
+     (funcall processor octet-vector)
+     :encoding encoding)))
