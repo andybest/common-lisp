@@ -1,4 +1,4 @@
-(in-package :flac-read)
+(in-package :flac-metadata)
 
 (defvar *dump-spec* '(:streaminfo :application :seektable :vorbis-comment
                       :cuesheet :picture))

@@ -1,6 +1,6 @@
 (in-package :cl-user)
 
-(defpackage #:flac-read
+(defpackage #:flac-metadata
   (:use #:cl
         #:alexandria
         #:parsley)

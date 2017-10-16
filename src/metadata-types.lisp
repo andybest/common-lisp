@@ -1,4 +1,4 @@
-(in-package :flac-read)
+(in-package :flac-metadata)
 
 (defclass seek-point ()
   ((%sample :initarg :sample)
