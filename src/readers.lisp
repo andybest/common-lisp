@@ -16,7 +16,7 @@
                 (buffer-bits)
                 :byte-endian :be
                 :num-bytes byte-count
-                :byte-width bits-per-byte
+                :bits-per-byte bits-per-byte
                 :unsignedp t)))
     (funcall processor value)))
 
@@ -25,7 +25,7 @@
                 (buffer-bits)
                 :byte-endian :le
                 :num-bytes byte-count
-                :byte-width bits-per-byte
+                :bits-per-byte bits-per-byte
                 :unsignedp t)))
     (funcall processor value)))
 
@@ -34,7 +34,7 @@
                 (buffer-bits)
                 :byte-endian :be
                 :num-bytes byte-count
-                :byte-width bits-per-byte
+                :bits-per-byte bits-per-byte
                 :unsignedp nil)))
     (funcall processor value)))
 
@@ -43,7 +43,7 @@
                 (buffer-bits)
                 :byte-endian :le
                 :num-bytes byte-count
-                :byte-width bits-per-byte
+                :bits-per-byte bits-per-byte
                 :unsignedp nil)))
     (funcall processor value)))
 
