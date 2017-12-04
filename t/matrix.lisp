@@ -327,7 +327,7 @@
 
 (diag "perspective projection matrix")
 (with-matrices ((r (matrix 0.97427857 0 0 0 0 1.7320508 0 0 0 0 -1.002002
-                           -2.002002 0 0 -1 1))
+                           -2.002002 0 0 -1 0))
                 (o (mid)))
   (is (mkpersp! o (/ pi 3) (/ 16 9) 1 1000) r)
   (is o r)

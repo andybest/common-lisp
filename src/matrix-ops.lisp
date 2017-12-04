@@ -1,9 +1,20 @@
 (in-package :gamebox-math)
 
 (eval-when (:compile-toplevel :load-toplevel)
+  (defun* zero-matrix! ((matrix matrix)) (:result matrix :abbrev mzero!)
+    "Modify the components of MATRIX to all zeros."
+    (with-matrix (m matrix)
+      (psetf m00 0.0 m01 0.0 m02 0.0 m03 0.0
+             m10 0.0 m11 0.0 m12 0.0 m13 0.0
+             m20 0.0 m21 0.0 m22 0.0 m23 0.0
+             m30 0.0 m31 0.0 m32 0.0 m33 0.0))
+    matrix)
+
   (defun* zero-matrix () (:result matrix :abbrev mzero)
     "Create a matrix of all zeros."
     (%matrix 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0))
+
+  (define-constant +zero-matrix+ (zero-matrix) :test #'equalp)
 
   (defun* matrix-identity! ((matrix matrix)) (:result matrix :abbrev mid!)
     "Modify the components of MATRIX to form an identity matrix."
@@ -508,7 +519,7 @@ Alias: MINVT"
   "Create a perspective projection matrix, storing the result in OUT-MATRIX."
   (let ((f (float (/ (tan (/ fov 2))) 1.0))
         (z (float (- near far) 1.0)))
-    (with-matrix (m (matrix-identity! out-matrix))
+    (with-matrix (m (zero-matrix! out-matrix))
       (psetf m00 (/ f aspect)
              m11 f
              m22 (/ (+ near far) z)
