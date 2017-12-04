@@ -482,7 +482,7 @@ Alias: MINVT"
                o01 sy o11 uy o12 (- fy)
                o02 sz o12 uz o22 (- fz))
         (matrix-translation-from-vec! translation (vec-negate! inv-eye eye))
-        (matrix*! out-matrix translation out-matrix))))
+        (matrix*! out-matrix out-matrix translation))))
   out-matrix)
 
 (defun* make-view-matrix ((eye vec) (target vec) (up vec))
