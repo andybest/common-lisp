@@ -184,7 +184,7 @@
 (diag "vector conversion")
 (with-quat (q (quat 0.3628688 0.9540863 0.017128706 0.32979298))
   (with-vectors ((r (vec qx qy qz))
-                 (o (vec)))
+                 (o (vzero)))
     (is (q->v! o q) r)
     (is o r)
     (is (q->v q) r)))
@@ -196,7 +196,7 @@
     (is (v->q v) r)))
 
 (diag "matrix conversion")
-(with-quats ((q (qrot +qid+ (vec (/ pi 3))))
+(with-quats ((q (qrot +qid+ (vec (/ pi 3) 0 0)))
              (qo (quat)))
   (with-matrices ((r (matrix 1 0 0 0 0 0.5 -0.86602545 0 0 0.86602545 0.5 0 0 0
                              0 1))

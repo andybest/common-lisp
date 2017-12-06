@@ -225,7 +225,7 @@ radians VEC, storing the result as a new quaternion."
 
 (defun* quat-to-vec ((quat quat)) (:result vec :abbrev q->v)
   "Convert a quaternion to a vector, storing the result as a new vector."
-  (quat-to-vec! (vec) quat))
+  (quat-to-vec! (vzero) quat))
 
 (defun* quat-from-vec! ((out-quat quat) (vec vec)) (:result quat :abbrev v->q!)
   "Convert a vector to a quaternion, storing the result in OUT-QUAT."

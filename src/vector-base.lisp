@@ -4,7 +4,7 @@
   (deftype vec () '(simple-array single-float (3)))
 
   (defstruct (vec (:type (vector single-float))
-                  (:constructor %vec (&optional x y z))
+                  (:constructor %vec (x y z))
                   (:conc-name v)
                   (:copier nil)
                   (:predicate nil))
@@ -12,12 +12,12 @@
     (y 0.0 :type single-float)
     (z 0.0 :type single-float))
 
-  (defun* vec (&optional ((x real) 0) ((y real) 0) ((z real) 0)) (:result vec)
+  (defun* vec ((x real) (y real) (z real)) (:result vec)
     "Create a new vector."
     (%vec (float x 1.0) (float y 1.0) (float z 1.0)))
 
-  (define-constant +zero-vector+ (vec) :test #'equalp)
-  (define-constant +0vec+ (vec) :test #'equalp))
+  (define-constant +zero-vector+ (vec 0 0 0) :test #'equalp)
+  (define-constant +0vec+ (vec 0 0 0) :test #'equalp))
 
 (defmacro with-vector ((prefix vec) &body body)
   "A convenience macro for concisely accessing components of a vector.

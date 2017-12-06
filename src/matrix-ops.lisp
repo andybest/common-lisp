@@ -151,7 +151,7 @@ in OUT-VEC."
 (defun* matrix-translation-to-vec ((matrix matrix)) (:result vec :abbrev mtr->v)
   "Copy the components in the translation column of MATRIX, storing the result
 as a new vector."
-  (matrix-translation-to-vec! (vec) matrix))
+  (matrix-translation-to-vec! (vzero) matrix))
 
 (defun* matrix-translation-from-vec! ((matrix matrix) (vec vec))
     (:result matrix :abbrev v->mtr!)
@@ -209,7 +209,7 @@ matrix."
     (:result vec :abbrev mrot->v)
   "Get a particular rotation AXIS from MATRIX, storing the result as a new
 vector."
-  (matrix-rotation-to-vec! (vec) matrix axis))
+  (matrix-rotation-to-vec! (vzero) matrix axis))
 
 (defun* matrix-rotation-from-vec! ((matrix matrix) (vec vec) (axis keyword))
     (:result matrix :abbrev v->mrot!)
@@ -270,7 +270,7 @@ OUT-VEC."
 (defun* matrix-scale-to-vec ((matrix matrix)) (:result vec :abbrev mscale->v)
   "Copy the components in the scaling part of MATRIX, storing the result as a new
 vector."
-  (matrix-scale-to-vec! (vec) matrix))
+  (matrix-scale-to-vec! (vzero) matrix))
 
 (defun* matrix-scale-from-vec! ((matrix matrix) (vec vec))
     (:result matrix :abbrev v->mscale!)
@@ -308,7 +308,7 @@ a new matrix."
 
 (defun* matrix*vec ((matrix matrix) (vec vec)) (:result vec :abbrev m*v)
   "Multiplication of MATRIX and VEC, storing the result as a new vector."
-  (matrix*vec! (vec) matrix vec))
+  (matrix*vec! (vzero) matrix vec))
 
 (defun* matrix-transpose! ((out-matrix matrix) (matrix matrix))
     (:result matrix :abbrev mtranspose!)
@@ -469,10 +469,10 @@ Alias: MINVT"
 (defun* make-view-matrix! ((out-matrix matrix) (eye vec) (target vec) (up vec))
     (:result matrix :abbrev mkview!)
   "Create a view matrix, storing the result in OUT-MATRIX."
-  (let ((f (vec))
-        (s (vec))
-        (u (vec))
-        (inv-eye (vec))
+  (let ((f (vzero))
+        (s (vzero))
+        (u (vzero))
+        (inv-eye (vzero))
         (translation (mid)))
     (with-matrix (o (matrix-identity! out-matrix))
       (with-vectors ((f (vec-normalize! f (vec-! f target eye)))

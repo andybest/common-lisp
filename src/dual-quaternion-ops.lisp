@@ -215,7 +215,7 @@ result in OUT-VEC."
 (defun* dquat-translation-to-vec ((dquat dquat)) (:result vec :abbrev dqtr->v)
   "Decode the translation in the dual part of a dual quaternion, storing the
 result as a new vector."
-  (dquat-translation-to-vec! (vec) dquat))
+  (dquat-translation-to-vec! (vzero) dquat))
 
 (defun* dquat-translation-from-vec! ((out-dquat dquat) (vec vec))
     (:result dquat :abbrev v->dqtr!)

@@ -14,10 +14,10 @@
     (:result vec :abbrev pttr)
   "Translate POINT along DIRECTION by DISTANCE, storing the result as a new
 vector."
-  (point-translate! (vec) point direction distance))
+  (point-translate! (vzero) point direction distance))
 
-(defun* point-near-p ((point1 vec) (point2 vec) &key ((tolerance single-float)
-                                                      +epsilon+))
+(defun* point-near-p ((point1 vec) (point2 vec)
+                      &key ((tolerance single-float) +epsilon+))
     (:result boolean :abbrev ptnearp)
   "Check if POINT1 is within TOLERANCE distance from POINT2."
   (< (abs (point-distance point1 point2)) tolerance))
@@ -30,9 +30,9 @@ the result in OUT-MATRIX."
   (let ((q1 (quat))
         (q2 (quat))
         (out-quat (quat))
-        (v1 (vec))
-        (v2 (vec))
-        (out-vec (vec)))
+        (v1 (vzero))
+        (v2 (vzero))
+        (out-vec (vzero)))
     (quat-from-matrix! q1 matrix1)
     (quat-from-matrix! q2 matrix2)
     (quat-slerp! out-quat q1 q2 coeff)

@@ -127,7 +127,7 @@
               (rd (dquat (quat 1 0 0 0) (quat 0.0 5.0 10.0 15.0)))
               (od (dquat)))
   (with-vectors ((rv (vec 10 20 30))
-                 (ov (vec)))
+                 (ov (vzero)))
     (ok (v~ (dqtr->v! ov d) rv :tolerance 1e-5))
     (ok (v~ ov rv :tolerance 1e-5))
     (ok (v~ (dqtr->v d) rv :tolerance 1e-5))

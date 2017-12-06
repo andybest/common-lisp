@@ -2,7 +2,7 @@
 
 (defun* vec-test () (:result vec :abbrev vtest)
   "Create a test vector."
-  (with-vector (v (vec))
+  (with-vector (v (vzero))
     (psetf vx 1.0 vy 2.0 vz 3.0)
     v))
 
@@ -14,7 +14,7 @@
 
 (defun* vec-copy ((vec vec)) (:result vec :abbrev vcp)
   "Copy the components of VEC, storing the result in a new vector."
-  (vec-copy! (vec) vec))
+  (vec-copy! (vzero) vec))
 
 (defun* vec-clamp! ((out-vec vec) (vec vec) &key
                     ((min single-float) most-negative-single-float)
@@ -34,7 +34,7 @@ in OUT-VEC."
     (:result vec :abbrev vclamp)
   "Clamp each component of VEC within the range of [MIN, MAX], storing the result
 as a new vector."
-  (vec-clamp! (vec) vec :min min :max max))
+  (vec-clamp! (vzero) vec :min min :max max))
 
 (defun* vec-stabilize! ((out-vec vec) (vec vec)
                         &key ((tolerance single-float) +epsilon+))
@@ -52,7 +52,7 @@ the result in OUT-VEC."
     (:result vec :abbrev vstab)
   "Adjust any component of VEC to zero if below the epsilon TOLERANCE, storing
 the result as a new vector."
-  (vec-stabilize! (vec) vec :tolerance tolerance))
+  (vec-stabilize! (vzero) vec :tolerance tolerance))
 
 (defun* vec-zero! ((vec vec)) (:result vec :abbrev vzero!)
   "Set each component of VEC to zero."
@@ -63,7 +63,7 @@ the result as a new vector."
 (defun* vec-zero () (:result vec :abbrev vzero)
   "Create a new zero vector. This is the same as calling #'VEC with no
 arguments."
-  (vec))
+  (vec 0 0 0))
 
 (defun* vec-to-list ((vec vec)) (:result list :abbrev v->list)
   "Convert VEC to a list of components."
@@ -100,7 +100,7 @@ VEC2, according to the epsilon TOLERANCE."
 
 (defun* vec+ ((vec1 vec) (vec2 vec)) (:result vec :abbrev v+)
   "Vector addition of VEC1 and VEC2, storing the result as a new vector."
-  (vec+! (vec) vec1 vec2))
+  (vec+! (vzero) vec1 vec2))
 
 (defun* vec-! ((out-vec vec) (vec1 vec) (vec2 vec)) (:result vec :abbrev v-!)
   "Vector subtraction of VEC2 from VEC1, storing the result in OUT-VEC."
@@ -112,7 +112,7 @@ VEC2, according to the epsilon TOLERANCE."
 
 (defun* vec- ((vec1 vec) (vec2 vec)) (:result vec :abbrev v-)
   "Vector subtraction of VEC2 from VEC1, storing the result as a new vector."
-  (vec-! (vec) vec1 vec2))
+  (vec-! (vzero) vec1 vec2))
 
 (defun* vec-hadamard*! ((out-vec vec) (vec1 vec) (vec2 vec))
     (:result vec :abbrev vhad*!)
@@ -127,7 +127,7 @@ the result in OUT-VEC."
 (defun* vec-hadamard* ((vec1 vec) (vec2 vec)) (:result vec :abbrev vhad*)
   "Component-wise multiplication (the Hadamard product) of VEC1 and VEC2, storing
 the result as a new vector."
-  (vec-hadamard*! (vec) vec1 vec2))
+  (vec-hadamard*! (vzero) vec1 vec2))
 
 (defun* vec-hadamard/! ((out-vec vec) (vec1 vec) (vec2 vec))
     (:result vec :abbrev vhad/!)
@@ -142,7 +142,7 @@ result in OUT-VEC."
 (defun* vec-hadamard/ ((vec1 vec) (vec2 vec)) (:result vec :abbrev vhad/)
   "Component-wise division (the Hadamard quotient) of VEC1 by VEC2, storing the
 result as a new vector."
-  (vec-hadamard/! (vec) vec1 vec2))
+  (vec-hadamard/! (vzero) vec1 vec2))
 
 (defun* vec-scale! ((out-vec vec) (vec vec) (scalar single-float))
     (:result vec :abbrev vscale!)
@@ -156,7 +156,7 @@ result as a new vector."
 (defun* vec-scale ((vec vec) (scalar single-float)) (:result vec :abbrev vscale)
   "Vector scalar multiplication of VEC by SCALAR, storing the result as a new
 vector."
-  (vec-scale! (vec) vec scalar))
+  (vec-scale! (vzero) vec scalar))
 
 (defun* vec-dot ((vec1 vec) (vec2 vec)) (:result single-float :abbrev vdot)
   "Compute the dot product of VEC1 and VEC2."
@@ -188,7 +188,7 @@ OUT-VEC."
 (defun* vec-normalize ((vec vec)) (:result vec :abbrev vnormalize)
   "Normalize a vector so it has a magnitude of 1.0, storing the result as a new
 vector."
-  (vec-normalize! (vec) vec))
+  (vec-normalize! (vzero) vec))
 
 (defun* vec-round! ((out-vec vec) (vec vec)) (:result vec :abbrev vround!)
   "Round each component of VEC to the nearest integer, storing the result in
@@ -202,7 +202,7 @@ OUT-VEC."
 (defun* vec-round ((vec vec)) (:result vec :abbrev vround)
   "Round each component of VEC to the nearest integer, storing the result as a
 new vector."
-  (vec-round! (vec) vec))
+  (vec-round! (vzero) vec))
 
 (defun* vec-abs! ((out-vec vec) (vec vec)) (:result vec :abbrev vabs!)
   "Modify VEC to have the absolute value of each component, storing the result in
@@ -216,7 +216,7 @@ OUT-VEC."
 (defun* vec-abs ((vec vec)) (:result vec :abbrev vabs)
   "Modify VEC to have the absolute value of each component, storing the result as
 a new vector."
-  (vec-abs! (vec) vec))
+  (vec-abs! (vzero) vec))
 
 (defun* vec-negate! ((out-vec vec) (vec vec)) (:result vec :abbrev vneg!)
   "Negate each component of VEC, storing the result in OUT-VEC."
@@ -224,7 +224,7 @@ a new vector."
 
 (defun* vec-negate ((vec vec)) (:result vec :abbrev vneg)
   "Negate each component of VEC, storing the result as a new vector."
-  (vec-negate! (vec) vec))
+  (vec-negate! (vzero) vec))
 
 (defun* vec-cross! ((out-vec vec) (vec1 vec) (vec2 vec))
     (:result vec :abbrev vcross!)
@@ -238,7 +238,7 @@ a new vector."
 (defun* vec-cross ((vec1 vec) (vec2 vec)) (:result vec :abbrev vcross)
   "Compute the cross product of VEC1 and VEC2, storing the result as a new
 vector."
-  (vec-cross! (vec) vec1 vec2))
+  (vec-cross! (vzero) vec1 vec2))
 
 (defun* vec-box ((vec1 vec) (vec2 vec) (vec3 vec))
     (:result single-float :abbrev vbox)
@@ -281,7 +281,7 @@ coefficient COEFF, storing the result in OUT-VEC."
     (:result vec :abbrev vlerp)
   "Perform a linear interpolation between VEC1 and VEC2 by the interpolation
 coefficient COEFF, storing the result as a new vector."
-  (vec-lerp! (vec) vec1 vec2 coeff))
+  (vec-lerp! (vzero) vec1 vec2 coeff))
 
 (defun* vec< ((vec1 vec) (vec2 vec)) (:result boolean :abbrev v<)
   "Check if each component of VEC1 is less than that component of VEC2."
@@ -324,7 +324,7 @@ VEC2."
 
 (defun* vec-min ((vec1 vec) (vec2 vec)) (:result vec :abbrev vmin)
   "Component-wise minimum of VEC1 and VEC2, storing the result as a new vector."
-  (vec-min! (vec) vec1 vec2))
+  (vec-min! (vzero) vec1 vec2))
 
 (defun* vec-max! ((out-vec vec) (vec1 vec) (vec2 vec))
     (:result vec :abbrev vmax!)
@@ -337,4 +337,4 @@ VEC2."
 
 (defun* vec-max ((vec1 vec) (vec2 vec)) (:result vec :abbrev vmax)
   "Component-wise maximum of VEC1 and VEC2, storing the result as a new vector."
-  (vec-max! (vec) vec1 vec2))
+  (vec-max! (vzero) vec1 vec2))
