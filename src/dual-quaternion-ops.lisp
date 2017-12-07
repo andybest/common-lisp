@@ -25,7 +25,7 @@
     (:result boolean :abbrev dq~)
   "Check if the components of DQUAT-A are approximately equal to the components
 of DQUAT-B."
-  (with-dquats ((d1 dquat-b) (d2 dquat-b))
+  (with-dquats ((d1 dquat-a) (d2 dquat-b))
     (and (q~ d1r d2r :tolerance tolerance)
          (q~ d1d d2d :tolerance tolerance))))
 
@@ -299,7 +299,7 @@ radians VEC, storing the result as a new dual quaternion."
   "Convert a matrix to a dual quaternion, storing the result in OUT-DQUAT."
   (with-dquat (o out-dquat)
     (let ((rot (q->dqrot (m->q matrix)))
-          (tr (v3->dqtr (m->v3 matrix))))
+          (tr (v3->dqtr (mtr->v3 matrix))))
       (dq*! out-dquat tr rot)))
   out-dquat)
 

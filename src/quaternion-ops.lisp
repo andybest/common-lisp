@@ -26,7 +26,7 @@ arguments."
 
 (defun* quat= ((quat-a quat) (quat-b quat)) (:result boolean :abbrev q=)
   "Check if the components of QUAT-A are equal to the components of QUAT-B."
-  (with-quats ((q1 quat-b) (q2 quat-b))
+  (with-quats ((q1 quat-a) (q2 quat-b))
     (and (= q1w q2w)
          (= q1x q2x)
          (= q1y q2y)
@@ -116,7 +116,7 @@ OUT-QUAT."
 new quaternion."
   (qscale! (qid) quat scalar))
 
-(defun* qcross! ((out-quat quat) (quat-a quat) (quat-b quat))
+(defun* quat-cross! ((out-quat quat) (quat-a quat) (quat-b quat))
     (:result quat :abbrev qcross!)
   "Compute the cross product of QUAT-A and QUAT-B, storing the result in
 OUT-QUAT."
