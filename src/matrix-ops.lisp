@@ -14,7 +14,7 @@
     "Create a matrix of all zeros."
     (%matrix 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0))
 
-  (define-constant +zero-matrix+ (zero-matrix) :test #'equalp)
+  (define-constant +zero-matrix+ (mzero) :test #'equalp)
 
   (defun* matrix-identity! ((matrix matrix)) (:result matrix :abbrev mid!)
     "Modify the components of MATRIX to form an identity matrix."
@@ -29,32 +29,33 @@
     "Create an identity matrix."
     (%matrix 1.0 0.0 0.0 0.0 0.0 1.0 0.0 0.0 0.0 0.0 1.0 0.0 0.0 0.0 0.0 1.0))
 
-  (define-constant +identity-matrix+ (matrix-identity) :test #'equalp)
-  (define-constant +mid+ (matrix-identity) :test #'equalp))
+  (define-constant +mid+ (mid) :test #'equalp))
 
 (defun* matrix-test () (:result matrix :abbrev mtest)
   "create a test matrix."
-  (with-matrix (m (zero-matrix))
+  (with-matrix (m (mzero))
     (psetf m00 1.0 m01 5.0 m02 9.0 m03 13.0
            m10 2.0 m11 6.0 m12 10.0 m13 14.0
            m20 3.0 m21 7.0 m22 11.0 m23 15.0
            m30 4.0 m31 8.0 m32 12.0 m33 16.0)
     m))
 
-(defun* matrix= ((matrix1 matrix) (matrix2 matrix)) (:result boolean :abbrev m=)
-  (with-matrices ((ma matrix1) (mb matrix2))
-    "Check if the components of MATRIX1 are equal to the components of MATRIX2."
+(defun* matrix= ((matrix-a matrix) (matrix-b matrix))
+    (:result boolean :abbrev m=)
+  (with-matrices ((ma matrix-a) (mb matrix-b))
+    "Check if the components of MATRIX-A are equal to the components of
+MATRIX-B."
     (and (= ma00 mb00) (= ma01 mb01) (= ma02 mb02) (= ma03 mb03)
          (= ma10 mb10) (= ma11 mb11) (= ma12 mb12) (= ma13 mb13)
          (= ma20 mb20) (= ma21 mb21) (= ma22 mb22) (= ma23 mb23)
          (= ma30 mb30) (= ma31 mb31) (= ma32 mb32) (= ma33 mb33))))
 
-(defun* matrix~ ((matrix1 matrix) (matrix2 matrix)
+(defun* matrix~ ((matrix-a matrix) (matrix-b matrix)
                  &key ((tolerance single-float) +epsilon+))
     (:result boolean :abbrev m~)
-  "Check if the components of MATRIX1 are approximately equal to the components
-of MATRIX2, according to the epsilon TOLERANCE."
-  (with-matrices ((ma matrix1) (mb matrix2))
+  "Check if the components of MATRIX-A are approximately equal to the components
+of MATRIX-B, according to the epsilon TOLERANCE."
+  (with-matrices ((ma matrix-a) (mb matrix-b))
     (and (~ ma00 mb00 tolerance)
          (~ ma01 mb01 tolerance)
          (~ ma02 mb02 tolerance)
@@ -84,7 +85,7 @@ of MATRIX2, according to the epsilon TOLERANCE."
 
 (defun* matrix-copy ((matrix matrix)) (:result matrix :abbrev mcp)
   "Copy the components of MATRIX, storing the result as a new matrix."
-  (matrix-copy! (zero-matrix) matrix))
+  (mcp! (mzero) matrix))
 
 (defun* matrix-clamp! ((out-matrix matrix) (matrix matrix) &key
                        ((min single-float) most-negative-single-float)
@@ -109,13 +110,13 @@ result in OUT-MATRIX."
     (:result matrix :abbrev mclamp)
   "Clamp each component of MATRIX within the range of [MIN, MAX], storing the
 result as a new matrix."
-  (matrix-clamp! (zero-matrix) matrix :min min :max max))
+  (mclamp! (mzero) matrix :min min :max max))
 
-(defun* matrix*! ((out-matrix matrix) (matrix1 matrix) (matrix2 matrix))
+(defun* matrix*! ((out-matrix matrix) (matrix-a matrix) (matrix-b matrix))
     (:result matrix :abbrev m*!)
-  "Matrix multiplication of MATRIX1 by MATRIX2, storing the result in
+  "Matrix multiplication of MATRIX-A by MATRIX-B, storing the result in
 OUT-MATRIX."
-  (with-matrices ((o out-matrix) (a matrix1) (b matrix2))
+  (with-matrices ((o out-matrix) (a matrix-a) (b matrix-b))
     (psetf o00 (+ (* a00 b00) (* a01 b10) (* a02 b20) (* a03 b30))
            o10 (+ (* a10 b00) (* a11 b10) (* a12 b20) (* a13 b30))
            o20 (+ (* a20 b00) (* a21 b10) (* a22 b20) (* a23 b30))
@@ -134,51 +135,52 @@ OUT-MATRIX."
            o33 (+ (* a30 b03) (* a31 b13) (* a32 b23) (* a33 b33))))
   out-matrix)
 
-(defun* matrix* ((matrix1 matrix) (matrix2 matrix)) (:result matrix :abbrev m*)
-  "Matrix multiplication of MATRIX1 by MATRIX2, storing the result as a new
+(defun* matrix* ((matrix-a matrix) (matrix-b matrix)) (:result matrix :abbrev m*)
+  "Matrix multiplication of MATRIX-A by MATRIX-B, storing the result as a new
 matrix."
-  (matrix*! (zero-matrix) matrix1 matrix2))
+  (m*! (mzero) matrix-a matrix-b))
 
-(defun* matrix-translation-to-vec! ((out-vec vec) (matrix matrix))
-    (:result vec :abbrev mtr->v!)
+(defun* matrix-translation-to-vec3! ((out-vec vec3) (matrix matrix))
+    (:result vec3 :abbrev mtr->v3!)
   "Copy the components in the translation column of MATRIX, storing the result
 in OUT-VEC."
-  (with-vector (o out-vec)
+  (with-vec3 (o out-vec)
     (with-matrix (m matrix)
       (psetf ox m03 oy m13 oz m23)))
   out-vec)
 
-(defun* matrix-translation-to-vec ((matrix matrix)) (:result vec :abbrev mtr->v)
+(defun* matrix-translation-to-vec3 ((matrix matrix))
+    (:result vec3 :abbrev mtr->v3)
   "Copy the components in the translation column of MATRIX, storing the result
 as a new vector."
-  (matrix-translation-to-vec! (vzero) matrix))
+  (mtr->v3! (v3zero) matrix))
 
-(defun* matrix-translation-from-vec! ((matrix matrix) (vec vec))
-    (:result matrix :abbrev v->mtr!)
+(defun* matrix-translation-from-vec3! ((matrix matrix) (vec vec3))
+    (:result matrix :abbrev v3->mtr!)
   "Copy the components of VEC, storing the result in the translation column of
 MATRIX."
   (with-matrix (m matrix)
-    (with-vector (v vec)
+    (with-vec3 (v vec)
       (psetf m03 vx m13 vy m23 vz)))
   matrix)
 
-(defun* matrix-translation-from-vec ((matrix matrix) (vec vec))
-    (:result matrix :abbrev v->mtr)
+(defun* matrix-translation-from-vec3 ((matrix matrix) (vec vec3))
+    (:result matrix :abbrev v3->mtr)
   "Copy the components of VEC, storing the result in the translation column of a
 new matrix."
-  (matrix-translation-from-vec! (matrix-copy matrix) vec))
+  (v3->mtr! (mcp matrix) vec))
 
-(defun* matrix-translate! ((out-matrix matrix) (matrix matrix) (vec vec))
+(defun* matrix-translate! ((out-matrix matrix) (matrix matrix) (vec vec3))
     (:result matrix :abbrev mtr!)
   "Translate a matrix by the translation vector VEC, storing the result in
 OUT-MATRIX."
-  (matrix*! out-matrix (matrix-translation-from-vec (matrix-identity) vec)
-            matrix))
+  (m*! out-matrix (v3->mtr (mid) vec) matrix))
 
-(defun* matrix-translate ((matrix matrix) (vec vec)) (:result matrix :abbrev mtr)
+(defun* matrix-translate ((matrix matrix) (vec vec3))
+    (:result matrix :abbrev mtr)
   "Translate a matrix by the translation vector VEC, storing the result as a new
 matrix."
-  (matrix-translate! (matrix-identity) matrix vec))
+  (mtr! (mid) matrix vec))
 
 (defun* matrix-copy-rotation! ((out-matrix matrix) (matrix matrix))
     (:result matrix :abbrev mcprot!)
@@ -192,12 +194,12 @@ matrix."
 (defun* matrix-copy-rotation ((matrix matrix)) (:result matrix :abbrev mcprot)
   "Copy the 3x3 rotation components of MATRIX, storing the result as a new
 matrix."
-  (matrix-copy-rotation! (matrix-identity) matrix))
+  (mcprot! (mid) matrix))
 
-(defun* matrix-rotation-to-vec! ((out-vec vec) (matrix matrix) (axis keyword))
-    (:result vec :abbrev mrot->v!)
+(defun* matrix-rotation-to-vec3! ((out-vec vec3) (matrix matrix) (axis keyword))
+    (:result vec3 :abbrev mrot->v3!)
   "Get a particular rotation AXIS from MATRIX, storing the result in OUT-VEC."
-  (with-vector (v out-vec)
+  (with-vec3 (v out-vec)
     (with-matrix (m matrix)
       (ecase axis
         (:x (psetf vx m00 vy m10 vz m20))
@@ -205,29 +207,29 @@ matrix."
         (:z (psetf vx m02 vy m12 vz m22)))))
   out-vec)
 
-(defun* matrix-rotation-to-vec ((matrix matrix) (axis keyword))
-    (:result vec :abbrev mrot->v)
+(defun* matrix-rotation-to-vec3 ((matrix matrix) (axis keyword))
+    (:result vec3 :abbrev mrot->v3)
   "Get a particular rotation AXIS from MATRIX, storing the result as a new
 vector."
-  (matrix-rotation-to-vec! (vzero) matrix axis))
+  (mrot->v3! (v3zero) matrix axis))
 
-(defun* matrix-rotation-from-vec! ((matrix matrix) (vec vec) (axis keyword))
-    (:result matrix :abbrev v->mrot!)
+(defun* matrix-rotation-from-vec3! ((matrix matrix) (vec vec3) (axis keyword))
+    (:result matrix :abbrev v3->mrot!)
   "Set a particular rotation AXIS of MATRIX, storing the result in MATRIX."
   (with-matrix (m matrix)
-    (with-vector (v vec)
+    (with-vec3 (v vec)
       (ecase axis
         (:x (psetf m00 vx m10 vy m20 vz))
         (:y (psetf m01 vx m11 vy m21 vz))
         (:z (psetf m02 vx m12 vy m22 vz)))))
   matrix)
 
-(defun* matrix-rotation-from-vec ((matrix matrix) (vec vec) (axis keyword))
-    (:result matrix :abbrev v->mrot)
+(defun* matrix-rotation-from-vec3 ((matrix matrix) (vec vec3) (axis keyword))
+    (:result matrix :abbrev v3->mrot)
   "Set a particular rotation AXIS of MATRIX, storing the result as a new matrix."
-  (matrix-rotation-from-vec! (matrix-copy matrix) vec axis))
+  (v3->mrot! (mcp matrix) vec axis))
 
-(defun* matrix-rotate! ((out-matrix matrix) (matrix matrix) (vec vec))
+(defun* matrix-rotate! ((out-matrix matrix) (matrix matrix) (vec vec3))
     (:result matrix :abbrev mrot!)
   "Rotate a matrix in each of 3 dimensions as specified by the vector of radians
 VEC, storing the result in OUT-MATRIX."
@@ -236,10 +238,10 @@ VEC, storing the result in OUT-MATRIX."
                   (let ((,s (sin ,angle))
                         (,c (cos ,angle)))
                     ,@body
-                    (matrix*! out-matrix out-matrix m)))))
-    (with-matrix (m (matrix-identity))
-      (with-vector (v vec)
-        (matrix-copy! out-matrix matrix)
+                    (m*! out-matrix out-matrix m)))))
+    (with-matrix (m (mid))
+      (with-vec3 (v vec)
+        (mcp! out-matrix matrix)
         (rotate-angle vz s c
                       (psetf m00 c m01 (- s)
                              m10 s m11 c))
@@ -253,67 +255,81 @@ VEC, storing the result in OUT-MATRIX."
                              m20 (- s) m21 0.0 m22 c)))))
   out-matrix)
 
-(defun* matrix-rotate ((matrix matrix) (vec vec)) (:result matrix :abbrev mrot)
+(defun* matrix-rotate ((matrix matrix) (vec vec3)) (:result matrix :abbrev mrot)
   "Rotate a matrix in each of 3 dimensions as specified by the vector of radians
 VEC, storing the result as a new matrix."
-  (matrix-rotate! (matrix-identity) matrix vec))
+  (mrot! (mid) matrix vec))
 
-(defun* matrix-scale-to-vec! ((out-vec vec) (matrix matrix))
-    (:result vec :abbrev mscale->v!)
+(defun* matrix-scale-to-vec3! ((out-vec vec3) (matrix matrix))
+    (:result vec3 :abbrev mscale->v3!)
   "Copy the components in the scaling part of MATRIX, storing the result in
 OUT-VEC."
-  (with-vector (o out-vec)
+  (with-vec3 (o out-vec)
     (with-matrix (m matrix)
       (psetf ox m00 oy m11 oz m22)))
   out-vec)
 
-(defun* matrix-scale-to-vec ((matrix matrix)) (:result vec :abbrev mscale->v)
+(defun* matrix-scale-to-vec3 ((matrix matrix)) (:result vec3 :abbrev mscale->v3)
   "Copy the components in the scaling part of MATRIX, storing the result as a new
 vector."
-  (matrix-scale-to-vec! (vzero) matrix))
+  (mscale->v3! (v3zero) matrix))
 
-(defun* matrix-scale-from-vec! ((matrix matrix) (vec vec))
-    (:result matrix :abbrev v->mscale!)
+(defun* matrix-scale-from-vec3! ((matrix matrix) (vec vec3))
+    (:result matrix :abbrev v3->mscale!)
   "Copy the components of VEC, storing the result in the diagonal scaling part of
 MATRIX."
   (with-matrix (m matrix)
-    (with-vector (v vec)
+    (with-vec3 (v vec)
       (psetf m00 vx m11 vy m22 vz)))
   matrix)
 
-(defun* matrix-scale-from-vec ((matrix matrix) (vec vec))
-    (:result matrix :abbrev v->mscale)
+(defun* matrix-scale-from-vec3 ((matrix matrix) (vec vec3))
+    (:result matrix :abbrev v3->mscale)
   "Copy the components of VEC, storing the result in the diagonal scaling part of
 a new matrix."
-  (matrix-scale-from-vec! (matrix-copy matrix) vec))
+  (v3->mscale! (mcp matrix) vec))
 
-(defun* matrix-scale! ((out-matrix matrix) (matrix matrix) (vec vec))
+(defun* matrix-scale! ((out-matrix matrix) (matrix matrix) (vec vec3))
     (:result matrix :abbrev mscale!)
   "Scale a matrix by the scaling vector VEC, storing the result in OUT-MATRIX."
-  (matrix*! out-matrix (matrix-scale-from-vec (matrix-identity) vec) matrix))
+  (m*! out-matrix (v3->mscale (mid) vec) matrix))
 
-(defun* matrix-scale ((matrix matrix) (vec vec)) (:result matrix :abbrev mscale)
+(defun* matrix-scale ((matrix matrix) (vec vec3)) (:result matrix :abbrev mscale)
   "Scale a matrix by the scaling vector VEC, storing the result as a new matrix."
-  (matrix-scale! (matrix-identity) matrix vec))
+  (mscale! (mid) matrix vec))
 
-(defun* matrix*vec! ((out-vec vec) (matrix matrix) (vec vec))
-    (:result vec :abbrev m*v!)
+(defun* matrix*vec3! ((out-vec vec3) (matrix matrix) (vec vec3))
+    (:result vec3 :abbrev m*v3!)
   "Multiplication of MATRIX and VEC, storing the result in OUT-VEC."
-  (with-vectors ((v vec) (o out-vec))
+  (with-vec3s ((v vec) (o out-vec))
     (with-matrix (m matrix)
-      (psetf ox (+ (* m00 vx) (* m01 vy) (* m02 vz) (* m03 1.0))
-             oy (+ (* m10 vx) (* m11 vy) (* m12 vz) (* m13 1.0))
-             oz (+ (* m20 vx) (* m21 vy) (* m22 vz) (* m23 1.0)))))
+      (psetf ox (+ (* m00 vx) (* m01 vy) (* m02 vz) m03)
+             oy (+ (* m10 vx) (* m11 vy) (* m12 vz) m13)
+             oz (+ (* m20 vx) (* m21 vy) (* m22 vz) m23))))
   out-vec)
 
-(defun* matrix*vec ((matrix matrix) (vec vec)) (:result vec :abbrev m*v)
+(defun* matrix*vec3 ((matrix matrix) (vec vec3)) (:result vec3 :abbrev m*v3)
   "Multiplication of MATRIX and VEC, storing the result as a new vector."
-  (matrix*vec! (vzero) matrix vec))
+  (m*v3! (v3zero) matrix vec))
+
+(defun* matrix*vec4! ((out-vec vec4) (matrix matrix) (vec vec4))
+    (:result vec4 :abbrev m*v4!)
+  "Multiplication of MATRIX and VEC, storing the result in OUT-VEC."
+  (with-vec4s ((v vec) (o out-vec))
+    (with-matrix (m matrix)
+      (psetf ox (+ (* m00 vx) (* m01 vy) (* m02 vz) (* m03 vw))
+             oy (+ (* m10 vx) (* m11 vy) (* m12 vz) (* m13 vw))
+             oz (+ (* m20 vx) (* m21 vy) (* m22 vz) (* m23 vw))
+             ow (+ (* m30 vx) (* m31 vy) (* m32 vz) (* m33 vw)))))
+  out-vec)
+
+(defun* matrix*vec4 ((matrix matrix) (vec vec4)) (:result vec4 :abbrev m*v4)
+  (m*v4! (v4zero) matrix vec))
 
 (defun* matrix-transpose! ((out-matrix matrix) (matrix matrix))
     (:result matrix :abbrev mtranspose!)
   "Transpose MATRIX, storing the result in OUT-MATRIX."
-  (with-matrix (o (matrix-copy! out-matrix matrix))
+  (with-matrix (o (mcp! out-matrix matrix))
     (rotatef o01 o10)
     (rotatef o02 o20)
     (rotatef o03 o30)
@@ -324,33 +340,33 @@ a new matrix."
 
 (defun* matrix-transpose ((matrix matrix)) (:result matrix :abbrev mtranspose)
   "Transpose MATRIX, storing the result as a new matrix."
-  (matrix-transpose! (matrix-identity) matrix))
+  (mtranspose! (mid) matrix))
 
 (defun* matrix-orthogonal-p ((matrix matrix)) (:result boolean :abbrev morthop)
   "Check if MATRIX is orthogonal. An orthogonal matrix is a square matrix with
 all of its rows (or columns) being perpendicular to each other, and of unit
 length."
-  (m~ (matrix* matrix (matrix-transpose matrix)) +identity-matrix+))
+  (m~ (m* matrix (mtranspose matrix)) +mid+))
 
 (defun* matrix-orthogonalize! ((out-matrix matrix) (matrix matrix))
     (:result matrix :abbrev mortho!)
   "Orthogonalize a matrix using the 'modified' Gram-Schmidt method (MGS), storing
 the result in OUT-MATRIX."
-  (let* ((x (matrix-rotation-to-vec matrix :x))
-         (y (matrix-rotation-to-vec matrix :y))
-         (z (matrix-rotation-to-vec matrix :z)))
-    (vec-normalize! x x)
-    (vec-normalize! y (vec- y (vec-scale x (vec-dot y x))))
-    (vec-cross! z x y)
-    (matrix-rotation-from-vec! out-matrix x :x)
-    (matrix-rotation-from-vec! out-matrix y :y)
-    (matrix-rotation-from-vec! out-matrix z :z))
+  (let* ((x (mrot->v3 matrix :x))
+         (y (mrot->v3 matrix :y))
+         (z (mrot->v3 matrix :z)))
+    (v3normalize! x x)
+    (v3normalize! y (v3- y (v3scale x (v3dot y x))))
+    (v3cross! z x y)
+    (v3->mrot! out-matrix x :x)
+    (v3->mrot! out-matrix y :y)
+    (v3->mrot! out-matrix z :z))
   out-matrix)
 
 (defun* matrix-orthogonalize ((matrix matrix)) (:result matrix :abbrev mortho)
   "Orthogonalize a matrix using the 'modified' Gram-Schmidt method (MGS), storing
 the result as a new matrix."
-  (matrix-orthogonalize! (matrix-identity) matrix))
+  (mortho! (mid) matrix))
 
 (defun* matrix-trace ((matrix matrix)) (:result single-float :abbrev mtrace)
   "Compute the trace of MATRIX."
@@ -376,7 +392,7 @@ in OUT-MATRIX.
 Warning: This will only work on matrices that have an orthogonal 3x3 rotation
 matrix.
 Alias: MINVTORTHO!"
-  (matrix-copy! out-matrix matrix)
+  (mcp! out-matrix matrix)
   (with-matrix (o out-matrix)
     (rotatef o10 o01)
     (rotatef o20 o02)
@@ -393,7 +409,7 @@ as a new matrix.
 Warning: This will only work on matrices that have an orthogonal 3x3 rotation ~
 matrix.
 Alias: MINVTORTHO"
-  (matrix-invert-orthogonal! (matrix-identity) matrix))
+  (minvtortho! (mid) matrix))
 
 (defun* matrix-invert! ((out-matrix matrix) (matrix matrix))
     (:result matrix :abbrev minvt!)
@@ -403,7 +419,7 @@ matrices can be inverted with the fast method.
 Warning: A matrix with a determinant of zero cannot be inverted, and will raise
 an error.
 Alias: MINVT!"
-  (let ((determinant (matrix-determinant matrix)))
+  (let ((determinant (mdet matrix)))
     (when (< (abs determinant) +epsilon+)
       (error "Cannot invert a matrix with a determinant of zero."))
     (with-matrices ((o out-matrix) (m matrix))
@@ -464,31 +480,31 @@ matrices can be inverted with the fast method.
 Warning: A matrix with a determinant of zero cannot be inverted, and will raise
 an error.
 Alias: MINVT"
-  (matrix-invert! (matrix-identity) matrix))
+  (minvt! (mid) matrix))
 
-(defun* make-view-matrix! ((out-matrix matrix) (eye vec) (target vec) (up vec))
-    (:result matrix :abbrev mkview!)
+(defun* make-view-matrix! ((out-matrix matrix) (eye vec3) (target vec3)
+                           (up vec3)) (:result matrix :abbrev mkview!)
   "Create a view matrix, storing the result in OUT-MATRIX."
-  (let ((f (vzero))
-        (s (vzero))
-        (u (vzero))
-        (inv-eye (vzero))
+  (let ((f (v3zero))
+        (s (v3zero))
+        (u (v3zero))
+        (inv-eye (v3zero))
         (translation (mid)))
-    (with-matrix (o (matrix-identity! out-matrix))
-      (with-vectors ((f (vec-normalize! f (vec-! f target eye)))
-                     (s (vec-normalize! s (vec-cross! s f up)))
-                     (u (vec-cross! u s f)))
+    (with-matrix (o (mid! out-matrix))
+      (with-vec3s ((f (v3normalize! f (v3-! f target eye)))
+                   (s (v3normalize! s (v3cross! s f up)))
+                   (u (v3cross! u s f)))
         (psetf o00 sx o10 ux o20 (- fx)
                o01 sy o11 uy o12 (- fy)
                o02 sz o12 uz o22 (- fz))
-        (matrix-translation-from-vec! translation (vec-negate! inv-eye eye))
-        (matrix*! out-matrix out-matrix translation))))
+        (v3->mtr! translation (v3neg! inv-eye eye))
+        (m*! out-matrix out-matrix translation))))
   out-matrix)
 
-(defun* make-view-matrix ((eye vec) (target vec) (up vec))
+(defun* make-view-matrix ((eye vec3) (target vec3) (up vec3))
     (:result matrix :abbrev mkview)
   "Create a view matrix, storing the result as a new matrix."
-  (make-view-matrix! (matrix-identity) eye target up))
+  (mkview! (mid) eye target up))
 
 (defun* make-orthographic-matrix! ((out-matrix matrix) (left real) (right real)
                                    (bottom real) (top real) (near real)
@@ -498,7 +514,7 @@ Alias: MINVT"
   (let ((right-left (float (- right left) 1.0))
         (top-bottom (float (- top bottom) 1.0))
         (far-near (float (- far near) 1.0)))
-    (with-matrix (m (matrix-identity! out-matrix))
+    (with-matrix (m (mid! out-matrix))
       (psetf m00 (/ 2.0 right-left)
              m03 (- (/ (+ right left) right-left))
              m11 (/ 2.0 top-bottom)
@@ -511,7 +527,7 @@ Alias: MINVT"
                                   (top real) (near real) (far real))
     (:result matrix :abbrev mkortho)
   "Create an orthographic projection matrix, storing the result as a new matrix."
-  (make-orthographic-matrix! (matrix-identity) left right bottom top near far))
+  (mkortho! (mid) left right bottom top near far))
 
 (defun* make-perspective-matrix! ((out-matrix matrix) (fov real) (aspect real)
                                   (near real) (far real))
@@ -519,7 +535,7 @@ Alias: MINVT"
   "Create a perspective projection matrix, storing the result in OUT-MATRIX."
   (let ((f (float (/ (tan (/ fov 2))) 1.0))
         (z (float (- near far) 1.0)))
-    (with-matrix (m (zero-matrix! out-matrix))
+    (with-matrix (m (mzero! out-matrix))
       (psetf m00 (/ f aspect)
              m11 f
              m22 (/ (+ near far) z)
@@ -530,4 +546,4 @@ Alias: MINVT"
 (defun* make-perspective-matrix ((fov real) (aspect real) (near real) (far real))
     (:result matrix :abbrev mkpersp)
   "Create a perspective projection matrix, storing the result as a new matrix."
-  (make-perspective-matrix! (matrix-identity) fov aspect near far))
+  (mkpersp! (mid) fov aspect near far))

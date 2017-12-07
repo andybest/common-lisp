@@ -12,7 +12,9 @@
   :serial t
   :components
   ((:file "package")
-   (:test-file "vector")
+   (:test-file "vec2")
+   (:test-file "vec3")
+   (:test-file "vec4")
    (:test-file "matrix")
    (:test-file "quaternion")
    (:test-file "dual-quaternion")))

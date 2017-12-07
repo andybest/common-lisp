@@ -9,10 +9,9 @@
 
   (defun* quat-identity () (:result quat :abbrev qid)
     "Create an identity quaternion."
-    (quat-identity! (quat)))
+    (qid! (quat)))
 
-  (define-constant +identity-quaternion+ (quat-identity) :test #'equalp)
-  (define-constant +qid+ (quat-identity) :test #'equalp))
+  (define-constant +qid+ (qid) :test #'equalp))
 
 (defun* quat-zero! ((quat quat)) (:result quat :abbrev qzero!)
   "Set each component of QUAT to zero."
@@ -25,20 +24,20 @@
 arguments."
   (quat))
 
-(defun* quat= ((quat1 quat) (quat2 quat)) (:result boolean :abbrev q=)
-  "Check if the components of QUAT1 are equal to the components of QUAT2."
-  (with-quats ((q1 quat1) (q2 quat2))
+(defun* quat= ((quat-a quat) (quat-b quat)) (:result boolean :abbrev q=)
+  "Check if the components of QUAT-A are equal to the components of QUAT-B."
+  (with-quats ((q1 quat-b) (q2 quat-b))
     (and (= q1w q2w)
          (= q1x q2x)
          (= q1y q2y)
          (= q1z q2z))))
 
-(defun* quat~ ((quat1 quat) (quat2 quat)
+(defun* quat~ ((quat-a quat) (quat-b quat)
                &key ((tolerance single-float) +epsilon+))
     (:result boolean :abbrev q~)
-  "Check if the components of QUAT1 are approximately equal to the components of
-QUAT2."
-  (with-quats ((q1 quat1) (q2 quat2))
+  "Check if the components of QUAT-A are approximately equal to the components of
+QUAT-B."
+  (with-quats ((q1 quat-a) (q2 quat-b))
     (and (~ q1w q2w tolerance)
          (~ q1x q2x tolerance)
          (~ q1y q2y tolerance)
@@ -52,52 +51,53 @@ QUAT2."
 
 (defun* quat-copy ((quat quat)) (:result quat :abbrev qcp)
   "Copy the components of QUAT, storing the result in a new quaternion."
-  (quat-copy! (quat-identity) quat))
+  (qcp! (qid) quat))
 
-(defun* quat+! ((out-quat quat) (quat1 quat) (quat2 quat))
+(defun* quat+! ((out-quat quat) (quat-a quat) (quat-b quat))
     (:result quat :abbrev q+!)
-  "Quaternion addition of QUAT1 and QUAT2, storing the result in OUT-QUAT."
-  (with-quats ((o out-quat) (q1 quat1) (q2 quat2))
+  "Quaternion addition of QUAT-A and QUAT-B, storing the result in OUT-QUAT."
+  (with-quats ((o out-quat) (q1 quat-a) (q2 quat-b))
     (psetf ow (+ q1w q2w)
            ox (+ q1x q2x)
            oy (+ q1y q2y)
            oz (+ q1z q2z)))
   out-quat)
 
-(defun* quat+ ((quat1 quat) (quat2 quat)) (:result quat :abbrev q+)
-  "Quaternion addition of QUAT1 and QUAT2, storing the result as a new ~
+(defun* quat+ ((quat-a quat) (quat-b quat)) (:result quat :abbrev q+)
+  "Quaternion addition of QUAT-A and QUAT-B, storing the result as a new ~
 quaternion."
-  (quat+! (quat-identity) quat1 quat2))
+  (q+! (qid) quat-a quat-b))
 
-(defun* quat-! ((out-quat quat) (quat1 quat) (quat2 quat))
+(defun* quat-! ((out-quat quat) (quat-a quat) (quat-b quat))
     (:result quat :abbrev q-!)
-  "Quaternion subtraction of QUAT2 from QUAT1, storing the result in OUT-QUAT."
-  (with-quats ((o out-quat) (q1 quat1) (q2 quat2))
+  "Quaternion subtraction of QUAT-A from QUAT-B, storing the result in OUT-QUAT."
+  (with-quats ((o out-quat) (q1 quat-a) (q2 quat-b))
     (psetf ow (- q1w q2w)
            ox (- q1x q2x)
            oy (- q1y q2y)
            oz (- q1z q2z)))
   out-quat)
 
-(defun* quat- ((quat1 quat) (quat2 quat)) (:result quat :abbrev q-)
-  "Quaternion subtraction of QUAT2 from QUAT1, storing the result as a new
+(defun* quat- ((quat-a quat) (quat-b quat)) (:result quat :abbrev q-)
+  "Quaternion subtraction of QUAT-B from QUAT-A, storing the result as a new
 quaternion."
-  (quat-! (quat-identity) quat1 quat2))
+  (q-! (qid) quat-a quat-b))
 
-(defun* quat*! ((out-quat quat) (quat1 quat) (quat2 quat))
+(defun* quat*! ((out-quat quat) (quat-a quat) (quat-b quat))
     (:result quat :abbrev q*!)
-  "Quaternion multiplication of QUAT1 and QUAT2, storing the result in OUT-QUAT."
-  (with-quats ((o out-quat) (q1 quat1) (q2 quat2))
+  "Quaternion multiplication of QUAT-A and QUAT-B, storing the result in
+OUT-QUAT."
+  (with-quats ((o out-quat) (q1 quat-a) (q2 quat-b))
     (psetf ow (- (* q1w q2w) (* q1x q2x) (* q1y q2y) (* q1z q2z))
            ox (- (+ (* q1w q2x) (* q1x q2w) (* q1y q2z)) (* q1z q2y))
            oy (- (+ (* q1w q2y) (* q1y q2w) (* q1z q2x)) (* q1x q2z))
            oz (- (+ (* q1w q2z) (* q1z q2w) (* q1x q2y)) (* q1y q2x))))
   out-quat)
 
-(defun* quat* ((quat1 quat) (quat2 quat)) (:result quat :abbrev q*)
-  "Quaternion multiplication of QUAT1 and QUAT2, storing the result as a new
+(defun* quat* ((quat-a quat) (quat-b quat)) (:result quat :abbrev q*)
+  "Quaternion multiplication of QUAT-A and QUAT-B, storing the result as a new
 quaternion."
-  (quat*! (quat-identity) quat1 quat2))
+  (q*! (qid) quat-a quat-b))
 
 (defun* quat-scale! ((out-quat quat) (quat quat) (scalar single-float))
     (:result quat :abbrev qscale!)
@@ -114,21 +114,22 @@ OUT-QUAT."
     (:result quat :abbrev qscale)
   "Quaternion scalar multiplication of QUAT by SCALAR, storing the result as a
 new quaternion."
-  (quat-scale! (quat-identity) quat scalar))
+  (qscale! (qid) quat scalar))
 
-(defun* quat-cross! ((out-quat quat) (quat1 quat) (quat2 quat))
+(defun* qcross! ((out-quat quat) (quat-a quat) (quat-b quat))
     (:result quat :abbrev qcross!)
-  "Compute the cross product of QUAT1 and QUAT2, storing the result in OUT-QUAT."
-  (quat-scale!
+  "Compute the cross product of QUAT-A and QUAT-B, storing the result in
+OUT-QUAT."
+  (qscale!
    out-quat
-   (quat+ (quat* quat2 (quat-conjugate quat1))
-          (quat* quat1 quat2))
+   (q+ (q* quat-b (qconj quat-a))
+       (q* quat-a quat-b))
    0.5))
 
-(defun* quat-cross ((quat1 quat) (quat2 quat)) (:result quat :abbrev qcross)
-  "Compute the cross product of QUAT1 and QUAT2, storing the result as a new
+(defun* quat-cross ((quat-a quat) (quat-b quat)) (:result quat :abbrev qcross)
+  "Compute the cross product of QUAT-A and QUAT-B, storing the result as a new
 quaternion."
-  (quat-cross! (quat-identity) quat1 quat2))
+  (qcross! (qid) quat-a quat-b))
 
 (defun* quat-conjugate! ((out-quat quat) (quat quat))
     (:result quat :abbrev qconj!)
@@ -142,7 +143,7 @@ quaternion."
 
 (defun* quat-conjugate ((quat quat)) (:result quat :abbrev qconj)
   "Calculate the conjugate of QUAT, storing the result as a new quaternion."
-  (quat-conjugate! (quat-identity) quat))
+  (qconj! (qid) quat))
 
 (defun* quat-magnitude-squared ((quat quat))
     (:result single-float :abbrev qmagsq)
@@ -153,33 +154,34 @@ results in a squared value, which is cheaper to compute."
 
 (defun* quat-magnitude ((quat quat)) (:result single-float :abbrev qmag)
   "Compute the magnitude (also known as length or Euclidean norm) of QUAT."
-  (sqrt (quat-magnitude-squared quat)))
+  (sqrt (qmagsq quat)))
 
 (defun* quat-normalize! ((out-quat quat) (quat quat))
     (:result quat :abbrev qnormalize!)
   "Normalize a quaternion so it has a magnitude of 1.0, storing the result in
 OUT-QUAT."
-  (let ((magnitude (quat-magnitude quat)))
+  (let ((magnitude (qmag quat)))
     (unless (zerop magnitude)
-      (quat-scale! out-quat quat (/ magnitude))))
+      (qscale! out-quat quat (/ magnitude))))
   out-quat)
 
 (defun* quat-normalize ((quat quat)) (:result quat :abbrev qnormalize)
   "Normalize a quaternion so it has a magnitude of 1.0, storing the result as a
 new quaternion."
-  (quat-normalize! (quat-identity) quat))
+  (qnormalize! (qid) quat))
 
 (defun* quat-negate! ((out-quat quat) (quat quat)) (:result quat :abbrev qneg!)
   "Negate each component of QUAT, storing the result in OUT-QUAT."
-  (quat-scale! out-quat quat -1.0))
+  (qscale! out-quat quat -1.0))
 
 (defun* quat-negate ((quat quat)) (:result quat :abbrev qneg)
   "Negate each component of QUAT, storing the result as a new quaternion."
-  (quat-negate! (quat-identity) quat))
+  (qneg! (qid) quat))
 
-(defun* quat-dot ((quat1 quat) (quat2 quat)) (:result single-float :abbrev qdot)
-  "Compute the dot product of QUAT1 and QUAT2."
-  (with-quats ((q1 quat1) (q2 quat2))
+(defun* quat-dot ((quat-a quat) (quat-b quat))
+    (:result single-float :abbrev qdot)
+  "Compute the dot product of QUAT-A and QUAT-B."
+  (with-quats ((q1 quat-a) (q2 quat-b))
     (+ (* q1w q2w)
        (* q1x q2x)
        (* q1y q2y)
@@ -187,63 +189,87 @@ new quaternion."
 
 (defun* quat-inverse! ((out-quat quat) (quat quat)) (:result quat :abbrev qinv!)
   "Compute the multiplicative inverse of QUAT, storing the result in OUT-QUAT."
-  (quat-conjugate! out-quat quat)
-  (quat-scale! out-quat out-quat (/ (quat-magnitude-squared quat)))
+  (qconj! out-quat quat)
+  (qscale! out-quat out-quat (/ (qmagsq quat)))
   out-quat)
 
 (defun* quat-inverse ((quat quat)) (:result quat :abbrev qinv)
   "Compute the multiplicative inverse of QUAT, storing the result as a new
 quaternion."
-  (quat-inverse! (quat-identity) quat))
+  (qinv! (qid) quat))
 
-(defun* quat-rotate! ((out-quat quat) (quat quat) (vec vec))
+(defun* quat-rotate! ((out-quat quat) (quat quat) (vec vec3))
     (:result quat :abbrev qrot!)
   "Rotate a quaternion in each of 3 dimensions as specified by the vector of
 radians VEC, storing the result in OUT-QUAT."
   (with-quats ((o out-quat) (q (qcp quat)))
-    (with-vectors ((v (vscale vec 0.5))
-                   (c (vec (cos vx) (cos vy) (cos vz)))
-                   (s (vec (sin vx) (sin vy) (sin vz))))
+    (with-vec3s ((v (v3scale vec 0.5))
+                 (c (vec3 (cos vx) (cos vy) (cos vz)))
+                 (s (vec3 (sin vx) (sin vy) (sin vz))))
       (psetf ow (- (* cx cy cz) (* sx sy sz))
              ox (+ (* sx cy cz) (* cx sy sz))
              oy (- (* cx sy cz) (* sx cy sz))
              oz (+ (* sx sy cz) (* cx cy sz)))
-      (quat*! out-quat out-quat q)))
+      (q*! out-quat out-quat q)))
   out-quat)
 
-(defun* quat-rotate ((quat quat) (vec vec)) (:result quat :abbrev qrot)
+(defun* quat-rotate ((quat quat) (vec vec3)) (:result quat :abbrev qrot)
   "Rotate a quaternion in each of 3 dimensions as specified by the vector of
 radians VEC, storing the result as a new quaternion."
-  (quat-rotate! (quat-identity) quat vec))
+  (qrot! (qid) quat vec))
 
-(defun* quat-to-vec! ((out-vec vec) (quat quat)) (:result vec :abbrev q->v!)
+(defun* quat-to-vec3! ((out-vec vec3) (quat quat)) (:result vec3 :abbrev q->v3!)
   "Convert a quaternion to a vector, storing the result in OUT-VEC."
-  (with-vector (v out-vec)
+  (with-vec3 (v out-vec)
     (with-quat (q quat)
       (setf vx qx vy qy vz qz)))
   out-vec)
 
-(defun* quat-to-vec ((quat quat)) (:result vec :abbrev q->v)
+(defun* quat-to-vec3 ((quat quat)) (:result vec3 :abbrev q->v3)
   "Convert a quaternion to a vector, storing the result as a new vector."
-  (quat-to-vec! (vzero) quat))
+  (q->v3! (v3zero) quat))
 
-(defun* quat-from-vec! ((out-quat quat) (vec vec)) (:result quat :abbrev v->q!)
+(defun* quat-to-vec4! ((out-vec vec4) (quat quat)) (:result vec4 :abbrev q->v4!)
+  "convert a quaternion to a vector, storing the result in OUT-VEC."
+  (with-vec4 (v out-vec)
+    (with-quat (q quat)
+      (setf vx qw vy qx vz qy vw qz)))
+  out-vec)
+
+(defun* quat-to-vec4 ((quat quat)) (:result vec4 :abbrev q->v4)
+  "Convert a quaternion to a vector, storing the result as a new vector."
+  (q->v4! (v4zero) quat))
+
+(defun* quat-from-vec3! ((out-quat quat) (vec vec3))
+    (:result quat :abbrev v3->q!)
   "Convert a vector to a quaternion, storing the result in OUT-QUAT."
   (with-quat (q out-quat)
-    (with-vector (v vec)
+    (with-vec3 (v vec)
       (setf qw 0.0 qx vx qy vy qz vz)))
   out-quat)
 
-(defun* quat-from-vec ((vec vec)) (:result quat :abbrev v->q)
+(defun* quat-from-vec3 ((vec vec3)) (:result quat :abbrev v3->q)
   "Convert a vector to a quaternion, storing the result as a new quaternion."
-  (quat-from-vec! (quat) vec))
+  (v3->q! (quat) vec))
+
+(defun* quat-from-vec4! ((out-quat quat) (vec vec4))
+    (:result quat :abbrev v4->q!)
+  "Convert a vector to a quaternion, storing the result in OUT-QUAT."
+  (with-quat (q out-quat)
+    (with-vec4 (v vec)
+      (setf qw vx qx vy qy vz qz vw)))
+  out-quat)
+
+(defun* quat-from-vec4 ((vec vec4)) (:result quat :abbrev v4->q)
+  "Convert a vector to a quaternion, storing the result as a new quaternion."
+  (v4->q! (quat) vec))
 
 (defun* quat-to-matrix! ((out-matrix matrix) (quat quat))
     (:result matrix :abbrev q->m!)
   "Convert a quaternion to a matrix, storing the result in OUT-MATRIX."
   (with-matrix (o out-matrix)
     (with-quat (q quat)
-      (let* ((s (/ 2 (quat-magnitude-squared quat)))
+      (let* ((s (/ 2 (qmagsq quat)))
              (xs (* qx s))
              (ys (* qy s))
              (zs (* qz s))
@@ -276,14 +302,14 @@ radians VEC, storing the result as a new quaternion."
 
 (defun* quat-to-matrix ((quat quat)) (:result matrix :abbrev q->m)
   "Convert a quaternion to a matrix, storing the result as a new matrix."
-  (quat-to-matrix! (matrix-identity) quat))
+  (q->m! (mid) quat))
 
 (defun* quat-from-matrix! ((out-quat quat) (matrix matrix))
     (:result quat :abbrev m->q!)
   "Convert a matrix to a quaternion, storing the result in OUT-QUAT."
   (with-quat (q out-quat)
     (with-matrix (m matrix)
-      (let ((trace (matrix-trace matrix))
+      (let ((trace (mtrace matrix))
             (col1 (1+ (- m00 m11 m22)))
             (col2 (1+ (- m11 m00 m22)))
             (col3 (1+ (- m22 m00 m11)))
@@ -317,37 +343,37 @@ radians VEC, storing the result as a new quaternion."
 
 (defun* quat-from-matrix ((matrix matrix)) (:result quat :abbrev m->q)
   "Convert a matrix to a quaternion storing the result as a new quaternion."
-  (quat-from-matrix! (quat-identity) matrix))
+  (m->q! (qid) matrix))
 
-(defun* quat-slerp! ((out-quat quat) (quat1 quat) (quat2 quat)
-                     (coeff single-float))
+(defun* quat-slerp! ((out-quat quat) (quat-a quat) (quat-b quat)
+                     (factor single-float))
     (:result quat :abbrev qslerp!)
-  "Perform a spherical linear interpolation between QUAT1 and QUAT2 by the
-interpolation coefficient COEFF, storing the result in OUT-QUAT."
-  (with-quats ((o out-quat) (q1 quat1)
-               (q2 quat2))
-    (let ((dot (quat-dot q1 q2))
+  "Perform a spherical linear interpolation between QUAT-A and QUAT-B by the
+interpolation factor FACTOR, storing the result in OUT-QUAT."
+  (with-quats ((o out-quat) (q1 quat-a)
+               (q2 quat-b))
+    (let ((dot (qdot q1 q2))
           (q2 q2))
       (when (minusp dot)
-        (quat-negate! q2 q2)
+        (qneg! q2 q2)
         (setf dot (- dot)))
       (if (> (abs dot) 0.9995)
-          (psetf ow (lerp coeff q1w q2w)
-                 ox (lerp coeff q1x q2x)
-                 oy (lerp coeff q1y q2y)
-                 oz (lerp coeff q1z q2z))
+          (psetf ow (lerp factor q1w q2w)
+                 ox (lerp factor q1x q2x)
+                 oy (lerp factor q1y q2y)
+                 oz (lerp factor q1z q2z))
           (let* ((angle (acos (clamp dot 0 1)))
                  (sin-angle (sin angle))
-                 (scale1 (/ (sin (* angle (- 1 coeff))) sin-angle))
-                 (scale2 (/ (sin (* coeff angle)) sin-angle)))
+                 (scale1 (/ (sin (* angle (- 1 factor))) sin-angle))
+                 (scale2 (/ (sin (* factor angle)) sin-angle)))
             (psetf ow (+ (* q1w scale1) (* q2w scale2))
                    ox (+ (* q1x scale1) (* q2x scale2))
                    oy (+ (* q1y scale1) (* q2y scale2))
                    oz (+ (* q1z scale1) (* q2z scale2)))))))
   out-quat)
 
-(defun* quat-slerp ((quat1 quat) (quat2 quat) (coeff single-float))
+(defun* quat-slerp ((quat-a quat) (quat-b quat) (factor single-float))
     (:result quat :abbrev qslerp)
-  "Perform a spherical linear interpolation between QUAT1 and QUAT2 by the
-interpolation coefficient COEFF, storing the result as a new quaternion."
-  (quat-slerp! (quat-identity) quat1 quat2 coeff))
+  "Perform a spherical linear interpolation between QUAT-A and QUAT-B by the
+interpolation factor FACTOR, storing the result as a new quaternion."
+  (qslerp! (qid) quat-a quat-b factor))
