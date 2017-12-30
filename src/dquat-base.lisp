@@ -1,0 +1,22 @@
+(in-package :gamebox-math)
+
+(deftype dquat () '(simple-array quat (2)))
+
+(defstruct (dquat (:type vector)
+                  (:constructor dq (real dual))
+                  (:conc-name dq-)
+                  (:copier nil)
+                  (:predicate nil))
+  (real (qzero) :type quat)
+  (dual (qzero) :type quat))
+
+(defmacro with-dquat (binds &body body)
+  (if (null binds)
+      `(progn ,@body)
+      (let ((prefix (caar binds))
+            (dquat (cadar binds)))
+        `(with-quat ((,prefix ,dquat)
+                     (,(make-accessor-symbol prefix '.r) (dq-real ,dquat))
+                     (,(make-accessor-symbol prefix '.d) (dq-dual ,dquat)))
+           ,(cadar binds)
+           (with-dquat ,(cdr binds) ,@body)))))

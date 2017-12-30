@@ -8,7 +8,7 @@
   :homepage "https://github.com/mfiano/gamebox-math"
   :bug-tracker "https://github.com/mfiano/gamebox-math/issues"
   :source-control (:git "git@github.com:mfiano/gamebox-math.git")
-  :version "2.0.0"
+  :version "3.0.0"
   :encoding :utf-8
   :long-description #.(uiop:read-file-string
                        (uiop/pathname:subpathname *load-pathname* "README.md"))
@@ -25,9 +25,9 @@
    (:file "vec3-ops")
    (:file "vec4-base")
    (:file "vec4-ops")
-   (:file "matrix-base")
-   (:file "matrix-ops")
-   (:file "quaternion-base")
-   (:file "quaternion-ops")
-   (:file "dual-quaternion-base")
-   (:file "dual-quaternion-ops")))
+   (:file "mat4-base")
+   (:file "mat4-ops")
+   (:file "quat-base")
+   (:file "quat-ops")
+   (:file "dquat-base")
+   (:file "dquat-ops")))

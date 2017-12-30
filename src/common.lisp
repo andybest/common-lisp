@@ -3,17 +3,13 @@
 (defconstant +epsilon+ 1e-7)
 
 (eval-when (:compile-toplevel :load-toplevel :execute)
-  #+sbcl(setf sb-ext:*inline-expansion-limit* 1024))
+  #+sbcl(setf sb-ext:*inline-expansion-limit* 1024)
 
-(defmacro defun* (fname arglist (&key result inline abbrev) &body body)
-  (flet ((make-def (fname)
-           (append
-            (when inline `((declaim (inline ,fname))))
-            `((defstar:defun* ,fname ,arglist (:returns ,result) ,@body)))))
-    (append
-     '(progn)
-     (make-def fname)
-     (when abbrev (make-def abbrev)))))
+  (declaim (inline make-accessor-symbol))
+  (defun make-accessor-symbol (prefix &rest args)
+    (intern (format nil "~@:(~{~a~}~)" (cons prefix args))
+            (symbol-package prefix))))
 
-(defun* ~ ((a real) (b real) (tolerance single-float)) (:result boolean)
+(declaim (inline ~))
+(defun* (~ -> boolean) ((a real) (b real) (tolerance single-float))
   (< (abs (- a b)) tolerance))
