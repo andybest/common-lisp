@@ -24,34 +24,8 @@ algebra and each symbol has a documentation string containing more detail.
 
 The library follows a certain naming convention. Functions having to do with
 vectors, matrices, quaternions, dual quaternions are prefixed, respectively,
-with `vecN-`, `matrix-`, `quat-`, and `dquat-`. Some functions do not include
-the dash, notably addition, subtraction, multiplication, and comparison
-functions. Each function has two variants, one destructive and one consing. The
-destructing ones use `!` as a postfix.
-
-Most functions also have an abbreviated name, noted in the `:abbrev` section of the top-level forms.
-
-Constructor functions for each of the above data types have the names listed
-above, also without the dash. For example, `(vec3)` produces a fresh 3d vector.
-
-Each of the above data types also have several ways of accessing their members.
-Vectors, matrices, and quaternions can be accessed by index with the functions
-`v2ref`, `v3ref`, `v4ref`, `mref`, and `qref`, respectively. Macros for locally
-binding members to symbols are available under the names `with-X` where `X` is
-`vec2`, `vec3`, `vec4` `matrix`, `quat`, `dquat`, or their plural forms.
-
-Example use:
-
-```lisp
-(with-vec3 (v my-vector)
-  ;; symbols vx, vy, and vz are now available as accessors
-)
-
-(with-vec3s ((v1 foo-vector)
-             (v2 bar-vector))
-  ;; symbol accessors for any number of vectors can now be used
-)
-```
+with `vN-`, `m4`, `q`, and `dq`. Each function has two variants, one destructive
+and one consing. The destructing ones use `!` as a postfix.
 
 ## License
 
