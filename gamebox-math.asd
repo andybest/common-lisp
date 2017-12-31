@@ -8,7 +8,7 @@
   :homepage "https://github.com/mfiano/gamebox-math"
   :bug-tracker "https://github.com/mfiano/gamebox-math/issues"
   :source-control (:git "git@github.com:mfiano/gamebox-math.git")
-  :version "4.0.0"
+  :version "4.1.0"
   :encoding :utf-8
   :long-description #.(uiop:read-file-string
                        (uiop/pathname:subpathname *load-pathname* "README.md"))
@@ -19,6 +19,7 @@
   :components
   ((:file "package")
    (:file "common")
+   (:file "swizzle")
    (:file "vec2-base")
    (:file "vec2-ops")
    (:file "vec3-base")
