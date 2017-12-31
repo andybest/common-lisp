@@ -7,7 +7,7 @@
                    (:constructor %vec4 (x y z w))
                    (:conc-name v4)
                    (:copier nil)
-                   (:predicate nil))
+                   #-ecl(:predicate nil))
     (x 0.0f0 :type single-float)
     (y 0.0f0 :type single-float)
     (z 0.0f0 :type single-float)

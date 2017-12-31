@@ -9,7 +9,7 @@
                                       m30 m31 m32 m33))
                  (:conc-name nil)
                  (:copier nil)
-                 (:predicate nil))
+                 #-ecl(:predicate nil))
   (m00 0.0f0 :type single-float)
   (m10 0.0f0 :type single-float)
   (m20 0.0f0 :type single-float)

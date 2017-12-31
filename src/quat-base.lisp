@@ -6,7 +6,7 @@
                  (:constructor %quat (w x y z))
                  (:conc-name q)
                  (:copier nil)
-                 (:predicate nil))
+                 #-ecl(:predicate nil))
   (w 0.0f0 :type single-float)
   (x 0.0f0 :type single-float)
   (y 0.0f0 :type single-float)

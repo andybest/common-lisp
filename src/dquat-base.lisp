@@ -6,7 +6,7 @@
                   (:constructor dquat (real dual))
                   (:conc-name dq-)
                   (:copier nil)
-                  (:predicate nil))
+                  #-ecl(:predicate nil))
   (real (qzero) :type quat)
   (dual (qzero) :type quat))
 
