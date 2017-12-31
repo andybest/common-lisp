@@ -4,7 +4,7 @@
   (deftype vec3 () '(simple-array single-float (3)))
 
   (defstruct (vec3 (:type (vector single-float))
-                   (:constructor %v3 (x y z))
+                   (:constructor %vec3 (x y z))
                    (:conc-name v3)
                    (:copier nil)
                    (:predicate nil))
@@ -12,11 +12,11 @@
     (y 0.0f0 :type single-float)
     (z 0.0f0 :type single-float))
 
-  (declaim (inline v3))
-  (defun* (v3 -> vec3) ((x real) (y real) (z real))
-    (%v3 (float x 1.0f0) (float y 1.0f0) (float z 1.0f0)))
+  (declaim (inline vec3))
+  (defun* (vec3 -> vec3) ((x real) (y real) (z real))
+    (%vec3 (float x 1.0f0) (float y 1.0f0) (float z 1.0f0)))
 
-  (define-constant +v3zero+ (v3 0 0 0) :test #'equalp))
+  (define-constant +v3zero+ (vec3 0 0 0) :test #'equalp))
 
 (defmacro with-vec3 (binds &body body)
   (if (null binds)

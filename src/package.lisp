@@ -5,7 +5,7 @@
         #:defstar)
 
   ;; vec2
-  (:export #:v2
+  (:export #:vec2
            #:v2x
            #:v2y
            #:+v2zero+
@@ -57,7 +57,7 @@
            #:v2max)
 
   ;; vec3
-  (:export #:v3
+  (:export #:vec3
            #:v3x
            #:v3y
            #:v3z
@@ -114,7 +114,7 @@
            #:v3max)
 
   ;; vec4
-  (:export #:v4
+  (:export #:vec4
            #:v4x
            #:v4y
            #:v4z
@@ -166,7 +166,7 @@
            #:v4max)
 
   ;; matrix
-  (:export #:m4
+  (:export #:mat4
            #:+m4id+
            #:+m4zero+
            #:m4zero!
@@ -224,7 +224,7 @@
            #:m4persp)
 
   ;; quaternion
-  (:export #:q
+  (:export #:quat
            #:qw
            #:qx
            #:qy
@@ -277,7 +277,7 @@
            #:qslerp)
 
   ;; dual quaternion
-  (:export #:dq
+  (:export #:dquat
            #:+dqid+
            #:+dqzero+
            #:dqid!

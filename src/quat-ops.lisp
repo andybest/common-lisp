@@ -7,7 +7,7 @@
     quat)
 
   (defun* (qid -> quat) ()
-    (qid! (q 0 0 0 0)))
+    (qid! (quat 0 0 0 0)))
 
   (define-constant +qid+ (qid) :test #'equalp))
 
@@ -19,7 +19,7 @@
 
 (declaim (inline qzero))
 (defun* (qzero -> quat) ()
-  (q 0 0 0 0))
+  (quat 0 0 0 0))
 
 (declaim (inline q=))
 (defun* (q= -> boolean) ((quat-a quat) (quat-b quat))
@@ -176,8 +176,8 @@
 (defun* (qrot! -> quat) ((out-quat quat) (quat quat) (vec vec3))
   (with-quat ((o out-quat) (q (qcp quat)))
     (with-vec3 ((v (v3scale vec 0.5f0))
-                (c (v3 (cos v.x) (cos v.y) (cos v.z)))
-                (s (v3 (sin v.x) (sin v.y) (sin v.z))))
+                (c (vec3 (cos v.x) (cos v.y) (cos v.z)))
+                (s (vec3 (sin v.x) (sin v.y) (sin v.z))))
       (psetf o.w (- (* c.x c.y c.z) (* s.x s.y s.z))
              o.x (+ (* s.x c.y c.z) (* c.x s.y s.z))
              o.y (- (* c.x s.y c.z) (* s.x c.y s.z))

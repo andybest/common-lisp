@@ -3,7 +3,7 @@
 (deftype dquat () '(simple-array quat (2)))
 
 (defstruct (dquat (:type vector)
-                  (:constructor dq (real dual))
+                  (:constructor dquat (real dual))
                   (:conc-name dq-)
                   (:copier nil)
                   (:predicate nil))

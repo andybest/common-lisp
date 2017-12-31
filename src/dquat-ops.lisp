@@ -10,7 +10,7 @@
 
   (declaim (inline dqid))
   (defun* (dqid -> dquat) ()
-    (dqid! (dq (qid) (qzero))))
+    (dqid! (dquat (qid) (qzero))))
 
   (define-constant +dqid+ (dqid) :test #'equalp)
 
@@ -23,7 +23,7 @@
 
   (declaim (inline dqzero))
   (defun* dqzero ()
-    (dq (qzero) (qzero)))
+    (dquat (qzero) (qzero)))
 
   (define-constant +dqzero+ (dqzero) :test #'equalp))
 
@@ -286,8 +286,8 @@
     (with-vec3 ((r (v3scale direction s))
                 (d (v3+ (v3scale moment s)
                         (v3scale direction (* pitch c 0.5f0)))))
-      (setf (dq-real out-dquat) (q c r.x r.y r.z)
-            (dq-dual out-dquat) (q (- (* pitch s 0.5f0)) d.x d.y d.z))))
+      (setf (dq-real out-dquat) (quat c r.x r.y r.z)
+            (dq-dual out-dquat) (quat (- (* pitch s 0.5f0)) d.x d.y d.z))))
   out-dquat)
 
 (declaim (inline screw->dq))

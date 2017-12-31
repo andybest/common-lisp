@@ -24,8 +24,8 @@ algebra and each symbol has a documentation string containing more detail.
 
 The library follows a certain naming convention. Functions having to do with
 vectors, matrices, quaternions, dual quaternions are prefixed, respectively,
-with `vN-`, `m4`, `q`, and `dq`. Each function has two variants, one destructive
-and one consing. The destructing ones use `!` as a postfix.
+with `vecN-`, `mat4`, `quat`, and `dquat`. Each function has two variants, one
+destructive and one consing. The destructing ones use `!` as a postfix.
 
 ## License
 

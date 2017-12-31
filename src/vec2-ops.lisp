@@ -8,7 +8,7 @@
 
 (declaim (inline v2zero))
 (defun* (v2zero -> vec2) ()
-  (v2 0 0))
+  (vec2 0 0))
 
 (declaim (inline v2cp!))
 (defun* (v2cp! -> vec2) ((out-vec vec2) (vec vec2))
@@ -59,7 +59,7 @@
 
 (declaim (inline list->v2))
 (defun* (list->v2 -> vec2) ((list list))
-  (apply #'v2 list))
+  (apply #'vec2 list))
 
 (declaim (inline v2=))
 (defun* (v2= -> boolean) ((vec-a vec2) (vec-b vec2))

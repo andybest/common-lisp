@@ -3,7 +3,7 @@
 (deftype quat () '(simple-array single-float (4)))
 
 (defstruct (quat (:type (vector single-float))
-                 (:constructor %q (w x y z))
+                 (:constructor %quat (w x y z))
                  (:conc-name q)
                  (:copier nil)
                  (:predicate nil))
@@ -12,9 +12,9 @@
   (y 0.0f0 :type single-float)
   (z 0.0f0 :type single-float))
 
-(declaim (inline q))
-(defun* (q -> quat) ((w real) (x real) (y real) (z real))
-  (%q (float w 1.0f0) (float x 1.0f0) (float y 1.0f0) (float z 1.0f0)))
+(declaim (inline quat))
+(defun* (quat -> quat) ((w real) (x real) (y real) (z real))
+  (%quat (float w 1.0f0) (float x 1.0f0) (float y 1.0f0) (float z 1.0f0)))
 
 (defmacro with-quat (binds &body body)
   (if (null binds)

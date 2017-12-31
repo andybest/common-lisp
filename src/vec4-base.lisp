@@ -4,7 +4,7 @@
   (deftype vec4 () '(simple-array single-float (4)))
 
   (defstruct (vec4 (:type (vector single-float))
-                   (:constructor %v4 (x y z w))
+                   (:constructor %vec4 (x y z w))
                    (:conc-name v4)
                    (:copier nil)
                    (:predicate nil))
@@ -13,11 +13,11 @@
     (z 0.0f0 :type single-float)
     (w 0.0f0 :type single-float))
 
-  (declaim (inline v4))
-  (defun* (v4 -> vec4) ((x real) (y real) (z real) (w real))
-    (%v4 (float x 1.0f0) (float y 1.0f0) (float z 1.0f0) (float w 1.0f0)))
+  (declaim (inline vec4))
+  (defun* (vec4 -> vec4) ((x real) (y real) (z real) (w real))
+    (%vec4 (float x 1.0f0) (float y 1.0f0) (float z 1.0f0) (float w 1.0f0)))
 
-  (define-constant +v4zero+ (v4 0 0 0 0) :test #'equalp))
+  (define-constant +v4zero+ (vec4 0 0 0 0) :test #'equalp))
 
 (defmacro with-vec4 (binds &body body)
   (if (null binds)

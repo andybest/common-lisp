@@ -8,7 +8,7 @@
   :homepage "https://github.com/mfiano/gamebox-math"
   :bug-tracker "https://github.com/mfiano/gamebox-math/issues"
   :source-control (:git "git@github.com:mfiano/gamebox-math.git")
-  :version "3.0.0"
+  :version "4.0.0"
   :encoding :utf-8
   :long-description #.(uiop:read-file-string
                        (uiop/pathname:subpathname *load-pathname* "README.md"))

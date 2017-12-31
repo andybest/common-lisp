@@ -1,7 +1,7 @@
 (in-package :gamebox-math)
 
 (eval-when (:compile-toplevel :load-toplevel)
-  (declaim (inline ))
+  (declaim (inline m4zero!))
   (defun* (m4zero! -> mat4) ((mat mat4))
     (with-mat4 ((m mat))
       (psetf m.00 0.0f0 m.01 0.0f0 m.02 0.0f0 m.03 0.0f0
@@ -12,10 +12,10 @@
 
   (declaim (inline m4zero))
   (defun* (m4zero -> mat4) ()
-    (%m4 0.0f0 0.0f0 0.0f0 0.0f0
-         0.0f0 0.0f0 0.0f0 0.0f0
-         0.0f0 0.0f0 0.0f0 0.0f0
-         0.0f0 0.0f0 0.0f0 0.0f0))
+    (%mat4 0.0f0 0.0f0 0.0f0 0.0f0
+           0.0f0 0.0f0 0.0f0 0.0f0
+           0.0f0 0.0f0 0.0f0 0.0f0
+           0.0f0 0.0f0 0.0f0 0.0f0))
 
   (define-constant +m4zero+ (m4zero) :test #'equalp)
 
@@ -30,10 +30,10 @@
 
   (declaim (inline m4id))
   (defun* (m4id -> mat4) ()
-    (%m4 1.0f0 0.0f0 0.0f0 0.0f0
-         0.0f0 1.0f0 0.0f0 0.0f0
-         0.0f0 0.0f0 1.0f0 0.0f0
-         0.0f0 0.0f0 0.0f0 1.0f0))
+    (%mat4 1.0f0 0.0f0 0.0f0 0.0f0
+           0.0f0 1.0f0 0.0f0 0.0f0
+           0.0f0 0.0f0 1.0f0 0.0f0
+           0.0f0 0.0f0 0.0f0 1.0f0))
 
   (define-constant +m4id+ (m4id) :test #'equalp))
 
