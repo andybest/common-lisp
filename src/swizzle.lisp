@@ -1,6 +1,6 @@
 (in-package :gamebox-math)
 
-(eval-when (:compile-toplevel)
+(eval-when (:compile-toplevel :load-toplevel)
   (defun %swizzle/permutations (n items)
     (if (= n 1)
         (mapcar #'list items)

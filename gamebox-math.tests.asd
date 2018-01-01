@@ -1,5 +1,3 @@
-(in-package :cl-user)
-
 (asdf:defsystem gamebox-math.tests
   :description "Tests for gamebox-math."
   :author "Michael Fiano <michael.fiano@gmail.com>"

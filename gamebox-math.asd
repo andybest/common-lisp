@@ -1,5 +1,3 @@
-(in-package :cl-user)
-
 (asdf:defsystem #:gamebox-math
   :description "A high performance math library useful for making games."
   :author "Michael Fiano <michael.fiano@gmail.com>"
