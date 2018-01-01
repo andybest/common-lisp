@@ -47,4 +47,18 @@
                (defun ,func-name (vec)
                  ,(%swizzle/function-body components))))))
 
+(defmacro generate-swizzle-setf-functions ()
+  (let ((component-masks '((x y z w) (r g b a) (s t p q))))
+    `(progn
+       ,@(loop :for mask :in component-masks
+               :append
+               (loop :for component :in mask
+                     :for i :from 0
+                     :for func-name := (symbolicate "." component)
+                     :append
+                     `((declaim (inline (setf ,func-name)))
+                       (defun (setf ,func-name) (value vec)
+                         (setf (aref vec ,i) value))))))))
+
 (generate-swizzle-functions)
+(generate-swizzle-setf-functions)
