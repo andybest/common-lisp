@@ -1,11 +1,15 @@
-(defpackage #:gamebox-math.vari
-  (:use #:cl
-        #:alexandria
-        #:varjo)
-  (:shadowing-import-from #:gamebox-math
-                          #:vec2
-                          #:vec3
-                          #:vec4)
+(uiop:define-package #:gamebox-math.vari
+    (:mix-reexport #:cl
+                   #:alexandria
+                   #:gamebox-math
+                   #:vari)
+  (:import-from #:varjo
+                #:v-def-glsl-template-fun
+                #:v-float
+                #:v-vec2
+                #:v-vec3
+                #:v-vec4
+                #:v-mat4)
   (:import-from #:gamebox-math
                 #:%swizzle/component-groups))
 
@@ -61,8 +65,7 @@
 (defmacro def-varjo-swizzle-macros ()
   (let ((macros (loop :for masks :in (%swizzle/component-groups)
                       :collect `(v-defmacro ,(symbolicate "." masks) (vector)
-                                  `(vari:swizzle ,vector
-                                                 ,,(make-keyword masks))))))
+                                  `(swizzle ,vector ,,(make-keyword masks))))))
     `(progn ,@macros)))
 
 (def-varjo-swizzle-macros)
