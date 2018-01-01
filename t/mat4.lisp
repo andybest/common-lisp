@@ -2,7 +2,7 @@
 
 (setf *default-test-function* #'equalp)
 
-(plan 108)
+(plan 116)
 
 (diag "identity")
 (let ((m (m4id))
@@ -195,6 +195,20 @@
 (is (m4trace (m4zero)) 0)
 (is (m4trace +m4id+) 4)
 (is (m4trace (mat4 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16)) 34)
+
+(diag "diagonal")
+(let ((m (mat4 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16))
+      (r1 (vec4 1 6 11 16))
+      (r2 (vec4 4 7 10 13))
+      (o (v4zero)))
+  (ok (m4diagp (m4id)))
+  (ok (not (m4diagp m)))
+  (is (m4mdiag! o m) r1)
+  (is o r1)
+  (is (m4mdiag m) r1)
+  (is (m4adiag! o m) r2)
+  (is o r2)
+  (is (m4adiag m) r2))
 
 (diag "determinant")
 (is (m4det (mat4 1 5 9 13 2 6 10 14 3 7 11 15 4 8 12 16)) 0)

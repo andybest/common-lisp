@@ -203,6 +203,11 @@
            #:m4orthonormalize!
            #:m4orthonormalize
            #:m4trace
+           #:m4diagp
+           #:m4mdiag!
+           #:m4mdiag
+           #:m4adiag!
+           #:m4adiag
            #:m4det
            #:m4invtortho!
            #:m4invtortho
