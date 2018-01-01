@@ -52,6 +52,15 @@
              ,(cadar binds)
            (with-mat4 ,(cdr binds) ,@body)))))
 
+(defun* (mref -> single-float) ((mat mat4) (row (integer 0 15))
+                                (column (integer 0 15)))
+  (aref mat (+ row (* column 4))))
+
+(defun* (setf mref) ((value single-float) (mat mat4) (row (integer 0 15))
+                     (column (integer 0 15)))
+  (:returns single-float)
+  (setf (aref mat (+ row (* column 4))) value))
+
 (set-pprint-dispatch
  'mat4
  (lambda (stream object)

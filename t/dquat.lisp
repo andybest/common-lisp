@@ -2,13 +2,10 @@
 
 (setf *default-test-function* #'equalp)
 
-(plan 45)
+(plan 44)
 
 (diag "identity")
-(let ((d (dqid))
-      (r (dquat (qid) (qzero))))
-  (is d r)
-  (is +dqid+ r))
+(is (dqid) (dquat (qid) (qzero)))
 
 (diag "equality")
 (pass "redundant")
@@ -43,7 +40,7 @@
   (is (dqnormalize! o d) r)
   (is o r)
   (is (dqnormalize d) r)
-  (is (dqnormalize (dquat (quat 2 0 0 0) (qzero))) +dqid+))
+  (is (dqnormalize (dquat (quat 2 0 0 0) (qzero))) (dqid)))
 
 (diag "negate")
 (pass "redundant")
