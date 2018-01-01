@@ -6,6 +6,7 @@
 
   ;; vec2
   (:export #:vec2
+           #:with-vec2
            #:+v2zero+
            #:v2zero!
            #:v2zero
@@ -56,6 +57,7 @@
 
   ;; vec3
   (:export #:vec3
+           #:with-vec3
            #:+v3zero+
            #:v3zero!
            #:v3zero
@@ -110,6 +112,7 @@
 
   ;; vec4
   (:export #:vec4
+           #:with-vec4
            #:+v4zero+
            #:v4zero!
            #:v4zero
@@ -158,6 +161,7 @@
 
   ;; matrix
   (:export #:mat4
+           #:with-mat4
            #:mref
            #:+m4zero+
            #:+m4id+
@@ -222,6 +226,7 @@
 
   ;; quaternion
   (:export #:quat
+           #:with-quat
            #:qw
            #:qx
            #:qy
@@ -276,6 +281,7 @@
 
   ;; dual quaternion
   (:export #:dquat
+           #:with-dquat
            #:dqid!
            #:dqid
            #:dqzero!
