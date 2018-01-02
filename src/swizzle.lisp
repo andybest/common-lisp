@@ -39,10 +39,11 @@
 (defmacro generate-swizzle-functions (component-count package-name)
   `(progn
      ,@(loop :for components :in (%swizzle/component-groups component-count)
-             :for func-name = (alexandria:symbolicate "." components)
+             :for func-name = (intern (format nil ".~a" components)
+                                      package-name)
              :append
              `((declaim (inline ,func-name))
-               #++(export ',func-name ,package-name)
+               (export ',func-name ,package-name)
                (defun ,func-name (vec)
                  ,(%swizzle/function-body components))))))
 
