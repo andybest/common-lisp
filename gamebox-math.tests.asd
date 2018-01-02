@@ -10,9 +10,4 @@
   :serial t
   :components
   ((:file "package")
-   (:test-file "vec2")
-   (:test-file "vec3")
-   (:test-file "vec4")
-   (:test-file "mat4")
-   (:test-file "quat")
-   (:test-file "dquat")))
+   (:test-file "vec3")))

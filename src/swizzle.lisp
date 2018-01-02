@@ -1,4 +1,4 @@
-(in-package :gamebox-math)
+(in-package :box.math.base)
 
 (eval-when (:compile-toplevel :load-toplevel)
   (defun %swizzle/permutations (n items)
@@ -12,11 +12,10 @@
             (%swizzle/permutations (1- n) items)))
          items)))
 
-  (defun %swizzle/component-groups ()
+  (defun %swizzle/component-groups (size)
     (loop :for masks :in '((x y z w) (r g b a) (s t p q))
           :append
-          (loop :with size = 4
-                :with set = (subseq masks 0 size)
+          (loop :with set = (subseq masks 0 size)
                 :for i from 1 :to size
                 :for items = (%swizzle/permutations i set)
                 :append (mapcar (lambda (x) (format nil "~{~a~}" x)) items))))
@@ -37,28 +36,16 @@
                      :collect `(setf (aref result ,i) (aref vec ,pos)))
              result)))))
 
-(defmacro generate-swizzle-functions ()
+(defmacro generate-swizzle-functions (component-count package-name)
   `(progn
-     ,@(loop :for components :in (%swizzle/component-groups)
-             :for func-name = (symbolicate "." components)
+     ,@(loop :for components :in (%swizzle/component-groups component-count)
+             :for func-name = (alexandria:symbolicate "." components)
              :append
              `((declaim (inline ,func-name))
-               (export ',func-name)
+               #++(export ',func-name ,package-name)
                (defun ,func-name (vec)
                  ,(%swizzle/function-body components))))))
 
-(defmacro generate-swizzle-setf-functions ()
-  (let ((component-masks '((x y z w) (r g b a) (s t p q))))
-    `(progn
-       ,@(loop :for mask :in component-masks
-               :append
-               (loop :for component :in mask
-                     :for i :from 0
-                     :for func-name := (symbolicate "." component)
-                     :append
-                     `((declaim (inline (setf ,func-name)))
-                       (defun (setf ,func-name) (value vec)
-                         (setf (aref vec ,i) value))))))))
-
-(generate-swizzle-functions)
-(generate-swizzle-setf-functions)
+(generate-swizzle-functions 2 :box.math.vec2)
+(generate-swizzle-functions 3 :box.math.vec3)
+(generate-swizzle-functions 4 :box.math.vec4)
