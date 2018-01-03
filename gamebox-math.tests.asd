@@ -5,6 +5,7 @@
   :license "MIT"
   :defsystem-depends-on (:prove-asdf)
   :depends-on (#:gamebox-math
+               #:defpackage-plus
                #:prove)
   :pathname "t"
   :serial t

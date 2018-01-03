@@ -4,7 +4,8 @@
   :maintainer "Michael Fiano <michael.fiano@gmail.com>"
   :license "MIT"
   :depends-on (#:gamebox-math
-               #:varjo)
+               #:varjo
+               #:defpackage-plus)
   :pathname "src"
   :serial t
   :components
