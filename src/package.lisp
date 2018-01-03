@@ -1,5 +1,32 @@
 (in-package :defpackage+-1)
 
+(eval-when (:compile-toplevel :load-toplevel)
+  (defun ensure-global-nickname (package nickname)
+    (let ((package (find-package package)))
+      (rename-package package
+                      (package-name package)
+                      (adjoin nickname
+                              (package-nicknames package)
+                              :key #'string
+                              :test #'equal))))
+
+  (defun add-local-nickname (package nickname local-to)
+    (declare (ignorable package nickname local-to))
+    #+sbcl
+    (sb-ext:add-package-local-nickname nickname package local-to)
+    #+(or abcl ecl)
+    (ext:add-package-local-nickname nickname package local-to))
+
+  (defmethod defpackage+-dispatch ((option (eql :local-nicknames))
+                                   parameters package)
+    (loop :for (nickname package-name) :in paramameters
+          :do (progn
+                (ensure-package package-name)
+                #+package-local-nicknames
+                (add-local-nickname pack nickname package)
+                #-package-local-nicknames
+                (ensure-global-nickname package-name nickname)))))
+
 (defpackage+ #:box.math.base
   (:inherit #:cl
             #:defstar)
