@@ -23,7 +23,7 @@
           :do (progn
                 (ensure-package package-name)
                 #+package-local-nicknames
-                (add-local-nickname pack nickname package)
+                (add-local-nickname package-name nickname package)
                 #-package-local-nicknames
                 (ensure-global-nickname package-name nickname)))))
 
