@@ -7,15 +7,15 @@
   :depends-on (#:gamebox-math
                #:defpackage-plus
                #:prove)
-  :pathname "t"
   :serial t
   :components
-  ((:file "package")
-   (:test-file "vec2")
-   (:test-file "vec3")
-   (:test-file "vec4")
-   (:test-file "mat2")
-   (:test-file "mat3")
-   (:test-file "mat4")
-   (:test-file "quat")
-   (:test-file "dquat")))
+  ((:file "src/package-local-nicknames-compat")
+   (:file "t/package")
+   (:test-file "t/vec2")
+   (:test-file "t/vec3")
+   (:test-file "t/vec4")
+   (:test-file "t/mat2")
+   (:test-file "t/mat3")
+   (:test-file "t/mat4")
+   (:test-file "t/quat")
+   (:test-file "t/dquat")))

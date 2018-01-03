@@ -16,7 +16,8 @@
   :pathname "src"
   :serial t
   :components
-  ((:file "package")
+  ((:file "package-local-nicknames-compat")
+   (:file "package")
    (:file "common")
    (:file "swizzle")
    (:file "vec2")
