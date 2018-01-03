@@ -109,10 +109,15 @@
 (defun* (stabilize -> vec) ((vec vec) &key ((tolerance single-float) +epsilon+))
   (stabilize! (zero) vec :tolerance tolerance))
 
-(declaim (inline ->list))
-(defun* (->list -> list) ((vec vec))
+
+(declaim (inline to-list))
+(defun* (to-list -> list) ((vec vec))
   (with-components ((v vec))
     (list vx vy vz vw)))
+
+(declaim (inline from-list))
+(defun* (from-list -> vec) ((list list))
+  (apply #'vec list))
 
 (declaim (inline =))
 (defun* (= -> boolean) ((vec1 vec) (vec2 vec))
@@ -158,8 +163,8 @@
 (defun* (- -> vec) ((vec1 vec) (vec2 vec))
   (-! (zero) vec1 vec2))
 
-(declaim (inline hadamard*!))
-(defun* (hadamard*! -> vec) ((out vec) (vec1 vec) (vec2 vec))
+(declaim (inline *!))
+(defun* (*! -> vec) ((out vec) (vec1 vec) (vec2 vec))
   (with-components ((o out) (v1 vec1) (v2 vec2))
     (psetf ox (cl:* v1x v2x)
            oy (cl:* v1y v2y)
@@ -167,22 +172,22 @@
            ow (cl:* v1w v2w)))
   out)
 
-(declaim (inline hadamard*))
-(defun* (hadamard* -> vec) ((vec1 vec) (vec2 vec))
-  (hadamard*! (zero) vec1 vec2))
+(declaim (inline *))
+(defun* (* -> vec) ((vec1 vec) (vec2 vec))
+  (*! (zero) vec1 vec2))
 
-(declaim (inline hadamard/!))
-(defun* (hadamard/! -> vec) ((out vec) (vec1 vec) (vec2 vec))
+(declaim (inline /!))
+(defun* (/! -> vec) ((out vec) (vec1 vec) (vec2 vec))
   (with-components ((o out) (v1 vec1) (v2 vec2))
-    (psetf ox (if (cl:zerop v2x) 0.0f0 (/ v1x v2x))
-           oy (if (cl:zerop v2y) 0.0f0 (/ v1y v2y))
-           oz (if (cl:zerop v2z) 0.0f0 (/ v1z v2z))
-           ow (if (cl:zerop v2w) 0.0f0 (/ v1w v2w))))
+    (psetf ox (if (cl:zerop v2x) 0.0f0 (cl:/ v1x v2x))
+           oy (if (cl:zerop v2y) 0.0f0 (cl:/ v1y v2y))
+           oz (if (cl:zerop v2z) 0.0f0 (cl:/ v1z v2z))
+           ow (if (cl:zerop v2w) 0.0f0 (cl:/ v1w v2w))))
   out)
 
-(declaim (inline hadamard/))
-(defun* (hadamard/ -> vec) ((vec1 vec) (vec2 vec))
-  (hadamard/! (zero) vec1 vec2))
+(declaim (inline /))
+(defun* (/ -> vec) ((vec1 vec) (vec2 vec))
+  (/! (zero) vec1 vec2))
 
 (declaim (inline scale!))
 (defun* (scale! -> vec) ((out vec) (vec vec) (scalar single-float))
@@ -214,7 +219,7 @@
 (defun* (normalize! -> vec) ((out vec) (vec vec))
   (let ((magnitude (magnitude vec)))
     (unless (cl:zerop magnitude)
-      (scale! out vec (/ magnitude))))
+      (scale! out vec (cl:/ magnitude))))
   out)
 
 (declaim (inline normalize))
@@ -259,7 +264,7 @@
 (defun* (angle -> single-float) ((vec1 vec) (vec2 vec))
   (let ((dot (dot vec1 vec2))
         (m*m (cl:* (magnitude vec1) (magnitude vec2))))
-    (if (cl:zerop m*m) 0.0f0 (acos (/ dot m*m)))))
+    (if (cl:zerop m*m) 0.0f0 (acos (cl:/ dot m*m)))))
 
 (declaim (inline lerp!))
 (defun* (lerp! -> vec) ((out vec) (vec1 vec) (vec2 vec) (factor single-float))

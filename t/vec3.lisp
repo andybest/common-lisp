@@ -2,7 +2,7 @@
 
 (setf *default-test-function* #'equalp)
 
-(plan 106)
+(plan 107)
 
 (diag "accessors")
 (let ((v (v3:vec 1 2 3)))
@@ -47,7 +47,8 @@
   (is (v3:zero) v3:+zero+))
 
 (diag "list conversion")
-(is (v3:->list (v3:vec 1 2 3)) '(1 2 3))
+(is (v3:to-list (v3:vec 1 2 3)) '(1 2 3))
+(is (v3:from-list '(1 2 3)) (v3:vec 1 2 3))
 
 (diag "equality")
 (let ((v1 (v3:vec 0.8598654 -0.4803753 -0.3822465))
@@ -82,22 +83,22 @@
       (v2 (v3:vec 0.6687746 -0.21906853 0.14335585))
       (r (v3:vec -0.4159684 0.17549706 -0.00986363))
       (o (v3:zero)))
-  (is (v3:hadamard*! o v1 v2) r)
+  (is (v3:*! o v1 v2) r)
   (is o r)
-  (is (v3:hadamard* v1 v2) r)
-  (is (v3:hadamard* v1 v3:+zero+) v3:+zero+)
-  (is (v3:hadamard* v3:+zero+ v2) v3:+zero+))
+  (is (v3:* v1 v2) r)
+  (is (v3:* v1 v3:+zero+) v3:+zero+)
+  (is (v3:* v3:+zero+ v2) v3:+zero+))
 
 (diag "hadamard quotient")
 (let ((v1 (v3:vec 0.9498384 0.4066379 -0.72961855))
       (v2 (v3:vec 0.32331443 0.17439032 -0.65894365))
       (r (v3:vec 2.9378164 2.3317688 1.1072549))
       (o (v3:zero)))
-  (is (v3:hadamard/! o v1 v2) r)
+  (is (v3:/! o v1 v2) r)
   (is o r)
-  (is (v3:hadamard/ v1 v2) r)
-  (is (v3:hadamard/ v1 v3:+zero+) v3:+zero+)
-  (is (v3:hadamard/ v3:+zero+ v2) v3:+zero+))
+  (is (v3:/ v1 v2) r)
+  (is (v3:/ v1 v3:+zero+) v3:+zero+)
+  (is (v3:/ v3:+zero+ v2) v3:+zero+))
 
 (diag "scalar product")
 (let ((v (v3:vec 0.82007027 -0.53582144 0.11559081))
