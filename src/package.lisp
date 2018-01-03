@@ -1,5 +1,6 @@
 (in-package :defpackage+-1)
 
+;; Remove this when defpackage-plus PR #2 is merged in.
 (eval-when (:compile-toplevel :load-toplevel)
   (defun ensure-global-nickname (package nickname)
     (let ((package (find-package package)))
@@ -245,8 +246,8 @@
            #:max))
 
 (defpackage+ #:box.math.mat2
-  (:use #:box.math.base)
   (:local-nicknames (#:v2 #:box.math.vec2))
+  (:use #:box.math.base)
   (:shadow #:=
            #:*
            #:trace)
@@ -292,9 +293,9 @@
            #:anti-diagonal))
 
 (defpackage+ #:box.math.mat3
-  (:use #:box.math.base)
   (:local-nicknames (#:v2 #:box.math.vec2)
                     (#:v3 #:box.math.vec3))
+  (:use #:box.math.base)
   (:shadow #:=
            #:*
            #:trace)
@@ -348,9 +349,9 @@
            #:anti-diagonal))
 
 (defpackage+ #:box.math.mat4
-  (:use #:box.math.base)
   (:local-nicknames (#:v3 #:box.math.vec3)
                     (#:v4 #:box.math.vec4))
+  (:use #:box.math.base)
   (:shadow #:=
            #:*
            #:trace)
@@ -417,10 +418,10 @@
            #:perspective-projection))
 
 (defpackage+ #:box.math.quat
-  (:use #:box.math.base)
   (:local-nicknames (#:v3 #:box.math.vec3)
                     (#:v4 #:box.math.vec4)
                     (#:m4 #:box.math.mat4))
+  (:use #:box.math.base)
   (:shadow #:=
            #:+
            #:-
@@ -481,11 +482,11 @@
            #:slerp))
 
 (defpackage+ #:box.math.dquat
-  (:use #:box.math.base)
   (:local-nicknames (#:v3 #:box.math.vec3)
                     (#:v4 #:box.math.vec4)
                     (#:m4 #:box.math.mat4)
                     (#:q #:box.math.quat))
+  (:use #:box.math.base)
   (:shadow #:=
            #:+
            #:-
