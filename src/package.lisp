@@ -21,8 +21,7 @@
       #+(or abcl ecl)
       (ext:add-package-local-nickname nickname package local-to)))
 
-  (defmethod defpackage+-dispatch ((option (eql :local-nicknames))
-                                   parameters package)
+  (defmethod defpackage+-dispatch ((option (eql :local-nicknames)) parameters package)
     (loop :for (nickname package-name) :in parameters
           :do (progn
                 (ensure-package package-name)
