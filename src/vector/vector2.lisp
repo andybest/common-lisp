@@ -20,19 +20,10 @@
           `(with-components ,rest ,@body)
           `(progn ,@body))))
 
-(set-pprint-dispatch
- 'vec
- (lambda (stream object)
-   (print-unreadable-object (object stream)
-     (with-components ((v object))
-       (format stream "~f ~f" vx vy))))
- 1)
-
 ;;; Constants
 
 (alexandria:define-constant +zero+
-    (make-array 2 :element-type 'single-float
-                  :initial-contents '(0.0f0 0.0f0))
+    (make-array 2 :element-type 'single-float :initial-contents '(0.0f0 0.0f0))
   :test #'equalp)
 
 ;;; Operations
@@ -68,8 +59,7 @@
   (copy! (zero) vec))
 
 (declaim (inline clamp!))
-(defun* (clamp! -> vec) ((out vec) (vec vec)
-                         &key
+(defun* (clamp! -> vec) ((out vec) (vec vec) &key
                          ((min single-float) most-negative-single-float)
                          ((max single-float) most-positive-single-float))
   (with-components ((o out) (v vec))
@@ -78,16 +68,13 @@
   out)
 
 (declaim (inline clamp))
-(defun* (clamp -> vec) ((vec vec)
-                        &key
+(defun* (clamp -> vec) ((vec vec) &key
                         ((min single-float) most-negative-single-float)
                         ((max single-float) most-positive-single-float))
   (clamp! (zero) vec :min min :max max))
 
 (declaim (inline stabilize!))
-(defun* (stabilize! -> vec) ((out vec) (vec vec)
-                             &key
-                             ((tolerance single-float) +epsilon+))
+(defun* (stabilize! -> vec) ((out vec) (vec vec) &key ((tolerance single-float) +epsilon+))
   (with-components ((o out) (v vec))
     (macrolet ((stabilize (place)
                  `(if (cl:< (cl:abs ,place) tolerance) 0.0f0 ,place)))
@@ -115,9 +102,7 @@
          (cl:= v1y v2y))))
 
 (declaim (inline ~))
-(defun* (~ -> boolean) ((vec1 vec) (vec2 vec)
-                        &key
-                        ((tolerance single-float) +epsilon+))
+(defun* (~ -> boolean) ((vec1 vec) (vec2 vec) &key ((tolerance single-float) +epsilon+))
   (with-components ((v1 vec1) (v2 vec2))
     (and (%~ v1x v2x tolerance)
          (%~ v1y v2y tolerance))))

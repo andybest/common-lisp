@@ -7,9 +7,9 @@ A high performance math library useful for making games.
 
 ## Overview
 
-A library written in portable Common Lisp, providing support for common math
-functions related to game development. Supported are 2D, 3D, and 4D vectors, 4x4
-matrices, quaternions, and dual quaternions.
+A library written in portable Common Lisp, providing support for common math functions related to
+game development. Supported are 2D, 3D, and 4D vectors, 4x4 matrices, quaternions, and dual
+quaternions.
 
 ## Install
 
@@ -19,13 +19,7 @@ matrices, quaternions, and dual quaternions.
 
 ## Usage
 
-This library should be fairly self-explanatory to anyone familiar with linear
-algebra and each symbol has a documentation string containing more detail.
-
-The library follows a certain naming convention. Functions having to do with
-vectors, matrices, quaternions, dual quaternions are prefixed, respectively,
-with `vecN-`, `mat4`, `quat`, and `dquat`. Each function has two variants, one
-destructive and one consing. The destructive ones use `!` as a postfix.
+Documentation has not been written at this time.
 
 ## License
 

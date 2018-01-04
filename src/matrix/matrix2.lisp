@@ -35,16 +35,6 @@
   (:returns single-float)
   (setf (aref matrix (+ row (cl:* column 2))) value))
 
-(set-pprint-dispatch
- 'matrix
- (lambda (stream object)
-   (print-unreadable-object (object stream)
-     (with-components ((m object))
-       (format stream "~f ~f~%  ~f ~f"
-               m00 m01
-               m10 m11))))
- 1)
-
 ;;; Constants
 
 (alexandria:define-constant +zero+
@@ -97,9 +87,7 @@
          (cl:= a10 b10) (cl:= a11 b11))))
 
 (declaim (inline ~))
-(defun* (~ -> boolean) ((matrix1 matrix) (matrix2 matrix)
-                        &key
-                        ((tolerance single-float) +epsilon+))
+(defun* (~ -> boolean) ((matrix1 matrix) (matrix2 matrix) &key ((tolerance single-float) +epsilon+))
   (with-components ((a matrix1) (b matrix2))
     (and (%~ a00 b00 tolerance) (%~ a01 b01 tolerance)
          (%~ a10 b10 tolerance) (%~ a11 b11 tolerance))))
@@ -115,8 +103,7 @@
 (defun* (copy -> matrix) ((matrix matrix))
   (copy! (zero) matrix))
 
-(defun* (clamp! -> matrix) ((out matrix) (matrix matrix)
-                            &key
+(defun* (clamp! -> matrix) ((out matrix) (matrix matrix) &key
                             ((min single-float) most-negative-single-float)
                             ((max single-float) most-positive-single-float))
   (with-components ((o out) (m matrix))
@@ -127,8 +114,7 @@
   out)
 
 (declaim (inline clamp))
-(defun* (clamp -> matrix) ((matrix matrix)
-                           &key
+(defun* (clamp -> matrix) ((matrix matrix) &key
                            ((min single-float) most-negative-single-float)
                            ((max single-float) most-positive-single-float))
   (clamp! (zero) matrix :min min :max max))
@@ -147,8 +133,7 @@
   (*! (zero) matrix1 matrix2))
 
 (declaim (inline rotation-axis-to-vec2!))
-(defun* (rotation-axis-to-vec2! -> v2:vec) ((out v2:vec) (matrix matrix)
-                                            (axis keyword))
+(defun* (rotation-axis-to-vec2! -> v2:vec) ((out v2:vec) (matrix matrix) (axis keyword))
   (v2:with-components ((v out))
     (with-components ((m matrix))
       (ecase axis
@@ -161,8 +146,7 @@
   (rotation-axis-to-vec2! (v2:zero) matrix axis))
 
 (declaim (inline rotation-axis-from-vec2!))
-(defun* (rotation-axis-from-vec2! -> matrix) ((matrix matrix) (vec v2:vec)
-                                              (axis keyword))
+(defun* (rotation-axis-from-vec2! -> matrix) ((matrix matrix) (vec v2:vec) (axis keyword))
   (with-components ((m matrix))
     (v2:with-components ((v vec))
       (ecase axis
@@ -171,8 +155,7 @@
   matrix)
 
 (declaim (inline rotation-axis-from-vec2))
-(defun* (rotation-axis-from-vec2 -> matrix) ((matrix matrix) (vec v2:vec)
-                                             (axis keyword))
+(defun* (rotation-axis-from-vec2 -> matrix) ((matrix matrix) (vec v2:vec) (axis keyword))
   (rotation-axis-from-vec2! (copy matrix) vec axis))
 
 (defun* (rotate! -> matrix) ((out matrix) (matrix matrix) (angle float))

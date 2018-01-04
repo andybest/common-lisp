@@ -7,8 +7,7 @@
 
   (declaim (inline %make-accessor-symbol))
   (defun %make-accessor-symbol (prefix &rest args)
-    (intern (format nil "~@:(~{~a~}~)" (cons prefix args))
-            (symbol-package prefix))))
+    (intern (format nil "~@:(~{~a~}~)" (cons prefix args)) (symbol-package prefix))))
 
 (declaim (inline %~))
 (defun* (%~ -> boolean) ((a real) (b real) (tolerance single-float))

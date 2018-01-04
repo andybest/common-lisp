@@ -24,24 +24,14 @@
           `(with-components ,rest ,@body)
           `(progn ,@body))))
 
-(set-pprint-dispatch
- 'quat
- (lambda (stream object)
-   (print-unreadable-object (object stream)
-     (with-components ((q object))
-       (format stream "~f ~f ~f ~f" qw qx qy qz))))
- 1)
-
 ;;; Constants
 
 (alexandria:define-constant +zero+
-    (make-array 4 :element-type 'single-float
-                  :initial-contents '(0.0f0 0.0f0 0.0f0 0.0f0))
+    (make-array 4 :element-type 'single-float :initial-contents '(0.0f0 0.0f0 0.0f0 0.0f0))
   :test #'equalp)
 
 (alexandria:define-constant +id+
-    (make-array 4 :element-type 'single-float
-                  :initial-contents '(1.0f0 0.0f0 0.0f0 0.0f0))
+    (make-array 4 :element-type 'single-float :initial-contents '(1.0f0 0.0f0 0.0f0 0.0f0))
   :test #'equalp)
 
 ;;; Operations
@@ -77,9 +67,7 @@
          (cl:= q1z q2z))))
 
 (declaim (inline ~))
-(defun* (~ -> boolean) ((quat1 quat) (quat2 quat)
-                        &key
-                        ((tolerance single-float) +epsilon+))
+(defun* (~ -> boolean) ((quat1 quat) (quat2 quat) &key ((tolerance single-float) +epsilon+))
   (with-components ((q1 quat1) (q2 quat2))
     (and (%~ q1w q2w tolerance)
          (%~ q1x q2x tolerance)
@@ -126,12 +114,9 @@
 (defun* (*! -> quat) ((out quat) (quat1 quat) (quat2 quat))
   (with-components ((o out) (q1 quat1) (q2 quat2))
     (psetf ow (cl:- (cl:* q1w q2w) (cl:* q1x q2x) (cl:* q1y q2y) (cl:* q1z q2z))
-           ox (cl:- (cl:+ (cl:* q1w q2x) (cl:* q1x q2w) (cl:* q1y q2z))
-                    (cl:* q1z q2y))
-           oy (cl:- (cl:+ (cl:* q1w q2y) (cl:* q1y q2w) (cl:* q1z q2x))
-                    (cl:* q1x q2z))
-           oz (cl:- (cl:+ (cl:* q1w q2z) (cl:* q1z q2w) (cl:* q1x q2y))
-                    (cl:* q1y q2x))))
+           ox (cl:- (cl:+ (cl:* q1w q2x) (cl:* q1x q2w) (cl:* q1y q2z)) (cl:* q1z q2y))
+           oy (cl:- (cl:+ (cl:* q1w q2y) (cl:* q1y q2w) (cl:* q1z q2x)) (cl:* q1x q2z))
+           oz (cl:- (cl:+ (cl:* q1w q2z) (cl:* q1z q2w) (cl:* q1x q2y)) (cl:* q1y q2x))))
   out)
 
 (declaim (inline *))
@@ -166,11 +151,7 @@
 
 (declaim (inline cross!))
 (defun* (cross! -> quat) ((out quat) (quat1 quat) (quat2 quat))
-  (scale!
-   out
-   (+ (* quat2 (conjugate quat1))
-      (* quat1 quat2))
-   0.5f0))
+  (scale! out (+ (* quat2 (conjugate quat1)) (* quat1 quat2)) 0.5f0))
 
 (declaim (inline cross))
 (defun* (cross -> quat) ((quat1 quat) (quat2 quat))
@@ -207,10 +188,7 @@
 (declaim (inline dot))
 (defun* (dot -> single-float) ((quat1 quat) (quat2 quat))
   (with-components ((q1 quat1) (q2 quat2))
-    (cl:+ (cl:* q1w q2w)
-          (cl:* q1x q2x)
-          (cl:* q1y q2y)
-          (cl:* q1z q2z))))
+    (cl:+ (cl:* q1w q2w) (cl:* q1x q2x) (cl:* q1y q2y) (cl:* q1z q2z))))
 
 (declaim (inline inverse!))
 (defun* (inverse! -> quat) ((out quat) (quat quat))
@@ -360,8 +338,7 @@
 (defun* (from-mat4 -> quat) ((matrix m4:matrix))
   (from-mat4! (id) matrix))
 
-(defun* (slerp! -> quat) ((out quat) (quat1 quat) (quat2 quat)
-                          (factor single-float))
+(defun* (slerp! -> quat) ((out quat) (quat1 quat) (quat2 quat) (factor single-float))
   (with-components ((o out) (q1 quat1) (q2 quat2))
     (let ((dot (dot q1 q2))
           (q2 q2))

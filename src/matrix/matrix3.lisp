@@ -37,25 +37,12 @@
           `(progn ,@body))))
 
 (declaim (inline mref))
-(defun* (mref -> single-float) ((matrix matrix) (row (integer 0 8))
-                                (column (integer 0 8)))
+(defun* (mref -> single-float) ((matrix matrix) (row (integer 0 8)) (column (integer 0 8)))
   (aref matrix (+ row (cl:* column 3))))
 
-(defun* (setf mref) ((value single-float) (matrix matrix) (row (integer 0 8))
-                     (column (integer 0 8)))
+(defun* (setf mref) ((value single-float) (matrix matrix) (row (integer 0 8)) (column (integer 0 8)))
   (:returns single-float)
   (setf (aref matrix (+ row (cl:* column 3))) value))
-
-(set-pprint-dispatch
- 'matrix
- (lambda (stream object)
-   (print-unreadable-object (object stream)
-     (with-components ((m object))
-       (format stream "~f ~f ~f~%  ~f ~f ~f~%  ~f ~f ~f"
-               m00 m01 m02
-               m10 m11 m12
-               m20 m21 m22))))
- 1)
 
 ;;; Constants
 
@@ -76,12 +63,10 @@
 ;;; Operations
 
 (declaim (inline make))
-(defun* (make -> matrix) ((m00 real) (m01 real) (m02 real)
-                          (m10 real) (m11 real) (m12 real)
+(defun* (make -> matrix) ((m00 real) (m01 real) (m02 real) (m10 real) (m11 real) (m12 real)
                           (m20 real) (m21 real) (m22 real))
-  (%make (float m00 1.0f0) (float m01 1.0f0) (float m02 1.0f0)
-         (float m10 1.0f0) (float m11 1.0f0) (float m12 1.0f0)
-         (float m20 1.0f0) (float m21 1.0f0) (float m22 1.0f0)))
+  (%make (float m00 1.0f0) (float m01 1.0f0) (float m02 1.0f0) (float m10 1.0f0) (float m11 1.0f0)
+         (float m12 1.0f0) (float m20 1.0f0) (float m21 1.0f0) (float m22 1.0f0)))
 
 (declaim (inline zero!))
 (defun* (zero! -> matrix) ((matrix matrix))
@@ -119,9 +104,7 @@
          (cl:= a20 b20) (cl:= a21 b21) (cl:= a22 b22))))
 
 (declaim (inline ~))
-(defun* (~ -> boolean) ((matrix1 matrix) (matrix2 matrix)
-                        &key
-                        ((tolerance single-float) +epsilon+))
+(defun* (~ -> boolean) ((matrix1 matrix) (matrix2 matrix) &key ((tolerance single-float) +epsilon+))
   (with-components ((a matrix1) (b matrix2))
     (and (%~ a00 b00 tolerance) (%~ a01 b01 tolerance) (%~ a02 b02 tolerance)
          (%~ a10 b10 tolerance) (%~ a11 b11 tolerance) (%~ a12 b12 tolerance)
@@ -139,8 +122,7 @@
 (defun* (copy -> matrix) ((matrix matrix))
   (copy! (zero) matrix))
 
-(defun* (clamp! -> matrix) ((out matrix) (matrix matrix)
-                            &key
+(defun* (clamp! -> matrix) ((out matrix) (matrix matrix) &key
                             ((min single-float) most-negative-single-float)
                             ((max single-float) most-positive-single-float))
   (with-components ((o out) (m matrix))
@@ -156,8 +138,7 @@
   out)
 
 (declaim (inline clamp))
-(defun* (clamp -> matrix) ((matrix matrix)
-                           &key
+(defun* (clamp -> matrix) ((matrix matrix) &key
                            ((min single-float) most-negative-single-float)
                            ((max single-float) most-positive-single-float))
   (clamp! (zero) matrix :min min :max max))
@@ -222,8 +203,7 @@
   (copy-rotation! (id) matrix))
 
 (declaim (inline rotation-axis-to-vec2!))
-(defun* (rotation-axis-to-vec2! -> v2:vec) ((out v2:vec) (matrix matrix)
-                                            (axis keyword))
+(defun* (rotation-axis-to-vec2! -> v2:vec) ((out v2:vec) (matrix matrix) (axis keyword))
   (v2:with-components ((v out))
     (with-components ((m matrix))
       (ecase axis
@@ -236,8 +216,7 @@
   (rotation-axis-to-vec2! (v2:zero) matrix axis))
 
 (declaim (inline rotation-axis-from-vec2!))
-(defun* (rotation-axis-from-vec2! -> matrix) ((matrix matrix) (vec v2:vec)
-                                              (axis keyword))
+(defun* (rotation-axis-from-vec2! -> matrix) ((matrix matrix) (vec v2:vec) (axis keyword))
   (with-components ((m matrix))
     (v2:with-components ((v vec))
       (ecase axis
@@ -246,8 +225,7 @@
   matrix)
 
 (declaim (inline rotation-axis-from-vec2))
-(defun* (rotation-axis-from-vec2 -> matrix) ((matrix matrix) (vec v2:vec)
-                                             (axis keyword))
+(defun* (rotation-axis-from-vec2 -> matrix) ((matrix matrix) (vec v2:vec) (axis keyword))
   (rotation-axis-from-vec2! (copy matrix) vec axis))
 
 (defun* (rotate! -> matrix) ((out matrix) (matrix matrix) (angle float))
