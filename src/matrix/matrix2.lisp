@@ -5,8 +5,8 @@
 (deftype matrix () '(simple-array single-float (4)))
 
 (defstruct (matrix (:type (vector single-float))
-                   (:constructor %matrix (m00 m01
-                                          m10 m11))
+                   (:constructor %make (m00 m01
+                                        m10 m11))
                    (:conc-name nil)
                    (:copier nil))
   (m00 0.0f0 :type single-float)
@@ -61,6 +61,11 @@
 
 ;;; Operations
 
+(declaim (inline make))
+(defun* (make -> matrix) ((m00 real) (m01 real) (m10 real) (m11 real))
+  (%make (float m00 1.0f0) (float m01 1.0f0)
+         (float m10 1.0f0) (float m11 1.0f0)))
+
 (declaim (inline zero!))
 (defun* (zero! -> matrix) ((matrix matrix))
   (with-components ((m matrix))
@@ -70,8 +75,8 @@
 
 (declaim (inline zero))
 (defun* (zero -> matrix) ()
-  (%matrix 0.0f0 0.0f0
-           0.0f0 0.0f0))
+  (%make 0.0f0 0.0f0
+         0.0f0 0.0f0))
 
 (declaim (inline id!))
 (defun* (id! -> matrix) ((matrix matrix))
@@ -82,13 +87,8 @@
 
 (declaim (inline id))
 (defun* (id -> matrix) ()
-  (%matrix 1.0f0 0.0f0
-           0.0f0 1.0f0))
-
-(declaim (inline matrix))
-(defun* (matrix -> matrix) ((m00 real) (m01 real) (m10 real) (m11 real))
-  (%matrix (float m00 1.0f0) (float m01 1.0f0)
-           (float m10 1.0f0) (float m11 1.0f0)))
+  (%make 1.0f0 0.0f0
+         0.0f0 1.0f0))
 
 (declaim (inline =))
 (defun* (= -> boolean) ((matrix1 matrix) (matrix2 matrix))

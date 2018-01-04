@@ -6,7 +6,7 @@
   :homepage "https://github.com/mfiano/gamebox-math"
   :bug-tracker "https://github.com/mfiano/gamebox-math/issues"
   :source-control (:git "git@github.com:mfiano/gamebox-math.git")
-  :version "6.0.0"
+  :version "6.1.0"
   :encoding :utf-8
   :long-description #.(uiop:read-file-string
                        (uiop/pathname:subpathname *load-pathname* "README.md"))
@@ -16,15 +16,23 @@
   :pathname "src"
   :serial t
   :components
-  ((:file "package-local-nicknames-compat")
-   (:file "package")
+  ((:file "package")
    (:file "common")
-   (:file "swizzle")
-   (:file "vec2")
-   (:file "vec3")
-   (:file "vec4")
-   (:file "mat2")
-   (:file "mat3")
-   (:file "mat4")
-   (:file "quat")
-   (:file "dquat")))
+   (:module "vector"
+    :components
+    ((:file "package")
+     (:file "swizzle")
+     (:file "vector2")
+     (:file "vector3")
+     (:file "vector4")))
+   (:module "matrix"
+    :components
+    ((:file "package")
+     (:file "matrix2")
+     (:file "matrix3")
+     (:file "matrix4")))
+   (:module "quaternion"
+    :components
+    ((:file "package")
+     (:file "quaternion")
+     (:file "dual-quaternion")))))

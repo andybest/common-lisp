@@ -5,7 +5,7 @@
 (deftype dquat () '(simple-array q:quat (2)))
 
 (defstruct (dquat (:type vector)
-                  (:constructor dquat (real dual))
+                  (:constructor make (real dual))
                   (:conc-name dq-)
                   (:copier nil))
   (real (q:zero) :type q:quat)
@@ -31,7 +31,7 @@
 
 (declaim (inline id))
 (defun* (id -> dquat) ()
-  (id! (dquat (q:id) (q:zero))))
+  (id! (make (q:id) (q:zero))))
 
 (declaim (inline zero!))
 (defun* (zero! -> dquat) ((dquat dquat))
@@ -42,7 +42,7 @@
 
 (declaim (inline zero))
 (defun* zero ()
-  (dquat (q:zero) (q:zero)))
+  (make (q:zero) (q:zero)))
 
 (declaim (inline =))
 (defun* (= -> boolean) ((dquat1 dquat) (dquat2 dquat))
@@ -301,8 +301,8 @@
     (v3:with-components ((r (v3:scale direction s))
                          (d (v3:+ (v3:scale moment s)
                                   (v3:scale direction (cl:* pitch c 0.5f0)))))
-      (setf (dq-real out) (q:quat c rx ry rz)
-            (dq-dual out) (q:quat (cl:- (cl:* pitch s 0.5f0)) dx dy dz))))
+      (setf (dq-real out) (q:make c rx ry rz)
+            (dq-dual out) (q:make (cl:- (cl:* pitch s 0.5f0)) dx dy dz))))
   out)
 
 (declaim (inline from-screw))

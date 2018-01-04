@@ -5,7 +5,7 @@
 (deftype quat () '(simple-array single-float (4)))
 
 (defstruct (quat (:type (vector single-float))
-                 (:constructor %quat (w x y z))
+                 (:constructor %make (w x y z))
                  (:conc-name nil)
                  (:copier nil))
   (w 0.0f0 :type single-float)
@@ -46,9 +46,9 @@
 
 ;;; Operations
 
-(declaim (inline quat))
-(defun* (quat -> quat) ((w real) (x real) (y real) (z real))
-  (%quat (float w 1.0f0) (float x 1.0f0) (float y 1.0f0) (float z 1.0f0)))
+(declaim (inline make))
+(defun* (make -> quat) ((w real) (x real) (y real) (z real))
+  (%make (float w 1.0f0) (float x 1.0f0) (float y 1.0f0) (float z 1.0f0)))
 
 (defun* (id! -> quat) ((quat quat))
   (with-components ((q quat))
@@ -56,7 +56,7 @@
   quat)
 
 (defun* (id -> quat) ()
-  (id! (quat 0 0 0 0)))
+  (id! (make 0 0 0 0)))
 
 (declaim (inline zero!))
 (defun* (zero! -> quat) ((quat quat))
@@ -66,7 +66,7 @@
 
 (declaim (inline zero))
 (defun* (zero -> quat) ()
-  (quat 0 0 0 0))
+  (make 0 0 0 0))
 
 (declaim (inline =))
 (defun* (= -> boolean) ((quat1 quat) (quat2 quat))
@@ -226,8 +226,8 @@
 (defun* (rotate! -> quat) ((out quat) (quat quat) (vec v3:vec))
   (with-components ((o out) (q (copy quat)))
     (v3:with-components ((v (v3:scale vec 0.5f0))
-                         (c (v3:vec (cos vx) (cos vy) (cos vz)))
-                         (s (v3:vec (sin vx) (sin vy) (sin vz))))
+                         (c (v3:make (cos vx) (cos vy) (cos vz)))
+                         (s (v3:make (sin vx) (sin vy) (sin vz))))
       (psetf ow (cl:- (cl:* cx cy cz) (cl:* sx sy sz))
              ox (cl:+ (cl:* sx cy cz) (cl:* cx sy sz))
              oy (cl:- (cl:* cx sy cz) (cl:* sx cy sz))

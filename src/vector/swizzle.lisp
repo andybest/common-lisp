@@ -1,4 +1,4 @@
-(in-package :box.math.base)
+(in-package :box.math.vectors)
 
 (eval-when (:compile-toplevel :load-toplevel)
   (defun %swizzle/permutations (n items)
@@ -12,10 +12,11 @@
             (%swizzle/permutations (1- n) items)))
          items)))
 
-  (defun %swizzle/component-groups (size)
+  (defun %swizzle/component-groups ()
     (loop :for masks :in '((x y z w) (r g b a) (s t p q))
           :append
-          (loop :with set = (subseq masks 0 size)
+          (loop :with size = 4
+                :with set = (subseq masks 0 size)
                 :for i from 1 :to size
                 :for items = (%swizzle/permutations i set)
                 :append (mapcar (lambda (x) (format nil "~{~a~}" x)) items))))
@@ -36,17 +37,14 @@
                      :collect `(setf (aref result ,i) (aref vec ,pos)))
              result)))))
 
-(defmacro generate-swizzle-functions (component-count package-name)
+(defmacro generate-swizzle-functions ()
   `(progn
-     ,@(loop :for components :in (%swizzle/component-groups component-count)
-             :for func-name = (intern (format nil ".~a" components)
-                                      package-name)
+     ,@(loop :for components :in (%swizzle/component-groups)
+             :for func-name = (alexandria:symbolicate "." components)
              :append
              `((declaim (inline ,func-name))
-               (export ',func-name ,package-name)
+               (export ',func-name)
                (defun ,func-name (vec)
                  ,(%swizzle/function-body components))))))
 
-(generate-swizzle-functions 2 :box.math.vec2)
-(generate-swizzle-functions 3 :box.math.vec3)
-(generate-swizzle-functions 4 :box.math.vec4)
+(generate-swizzle-functions)

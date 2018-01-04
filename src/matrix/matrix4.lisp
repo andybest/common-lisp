@@ -5,10 +5,10 @@
 (deftype matrix () '(simple-array single-float (16)))
 
 (defstruct (matrix (:type (vector single-float))
-                   (:constructor %matrix (m00 m01 m02 m03
-                                          m10 m11 m12 m13
-                                          m20 m21 m22 m23
-                                          m30 m31 m32 m33))
+                   (:constructor %make (m00 m01 m02 m03
+                                        m10 m11 m12 m13
+                                        m20 m21 m22 m23
+                                        m30 m31 m32 m33))
                    (:conc-name nil)
                    (:copier nil))
   (m00 0.0f0 :type single-float)
@@ -93,6 +93,28 @@
 
 ;;; Operations
 
+(declaim (inline make))
+(defun* (make -> matrix) ((m00 real) (m01 real) (m02 real) (m03 real)
+                          (m10 real) (m11 real) (m12 real) (m13 real)
+                          (m20 real) (m21 real) (m22 real) (m23 real)
+                          (m30 real) (m31 real) (m32 real) (m33 real))
+  (%make (float m00 1.0f0)
+         (float m01 1.0f0)
+         (float m02 1.0f0)
+         (float m03 1.0f0)
+         (float m10 1.0f0)
+         (float m11 1.0f0)
+         (float m12 1.0f0)
+         (float m13 1.0f0)
+         (float m20 1.0f0)
+         (float m21 1.0f0)
+         (float m22 1.0f0)
+         (float m23 1.0f0)
+         (float m30 1.0f0)
+         (float m31 1.0f0)
+         (float m32 1.0f0)
+         (float m33 1.0f0)))
+
 (declaim (inline zero!))
 (defun* (zero! -> matrix) ((matrix matrix))
   (with-components ((m matrix))
@@ -104,10 +126,10 @@
 
 (declaim (inline zero))
 (defun* (zero -> matrix) ()
-  (%matrix 0.0f0 0.0f0 0.0f0 0.0f0
-           0.0f0 0.0f0 0.0f0 0.0f0
-           0.0f0 0.0f0 0.0f0 0.0f0
-           0.0f0 0.0f0 0.0f0 0.0f0))
+  (%make 0.0f0 0.0f0 0.0f0 0.0f0
+         0.0f0 0.0f0 0.0f0 0.0f0
+         0.0f0 0.0f0 0.0f0 0.0f0
+         0.0f0 0.0f0 0.0f0 0.0f0))
 
 (declaim (inline id!))
 (defun* (id! -> matrix) ((matrix matrix))
@@ -120,32 +142,10 @@
 
 (declaim (inline id))
 (defun* (id -> matrix) ()
-  (%matrix 1.0f0 0.0f0 0.0f0 0.0f0
-           0.0f0 1.0f0 0.0f0 0.0f0
-           0.0f0 0.0f0 1.0f0 0.0f0
-           0.0f0 0.0f0 0.0f0 1.0f0))
-
-(declaim (inline matrix))
-(defun* (matrix -> matrix) ((m00 real) (m01 real) (m02 real) (m03 real)
-                            (m10 real) (m11 real) (m12 real) (m13 real)
-                            (m20 real) (m21 real) (m22 real) (m23 real)
-                            (m30 real) (m31 real) (m32 real) (m33 real))
-  (%matrix (float m00 1.0f0)
-           (float m01 1.0f0)
-           (float m02 1.0f0)
-           (float m03 1.0f0)
-           (float m10 1.0f0)
-           (float m11 1.0f0)
-           (float m12 1.0f0)
-           (float m13 1.0f0)
-           (float m20 1.0f0)
-           (float m21 1.0f0)
-           (float m22 1.0f0)
-           (float m23 1.0f0)
-           (float m30 1.0f0)
-           (float m31 1.0f0)
-           (float m32 1.0f0)
-           (float m33 1.0f0)))
+  (%make 1.0f0 0.0f0 0.0f0 0.0f0
+         0.0f0 1.0f0 0.0f0 0.0f0
+         0.0f0 0.0f0 1.0f0 0.0f0
+         0.0f0 0.0f0 0.0f0 1.0f0))
 
 (declaim (inline =))
 (defun* (= -> boolean) ((matrix1 matrix) (matrix2 matrix))

@@ -6,7 +6,7 @@
   :depends-on (#:gamebox-math
                #:varjo
                #:defpackage-plus)
-  :pathname "src"
+  :pathname "contrib"
   :serial t
   :components
   ((:file "vari")))
