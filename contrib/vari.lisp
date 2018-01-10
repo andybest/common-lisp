@@ -16,7 +16,7 @@
                 #:v-vec3
                 #:v-vec4
                 #:v-mat4)
-  (:import-from #:box.math.base
+  (:import-from #:box.math.vectors
                 #:%swizzle/component-groups))
 
 (in-package :box.math.vari)
@@ -69,10 +69,12 @@
 
 ;;; swizzling
 
-(defmacro define-varjo-swizzle-macros (size)
+(defmacro define-varjo-swizzle-macros ()
   `(progn
      ,@(loop :for masks :in (%swizzle/component-groups)
-             :collect `(v-defmacro ,(alexandria:symbolicate "." masks) (vector)
-                         `(swizzle ,vector ,,(alexandria:make-keyword masks))))))
+             :for name = (alexandria:symbolicate "." masks)
+             :append `((export ',name)
+                       (v-defmacro ,name (vector)
+                         `(swizzle ,vector ,,(alexandria:make-keyword masks)))))))
 
 (define-varjo-swizzle-macros)
