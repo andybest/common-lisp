@@ -26,11 +26,20 @@
     ((or number string symbol)
      (alexandria:make-keyword (format nil "~a" x)))))
 
-(defgeneric join-parts (target parts)
-  (:method ((target (eql :lisp)) parts)
-    (ensure-keyword (format nil "~{~a~^.~}" parts)))
-  (:method ((target (eql :glsl)) parts)
-    (format nil "~{~a~^.~}" (mapcar #'varjo.internals:safe-glsl-name-string parts))))
+(defun parts->string (parts &optional (filter #'identity))
+  (with-output-to-string (s)
+    (flet ((convert (parts)
+             (mapcar
+              (lambda (part)
+                (if (numberp part)
+                    part
+                    (funcall filter part)))
+              parts)))
+      (loop :for (part . rest) :on (convert parts)
+            :for separator = "" :then "."
+            :do (etypecase part
+                  ((or symbol string) (format s "~a~a" separator part))
+                  (number (format s "[~a]" part)))))))
 
 (defun find-gpu-function (func-spec)
   (destructuring-bind (name . types) func-spec
@@ -83,21 +92,32 @@
                     (make-metadata :name (varjo:glsl-name attr)
                                    :type (varjo:type->type-spec type))))))
 
+(defgeneric get-type-info (type parts)
+  (:method (type parts)
+    (list (list (reverse parts) type))))
+
+(defmethod get-type-info ((type varjo:v-user-struct) parts)
+  (loop :for (slot-name slot-type . nil) :in (varjo.internals:v-slots type)
+        :append (get-type-info slot-type (cons slot-name parts))))
+
+(defmethod get-type-info ((type varjo:v-array) parts)
+  (loop :for i :below (first (varjo:v-dimensions type))
+        :for element-type = (varjo:v-element-type type)
+        :when (zerop i)
+          :append (get-type-info element-type parts)
+        :append (get-type-info element-type (cons i parts))))
+
 (defun store-uniforms (program stage)
-  (labels ((get-type-info (type parts)
-             (if (typep type 'varjo:v-user-struct)
-                 (loop :for (slot-name slot-type . nil) :in (varjo.internals:v-slots type)
-                       :append (get-type-info slot-type (cons slot-name parts)))
-                 (list (list (reverse parts) type))))
-           (get-uniform-info (stage)
+  (flet ((get-uniform-info (stage)
              (loop :for uniform :in (varjo:uniform-variables stage)
                    :for type = (varjo:v-type-of uniform)
                    :append (get-type-info type (list (varjo:name uniform))))))
     (loop :for (parts type) :in (get-uniform-info stage)
-          :for id = (join-parts :lisp parts)
+          :for id = (ensure-keyword (parts->string parts))
           :do (setf (gethash id (uniforms program))
-                    (make-metadata :name (join-parts :glsl parts)
-                                   :type (varjo:type->type-spec type))))))
+                    (make-metadata
+                     :name (parts->string parts #'varjo.internals:safe-glsl-name-string)
+                     :type (varjo:type->type-spec type))))))
 
 (defun %make-program (name primitive stage-specs)
   (let ((program (make-instance 'program))
