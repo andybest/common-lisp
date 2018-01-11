@@ -19,7 +19,7 @@
                      (:predicate nil))
   name
   type
-  location)
+  (location -1))
 
 (defun ensure-keyword (x)
   (etypecase x
@@ -77,13 +77,11 @@
 (defun store-attributes (program stage)
   (when (eq (stage-type stage) :vertex)
     (loop :for attr :in (varjo:input-variables stage)
-          :for location :from 0
           :for id = (ensure-keyword (varjo:name attr))
           :for type = (varjo:v-type-of attr)
           :do (setf (gethash id (attributes program))
                     (make-metadata :name (varjo:glsl-name attr)
-                                   :type (varjo:type->type-spec type)
-                                   :location location)))))
+                                   :type (varjo:type->type-spec type))))))
 
 (defun store-uniforms (program stage)
   (labels ((get-type-info (type parts)
@@ -99,8 +97,7 @@
           :for id = (join-parts :lisp parts)
           :do (setf (gethash id (uniforms program))
                     (make-metadata :name (join-parts :glsl parts)
-                                   :type (varjo:type->type-spec type)
-                                   :location -1)))))
+                                   :type (varjo:type->type-spec type))))))
 
 (defun %make-program (name primitive stage-specs)
   (let ((program (make-instance 'program))
@@ -152,6 +149,16 @@
             (gl:delete-shader shader))))
     program))
 
+(defun store-attribute-locations (program)
+  (let ((id (id program)))
+    (gl:use-program id)
+    (maphash
+     (lambda (k v)
+       (declare (ignore k))
+       (setf (metadata-location v) (gl:get-attrib-location id (metadata-name v))))
+     (attributes program))
+    (gl:use-program 0)))
+
 (defun store-uniform-locations (program)
   (let ((id (id program)))
     (gl:use-program id)
@@ -167,6 +174,7 @@
          (shaders (compile-stages object))
          (program (link-program shaders)))
     (setf (slot-value object '%id) program)
+    (store-attribute-locations object)
     (store-uniform-locations object)
     program))
 
