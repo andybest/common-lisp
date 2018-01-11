@@ -18,4 +18,7 @@
   :serial t
   :components
   ((:file "package")
-   (:file "shadow")))
+   (:file "utils")
+   (:file "program")
+   (:file "uniforms")
+   (:file "translation")))
