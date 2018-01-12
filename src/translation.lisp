@@ -58,8 +58,10 @@
     (list (list (reverse parts) type))))
 
 (defmethod get-type-info ((type varjo:v-user-struct) parts)
-  (loop :for (slot-name slot-type . nil) :in (varjo.internals:v-slots type)
-        :append (get-type-info slot-type (cons slot-name parts))))
+  (cons
+   (list (reverse parts) type)
+   (loop :for (slot-name slot-type . nil) :in (varjo.internals:v-slots type)
+         :append (get-type-info slot-type (cons slot-name parts)))))
 
 (defmethod get-type-info ((type varjo:v-array) parts)
   (loop :for i :below (first (varjo:v-dimensions type))
