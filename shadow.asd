@@ -1,5 +1,5 @@
 (asdf:defsystem #:shadow
-  :description "A simple wrapper around varjo for writing OpenGL shader programs."
+  :description "A lightweight system to help with defining and managing OpenGL shader programs."
   :author "Michael Fiano <michael.fiano@gmail.com>"
   :maintainer "Michael Fiano <michael.fiano@gmail.com>"
   :license "MIT"
@@ -10,7 +10,6 @@
   :encoding :utf-8
   :long-description #.(uiop:read-file-string (uiop/pathname:subpathname *load-pathname* "README.md"))
   :depends-on (#:alexandria
-               #:defpackage-plus
                #:static-vectors
                #:varjo
                #:cl-opengl)

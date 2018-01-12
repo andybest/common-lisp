@@ -14,7 +14,7 @@
 (defun stage-type->shader-type (stage-type)
   (ecase stage-type
     (:vertex :vertex-shader)
-    (:tessllation-control :tess-control-shader)
+    (:tessellation-control :tess-control-shader)
     (:tessellation-evaluation :tess-evaluation-shader)
     (:geometry :geometry-shader)
     (:fragment :fragment-shader)
@@ -55,19 +55,20 @@
 
 (defgeneric get-type-info (type parts)
   (:method (type parts)
-    (list (list (reverse parts) type))))
+    (list (list (reverse parts) (varjo:type->type-spec type)))))
 
 (defmethod get-type-info ((type varjo:v-user-struct) parts)
   (cons
-   (list (reverse parts) type)
+   (list (reverse parts) (ensure-keyword (varjo:type->type-spec type)))
    (loop :for (slot-name slot-type . nil) :in (varjo.internals:v-slots type)
          :append (get-type-info slot-type (cons slot-name parts)))))
 
 (defmethod get-type-info ((type varjo:v-array) parts)
-  (loop :for i :below (first (varjo:v-dimensions type))
-        :for element-type = (varjo:v-element-type type)
+  (loop :with dimensions = (first (varjo:v-dimensions type))
+        :with element-type = (varjo:v-element-type type)
+        :for i :below dimensions
         :when (zerop i)
-          :append (get-type-info element-type parts)
+          :collect (list (reverse parts) (cons (varjo:type->type-spec element-type) dimensions))
         :append (get-type-info element-type (cons i parts))))
 
 (defun store-uniforms (program stage)
@@ -80,7 +81,7 @@
           :do (setf (gethash id (uniforms program))
                     (make-metadata
                      :name (parts->string parts #'varjo.internals:safe-glsl-name-string)
-                     :type (varjo:type->type-spec type))))))
+                     :type type)))))
 
 (defun %make-program (name primitive stage-specs)
   (let ((program (make-instance 'program))

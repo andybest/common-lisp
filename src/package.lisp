@@ -1,10 +1,14 @@
-(in-package :defpackage+-user-1)
+(in-package :cl-user)
 
-(defpackage+ #:shadow
+(defpackage #:shadow
   (:use #:cl)
   (:export #:defun-gpu
            #:defstruct-gpu
            #:make-program
+           #:program
+           #:source
+           #:attributes
+           #:uniforms
            #:build-program
            #:build-dictionary
            #:with-program
