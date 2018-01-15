@@ -10,12 +10,14 @@
    (%attributes :reader attributes
                 :initform (make-hash-table))
    (%uniforms :reader uniforms
-              :initform (make-hash-table))))
+              :initform (make-hash-table))
+   (%buffers :reader buffers
+             :initform (make-hash-table))))
 
-(defstruct (metadata (:type vector)
-                     (:constructor make-metadata (&key name type location))
-                     (:copier nil)
-                     (:predicate nil))
+(defstruct (stage-variable (:type vector)
+                           (:constructor make-stage-variable (&key name type location))
+                           (:copier nil)
+                           (:predicate nil))
   name
   type
   (location -1))
@@ -53,26 +55,6 @@
             (gl:detach-shader program shader)
             (gl:delete-shader shader))))
     program))
-
-(defun store-attribute-locations (program)
-  (let ((id (id program)))
-    (gl:use-program id)
-    (maphash
-     (lambda (k v)
-       (declare (ignore k))
-       (setf (metadata-location v) (gl:get-attrib-location id (metadata-name v))))
-     (attributes program))
-    (gl:use-program 0)))
-
-(defun store-uniform-locations (program)
-  (let ((id (id program)))
-    (gl:use-program id)
-    (maphash
-     (lambda (k v)
-       (declare (ignore k))
-       (setf (metadata-location v) (gl:get-uniform-location id (metadata-name v))))
-     (uniforms program))
-    (gl:use-program 0)))
 
 (defun build-program (name)
   (let* ((object (gethash name *shaders*))

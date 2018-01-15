@@ -1,0 +1,20 @@
+(in-package :shadow)
+
+(defun store-attributes (program stage)
+  (when (eq (stage-type stage) :vertex)
+    (loop :for attr :in (varjo:input-variables stage)
+          :for id = (ensure-keyword (varjo:name attr))
+          :for type = (varjo:v-type-of attr)
+          :do (setf (gethash id (attributes program))
+                    (make-stage-variable :name (varjo:glsl-name attr)
+                                         :type (varjo:type->type-spec type))))))
+
+(defun store-attribute-locations (program)
+  (let ((id (id program)))
+    (gl:use-program id)
+    (maphash
+     (lambda (k v)
+       (declare (ignore k))
+       (setf (stage-variable-location v) (gl:get-attrib-location id (stage-variable-name v))))
+     (attributes program))
+    (gl:use-program 0)))

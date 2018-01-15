@@ -11,6 +11,7 @@
   :long-description #.(uiop:read-file-string (uiop/pathname:subpathname *load-pathname* "README.md"))
   :depends-on (#:alexandria
                #:static-vectors
+               #:glsl-packing
                #:varjo
                #:cl-opengl)
   :pathname "src"
@@ -18,6 +19,9 @@
   :components
   ((:file "package")
    (:file "utils")
-   (:file "program")
+   (:file "packing")
+   (:file "attributes")
    (:file "uniforms")
+   (:file "uniform-buffers")
+   (:file "program")
    (:file "translation")))

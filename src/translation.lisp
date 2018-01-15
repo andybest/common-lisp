@@ -44,45 +44,6 @@
     (setf (gethash (stage-type stage) (source program))
           (subseq source (1+ (position #\newline source)) (- (length source) 2)))))
 
-(defun store-attributes (program stage)
-  (when (eq (stage-type stage) :vertex)
-    (loop :for attr :in (varjo:input-variables stage)
-          :for id = (ensure-keyword (varjo:name attr))
-          :for type = (varjo:v-type-of attr)
-          :do (setf (gethash id (attributes program))
-                    (make-metadata :name (varjo:glsl-name attr)
-                                   :type (varjo:type->type-spec type))))))
-
-(defgeneric get-type-info (type parts)
-  (:method (type parts)
-    (list (list (reverse parts) (varjo:type->type-spec type)))))
-
-(defmethod get-type-info ((type varjo:v-user-struct) parts)
-  (cons
-   (list (reverse parts) (ensure-keyword (varjo:type->type-spec type)))
-   (loop :for (slot-name slot-type . nil) :in (varjo.internals:v-slots type)
-         :append (get-type-info slot-type (cons slot-name parts)))))
-
-(defmethod get-type-info ((type varjo:v-array) parts)
-  (loop :with dimensions = (first (varjo:v-dimensions type))
-        :with element-type = (varjo:v-element-type type)
-        :for i :below dimensions
-        :when (zerop i)
-          :collect (list (reverse parts) (cons (varjo:type->type-spec element-type) dimensions))
-        :append (get-type-info element-type (cons i parts))))
-
-(defun store-uniforms (program stage)
-  (flet ((get-uniform-info (stage)
-             (loop :for uniform :in (varjo:uniform-variables stage)
-                   :for type = (varjo:v-type-of uniform)
-                   :append (get-type-info type (list (varjo:name uniform))))))
-    (loop :for (parts type) :in (get-uniform-info stage)
-          :for id = (ensure-keyword (parts->string parts))
-          :do (setf (gethash id (uniforms program))
-                    (make-metadata
-                     :name (parts->string parts #'varjo.internals:safe-glsl-name-string)
-                     :type type)))))
-
 (defun %make-program (name primitive stage-specs)
   (let ((program (make-instance 'program))
         (stages (translate-stages primitive stage-specs)))
@@ -90,6 +51,8 @@
       (store-source program stage)
       (store-attributes program stage)
       (store-uniforms program stage))
+    (store-buffer-data program stages :ubo)
+    (store-buffer-data program stages :ssbo)
     (setf (gethash name *shaders*) program)
     program))
 
