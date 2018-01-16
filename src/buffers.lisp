@@ -82,6 +82,15 @@
                          :size size
                          unpacked-type))))))))
 
+(defun make-buffer (root block-type data)
+  (let ((buffer (make-instance 'buffer
+                               :name (format nil "_~a_~a" block-type root)
+                               :type block-type
+                               :target (buffer-type->target block-type)
+                               :size (getf data :size))))
+    (setf (gethash (ensure-keyword root) (buffers *shader-info*)) buffer)
+    (make-buffer-data buffer data)))
+
 (defun store-buffer-data (stages)
   (dolist (block-type '(:ubo :ssbo))
     (loop :with blocks = (collect-blocks stages block-type)
@@ -90,13 +99,7 @@
             :initially (when *debugp* (format t "~&~a packing:~%~S~%~%" block-type packing))
           :for ((root) . (data)) :in (pack-all structs blocks)
           :when (find root blocks :key #'varjo:name)
-            :do (let ((buffer (make-instance 'buffer
-                                             :name (format nil "_~a_~a" block-type root)
-                                             :type block-type
-                                             :target (buffer-type->target block-type)
-                                             :size (getf data :size))))
-                  (setf (gethash (ensure-keyword root) (buffers *shader-info*)) buffer)
-                  (make-buffer-data buffer data)))))
+            :do (make-buffer root block-type data))))
 
 (defun initialize-buffers ()
   (maphash
