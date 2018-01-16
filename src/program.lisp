@@ -10,9 +10,7 @@
    (%attributes :reader attributes
                 :initform (make-hash-table))
    (%uniforms :reader uniforms
-              :initform (make-hash-table))
-   (%buffers :reader buffers
-             :initform (make-hash-table))))
+              :initform (make-hash-table))))
 
 (defstruct (stage-variable (:type vector)
                            (:constructor make-stage-variable (&key name type location))
@@ -57,23 +55,24 @@
     program))
 
 (defun build-program (name)
-  (let* ((object (gethash name *shaders*))
-         (shaders (compile-stages object))
-         (program (link-program shaders)))
-    (setf (slot-value object '%id) program)
-    (store-attribute-locations object)
-    (store-uniform-locations object)
-    program))
+  (let* ((program (gethash name (programs *shader-info*)))
+         (shaders (compile-stages program))
+         (id (link-program shaders)))
+    (setf (slot-value program'%id) id)
+    (store-attribute-locations program)
+    (store-uniform-locations program)
+    id))
 
 (defun build-dictionary ()
   (maphash
    (lambda (k v)
      (declare (ignore v))
      (build-program k))
-   *shaders*))
+   (programs *shader-info*))
+  (initialize-buffers))
 
 (defmacro with-program (name &body body)
-  `(let ((*active-program* (gethash ,name *shaders*)))
+  `(let ((*active-program* (gethash ,name (programs *shader-info*))))
      (gl:use-program (id *active-program*))
      ,@body
      (gl:use-program 0)))

@@ -11,6 +11,7 @@
            #:uniforms
            #:build-program
            #:build-dictionary
+           #:initialize-buffers
            #:with-program
            #:uniform-int
            #:uniform-int-array

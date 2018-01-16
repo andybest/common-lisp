@@ -14,9 +14,14 @@
     (varjo:v-float '(:float 32))
     (varjo:v-double '(:float 64))
     (varjo:v-struct (varjo:type->type-spec type))
-    (varjo:v-container (list* (pack-container type)
-                              (pack-type (varjo:v-element-type type))
-                              (varjo:v-dimensions type)))))
+    (varjo:v-container
+     (let ((element-type (varjo:v-element-type type)))
+       (if (or (typep element-type 'varjo:v-user-struct)
+               (typep element-type 'varjo:v-array))
+           (error "Arrays of aggregates are not currently supported.")
+           (list* (pack-container type)
+                  (pack-type element-type)
+                  (varjo:v-dimensions type)))))))
 
 (defun pack-struct (struct)
   (loop :with name = (varjo:type->type-spec struct)
@@ -26,7 +31,7 @@
         :finally (return `(,name (:struct () ,@members)))))
 
 (defun pack-block-layout (block)
-  (if (member :std-430 (varjo:qualifiers block))
+  (if (qualifier-exists-p block :std-430)
       :std430
       :std140))
 
@@ -43,3 +48,23 @@
   (glsl-packing:pack-structs
    `(,@(mapcar #'pack-struct structs)
      ,@(mapcar #'pack-block blocks))))
+
+(defun unpack-type (type)
+  (let ((type (alexandria:ensure-list (first type))))
+    (cond
+      ((equal type '(:bool))
+       (list :type :bool))
+      ((or (eq (first type) :int)
+           (eq (first type) :uint))
+       (list :type :int))
+      ((equal type '(:float 32))
+       (list :type :float))
+      ((equal type '(:float 64))
+       (list :type :double))
+      ((eq (first type) :vec)
+       (list :type :vec :dimensions (last type)))
+      ((eq (first type) :mat)
+       (list :type :mat :dimensions (last type 2)))
+      ((eq (first type) :array)
+       (append (list :count (third type))
+               (unpack-type (list (second type))))))))

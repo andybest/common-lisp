@@ -1,6 +1,14 @@
 (in-package :shadow)
 
-(defvar *shaders* (make-hash-table))
+(defvar *debugp* nil)
+
+(defclass shader-info ()
+  ((%programs :reader programs
+              :initform (make-hash-table))
+   (%buffers :reader buffers
+             :initform (make-hash-table))))
+
+(defvar *shader-info* (make-instance 'shader-info))
 
 (defun find-gpu-function (func-spec)
   (destructuring-bind (name . types) func-spec
@@ -51,9 +59,8 @@
       (store-source program stage)
       (store-attributes program stage)
       (store-uniforms program stage))
-    (store-buffer-data program stages :ubo)
-    (store-buffer-data program stages :ssbo)
-    (setf (gethash name *shaders*) program)
+    (store-buffer-data stages)
+    (setf (gethash name (programs *shader-info*)) program)
     program))
 
 (defmacro make-program (name (&optional (primitive :triangles)) &body body)

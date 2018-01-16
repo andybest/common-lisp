@@ -18,10 +18,10 @@
   :serial t
   :components
   ((:file "package")
-   (:file "utils")
+   (:file "common")
    (:file "packing")
    (:file "attributes")
    (:file "uniforms")
-   (:file "uniform-buffers")
+   (:file "buffers")
    (:file "program")
-   (:file "translation")))
+   (:file "shadow")))
