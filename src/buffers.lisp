@@ -1,7 +1,8 @@
 (in-package :shadow)
 
 (defclass buffer ()
-  ((%id :accessor id)
+  ((%id :accessor id
+        :initform 0)
    (%name :reader name
           :initarg :name)
    (%type :reader block-type
@@ -101,6 +102,8 @@
   (maphash
    (lambda (k v)
      (declare (ignore k))
+     (unless (zerop (id v))
+       (gl:delete-buffers (list (id v))))
      (let ((id (gl:gen-buffer)))
        (gl:bind-buffer (target v) id)
        (%gl:buffer-data (target v) (size v) (cffi:null-pointer) :static-draw)
