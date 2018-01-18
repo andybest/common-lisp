@@ -71,7 +71,7 @@
   (maphash
    (lambda (k v)
      (build-program k)
-     (bind-uniform-blocks v))
+     (bind-blocks v))
    (programs *shader-info*)))
 
 (defun %make-program (name primitive stage-specs)
@@ -81,7 +81,7 @@
       (store-source program stage)
       (store-attributes program stage)
       (store-uniforms program stage))
-    (store-uniform-blocks stages)
+    (store-blocks stages)
     (setf (gethash name (programs *shader-info*)) program)
     program))
 

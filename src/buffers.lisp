@@ -1,6 +1,7 @@
 (in-package :shadow)
 
-(defvar *current-binding-point*)
+(defvar *current-ubo-binding*)
+(defvar *current-ssbo-binding*)
 
 (defclass buffer ()
   ((%id :accessor id
@@ -40,7 +41,7 @@
 (defun buffer-type->target (type)
   (ecase type
     (:ubo :uniform-buffer)
-    (:ssbo :shader-storage)))
+    (:ssbo :shader-storage-buffer)))
 
 (defun collect-blocks (stages block-type)
   (remove-duplicates
@@ -76,11 +77,11 @@
                   :collect type))
         blocks)))))
 
-(defun make-uniform-buffer (block-id block-name data)
+(defun make-buffer (type id name data)
   (let ((buffer (make-instance 'buffer
-                               :name block-name
-                               :type :ubo
-                               :target (buffer-type->target :ubo)
+                               :name name
+                               :type type
+                               :target (buffer-type->target type)
                                :size (getf data :size))))
     (labels ((make-data-symbol (name)
                (ensure-keyword (format nil "~{~a~^.~}" (alexandria:ensure-list name))))
@@ -96,42 +97,59 @@
                                   :size size
                                   :stride (or stride matrix-stride size)
                                   unpacked-type)))))))
-      (setf (gethash block-id (buffers *shader-info*)) buffer)
+      (setf (gethash id (buffers *shader-info*)) buffer)
       (make-data))))
 
-(defun bind-uniform-blocks (program)
-  (let ((*current-binding-point* 1))
+(defun store-blocks (stages)
+  (dolist (type '(:ubo :ssbo))
+    (loop :with blocks = (collect-blocks stages type)
+          :with structs = (collect-block-structs blocks)
+          :for ((root) . (data)) :in (pack-all structs blocks)
+          :when (find root blocks :key #'varjo:name)
+            :do (let* ((id (ensure-keyword root))
+                       (name (format nil "_~a_~a" type id)))
+                  (make-buffer type id name data)))))
+
+(defmethod bind-block ((block-type (eql :ubo)) program block)
+  (with-slots (%id %target %name %binding-point) block
+    (let ((index (gl:get-uniform-block-index (id program) %name))
+          (binding *current-ubo-binding*))
+      (%gl:uniform-block-binding (id program) index binding)
+      (%gl:bind-buffer-base %target binding %id)
+      (setf %binding-point binding)
+      (incf *current-ubo-binding*))))
+
+(defmethod bind-block ((block-type (eql :ssbo)) program block)
+  (with-slots (%id %target %name %binding-point) block
+    (cffi:with-foreign-string (name %name)
+      (let ((index (%gl:get-program-resource-index (id program) :shader-storage-block name))
+            (binding *current-ssbo-binding*))
+        (%gl:shader-storage-block-binding (id program) index binding)
+        (%gl:bind-buffer-base %target binding %id)
+        (setf %binding-point binding)
+        (incf *current-ssbo-binding*)))))
+
+(defun bind-blocks (program)
+  (let ((*current-ubo-binding* 0)
+        (*current-ssbo-binding* 0))
     (maphash
      (lambda (k v)
        (declare (ignore k))
-       (let ((index (gl:get-uniform-block-index (id program) (name v)))
-             (binding *current-binding-point*))
-         (%gl:uniform-block-binding (id program) index binding)
-         (%gl:bind-buffer-base :uniform-buffer binding (id v))
-         (setf (binding-point v) binding)
-         (incf *current-binding-point*)))
+       (bind-block (block-type v) program v))
      (buffers *shader-info*))))
-
-(defun store-uniform-blocks (stages)
-  (loop :with blocks = (collect-blocks stages :ubo)
-        :with structs = (collect-block-structs blocks)
-        :for ((root) . (data)) :in (pack-all structs blocks)
-        :when (find root blocks :key #'varjo:name)
-          :do (let* ((block-id (ensure-keyword root))
-                     (block-name (format nil "_UBO_~a" block-id)))
-                (make-uniform-buffer block-id block-name data))))
 
 (defun initialize-buffers ()
   (maphash
    (lambda (k v)
      (declare (ignore k))
-     (unless (zerop (id v))
-       (gl:delete-buffers (list (id v))))
-     (let ((id (gl:gen-buffer)))
-       (gl:bind-buffer (target v) id)
-       (%gl:buffer-data (target v) (size v) (cffi:null-pointer) :static-draw)
-       (%gl:bind-buffer (target v) 0)
-       (setf (id v) id)))
+     (with-slots (%id %target %size) v
+       (unless (zerop %id)
+         (gl:delete-buffers (list %id)))
+       (let ((id (gl:gen-buffer)))
+         (gl:bind-buffer %target id)
+         (%gl:buffer-data %target %size (cffi:null-pointer) :static-draw)
+         (%gl:bind-buffer %target 0)
+         (setf %id id))))
    (buffers *shader-info*)))
 
 (defun %write-buffer-data (buffer data value)
