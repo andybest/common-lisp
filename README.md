@@ -7,7 +7,8 @@ A lightweight system to help with defining and managing OpenGL shader programs.
 Under the hood, Shadow is just a wrapper around the [Varjo](https://github.com/cbaggers/varjo)
 library used for writing shader programs, and some fluff to allow referencing shader programs by
 name, querying for basic information about them, as well as modifying uniform variables throughout
-the lifecycle of an OpenGL application.
+the lifecycle of an OpenGL application. Limited and experimental support for writing to uniform
+buffer objects is also available.
 
 The goal of Shadow is to be a simple solution to ease the task of writing and managing OpenGL shader
 programs, and as such, does not and will not contain every feature you might need.
