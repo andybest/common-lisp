@@ -1,7 +1,5 @@
 (in-package :shadow)
 
-(defvar *debugp* nil)
-
 (defclass shader-info ()
   ((%programs :reader programs
               :initform (make-hash-table))
@@ -51,20 +49,6 @@
   (let ((source (varjo:glsl-code stage)))
     (setf (gethash (stage-type stage) (source program))
           (subseq source (1+ (position #\newline source)) (- (length source) 2)))))
-
-(defun %make-program (name primitive stage-specs)
-  (let ((program (make-instance 'program))
-        (stages (translate-stages primitive stage-specs)))
-    (dolist (stage stages)
-      (store-source program stage)
-      (store-attributes program stage)
-      (store-uniforms program stage))
-    (store-buffer-data stages)
-    (setf (gethash name (programs *shader-info*)) program)
-    program))
-
-(defmacro make-program (name (&optional (primitive :triangles)) &body body)
-  `(%make-program ,name ,primitive ',body))
 
 (setf (macro-function 'defstruct-gpu) (macro-function 'varjo:v-defstruct)
       (macro-function 'defun-gpu) (macro-function 'varjo:v-defun))

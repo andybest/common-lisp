@@ -1,5 +1,7 @@
 (in-package :shadow)
 
+(defvar *current-binding-point*)
+
 (defclass buffer ()
   ((%id :accessor id
         :initform 0)
@@ -9,24 +11,31 @@
           :initarg :type)
    (%target :reader target
             :initarg :target)
+   (%binding-point :accessor binding-point
+                   :initform 0)
    (%size :reader size
           :initarg :size)
    (%members :reader members
              :initform (make-hash-table))))
 
 (defclass buffer-data ()
-  ((%type :reader data-type
-          :initarg :type)
-   (%dimensions :reader dimensions
+  ((%dimensions :reader dimensions
                 :initarg :dimensions
-                :initform nil)
-   (%count :reader element-count
-           :initarg :count
-           :initform 1)
+                :initform 1)
+   (%element-count :reader element-count
+                   :initarg :count
+                   :initform 1)
+   (%element-type :reader element-type
+                  :initarg :element-type)
+   (%stride :reader stride
+            :initarg :stride)
    (%offset :reader offset
             :initarg :offset)
    (%size :reader size
           :initarg :size)))
+
+(defun buffer-by-name (buffer-name)
+  (gethash buffer-name (buffers *shader-info*)))
 
 (defun buffer-type->target (type)
   (ecase type
@@ -67,39 +76,50 @@
                   :collect type))
         blocks)))))
 
-(defun make-buffer-data (buffer data)
-  (flet ((make-buffer-data-symbol (name)
-           (ensure-keyword
-            (format nil "~{~a~^.~}" (alexandria:ensure-list name)))))
-    (dolist (part (getf data :members))
-      (destructuring-bind (&key type name offset size &allow-other-keys) part
-        (let ((key (make-buffer-data-symbol name))
-              (unpacked-type (unpack-type type)))
-          (when unpacked-type
-            (setf (gethash key (members buffer))
-                  (apply #'make-instance 'buffer-data
-                         :offset offset
-                         :size size
-                         unpacked-type))))))))
-
-(defun make-buffer (root block-type data)
+(defun make-uniform-buffer (block-id block-name data)
   (let ((buffer (make-instance 'buffer
-                               :name (format nil "_~a_~a" block-type root)
-                               :type block-type
-                               :target (buffer-type->target block-type)
+                               :name block-name
+                               :type :ubo
+                               :target (buffer-type->target :ubo)
                                :size (getf data :size))))
-    (setf (gethash (ensure-keyword root) (buffers *shader-info*)) buffer)
-    (make-buffer-data buffer data)))
+    (labels ((make-data-symbol (name)
+               (ensure-keyword (format nil "~{~a~^.~}" (alexandria:ensure-list name))))
+             (make-data ()
+               (dolist (part (getf data :members))
+                 (destructuring-bind
+                     (&key type name offset size stride matrix-stride &allow-other-keys) part
+                   (alexandria:when-let ((key (make-data-symbol name))
+                                         (unpacked-type (unpack-type type)))
+                     (setf (gethash key (members buffer))
+                           (apply #'make-instance 'buffer-data
+                                  :offset offset
+                                  :size size
+                                  :stride (or stride matrix-stride size)
+                                  unpacked-type)))))))
+      (setf (gethash block-id (buffers *shader-info*)) buffer)
+      (make-data))))
 
-(defun store-buffer-data (stages)
-  (dolist (block-type '(:ubo :ssbo))
-    (loop :with blocks = (collect-blocks stages block-type)
-          :with structs = (collect-block-structs blocks)
-          :with packing = (pack-all structs blocks)
-            :initially (when *debugp* (format t "~&~a packing:~%~S~%~%" block-type packing))
-          :for ((root) . (data)) :in (pack-all structs blocks)
-          :when (find root blocks :key #'varjo:name)
-            :do (make-buffer root block-type data))))
+(defun bind-uniform-blocks (program)
+  (let ((*current-binding-point* 1))
+    (maphash
+     (lambda (k v)
+       (declare (ignore k))
+       (let ((index (gl:get-uniform-block-index (id program) (name v)))
+             (binding *current-binding-point*))
+         (%gl:uniform-block-binding (id program) index binding)
+         (%gl:bind-buffer-base :uniform-buffer binding (id v))
+         (setf (binding-point v) binding)
+         (incf *current-binding-point*)))
+     (buffers *shader-info*))))
+
+(defun store-uniform-blocks (stages)
+  (loop :with blocks = (collect-blocks stages :ubo)
+        :with structs = (collect-block-structs blocks)
+        :for ((root) . (data)) :in (pack-all structs blocks)
+        :when (find root blocks :key #'varjo:name)
+          :do (let* ((block-id (ensure-keyword root))
+                     (block-name (format nil "_UBO_~a" block-id)))
+                (make-uniform-buffer block-id block-name data))))
 
 (defun initialize-buffers ()
   (maphash
@@ -113,3 +133,31 @@
        (%gl:bind-buffer (target v) 0)
        (setf (id v) id)))
    (buffers *shader-info*)))
+
+(defun %write-buffer-data (buffer data value)
+  (check-type value sequence)
+  (let ((count (length value))
+        (padding 4))
+    (with-slots (%target) buffer
+      (with-slots (%offset %element-count %element-type %stride) data
+        (when (> count %element-count)
+          (error "Cannot write more data to a buffer's path than its size."))
+        (static-vectors:with-static-vector (sv (* count padding) :element-type %element-type)
+          (let ((pointer (static-vectors:static-vector-pointer sv))
+                (i 0))
+            (map nil
+                 (lambda (x)
+                   (if (typep x 'sequence)
+                       (replace sv x :start1 i)
+                       (setf (aref sv i) x))
+                   (incf i padding))
+                 value)
+            (%gl:buffer-sub-data %target %offset (* %stride count) pointer)))))))
+
+(defun write-buffer-data (buffer-name path value)
+  (let* ((buffer (buffer-by-name buffer-name))
+         (data (gethash path (members buffer))))
+    (with-slots (%id %target) buffer
+      (gl:bind-buffer %target %id)
+      (%write-buffer-data buffer data value)
+      (gl:bind-buffer %target 0))))

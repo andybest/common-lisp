@@ -20,6 +20,9 @@
   type
   (location -1))
 
+(defun program-by-name (program-name)
+  (gethash program-name (programs *shader-info*)))
+
 (defun compile-stages (program)
   (let ((shaders))
     (maphash
@@ -55,7 +58,7 @@
     program))
 
 (defun build-program (name)
-  (let* ((program (gethash name (programs *shader-info*)))
+  (let* ((program (program-by-name name))
          (shaders (compile-stages program))
          (id (link-program shaders)))
     (setf (slot-value program'%id) id)
@@ -64,15 +67,29 @@
     id))
 
 (defun build-dictionary ()
+  (initialize-buffers)
   (maphash
    (lambda (k v)
-     (declare (ignore v))
-     (build-program k))
-   (programs *shader-info*))
-  (initialize-buffers))
+     (build-program k)
+     (bind-uniform-blocks v))
+   (programs *shader-info*)))
+
+(defun %make-program (name primitive stage-specs)
+  (let ((program (make-instance 'program))
+        (stages (translate-stages primitive stage-specs)))
+    (dolist (stage stages)
+      (store-source program stage)
+      (store-attributes program stage)
+      (store-uniforms program stage))
+    (store-uniform-blocks stages)
+    (setf (gethash name (programs *shader-info*)) program)
+    program))
+
+(defmacro make-program (name (&optional (primitive :triangles)) &body body)
+  `(%make-program ,name ,primitive ',body))
 
 (defmacro with-program (name &body body)
-  `(let ((*active-program* (gethash ,name (programs *shader-info*))))
+  `(let ((*active-program* (program-by-name ,name)))
      (gl:use-program (id *active-program*))
      ,@body
      (gl:use-program 0)))
