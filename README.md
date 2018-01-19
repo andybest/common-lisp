@@ -53,21 +53,22 @@ To use this program it first must be translated from the Lisp-like "Vari" langua
 is done with the `MAKE-PROGRAM` macro:
 
 ```lisp
-(make-program :example-program (:points)
+(make-program :example-program (:version 330 :primitive :points)
   (:vertex () (foo-vert :vec3 :vec2))
   (:fragment () (foo-frag :vec4)))
 ```
 
-Above, we call `MAKE-PROGRAM` with a name to call our program, `:example-program`, and the OpenGL
-drawing primitive the vertex stage should use `:points`, followed by a sequence of "stage-specs" of
-the form: `(stage-type (version) function-spec)`:
+Above, we call `MAKE-PROGRAM` with a name to call our program, `:example-program`, the default
+stage version to use, `:version 330`, and the OpenGL drawing primitive the vertex stage should use,
+`:primitive :points`, followed by a sequence of "stage-specs" of the form: `(stage-type (version)
+function-spec)`:
 
 `stage-type` may be one of: `:vertex`, `:tessellation-control`, `:tessellation-evaluation`,
 `:geometry`, `:fragment`, or `:compute`.
 
 `version` is a number, string, or symbol representing a GLSL version to use when compiling this
 stage, for example `330`, `"330"`, `:330`, or `'|330|` are all equivalent. The default version if
-not specified is `330`.
+not specified is derived from the options list of the containing `MAKE-PROGRAM` form.
 
 `func-spec` specifies which `DEFUN-GPU` function to use for this stage, and is a list consisting of
 the function name followed by the types of all of its input arguments. The types are important
