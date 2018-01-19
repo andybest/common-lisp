@@ -26,8 +26,8 @@
     (:fragment :fragment-shader)
     (:compute :compute-shader)))
 
-(defun make-stage (primitive stage-spec)
-  (destructuring-bind (stage-type (&key (version 330)) func-spec) stage-spec
+(defun make-stage (version primitive stage-spec)
+  (destructuring-bind (stage-type (&key (version version)) func-spec) stage-spec
     (let ((func (find-gpu-function func-spec)))
       (varjo:make-stage
        stage-type
@@ -39,10 +39,10 @@
        (when (eq stage-type :vertex)
          (varjo.internals:primitive-name-to-instance primitive))))))
 
-(defun translate-stages (primitive stage-specs)
+(defun translate-stages (version primitive stage-specs)
   (varjo:rolling-translate
    (mapcar
-    (lambda (x) (make-stage primitive x))
+    (lambda (x) (make-stage version primitive x))
     stage-specs)))
 
 (defun store-source (program stage)

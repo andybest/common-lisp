@@ -74,9 +74,9 @@
      (bind-blocks v))
    (programs *shader-info*)))
 
-(defun %make-program (name primitive stage-specs)
+(defun %make-program (name version primitive stage-specs)
   (let ((program (make-instance 'program))
-        (stages (translate-stages primitive stage-specs)))
+        (stages (translate-stages version primitive stage-specs)))
     (dolist (stage stages)
       (store-source program stage)
       (store-attributes program stage)
@@ -85,8 +85,8 @@
     (setf (gethash name (programs *shader-info*)) program)
     program))
 
-(defmacro make-program (name (&optional (primitive :triangles)) &body body)
-  `(%make-program ,name ,primitive ',body))
+(defmacro make-program (name (&key (version :330) (primitive :triangles)) &body body)
+  `(%make-program ,name ,version ,primitive ',body))
 
 (defmacro with-program (name &body body)
   `(let ((*active-program* (program-by-name ,name)))
