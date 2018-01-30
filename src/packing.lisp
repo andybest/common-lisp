@@ -29,24 +29,20 @@
         :collect (list slot-name type) :into members
         :finally (return `(,name (:struct () ,@members)))))
 
-(defun pack-block-layout (block)
-  (if (qualifier-exists-p block :std-430)
-      :std430
-      :std140))
+(defun pack-block (layout)
+  (loop :with uniform = (uniform layout)
+        :with name = (varjo:name uniform)
+        :with layout-type = (layout-type layout)
+        :for (slot-name slot-type) :in (varjo.internals:v-slots (varjo:v-type-of uniform))
+        :for packed-type = (pack-type slot-type)
+        :collect (list slot-name packed-type) :into members
+        :finally (return `(,name (:block (:packing ,layout-type) ,@members)))))
 
-(defun pack-block (block)
-  (loop :with name = (varjo:name block)
-        :with struct = (varjo:v-type-of block)
-        :for (slot-name slot-type) :in (varjo.internals:v-slots struct)
-        :for type = (pack-type slot-type)
-        :for layout = (pack-block-layout block)
-        :collect (list slot-name type) :into members
-        :finally (return `(,name (:block (:packing ,layout) ,@members)))))
-
-(defun pack-all (structs blocks)
-  (glsl-packing:pack-structs
-   `(,@(mapcar #'pack-struct structs)
-     ,@(mapcar #'pack-block blocks))))
+(defun pack-layout (layout)
+  (let ((structs (collect-layout-structs layout)))
+    (glsl-packing:pack-structs
+     `(,@(mapcar #'pack-struct structs)
+       ,(pack-block layout)))))
 
 (defun unpack-type (type)
   (let ((type (alexandria:ensure-list (first type))))

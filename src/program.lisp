@@ -10,7 +10,9 @@
    (%attributes :reader attributes
                 :initform (make-hash-table))
    (%uniforms :reader uniforms
-              :initform (make-hash-table))))
+              :initform (make-hash-table))
+   (%blocks :reader blocks
+            :initform (make-hash-table :test #'equal))))
 
 (defstruct (stage-variable (:type vector)
                            (:constructor make-stage-variable (&key name type location))
@@ -67,12 +69,8 @@
     id))
 
 (defun build-dictionary ()
-  (initialize-buffers)
-  (maphash
-   (lambda (k v)
-     (build-program k)
-     (bind-blocks v))
-   (programs *shader-info*)))
+  (dolist (program-name (alexandria:hash-table-keys (programs *shader-info*)))
+    (build-program program-name)))
 
 (defun %make-program (name version primitive stage-specs)
   (let ((program (make-instance 'program))
@@ -80,8 +78,8 @@
     (dolist (stage stages)
       (store-source program stage)
       (store-attributes program stage)
-      (store-uniforms program stage))
-    (store-blocks stages)
+      (store-uniforms program stage)
+      (store-blocks program stage))
     (setf (gethash name (programs *shader-info*)) program)
     program))
 

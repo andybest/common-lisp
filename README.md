@@ -21,11 +21,15 @@ programs, and as such, does not and will not contain every feature you might nee
 
 ## Usage
 
+### Basic Usage
+
 Using Shadow is not very straightforward, mostly due to the borrowing of the "Vari" language used to
 write shader programs, which does not have much documentation. It does however try to stay familiar
 and resembles Common Lisp. Additionally, there are [several
 videos](https://www.youtube.com/watch?v=82o5NeyZtvw&list=PL2VAYZE_4wRITJBv6saaKouj4sWSG1FcS) of its
 usage created by its author.
+
+To begin, call `INITIALIZE` to create a fresh state.
 
 Shader programs are written using a series of `DEFUN-GPU` and `DEFSTRUCT-GPU` forms representing GPU
 functions and structures respectively. As mentioned, their bodies follow the language rules of
@@ -167,6 +171,12 @@ the object you wish to render. There are quite a few `UNIFORM-*` functions, and 
 viewed in the [package's exported symbols](src/package.lisp). Note that each uniform
 function takes the name of a uniform variable as a keyword symbol, followed by the value to modify
 it with.
+
+### UBO/SSBO Support
+
+Shadow also includes experimental support for uniform buffer objects (UBO's) and shader storage
+buffer objects (SSBO's). Usage will be documented at a later time when their implementation is more
+stable.
 
 ## License
 

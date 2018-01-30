@@ -4,6 +4,7 @@
   (:use #:cl)
   (:export #:defun-gpu
            #:defstruct-gpu
+           #:initialize
            #:make-program
            #:program
            #:source
@@ -11,7 +12,11 @@
            #:uniforms
            #:build-program
            #:build-dictionary
-           #:write-buffer-data
+           #:bind-uniform-block
+           #:bind-shader-storage-block
+           #:create-buffer
+           #:delete-buffer
+           #:write-buffer-path
            #:with-program
            #:uniform-int
            #:uniform-int-array

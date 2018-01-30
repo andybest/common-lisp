@@ -20,5 +20,5 @@
                   ((or symbol string) (format s "~a~a" separator part))
                   (integer (format s "[~a]" part)))))))
 
-(defun qualifier-exists-p (type qualifier)
+(defun has-qualifier-p (type qualifier)
   (member qualifier (varjo:qualifiers type) :test #'varjo.internals:qualifier=))

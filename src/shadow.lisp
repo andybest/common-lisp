@@ -1,12 +1,19 @@
 (in-package :shadow)
 
+(defvar *shader-info*)
+
 (defclass shader-info ()
   ((%programs :reader programs
               :initform (make-hash-table))
+   (%uniform-block-bindings :reader uniform-block-bindings
+                            :initform (make-hash-table))
+   (%buffer-block-bindings :reader buffer-block-bindings
+                           :initform (make-hash-table))
    (%buffers :reader buffers
              :initform (make-hash-table))))
 
-(defvar *shader-info* (make-instance 'shader-info))
+(defun initialize ()
+  (setf *shader-info* (make-instance 'shader-info)))
 
 (defun find-gpu-function (func-spec)
   (destructuring-bind (name . types) func-spec

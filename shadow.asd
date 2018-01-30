@@ -22,6 +22,8 @@
    (:file "packing")
    (:file "attributes")
    (:file "uniforms")
+   (:file "layout")
+   (:file "blocks")
    (:file "buffers")
    (:file "program")
    (:file "shadow")))
