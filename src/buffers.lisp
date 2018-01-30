@@ -19,12 +19,6 @@
     (:ubo :uniform-buffer)
     (:ssbo :shader-storage-buffer)))
 
-(defgeneric get-bound-blocks (buffer-type binding-point)
-  (:method ((buffer-type (eql :ubo)) binding-point)
-    (gethash binding-point (uniform-block-bindings *shader-info*)))
-  (:method ((buffer-type (eql :ssbo)) binding-point)
-    (gethash binding-point (buffer-block-bindings *shader-info*))))
-
 (defun create-buffer (type name binding-point)
   (let ((target (buffer-type->target type))
         (bound-blocks (get-bound-blocks type binding-point)))
