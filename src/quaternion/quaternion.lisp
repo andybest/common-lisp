@@ -42,7 +42,7 @@
   (%make (float w 1.0f0) (float x 1.0f0) (float y 1.0f0) (float z 1.0f0)))
 
 (declaim (ftype (function (quat) quat) id!))
-(defun id! (qyyuat)
+(defun id! (quat)
   (with-components ((q quat))
     (psetf qw 1.0f0 qx 0.0f0 qy 0.0f0 qz 0.0f0))
   quat)
