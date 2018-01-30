@@ -40,7 +40,7 @@
 (defun delete-buffer (buffer-name)
   (let ((buffer (buffer-by-name buffer-name)))
     (gl:delete-buffers (list (id buffer)))
-    (remhash buffer (buffers *shader-info*))))
+    (remhash buffer-name (buffers *shader-info*))))
 
 (defun %write-buffer-data (buffer data value)
   (check-type value sequence)
