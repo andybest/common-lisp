@@ -52,12 +52,13 @@
           `(progn ,@body))))
 
 (declaim (inline mref))
-(defun* (mref -> single-float) ((matrix matrix) (row (integer 0 15)) (column (integer 0 15)))
+(declaim (ftype (function (matrix (integer 0 15) (integer 0 15)) single-float) mref))
+(defun mref (matrix row column)
   (aref matrix (+ row (cl:* column 4))))
 
-(defun* (setf mref) ((value single-float) (matrix matrix) (row (integer 0 15))
-                     (column (integer 0 15)))
-  (:returns single-float)
+(declaim (inline mref))
+(declaim (ftype (function (matrix (integer 0 15) (integer 0 15)) single-float) mref))
+(defun (setf mref) (value matrix row column)
   (setf (aref matrix (+ row (cl:* column 4))) value))
 
 ;;; Constants
@@ -81,16 +82,19 @@
 ;;; Operations
 
 (declaim (inline make))
-(defun* (make -> matrix) ((m00 real) (m01 real) (m02 real) (m03 real) (m10 real) (m11 real)
-                          (m12 real) (m13 real) (m20 real) (m21 real) (m22 real) (m23 real)
-                          (m30 real) (m31 real) (m32 real) (m33 real))
+(declaim (ftype (function
+                 (real real real real real real real real real real real real real real real real)
+                 matrix)
+                make))
+(defun make (m00 m01 m02 m03 m10 m11 m12 m13 m20 m21 m22 m23 m30 m31 m32 m33)
   (%make (float m00 1.0f0) (float m01 1.0f0) (float m02 1.0f0) (float m03 1.0f0) (float m10 1.0f0)
          (float m11 1.0f0) (float m12 1.0f0) (float m13 1.0f0) (float m20 1.0f0) (float m21 1.0f0)
          (float m22 1.0f0) (float m23 1.0f0) (float m30 1.0f0) (float m31 1.0f0) (float m32 1.0f0)
          (float m33 1.0f0)))
 
 (declaim (inline zero!))
-(defun* (zero! -> matrix) ((matrix matrix))
+(declaim (ftype (function (matrix) matrix) zero!))
+(defun zero! (matrix)
   (with-components ((m matrix))
     (psetf m00 0.0f0 m01 0.0f0 m02 0.0f0 m03 0.0f0
            m10 0.0f0 m11 0.0f0 m12 0.0f0 m13 0.0f0
@@ -99,14 +103,16 @@
   matrix)
 
 (declaim (inline zero))
-(defun* (zero -> matrix) ()
+(declaim (ftype (function () matrix) zero))
+(defun zero ()
   (%make 0.0f0 0.0f0 0.0f0 0.0f0
          0.0f0 0.0f0 0.0f0 0.0f0
          0.0f0 0.0f0 0.0f0 0.0f0
          0.0f0 0.0f0 0.0f0 0.0f0))
 
 (declaim (inline id!))
-(defun* (id! -> matrix) ((matrix matrix))
+(declaim (ftype (function (matrix) matrix) id!))
+(defun id! (matrix)
   (with-components ((m matrix))
     (psetf m00 1.0f0 m01 0.0f0 m02 0.0f0 m03 0.0f0
            m10 0.0f0 m11 1.0f0 m12 0.0f0 m13 0.0f0
@@ -115,14 +121,16 @@
   matrix)
 
 (declaim (inline id))
-(defun* (id -> matrix) ()
+(declaim (ftype (function () matrix) id))
+(defun id ()
   (%make 1.0f0 0.0f0 0.0f0 0.0f0
          0.0f0 1.0f0 0.0f0 0.0f0
          0.0f0 0.0f0 1.0f0 0.0f0
          0.0f0 0.0f0 0.0f0 1.0f0))
 
 (declaim (inline =))
-(defun* (= -> boolean) ((matrix1 matrix) (matrix2 matrix))
+(declaim (ftype (function (matrix matrix) boolean) =))
+(defun = (matrix1 matrix2)
   (with-components ((a matrix1) (b matrix2))
     (and (cl:= a00 b00) (cl:= a01 b01) (cl:= a02 b02) (cl:= a03 b03)
          (cl:= a10 b10) (cl:= a11 b11) (cl:= a12 b12) (cl:= a13 b13)
@@ -130,8 +138,8 @@
          (cl:= a30 b30) (cl:= a31 b31) (cl:= a32 b32) (cl:= a33 b33))))
 
 (declaim (inline ~))
-(defun* (~ -> boolean) ((matrix1 matrix) (matrix2 matrix) &key
-                        ((tolerance single-float) +epsilon+))
+(declaim (ftype (function (matrix matrix &key (:tolerance single-float)) boolean) ~))
+(defun ~ (matrix1 matrix2 &key (tolerance +epsilon+))
   (with-components ((a matrix1) (b matrix2))
     (and (%~ a00 b00 tolerance)
          (%~ a01 b01 tolerance)
@@ -151,7 +159,8 @@
          (%~ a33 b33 tolerance))))
 
 (declaim (inline copy!))
-(defun* (copy! -> matrix) ((out matrix) (matrix matrix))
+(declaim (ftype (function (matrix matrix) matrix) copy!))
+(defun copy! (out matrix)
   (with-components ((o out) (m matrix))
     (psetf o00 m00 o01 m01 o02 m02 o03 m03
            o10 m10 o11 m11 o12 m12 o13 m13
@@ -160,12 +169,13 @@
   out)
 
 (declaim (inline copy))
-(defun* (copy -> matrix) ((matrix matrix))
+(declaim (ftype (function (matrix) matrix) copy))
+(defun copy (matrix)
   (copy! (zero) matrix))
 
-(defun* (clamp! -> matrix) ((out matrix) (matrix matrix) &key
-                            ((min single-float) most-negative-single-float)
-                            ((max single-float) most-positive-single-float))
+(declaim (ftype (function (matrix matrix &key (:min single-float) (:max single-float)) matrix)
+                clamp!))
+(defun clamp! (out matrix &key (min most-negative-single-float) (max most-positive-single-float))
   (with-components ((o out) (m matrix))
     (psetf o00 (alexandria:clamp m00 min max)
            o01 (alexandria:clamp m01 min max)
@@ -186,13 +196,13 @@
   out)
 
 (declaim (inline clamp))
-(defun* (clamp -> matrix) ((matrix matrix) &key
-                           ((min single-float) most-negative-single-float)
-                           ((max single-float) most-positive-single-float))
+(declaim (ftype (function (matrix &key (:min single-float) (:max single-float)) matrix) clamp))
+(defun clamp (matrix &key (min most-negative-single-float) (max most-positive-single-float))
   (clamp! (zero) matrix :min min :max max))
 
 (declaim (inline *!))
-(defun* (*! -> matrix) ((out matrix) (matrix1 matrix) (matrix2 matrix))
+(declaim (ftype (function (matrix matrix matrix) matrix) *!))
+(defun *! (out matrix1 matrix2)
   (with-components ((o out) (a matrix1) (b matrix2))
     (psetf o00 (+ (cl:* a00 b00) (cl:* a01 b10) (cl:* a02 b20) (cl:* a03 b30))
            o10 (+ (cl:* a10 b00) (cl:* a11 b10) (cl:* a12 b20) (cl:* a13 b30))
@@ -213,41 +223,49 @@
   out)
 
 (declaim (inline *))
-(defun* (* -> matrix) ((matrix1 matrix) (matrix2 matrix))
+(declaim (ftype (function (matrix matrix) matrix) *))
+(defun * (matrix1 matrix2)
   (*! (zero) matrix1 matrix2))
 
 (declaim (inline translation-to-vec3!))
-(defun* (translation-to-vec3! -> v3:vec) ((out v3:vec) (matrix matrix))
+(declaim (ftype (function (v3:vec matrix) v3:vec) translation-to-vec3!))
+(defun translation-to-vec3! (out matrix)
   (v3:with-components ((o out))
     (with-components ((m matrix))
       (psetf ox m03 oy m13 oz m23)))
   out)
 
 (declaim (inline translation-to-vec3))
-(defun* (translation-to-vec3 -> v3:vec) ((matrix matrix))
+(declaim (ftype (function (matrix) v3:vec) translation-to-vec3))
+(defun translation-to-vec3 (matrix)
   (translation-to-vec3! (v3:zero) matrix))
 
 (declaim (inline translation-from-vec3!))
-(defun* (translation-from-vec3! -> matrix) ((matrix matrix) (vec v3:vec))
+(declaim (ftype (function (matrix v3:vec) matrix) translation-from-vec3!))
+(defun translation-from-vec3! (matrix vec)
   (with-components ((m matrix))
     (v3:with-components ((v vec))
       (psetf m03 vx m13 vy m23 vz)))
   matrix)
 
 (declaim (inline translation-from-vec3))
-(defun* (translation-from-vec3 -> matrix) ((matrix matrix) (vec v3:vec))
+(declaim (ftype (function (matrix v3:vec) matrix) translation-from-vec3))
+(defun translation-from-vec3 (matrix vec)
   (translation-from-vec3! (copy matrix) vec))
 
 (declaim (inline translate!))
-(defun* (translate! -> matrix) ((out matrix) (matrix matrix) (vec v3:vec))
+(declaim (ftype (function (matrix matrix v3:vec) matrix) translate!))
+(defun translate! (out matrix vec)
   (*! out (translation-from-vec3 (id) vec) matrix))
 
 (declaim (inline translate))
-(defun* (translate -> matrix) ((matrix matrix) (vec v3:vec))
+(declaim (ftype (function (matrix v3:vec) matrix) translate))
+(defun translate (matrix vec)
   (translate! (id) matrix vec))
 
 (declaim (inline copy-rotation!))
-(defun* (copy-rotation! -> matrix) ((out matrix) (matrix matrix))
+(declaim (ftype (function (matrix matrix) matrix) copy-rotation!))
+(defun copy-rotation! (out matrix)
   (with-components ((o out) (m matrix))
     (psetf o00 m00 o01 m01 o02 m02
            o10 m10 o11 m11 o12 m12
@@ -255,11 +273,13 @@
   out)
 
 (declaim (inline copy-rotation))
-(defun* (copy-rotation -> matrix) ((matrix matrix))
+(declaim (ftype (function (matrix) matrix) copy-rotation))
+(defun copy-rotation (matrix)
   (copy-rotation! (id) matrix))
 
 (declaim (inline rotation-axis-to-vec3!))
-(defun* (rotation-axis-to-vec3! -> v3:vec) ((out v3:vec) (matrix matrix) (axis keyword))
+(declaim (ftype (function (v3:vec matrix keyword) v3:vec) rotation-axis-to-vec3!))
+(defun rotation-axis-to-vec3! (out matrix axis)
   (v3:with-components ((v out))
     (with-components ((m matrix))
       (ecase axis
@@ -269,11 +289,13 @@
   out)
 
 (declaim (inline rotation-axis-to-vec3))
-(defun* (rotation-axis-to-vec3 -> v3:vec) ((matrix matrix) (axis keyword))
+(declaim (ftype (function (matrix keyword) v3:vec) rotation-axis-to-vec3))
+(defun rotation-axis-to-vec3 (matrix axis)
   (rotation-axis-to-vec3! (v3:zero) matrix axis))
 
 (declaim (inline rotation-axis-from-vec3!))
-(defun* (rotation-axis-from-vec3! -> matrix) ((matrix matrix) (vec v3:vec) (axis keyword))
+(declaim (ftype (function (matrix v3:vec keyword) matrix) rotation-axis-from-vec3!))
+(defun rotation-axis-from-vec3! (matrix vec axis)
   (with-components ((m matrix))
     (v3:with-components ((v vec))
       (ecase axis
@@ -283,10 +305,12 @@
   matrix)
 
 (declaim (inline rotation-axis-from-vec3))
-(defun* (rotation-axis-from-vec3 -> matrix) ((matrix matrix) (vec v3:vec) (axis keyword))
+(declaim (ftype (function (matrix v3:vec keyword) matrix) rotation-axis-from-vec3))
+(defun rotation-axis-from-vec3 (matrix vec axis)
   (rotation-axis-from-vec3! (copy matrix) vec axis))
 
-(defun* (rotate! -> matrix) ((out matrix) (matrix matrix) (vec v3:vec))
+(declaim (ftype (function (matrix matrix v3:vec) matrix) rotate!))
+(defun rotate! (out matrix vec)
   (macrolet ((rotate-angle (angle s c &body body)
                `(when (> (abs ,angle) +epsilon+)
                   (let ((,s (sin ,angle))
@@ -310,41 +334,49 @@
   out)
 
 (declaim (inline rotate))
-(defun* (rotate -> matrix) ((matrix matrix) (vec v3:vec))
+(declaim (ftype (function (matrix v3:vec) matrix) rotate))
+(defun rotate (matrix vec)
   (rotate! (id) matrix vec))
 
 (declaim (inline scale-to-vec3!))
-(defun* (scale-to-vec3! -> v3:vec) ((out v3:vec) (matrix matrix))
+(declaim (ftype (function (v3:vec matrix) v3:vec) scale-to-vec3!))
+(defun scale-to-vec3! (out matrix)
   (v3:with-components ((o out))
     (with-components ((m matrix))
       (psetf ox m00 oy m11 oz m22)))
   out)
 
 (declaim (inline scale-to-vec3))
-(defun* (scale-to-vec3 -> v3:vec) ((matrix matrix))
+(declaim (ftype (function (matrix) v3:vec) scale-to-vec3))
+(defun scale-to-vec3 (matrix)
   (scale-to-vec3! (v3:zero) matrix))
 
 (declaim (inline scale-from-vec3!))
-(defun* (scale-from-vec3! -> matrix) ((matrix matrix) (vec v3:vec))
+(declaim (ftype (function (matrix v3:vec) matrix) scale-from-vec3!))
+(defun scale-from-vec3! (matrix vec)
   (with-components ((m matrix))
     (v3:with-components ((v vec))
       (psetf m00 vx m11 vy m22 vz)))
   matrix)
 
 (declaim (inline scale-from-vec3))
-(defun* (scale-from-vec3 -> matrix) ((matrix matrix) (vec v3:vec))
+(declaim (ftype (function (matrix v3:vec) matrix) scale-from-vec3))
+(defun scale-from-vec3 (matrix vec)
   (scale-from-vec3! (copy matrix) vec))
 
 (declaim (inline scale!))
-(defun* (scale! -> matrix) ((out matrix) (matrix matrix) (vec v3:vec))
+(declaim (ftype (function (matrix matrix v3:vec) matrix) scale!))
+(defun scale! (out matrix vec)
   (*! out (scale-from-vec3 (id) vec) matrix))
 
 (declaim (inline scale))
-(defun* (scale -> matrix) ((matrix matrix) (vec v3:vec))
+(declaim (ftype (function (matrix v3:vec) matrix) scale))
+(defun scale (matrix vec)
   (scale! (id) matrix vec))
 
 (declaim (inline *v4!))
-(defun* (*v4! -> v4:vec) ((out v4:vec) (matrix matrix) (vec v4:vec))
+(declaim (ftype (function (v4:vec matrix v4:vec) v4:vec) *v4!))
+(defun *v4! (out matrix vec)
   (v4:with-components ((v vec) (o out))
     (with-components ((m matrix))
       (psetf ox (+ (cl:* m00 vx) (cl:* m01 vy) (cl:* m02 vz) (cl:* m03 vw))
@@ -354,11 +386,13 @@
   out)
 
 (declaim (inline *v4))
-(defun* (*v4 -> v4:vec) ((matrix matrix) (vec v4:vec))
+(declaim (ftype (function (matrix v4:vec) v4:vec) *v4))
+(defun *v4 (matrix vec)
   (*v4! (v4:zero) matrix vec))
 
 (declaim (inline transpose!))
-(defun* (transpose! -> matrix) ((out matrix) (matrix matrix))
+(declaim (ftype (function (matrix matrix) matrix) transpose!))
+(defun transpose! (out matrix)
   (with-components ((o (copy! out matrix)))
     (rotatef o01 o10)
     (rotatef o02 o20)
@@ -369,13 +403,16 @@
   out)
 
 (declaim (inline transpose))
-(defun* (transpose -> matrix) ((matrix matrix))
+(declaim (ftype (function (matrix) matrix) transpose))
+(defun transpose (matrix)
   (transpose! (id) matrix))
 
-(defun* (orthogonalp -> boolean) ((matrix matrix))
+(declaim (ftype (function (matrix) boolean) orthogonalp))
+(defun orthogonalp (matrix)
   (~ (* matrix (transpose matrix)) +id+))
 
-(defun* (orthonormalize! -> matrix) ((out matrix) (matrix matrix))
+(declaim (ftype (function (matrix matrix) matrix) orthonormalize!))
+(defun orthonormalize! (out matrix)
   (let* ((x (rotation-axis-to-vec3 matrix :x))
          (y (rotation-axis-to-vec3 matrix :y))
          (z (rotation-axis-to-vec3 matrix :z)))
@@ -387,17 +424,20 @@
     (rotation-axis-from-vec3! out z :z))
   out)
 
+(declaim (ftype (function (matrix) matrix) orthonormalize))
 (declaim (inline orthonormalize))
-(defun* (orthonormalize -> matrix) ((matrix matrix))
+(defun orthonormalize (matrix)
   (orthonormalize! (id) matrix))
 
 (declaim (inline trace))
-(defun* (trace -> single-float) ((matrix matrix))
+(declaim (ftype (function (matrix) single-float) trace))
+(defun trace (matrix)
   (with-components ((m matrix))
     (+ m00 m11 m22 m33)))
 
 (declaim (inline diagonalp))
-(defun* (diagonalp -> boolean) ((matrix matrix))
+(declaim (ftype (function (matrix) boolean) diagonalp))
+(defun diagonalp (matrix)
   (with-components ((m matrix))
     (and (zerop m10)
          (zerop m20)
@@ -413,29 +453,34 @@
          (zerop m23))))
 
 (declaim (inline main-diagonal!))
-(defun* (main-diagonal! -> v4:vec) ((out v4:vec) (matrix matrix))
+(declaim (ftype (function (v4:vec matrix) v4:vec) main-diagonal!))
+(defun main-diagonal! (out matrix)
   (with-components ((m matrix))
     (v4:with-components ((v out))
       (setf vx m00 vy m11 vz m22 vw m33)))
   out)
 
 (declaim (inline main-diagonal))
-(defun* (main-diagonal -> v4:vec) ((matrix matrix))
+(declaim (ftype (function (matrix) v4:vec) main-diagonal))
+(defun main-diagonal (matrix)
   (main-diagonal! (v4:zero) matrix))
 
 (declaim (inline anti-diagonal!))
-(defun* (anti-diagonal! -> v4:vec) ((out v4:vec) (matrix matrix))
+(declaim (ftype (function (v4:vec matrix) v4:vec) anti-diagonal!))
+(defun anti-diagonal! (out matrix)
   (with-components ((m matrix))
     (v4:with-components ((v out))
       (setf vx m03 vy m12 vz m21 vw m30)))
   out)
 
 (declaim (inline anti-diagonal))
-(defun* (anti-diagonal -> v4:vec) ((matrix matrix))
+(declaim (ftype (function (matrix) v4:vec) anti-diagonal))
+(defun anti-diagonal (matrix)
   (anti-diagonal! (v4:zero) matrix))
 
 (declaim (inline determinant))
-(defun* (determinant -> single-float) ((matrix matrix))
+(declaim (ftype (function (matrix) single-float) determinant))
+(defun determinant (matrix)
   (with-components ((m matrix))
     (- (+ (cl:* m00 m11 m22 m33) (cl:* m00 m12 m23 m31) (cl:* m00 m13 m21 m32)
           (cl:* m01 m10 m23 m32) (cl:* m01 m12 m20 m33) (cl:* m01 m13 m22 m30)
@@ -447,7 +492,8 @@
        (cl:* m03 m10 m21 m32) (cl:* m03 m11 m22 m30) (cl:* m03 m12 m20 m31))))
 
 (declaim (inline invert-orthogonal!))
-(defun* (invert-orthogonal! -> matrix) ((out matrix) (matrix matrix))
+(declaim (ftype (function (matrix matrix) matrix) invert-orthogonal!))
+(defun invert-orthogonal! (out matrix)
   (copy! out matrix)
   (with-components ((o out))
     (rotatef o10 o01)
@@ -459,10 +505,12 @@
   out)
 
 (declaim (inline invert-orthogonal))
-(defun* (invert-orthogonal -> matrix) ((matrix matrix))
+(declaim (ftype (function (matrix) matrix) invert-orthogonal))
+(defun invert-orthogonal (matrix)
   (invert-orthogonal! (id) matrix))
 
-(defun* (invert! -> matrix) ((out matrix) (matrix matrix))
+(declaim (ftype (function (matrix matrix) matrix) invert!))
+(defun invert! (out matrix)
   (let ((determinant (determinant matrix)))
     (when (< (abs determinant) +epsilon+)
       (error "Cannot invert a matrix with a determinant of zero."))
@@ -518,10 +566,12 @@
   out)
 
 (declaim (inline invert))
-(defun* (invert -> matrix) ((matrix matrix))
+(declaim (ftype (function (matrix) matrix) invert))
+(defun invert (matrix)
   (invert! (id) matrix))
 
-(defun* (view! -> matrix) ((out matrix) (eye v3:vec) (target v3:vec) (up v3:vec))
+(declaim (ftype (function (matrix v3:vec v3:vec v3:vec) matrix) view!))
+(defun view! (out eye target up)
   (let ((f (v3:zero))
         (s (v3:zero))
         (u (v3:zero))
@@ -539,11 +589,12 @@
   out)
 
 (declaim (inline view))
-(defun* (view -> matrix) ((eye v3:vec) (target v3:vec) (up v3:vec))
+(declaim (ftype (function (v3:vec v3:vec v3:vec) matrix) view))
+(defun view (eye target up)
   (view! (id) eye target up))
 
-(defun* (orthographic-projection! -> matrix) ((out matrix) (left real) (right real) (bottom real)
-                                              (top real) (near real) (far real))
+(declaim (ftype (function (matrix real real real real real real) matrix) orthographic-projection!))
+(defun orthographic-projection! (out left right bottom top near far)
   (let ((right-left (float (- right left) 1.0f0))
         (top-bottom (float (- top bottom) 1.0f0))
         (far-near (float (- far near) 1.0f0)))
@@ -557,12 +608,12 @@
     out))
 
 (declaim (inline orthographic))
-(defun* (orthographic-projection -> matrix) ((left real) (right real) (bottom real) (top real)
-                                             (near real) (far real))
+(declaim (ftype (function (real real real real real real) matrix) orthographic-projection))
+(defun orthographic-projection (left right bottom top near far)
   (orthographic-projection! (id) left right bottom top near far))
 
-(defun* (perspective-projection! -> matrix) ((out matrix) (fov real) (aspect real) (near real)
-                                             (far real))
+(declaim (ftype (function (matrix real real real real) matrix) perspective-projection!))
+(defun perspective-projection! (out fov aspect near far)
   (let ((f (float (/ (tan (/ fov 2))) 1.0f0))
         (z (float (- near far) 1.0f0)))
     (with-components ((m (zero! out)))
@@ -574,5 +625,6 @@
   out)
 
 (declaim (inline perspective-projection))
-(defun* (perspective-projection -> matrix) ((fov real) (aspect real) (near real) (far real))
+(declaim (ftype (function (real real real real) matrix) perspective-projection))
+(defun perspective-projection (fov aspect near far)
   (perspective-projection! (id) fov aspect near far))

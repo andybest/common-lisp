@@ -10,5 +10,6 @@
     (intern (format nil "~@:(~{~a~}~)" (cons prefix args)) (symbol-package prefix))))
 
 (declaim (inline %~))
-(defun* (%~ -> boolean) ((a real) (b real) (tolerance single-float))
+(declaim (ftype (function (single-float single-float single-float) boolean) %~))
+(defun %~ (a b tolerance)
   (< (abs (- a b)) tolerance))
