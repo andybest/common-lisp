@@ -29,8 +29,6 @@ and resembles Common Lisp. Additionally, there are [several
 videos](https://www.youtube.com/watch?v=82o5NeyZtvw&list=PL2VAYZE_4wRITJBv6saaKouj4sWSG1FcS) of its
 usage created by its author.
 
-To begin, call `INITIALIZE` to create a fresh state.
-
 Shader programs are written using a series of `DEFUN-GPU` and `DEFSTRUCT-GPU` forms representing GPU
 functions and structures respectively. As mentioned, their bodies follow the language rules of
 "Vari", which is not documented here.
@@ -54,39 +52,39 @@ This defines 2 GPU functions, `foo-vert` and `foo-frag` that will serve as a ver
 once translated and compiled.
 
 To use this program it first must be translated from the Lisp-like "Vari" language, into GLSL. This
-is done with the `MAKE-PROGRAM` macro:
+is done with the `MAKE-SHADER-PROGRAM` macro:
 
 ```lisp
-(make-program :example-program (:version 330 :primitive :points)
+(make-shader-program :example-program (:version 330 :primitive :points)
   (:vertex () (foo-vert :vec3 :vec2))
   (:fragment () (foo-frag :vec4)))
 ```
 
-Above, we call `MAKE-PROGRAM` with a name to call our program, `:example-program`, the default
-stage version to use, `:version 330`, and the OpenGL drawing primitive the vertex stage should use,
-`:primitive :points`, followed by a sequence of "stage-specs" of the form: `(stage-type (version)
-function-spec)`:
+Above, we call `MAKE-SHADER-PROGRAM` with a name to call our program, `:example-program`, the
+default stage version to use, `:version 330`, and the OpenGL drawing primitive the vertex stage
+should use, `:primitive :points`, followed by a sequence of "stage-specs" of the form: `(stage-type
+(version) function-spec)`:
 
 `stage-type` may be one of: `:vertex`, `:tessellation-control`, `:tessellation-evaluation`,
 `:geometry`, `:fragment`, or `:compute`.
 
 `version` is a number, string, or symbol representing a GLSL version to use when compiling this
 stage, for example `330`, `"330"`, `:330`, or `'|330|` are all equivalent. The default version if
-not specified is derived from the options list of the containing `MAKE-PROGRAM` form.
+not specified is derived from the options list of the containing `MAKE-SHADER-PROGRAM` form.
 
 `func-spec` specifies which `DEFUN-GPU` function to use for this stage, and is a list consisting of
 the function name followed by the types of all of its input arguments. The types are important
 because the "Vari" shader language allows the same function name to exist with different signatures,
 so you must be explicit in which function you want to translate to GLSL.
 
-Issuing the call to `MAKE-PROGRAM` produces a `PROGRAM` object, which includes some useful
+Issuing the call to `MAKE-SHADER-PROGRAM` produces a `PROGRAM` object, which includes some useful
 information:
 
 The `SOURCE` reader method is a hash table with keys consisting of shader stage keyword symbols, and
 values being strings of the translated "Vari" to GLSL source code:
 
 ```lisp
-(make-program ...)
+(make-shader-program ...)
 
 (source *) ; => #<HASH-TABLE :TEST EQL :COUNT 2 {10020C7603}>
 
@@ -154,14 +152,15 @@ This will compile all of the stages previously translated to GLSL in our `:examp
 and link it into a program object on the GPU. This returns a non-zero integer on success.
 
 Alternatively, you can compile and link all GLSL translated programs in one shot, by using the
-`BUILD-DICTIONARY` function, which takes no arguments and returns a hash table of all program
+`BUILD-SHADER-DICTIONARY` function, which takes no arguments and returns a hash table of all program
 objects keyed by name.
 
 The only thing left to do, is make use of the shader program to do your rendering. This is done by
-issuing calls to the various `UNIFORM-*` functions within the body of the `WITH-PROGRAM` macro:
+issuing calls to the various `UNIFORM-*` functions within the body of the `WITH-SHADER-PROGRAM`
+macro:
 
 ```lisp
-(with-program :example-program
+(with-shader-program :example-program
   (uniform-mat4 :mvp *matrix*))
 ```
 

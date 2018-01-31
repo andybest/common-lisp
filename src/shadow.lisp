@@ -1,7 +1,5 @@
 (in-package :shadow)
 
-(defvar *shader-info*)
-
 (defclass shader-info ()
   ((%programs :reader programs
               :initform (make-hash-table))
@@ -12,7 +10,11 @@
    (%buffers :reader buffers
              :initform (make-hash-table))))
 
-(defun initialize ()
+(defvar *shader-info* (make-instance 'shader-info))
+
+(defun initialize-shaders ()
+  (dolist (buffer-name (alexandria:hash-table-keys (buffers *shader-info*)))
+    (delete-buffer buffer-name))
   (setf *shader-info* (make-instance 'shader-info)))
 
 (defun find-gpu-function (func-spec)

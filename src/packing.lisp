@@ -15,7 +15,7 @@
     (varjo:v-struct (varjo:type->type-spec type))
     (varjo:v-container
      (let ((element-type (varjo:v-element-type type))
-           (dimensions (print (varjo:v-dimensions type))))
+           (dimensions (varjo:v-dimensions type)))
        (cond
          ((or (typep element-type 'varjo:v-user-struct)
               (typep element-type 'varjo:v-array))
@@ -60,11 +60,9 @@
       ((equal type '(:float 32))
        (list :element-type 'single-float))
       ((eq (first type) :vec)
-       (append (list :dimensions (last type))
-               (unpack-type (list (second type)))))
+       (unpack-type (list (second type))))
       ((eq (first type) :mat)
-       (append (list :dimensions (last type 2))
-               (unpack-type (list (second type)))))
+       (unpack-type (list (second type))))
       ((eq (first type) :array)
        (append (list :count (third type))
                (unpack-type (list (second type))))))))

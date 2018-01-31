@@ -1,6 +1,6 @@
 (in-package :shadow)
 
-(defvar *active-program*)
+(defvar *active-shader-program*)
 
 (defclass program ()
   ((%id :reader id
@@ -59,7 +59,7 @@
             (gl:delete-shader shader))))
     program))
 
-(defun build-program (name)
+(defun build-shader-program (name)
   (let* ((program (program-by-name name))
          (shaders (compile-stages program))
          (id (link-program shaders)))
@@ -68,11 +68,11 @@
     (store-uniform-locations program)
     id))
 
-(defun build-dictionary ()
+(defun build-shader-dictionary ()
   (dolist (program-name (alexandria:hash-table-keys (programs *shader-info*)))
-    (build-program program-name)))
+    (build-shader-program program-name)))
 
-(defun %make-program (name version primitive stage-specs)
+(defun %make-shader-program (name version primitive stage-specs)
   (let ((program (make-instance 'program))
         (stages (translate-stages version primitive stage-specs)))
     (dolist (stage stages)
@@ -83,11 +83,11 @@
     (setf (gethash name (programs *shader-info*)) program)
     program))
 
-(defmacro make-program (name (&key (version :330) (primitive :triangles)) &body body)
-  `(%make-program ,name ,version ,primitive ',body))
+(defmacro make-shader-program (name (&key (version :330) (primitive :triangles)) &body body)
+  `(%make-shader-program ,name ,version ,primitive ',body))
 
-(defmacro with-program (name &body body)
-  `(let ((*active-program* (program-by-name ,name)))
-     (gl:use-program (id *active-program*))
+(defmacro with-shader-program (name &body body)
+  `(let ((*active-shader-program* (program-by-name ,name)))
+     (gl:use-program (id *active-shader-program*))
      ,@body
      (gl:use-program 0)))

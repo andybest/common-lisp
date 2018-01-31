@@ -10,10 +10,7 @@
              :initarg :uniform)))
 
 (defclass layout-member ()
-  ((%dimensions :reader dimensions
-                :initarg :dimensions
-                :initform 1)
-   (%element-count :reader element-count
+  ((%element-count :reader element-count
                    :initarg :count
                    :initform 1)
    (%element-type :reader element-type

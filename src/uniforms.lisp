@@ -43,7 +43,7 @@
     (gl:use-program 0)))
 
 (defun get-uniform-location (uniform)
-  (stage-variable-location (gethash uniform (uniforms *active-program*))))
+  (stage-variable-location (gethash uniform (uniforms *active-shader-program*))))
 
 (defmacro %uniform-array (location func component-count element-type sequence)
   (alexandria:with-gensyms (count sv)

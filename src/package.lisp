@@ -4,20 +4,16 @@
   (:use #:cl)
   (:export #:defun-gpu
            #:defstruct-gpu
-           #:initialize
-           #:make-program
-           #:program
-           #:source
-           #:attributes
-           #:uniforms
-           #:build-program
-           #:build-dictionary
+           #:initialize-shaders
+           #:make-shader-program
+           #:build-shader-program
+           #:build-shader-dictionary
            #:bind-uniform-block
            #:bind-shader-storage-block
            #:create-buffer
            #:delete-buffer
            #:write-buffer-path
-           #:with-program
+           #:with-shader-program
            #:uniform-int
            #:uniform-int-array
            #:uniform-float
