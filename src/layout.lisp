@@ -10,11 +10,11 @@
              :initarg :uniform)))
 
 (defclass layout-member ()
-  ((%element-count :reader element-count
-                   :initarg :count
-                   :initform 1)
-   (%element-type :reader element-type
-                  :initarg :element-type)
+  ((%count :reader element-count
+           :initarg :count
+           :initform 1)
+   (%type :reader element-type
+          :initarg :type)
    (%stride :reader stride
             :initarg :stride)
    (%offset :reader offset
@@ -30,6 +30,12 @@
   (if (has-qualifier-p struct :std-430)
       :std430
       :std140))
+
+(defun get-layout-stride (layout member)
+  (with-slots (%count) member
+    (ecase (layout-type layout)
+      (:std140 4)
+      (:std430 (+ %count (mod 4 %count))))))
 
 (defun collect-layout-structs (layout)
   (let ((structs))
