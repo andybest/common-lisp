@@ -13,8 +13,6 @@
 (defvar *shader-info* (make-instance 'shader-info))
 
 (defun initialize-shaders ()
-  (dolist (buffer-name (alexandria:hash-table-keys (buffers *shader-info*)))
-    (delete-buffer buffer-name))
   (setf *shader-info* (make-instance 'shader-info)))
 
 (defun find-gpu-function (func-spec)
