@@ -27,11 +27,12 @@
 (defun make-block (program layout)
   (let* ((uniform (uniform layout))
          (id (ensure-keyword (varjo:name uniform)))
+         (name (varjo.internals:safe-glsl-name-string id))
          (type (varjo:v-type-of uniform)))
     (multiple-value-bind (block-type buffer-type) (get-block-type type)
       (setf (gethash (cons block-type id) (blocks program))
             (make-instance 'shader-block
-                           :name (format nil "_~a_~a" buffer-type id)
+                           :name (format nil "_~a_~a" buffer-type name)
                            :type block-type
                            :layout layout)))))
 
