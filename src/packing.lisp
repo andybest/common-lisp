@@ -3,7 +3,7 @@
 (defun pack-container (type)
   (etypecase type
     (varjo:v-vector :vec)
-    (varjo:v-matrix :mat)
+    (varjo:v-matrix (error "Shader blocks containing matrices are not currently supported."))
     (varjo:v-array :array)))
 
 (defun pack-type (type)
@@ -14,15 +14,11 @@
     (varjo:v-float '(:float 32))
     (varjo:v-struct (varjo:type->type-spec type))
     (varjo:v-container
-     (let ((element-type (varjo:v-element-type type))
-           (dimensions (varjo:v-dimensions type)))
+     (let ((element-type (varjo:v-element-type type)))
        (cond
          ((or (typep element-type 'varjo:v-user-struct)
               (typep element-type 'varjo:v-array))
-          (error "Arrays of aggregates are not currently supported."))
-         ((and (cadr dimensions)
-               (not (= (cadr dimensions) 4)))
-          (error "Only 4x4 matrices are currently supported."))
+          (error "Shader blocks containing arrays of aggregates are not currently supported."))
          (t (list* (pack-container type)
                    (pack-type element-type)
                    (varjo:v-dimensions type))))))))
@@ -49,19 +45,18 @@
      `(,@(mapcar #'pack-struct structs)
        ,(pack-block layout)))))
 
-(defun unpack-type (type)
-  (destructuring-bind ((x &optional y z) &key &allow-other-keys) type
-    (cond
-      ((or (and (eq x :bool) (null y))
-           (and (eq x :uint) (eql y 32)))
-       (list :type '(unsigned-byte 32)))
-      ((and (eq x :int)
-            (eql y 32))
-       (list :type '(signed-byte 32)))
-      ((and (eq x :float)
-            (eql y 32))
-       (list :type 'single-float))
-      ((eq x :vec)
-       (append (list :count z) (unpack-type (list y))))
-      ((eq x :array)
-       (unpack-type (list y))))))
+(defun unpack-type (layout-type type)
+  (flet ((add-stride (&rest args)
+           (let ((count (or (getf args :count) 1)))
+             (setf (getf args :element-stride)
+                   (ecase layout-type
+                     (:std140 4)
+                     (:std430 (if (= count 3) 4 count))))
+             args)))
+    (destructuring-bind ((spec &optional x y) &key &allow-other-keys) type
+      (ecase spec
+        ((:bool :uint) (add-stride :type '(unsigned-byte 32)))
+        (:int (add-stride :type '(signed-byte 32)))
+        (:float (add-stride :type 'single-float))
+        (:vec (apply #'add-stride :count y (unpack-type layout-type (list x))))
+        (:array (unpack-type layout-type (list x)))))))

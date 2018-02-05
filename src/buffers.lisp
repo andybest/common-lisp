@@ -36,10 +36,10 @@
     (gl:delete-buffers (list (id buffer)))
     (remhash buffer-name (buffers *shader-info*))))
 
-(defun %write-buffer-member (target member stride value)
-  (with-slots (%type %offset %stride) member
+(defun %write-buffer-member (target member value)
+  (with-slots (%type %offset %element-stride %byte-stride) member
     (let ((count (length value)))
-      (static-vectors:with-static-vector (sv (* count stride) :element-type %type)
+      (static-vectors:with-static-vector (sv (* count %element-stride) :element-type %type)
         (let ((ptr (static-vectors:static-vector-pointer sv))
               (i 0))
           (map nil
@@ -47,15 +47,14 @@
                  (if (typep x 'sequence)
                      (replace sv x :start1 i)
                      (setf (aref sv i) x))
-                 (incf i stride))
+                 (incf i %element-stride))
                value)
-          (%gl:buffer-sub-data target %offset (* count %stride) ptr))))))
+          (%gl:buffer-sub-data target %offset (* count %byte-stride) ptr))))))
 
 (defun write-buffer-path (buffer-name path value)
   (with-slots (%id %target %layout) (buffer-by-name buffer-name)
-    (let* ((member (gethash path (members %layout)))
-           (stride (get-layout-stride %layout member)))
+    (let ((member (gethash path (members %layout))))
       (check-type value sequence)
       (gl:bind-buffer %target %id)
-      (%write-buffer-member %target member stride value)
+      (%write-buffer-member %target member value)
       (gl:bind-buffer %target 0))))
