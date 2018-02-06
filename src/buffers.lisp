@@ -37,9 +37,9 @@
     (remhash buffer-name (buffers *shader-info*))))
 
 (defun %write-buffer-member (target member value)
-  (with-slots (%type %offset %element-stride %byte-stride) member
+  (with-slots (%element-type %offset %element-stride %byte-stride) member
     (let ((count (length value)))
-      (static-vectors:with-static-vector (sv (* count %element-stride) :element-type %type)
+      (static-vectors:with-static-vector (sv (* count %element-stride) :element-type %element-type)
         (let ((ptr (static-vectors:static-vector-pointer sv))
               (i 0))
           (map nil
@@ -51,10 +51,30 @@
                value)
           (%gl:buffer-sub-data target %offset (* count %byte-stride) ptr))))))
 
+(defun %write-buffer-member-matrix (target member value)
+  (with-slots (%element-type %offset %element-stride %byte-stride %dimensions) member
+    (let ((count (length value)))
+      (destructuring-bind (columns . rows) %dimensions
+        (static-vectors:with-static-vector (sv (* count columns %element-stride)
+                                               :element-type %element-type)
+          (let ((ptr (static-vectors:static-vector-pointer sv))
+                (i 0))
+            (map nil
+                 (lambda (x)
+                   (loop :repeat columns
+                         :for j :from i :by %element-stride
+                         :for k :by rows
+                         :do (replace sv x :start1 j :start2 k :end2 (+ k rows)))
+                   (incf i (* columns %element-stride)))
+                 value)
+            (%gl:buffer-sub-data target %offset (* count %byte-stride) ptr)))))))
+
 (defun write-buffer-path (buffer-name path value)
   (with-slots (%id %target %layout) (buffer-by-name buffer-name)
     (let ((member (gethash path (members %layout))))
       (check-type value sequence)
       (gl:bind-buffer %target %id)
-      (%write-buffer-member %target member value)
+      (if (cdr (dimensions member))
+          (%write-buffer-member-matrix %target member value)
+          (%write-buffer-member %target member value))
       (gl:bind-buffer %target 0))))

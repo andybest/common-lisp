@@ -3,7 +3,7 @@
 (defun pack-container (type)
   (etypecase type
     (varjo:v-vector :vec)
-    (varjo:v-matrix (error "Shader blocks containing matrices are not currently supported."))
+    (varjo:v-matrix :mat)
     (varjo:v-array :array)))
 
 (defun pack-type (type)
@@ -46,17 +46,21 @@
        ,(pack-block layout)))))
 
 (defun unpack-type (layout-type type)
-  (flet ((add-stride (&rest args)
-           (let ((count (or (getf args :count) 1)))
-             (setf (getf args :element-stride)
-                   (ecase layout-type
-                     (:std140 4)
-                     (:std430 (if (= count 3) 4 count))))
-             args)))
-    (destructuring-bind ((spec &optional x y) &key &allow-other-keys) type
+  (destructuring-bind ((spec &optional x y z) &key &allow-other-keys) type
+    (labels ((get-container (x)
+               (unpack-type layout-type (list x)))
+             (get-stride (count)
+               (ecase layout-type
+                 (:std140 4)
+                 (:std430 (if (= count 3) 4 count))))
+             (get-result (&rest args)
+               (destructuring-bind (&optional (count 1) rows) (getf args :dimensions)
+                 (list :dimensions (cons count rows)
+                       :element-type (getf args :element-type)
+                       :element-stride (get-stride count)))))
       (ecase spec
-        ((:bool :uint) (add-stride :type '(unsigned-byte 32)))
-        (:int (add-stride :type '(signed-byte 32)))
-        (:float (add-stride :type 'single-float))
-        (:vec (apply #'add-stride :count y (unpack-type layout-type (list x))))
-        (:array (unpack-type layout-type (list x)))))))
+        ((:bool :uint) (get-result :element-type '(unsigned-byte 32)))
+        (:int (get-result :element-type '(signed-byte 32)))
+        (:float (get-result :element-type 'single-float))
+        ((:vec :mat) (apply #'get-result :dimensions (list y z) (get-container x)))
+        (:array (get-container x))))))

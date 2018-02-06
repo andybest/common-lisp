@@ -10,19 +10,17 @@
              :initarg :uniform)))
 
 (defclass layout-member ()
-  ((%count :reader element-count
-           :initarg :count
-           :initform 1)
-   (%type :reader element-type
-          :initarg :type)
+  ((%element-type :reader element-type
+                  :initarg :element-type)
    (%element-stride :reader element-stride
                     :initarg :element-stride)
    (%byte-stride :reader byte-stride
                  :initarg :byte-stride)
+   (%dimensions :reader dimensions
+                :initarg :dimensions
+                :initform nil)
    (%offset :reader offset
-            :initarg :offset)
-   (%size :reader size
-          :initarg :size)))
+            :initarg :offset)))
 
 (defun layout-struct-p (struct)
   (or (has-qualifier-p struct :ubo)
@@ -56,15 +54,14 @@
 
 (defun make-layout-member (layout data)
   (dolist (part (getf data :members))
-    (destructuring-bind (&key type name offset size stride matrix-stride &allow-other-keys) part
+    (destructuring-bind (&key type name offset size stride &allow-other-keys) part
       (alexandria:when-let ((unpacked-type (unpack-type (layout-type layout) type))
                             (path (ensure-keyword
                                    (format nil "~{~a~^.~}" (alexandria:ensure-list name)))))
         (setf (gethash path (members layout))
               (apply #'make-instance 'layout-member
                      :offset offset
-                     :size size
-                     :byte-stride (or stride matrix-stride size)
+                     :byte-stride (or stride size)
                      unpacked-type))))))
 
 (defun make-layout (uniform)
