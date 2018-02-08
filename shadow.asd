@@ -1,7 +1,7 @@
 (asdf:defsystem #:shadow
   :description "A lightweight system to help with defining and managing OpenGL shader programs."
-  :author "Michael Fiano <michael.fiano@gmail.com>"
-  :maintainer "Michael Fiano <michael.fiano@gmail.com>"
+  :author "Michael Fiano <mail@michaelfiano.com>"
+  :maintainer "Michael Fiano <mail@michaelfiano.com>"
   :license "MIT"
   :homepage "https://github.com/mfiano/shadow"
   :bug-tracker "https://github.com/mfiano/shadow/issues"

@@ -179,7 +179,7 @@ stable.
 
 ## License
 
-Copyright © 2018 Michael Fiano <michael.fiano@gmail.com>.
+Copyright © 2018 Michael Fiano <mail@michaelfiano.com>.
 
 Licensed under the MIT License.
 
