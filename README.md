@@ -46,7 +46,7 @@ Alternatively, you may dump out the metadata pretty-printed:
 
 ## License
 
-Copyright © 2017 Michael Fiano <michael.fiano@gmail.com>.
+Copyright © 2017 Michael Fiano <mail@michaelfiano.com>.
 
 Licensed under the MIT License.
 
