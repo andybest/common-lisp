@@ -20,7 +20,7 @@ local-projects directory and issue the following in your REPL:
 
 ## License
 
-Copyright © 2017 Michael Fiano <michael.fiano@gmail.com>.
+Copyright © 2017 Michael Fiano <mail@michaelfiano.com>.
 
 Licensed under the MIT License.
 
