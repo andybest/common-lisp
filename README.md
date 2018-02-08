@@ -23,7 +23,7 @@ Documentation has not been written at this time.
 
 ## License
 
-Copyright © 2014-2018 Michael Fiano <michael.fiano@gmail.com>.
+Copyright © 2014-2018 Michael Fiano <mail@michaelfiano.com>.
 
 Licensed under the MIT License.
 

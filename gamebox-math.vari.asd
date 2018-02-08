@@ -1,7 +1,7 @@
 (asdf:defsystem #:gamebox-math.vari
   :description "A compatibility wrapper to make varjo work with gamebox-math."
-  :author "Michael Fiano <michael.fiano@gmail.com>"
-  :maintainer "Michael Fiano <michael.fiano@gmail.com>"
+  :author "Michael Fiano <mail@michaelfiano.com>"
+  :maintainer "Michael Fiano <mail@michaelfiano.com>"
   :license "MIT"
   :depends-on (#:gamebox-math
                #:varjo
