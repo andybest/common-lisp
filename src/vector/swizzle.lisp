@@ -35,15 +35,25 @@
              ,@(loop :for i :below size
                      :for pos = (%swizzle/char-position components i)
                      :collect `(setf (aref result ,i) (aref vec ,pos)))
-             result)))))
+             result))))
+
+  (defun %swizzle/generate-docstring (components)
+    (let ((size (length components)))
+      (if (= size 1)
+          (format nil "Swizzle: Get the scalar component ~a from VEC." components)
+          (format nil "Swizzle: Create a vec~a from the ~{~a~#[~;, and ~:;, ~]~} components of VEC."
+                  size (coerce components 'list))))))
 
 (defmacro generate-swizzle-functions ()
   `(progn
      ,@(loop :for components :in (%swizzle/component-groups)
              :for func-name = (alexandria:symbolicate "." components)
+             :for component-list = (coerce components 'list)
              :append
              `((declaim (inline ,func-name))
                (export ',func-name)
+               (setf (documentation ',func-name 'function)
+                     (%swizzle/generate-docstring ,components))
                (defun ,func-name (vec)
                  ,(%swizzle/function-body components))))))
 

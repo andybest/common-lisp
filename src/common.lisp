@@ -1,6 +1,7 @@
 (in-package :box.math.base)
 
-(defconstant +epsilon+ 1e-7)
+(defconstant +epsilon+ 1e-7
+  "The smallest positive quantity that is possible for a scalar.")
 
 (eval-when (:compile-toplevel :load-toplevel :execute)
   #+sbcl(setf sb-ext:*inline-expansion-limit* 1024)
