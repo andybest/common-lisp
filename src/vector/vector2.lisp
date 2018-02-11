@@ -13,9 +13,7 @@
   (y 0.0f0 :type single-float))
 
 (defmacro with-components (((prefix vec) &rest rest) &body body)
-  "A convenience macro for concisely accessing the components of a vector.
-Example: `(with-components ((v1 vector1) (v2 vector2)) (values v1x v2y))` would return as values, the
-X component of vector1, and the Y component of vector2.''"
+  "A convenience macro for concisely accessing the components of vectors."
   `(with-accessors ((,prefix identity)
                     (,(box.math.base::%make-accessor-symbol prefix 'x) x)
                     (,(box.math.base::%make-accessor-symbol prefix 'y) y))
@@ -50,7 +48,7 @@ X component of vector1, and the Y component of vector2.''"
 (declaim (inline zero))
 (declaim (ftype (function () vec) zero))
 (defun zero ()
-  "Create a new vector, with all components initialized to zero."
+  "Create a new vector with all components initialized to zero."
   (make 0 0))
 
 (declaim (inline zerop))
@@ -64,7 +62,7 @@ X component of vector1, and the Y component of vector2.''"
 (declaim (inline copy!))
 (declaim (ftype (function (vec vec) vec) copy!))
 (defun copy! (out vec)
-  "Copy each component of VEC to the existing vector OUT."
+  "Copy each component of VEC to the existing vector, OUT."
   (with-components ((o out) (v vec))
     (psetf ox vx oy vy))
   out)
@@ -72,14 +70,14 @@ X component of vector1, and the Y component of vector2.''"
 (declaim (inline copy))
 (declaim (ftype (function (vec) vec) copy))
 (defun copy (vec)
-  "Copy each component of VEC into a freshly allocated vector."
+  "Copy each component of VEC to a freshly allocated vector."
   (copy! (zero) vec))
 
 (declaim (inline clamp!))
 (declaim (ftype (function (vec vec &key (:min single-float) (:max single-float)) vec) clamp!))
 (defun clamp! (out vec &key (min most-negative-single-float) (max most-positive-single-float))
   "Clamp each component of VEC within the range of [MIN, MAX], storing the result in the existing
-vector OUT."
+vector, OUT."
   (with-components ((o out) (v vec))
     (psetf ox (alexandria:clamp vx min max)
            oy (alexandria:clamp vy min max)))
@@ -231,8 +229,8 @@ allocated vector."
 (declaim (ftype (function (vec) single-float) magnitude-squared))
 (defun magnitude-squared (vec)
   "Calculate the magnitude (also known as length or Euclidean norm) of VEC. This results in a
-squared value, which is cheaper to compute. It is useful when you want to compare relative vector
-lengths, which does not need the expensive square root function.
+squared value, which is cheaper to compute. It is useful when you want to compare relative lengths,
+which does not need the expensive square root function.
 
 See MAGNITUDE for other cases."
   (dot vec vec))
@@ -242,13 +240,14 @@ See MAGNITUDE for other cases."
 (defun magnitude (vec)
   "Compute the magnitude (also known as length or Euclidean norm) of VEC.
 
-See MAGNITUDE-SQUARED if you only need to compare lengths of vectors, as it is cheaper to compute
-without the square root call of this function."
+See MAGNITUDE-SQUARED if you only need to compare lengths, as it is cheaper to compute without the
+square root call of this function."
   (sqrt (magnitude-squared vec)))
 
 (declaim (inline normalize!))
 (declaim (ftype (function (vec vec) vec) normalize!))
 (defun normalize! (out vec)
+  "Convert VEC to be of unit length, storing the result in the existing vector, OUT."
   (let ((magnitude (magnitude vec)))
     (unless (cl:zerop magnitude)
       (scale! out vec (cl:/ magnitude))))
@@ -257,11 +256,14 @@ without the square root call of this function."
 (declaim (inline normalize))
 (declaim (ftype (function (vec) vec) normalize))
 (defun normalize (vec)
+  "Convert VEC to be of unit length, storing the result in a freshly allocated vector."
   (normalize! (zero) vec))
 
 (declaim (inline round!))
 (declaim (ftype (function (vec vec) vec) round!))
 (defun round! (out vec)
+  "Round each component of VEC to the nearest integer, storing the result in the existing vector,
+OUT."
   (with-components ((o out) (v vec))
     (psetf ox (fround vx)
            oy (fround vy)))
@@ -270,11 +272,15 @@ without the square root call of this function."
 (declaim (inline round))
 (declaim (ftype (function (vec) vec) round))
 (defun round (vec)
+  "Round each component of VEC to the nearest integer, storing the result in a freshly allocated
+vector."
   (round! (zero) vec))
 
 (declaim (inline abs!))
 (declaim (ftype (function (vec vec) vec) abs!))
 (defun abs! (out vec)
+  "Convert each component of VEC to its absolute value, storing the result in the existing vector,
+OUT."
   (with-components ((o out) (v vec))
     (psetf ox (cl:abs vx)
            oy (cl:abs vy)))
@@ -283,21 +289,26 @@ without the square root call of this function."
 (declaim (inline abs))
 (declaim (ftype (function (vec) vec) abs))
 (defun abs (vec)
+  "Convert each component of VEC to its absolute value, storing the result in a freshly allocated
+vector."
   (abs! (zero) vec))
 
 (declaim (inline negate!))
 (declaim (ftype (function (vec vec) vec) negate!))
 (defun negate! (out vec)
+  "Negate each component of VEC, storing the result in the existing vector, OUT."
   (scale! out vec -1.0f0))
 
 (declaim (inline negate))
 (declaim (ftype (function (vec) vec) negate))
 (defun negate (vec)
+  "Negate each component of VEC, storing the result in a freshly allocated vector."
   (negate! (zero) vec))
 
 (declaim (inline angle))
 (declaim (ftype (function (vec vec) single-float) angle))
 (defun angle (vec1 vec2)
+  "Calculate the angle in radians between VEC1 and VEC2."
   (let ((dot (dot vec1 vec2))
         (m*m (cl:* (magnitude vec1) (magnitude vec2))))
     (if (cl:zerop m*m) 0.0f0 (acos (cl:/ dot m*m)))))
@@ -310,6 +321,8 @@ without the square root call of this function."
 (declaim (inline lerp!))
 (declaim (ftype (function (vec vec vec single-float) vec) lerp!))
 (defun lerp! (out vec1 vec2 factor)
+  "Linearly interpolate between VEC1 and VEC2 by FACTOR, storing the result in the existing vector,
+OUT."
   (with-components ((o out) (v1 vec1) (v2 vec2))
     (psetf ox (alexandria:lerp factor v1x v2x)
            oy (alexandria:lerp factor v1y v2y)))
@@ -318,11 +331,14 @@ without the square root call of this function."
 (declaim (inline lerp))
 (declaim (ftype (function (vec vec single-float) vec) lerp))
 (defun lerp (vec1 vec2 factor)
+  "Linearly interpolate between VEC1 and VEC2 by FACTOR, storing the result in a freshly allocated
+vector."
   (lerp! (zero) vec1 vec2 factor))
 
 (declaim (inline <))
 (declaim (ftype (function (vec vec) boolean) <))
 (defun < (vec1 vec2)
+  "Check if each component of VEC1 is less than the same component of VEC2."
   (with-components ((v1 vec1) (v2 vec2))
     (and (cl:< v1x v2x)
          (cl:< v1y v2y))))
@@ -330,6 +346,7 @@ without the square root call of this function."
 (declaim (inline <=))
 (declaim (ftype (function (vec vec) boolean) <=))
 (defun <= (vec1 vec2)
+  "Check if each component of VEC1 is less than or equal to the same component of VEC2."
   (with-components ((v1 vec1) (v2 vec2))
     (and (cl:<= v1x v2x)
          (cl:<= v1y v2y))))
@@ -337,6 +354,7 @@ without the square root call of this function."
 (declaim (inline >))
 (declaim (ftype (function (vec vec) boolean) >))
 (defun > (vec1 vec2)
+  "Check if each component of VEC1 is greater than the same component of VEC2."
   (with-components ((v1 vec1) (v2 vec2))
     (and (cl:> v1x v2x)
          (cl:> v1y v2y))))
@@ -344,6 +362,7 @@ without the square root call of this function."
 (declaim (inline >=))
 (declaim (ftype (function (vec vec) boolean) >=))
 (defun >= (vec1 vec2)
+  "Check if each component of VEC1 is greater than or equal to the same component of VEC2."
   (with-components ((v1 vec1) (v2 vec2))
     (and (cl:>= v1x v2x)
          (cl:>= v1y v2y))))
@@ -351,6 +370,7 @@ without the square root call of this function."
 (declaim (inline min!))
 (declaim (ftype (function (vec vec vec) vec) min!))
 (defun min! (out vec1 vec2)
+  "Return the minimum of each component in VEC1 and VEC2, into the existing vector, OUT."
   (with-components ((o out) (v1 vec1) (v2 vec2))
     (psetf ox (cl:min v1x v2x)
            oy (cl:min v1y v2y)))
@@ -359,11 +379,13 @@ without the square root call of this function."
 (declaim (inline min))
 (declaim (ftype (function (vec vec) vec) min))
 (defun min (vec1 vec2)
+  "Return the minimum of each component in VEC1 and VEC2, into a freshly allocated vector."
   (min! (zero) vec1 vec2))
 
 (declaim (inline max!))
 (declaim (ftype (function (vec vec vec) vec) max!))
 (defun max! (out vec1 vec2)
+  "Return the maximum of each component in VEC1 and VEC2, into the existing vector, OUT."
   (with-components ((o out) (v1 vec1) (v2 vec2))
     (psetf ox (cl:max v1x v2x)
            oy (cl:max v1y v2y)))
@@ -372,4 +394,5 @@ without the square root call of this function."
 (declaim (inline max))
 (declaim (ftype (function (vec vec) vec) max))
 (defun max (vec1 vec2)
+  "Return the maximum of each component in VEC1 and VEC2, into a freshly allocated vector."
   (max! (zero) vec1 vec2))
