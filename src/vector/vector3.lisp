@@ -2,13 +2,13 @@
 
 ;;; Structure
 
-(deftype vec () '(simple-array single-float (3))
-  "A Euclidean vector of 3 single-float components.")
+(deftype vec () '(simple-array single-float (3)))
 
 (defstruct (vec (:type (vector single-float))
                 (:constructor %make (x y z))
                 (:conc-name nil)
                 (:copier nil))
+  "A Euclidean vector of 3 single-float components."
   (x 0.0f0 :type single-float)
   (y 0.0f0 :type single-float)
   (z 0.0f0 :type single-float))
