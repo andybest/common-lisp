@@ -1,14 +1,12 @@
 (in-package :defpackage+-user-1)
 
 (defpackage+ #:box.math.vectors
-  (:local-nicknames (#:v2 #:box.math.vec2)
-                    (#:v3 #:box.math.vec3)
-                    (#:v4 #:box.math.vec4))
   (:use #:cl))
 
 (defpackage+ #:box.math.vec2
-  (:use #:box.math.base)
-  (:inherit #:box.math.vectors)
+  (:use #:cl
+        #:box.math.base
+        #:box.math.vectors)
   (:shadow #:=
            #:+
            #:-
@@ -77,8 +75,9 @@
            #:max))
 
 (defpackage+ #:box.math.vec3
-  (:use #:box.math.base)
-  (:inherit #:box.math.vectors)
+  (:use #:cl
+        #:box.math.base
+        #:box.math.vectors)
   (:shadow #:=
            #:+
            #:-
@@ -152,8 +151,9 @@
            #:max))
 
 (defpackage+ #:box.math.vec4
-  (:use #:box.math.base)
-  (:inherit #:box.math.vectors)
+  (:use #:cl
+        #:box.math.base
+        #:box.math.vectors)
   (:shadow #:=
            #:+
            #:-

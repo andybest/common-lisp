@@ -1,7 +1,7 @@
 (in-package :defpackage+-user-1)
 
 (defpackage+ #:box.math.base
-  (:inherit #:cl)
+  (:use #:cl)
   (:export #:+epsilon+
            #:%make-accessor-symbol
            #:%~))

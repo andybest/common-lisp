@@ -2,7 +2,8 @@
 
 (defpackage+ #:box.math.mat2
   (:local-nicknames (#:v2 #:box.math.vec2))
-  (:use #:box.math.base)
+  (:use #:cl
+        #:box.math.base)
   (:shadow #:=
            #:*
            #:trace)
@@ -51,7 +52,8 @@
 (defpackage+ #:box.math.mat3
   (:local-nicknames (#:v2 #:box.math.vec2)
                     (#:v3 #:box.math.vec3))
-  (:use #:box.math.base)
+  (:use #:cl
+        #:box.math.base)
   (:shadow #:=
            #:*
            #:trace)
@@ -108,7 +110,8 @@
 (defpackage+ #:box.math.mat4
   (:local-nicknames (#:v3 #:box.math.vec3)
                     (#:v4 #:box.math.vec4))
-  (:use #:box.math.base)
+  (:use #:cl
+        #:box.math.base)
   (:shadow #:=
            #:*
            #:trace)
