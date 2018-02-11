@@ -26,5 +26,3 @@ Documentation has not been written at this time.
 Copyright © 2014-2018 [Michael Fiano](mail@michaelfiano.com).
 
 Licensed under the MIT License.
-
-A copy of the license is available [here](LICENSE).
