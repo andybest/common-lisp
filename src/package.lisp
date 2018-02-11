@@ -2,6 +2,4 @@
 
 (defpackage+ #:box.math.base
   (:use #:cl)
-  (:export #:+epsilon+
-           #:%make-accessor-symbol
-           #:%~))
+  (:export #:+epsilon+))

@@ -13,8 +13,8 @@
 
 (defmacro with-components (((prefix dquat) . rest) &body body)
   `(q:with-components ((,prefix ,dquat)
-                       (,(%make-accessor-symbol prefix '.r) (dq-real ,dquat))
-                       (,(%make-accessor-symbol prefix '.d) (dq-dual ,dquat)))
+                       (,(box.math.base::%make-accessor-symbol prefix '.r) (dq-real ,dquat))
+                       (,(box.math.base::%make-accessor-symbol prefix '.d) (dq-dual ,dquat)))
      ,dquat
      ,(if rest
           `(with-components ,rest ,@body)

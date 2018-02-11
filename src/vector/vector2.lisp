@@ -13,8 +13,8 @@
 
 (defmacro with-components (((prefix vec) &rest rest) &body body)
   `(with-accessors ((,prefix identity)
-                    (,(%make-accessor-symbol prefix 'x) x)
-                    (,(%make-accessor-symbol prefix 'y) y))
+                    (,(box.math.base::%make-accessor-symbol prefix 'x) x)
+                    (,(box.math.base::%make-accessor-symbol prefix 'y) y))
        ,vec
      ,(if rest
           `(with-components ,rest ,@body)
@@ -114,8 +114,8 @@
 (declaim (ftype (function (vec vec &key (:tolerance single-float)) boolean) ~))
 (defun ~ (vec1 vec2 &key (tolerance +epsilon+))
   (with-components ((v1 vec1) (v2 vec2))
-    (and (%~ v1x v2x tolerance)
-         (%~ v1y v2y tolerance))))
+    (and (box.math.base::%~ v1x v2x tolerance)
+         (box.math.base::%~ v1y v2y tolerance))))
 
 (declaim (inline +!))
 (declaim (ftype (function (vec vec vec) vec) +!))

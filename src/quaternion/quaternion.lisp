@@ -15,10 +15,10 @@
 
 (defmacro with-components (((prefix quat) &rest rest) &body body)
   `(with-accessors ((,prefix identity)
-                    (,(%make-accessor-symbol prefix 'w) w)
-                    (,(%make-accessor-symbol prefix 'x) x)
-                    (,(%make-accessor-symbol prefix 'y) y)
-                    (,(%make-accessor-symbol prefix 'z) z))
+                    (,(box.math.base::%make-accessor-symbol prefix 'w) w)
+                    (,(box.math.base::%make-accessor-symbol prefix 'x) x)
+                    (,(box.math.base::%make-accessor-symbol prefix 'y) y)
+                    (,(box.math.base::%make-accessor-symbol prefix 'z) z))
        ,quat
      ,(if rest
           `(with-components ,rest ,@body)
@@ -76,10 +76,10 @@
 (declaim (ftype (function (quat quat &key (:tolerance single-float)) boolean) ~))
 (defun ~ (quat1 quat2 &key (tolerance +epsilon+))
   (with-components ((q1 quat1) (q2 quat2))
-    (and (%~ q1w q2w tolerance)
-         (%~ q1x q2x tolerance)
-         (%~ q1y q2y tolerance)
-         (%~ q1z q2z tolerance))))
+    (and (box.math.base::%~ q1w q2w tolerance)
+         (box.math.base::%~ q1x q2x tolerance)
+         (box.math.base::%~ q1y q2y tolerance)
+         (box.math.base::%~ q1z q2z tolerance))))
 
 (declaim (inline copy!))
 (declaim (ftype (function (quat quat) quat) copy!))
