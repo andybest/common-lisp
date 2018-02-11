@@ -316,6 +316,7 @@ vector."
 (declaim (inline direction=))
 (declaim (ftype (function (vec vec) boolean) direction=))
 (defun direction= (vec1 vec2)
+  "Check if the directions of VEC1 and VEC2 are approximately equal."
   (cl:>= (dot (normalize vec1) (normalize vec2)) (cl:- 1 +epsilon+)))
 
 (declaim (inline lerp!))

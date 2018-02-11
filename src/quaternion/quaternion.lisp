@@ -197,11 +197,15 @@ quaternion."
 (declaim (inline cross!))
 (declaim (ftype (function (quat quat quat) quat) cross!))
 (defun cross! (out quat1 quat2)
+  "Calculate the cross product of QUAT1 and QUAT2, storing the result in the existing quaternion,
+OUT."
   (scale! out (+ (* quat2 (conjugate quat1)) (* quat1 quat2)) 0.5f0))
 
 (declaim (inline cross))
 (declaim (ftype (function (quat quat) quat) cross))
 (defun cross (quat1 quat2)
+  "Calculate the cross product of QUAT1 and QUAT2, storing the result in a freshly allocated
+quaternion."
   (cross! (id) quat1 quat2))
 
 (declaim (inline magnitude-squared))
