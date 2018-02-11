@@ -263,6 +263,9 @@ See MAGNITUDE for other cases."
 (declaim (inline magnitude))
 (declaim (ftype (function (vec) single-float) magnitude))
 (defun magnitude (vec)
+  "Compute the magnitude (also known as length or Euclidean norm) of VEC. If you only need to
+compare lengths of vectors, see MAGNITUDE-SQUARED instead, as it is cheaper to compute without the
+square root call of this function."
   (sqrt (magnitude-squared vec)))
 
 (declaim (inline normalize!))
