@@ -233,15 +233,17 @@ allocated vector."
   "Calculate the magnitude (also known as length or Euclidean norm) of VEC. This results in a
 squared value, which is cheaper to compute. It is useful when you want to compare relative vector
 lengths, which does not need the expensive square root function.
+
 See MAGNITUDE for other cases."
   (dot vec vec))
 
 (declaim (inline magnitude))
 (declaim (ftype (function (vec) single-float) magnitude))
 (defun magnitude (vec)
-  "Compute the magnitude (also known as length or Euclidean norm) of VEC. If you only need to
-compare lengths of vectors, see MAGNITUDE-SQUARED instead, as it is cheaper to compute without the
-square root call of this function."
+  "Compute the magnitude (also known as length or Euclidean norm) of VEC.
+
+See MAGNITUDE-SQUARED if you only need to compare lengths of vectors, as it is cheaper to compute
+without the square root call of this function."
   (sqrt (magnitude-squared vec)))
 
 (declaim (inline normalize!))
