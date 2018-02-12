@@ -665,7 +665,7 @@ Note: A matrix with a determinant of zero cannot be inverted, and will raise an 
 Note: This method is slower than INVERT-ORTHOGONAL, but not all matrices can be inverted with the
 fast method.
 
-See INVERT-ORTHOGONAL."
+See INVERT-ORTHOGONAL"
   (invert! (id) matrix))
 
 (declaim (ftype (function (matrix v3:vec v3:vec v3:vec) matrix) view!))
