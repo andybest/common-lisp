@@ -18,8 +18,12 @@
       (call-next-method)))
 
 (defun dump-file (file &rest spec)
+  "Print out the FLAC metadata of FILE. SPEC may be one or more of the following to control which
+types of metadata are dumped, or NIL for all types:
+
+:streaminfo, :application, :seektable, :vorbis-comment, :cuesheet, :picture."
   (let ((*dump-spec* (or spec *dump-spec*)))
-    (dump :file file 0)))
+    (dump :file (load-file file) 0)))
 
 (defmethod dump ((type (eql :file)) node level)
   (print-line level "File" (file-path node))

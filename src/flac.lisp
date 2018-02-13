@@ -6,9 +6,10 @@
 
 (defclass flac ()
   ((file-path :accessor file-path)
-   (parse-tree :accessor parse-tree)))
+   (parse-tree :accessor parse-tree
+               :documentation "The concrete syntax tree of the FLAC stream.")))
 
-(defun load-stream (stream &optional path)
+(defun %load-stream (stream &optional path)
   (with-buffer-read (:stream stream)
     (let ((*flac* (make-instance 'flac)))
       (setf (parse-tree *flac*) (parse-datastream)
@@ -16,5 +17,7 @@
       *flac*)))
 
 (defun load-file (path)
+  "Load the FLAC file located at the given filesystem PATH. Returns an object with the concrete
+syntax tree of the FLAC specification."
   (with-open-file (in path :element-type 'ub8)
-    (load-stream in path)))
+    (%load-stream in path)))

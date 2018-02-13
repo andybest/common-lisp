@@ -2,7 +2,12 @@
 
 (defpackage #:flac-metadata
   (:use #:cl
-        #:alexandria
         #:parsley)
+  (:import-from #:alexandria
+                #:with-gensyms
+                #:symbolicate
+                #:make-keyword
+                #:hash-table-alist)
   (:export #:load-file
-           #:dump-file))
+           #:dump-file
+           #:parse-tree))
