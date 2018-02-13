@@ -24,6 +24,6 @@ game development. Supported are:
 
 ## License
 
-Copyright © 2014-2018 [Michael Fiano](mail@michaelfiano.com).
+Copyright © 2014-2018 [Michael Fiano](mailto:mail@michaelfiano.com).
 
 Licensed under the MIT License.
