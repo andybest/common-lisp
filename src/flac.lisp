@@ -6,8 +6,7 @@
 
 (defclass flac ()
   ((file-path :accessor file-path)
-   (parse-tree :accessor parse-tree
-               :documentation "The concrete syntax tree of the FLAC stream.")))
+   (parse-tree :accessor parse-tree)))
 
 (defun %load-stream (stream &optional path)
   (with-buffer-read (:stream stream)

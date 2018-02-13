@@ -21,7 +21,7 @@
   "Print out the FLAC metadata of FILE. SPEC may be one or more of the following to control which
 types of metadata are dumped, or NIL for all types:
 
-:streaminfo, :application, :seektable, :vorbis-comment, :cuesheet, :picture."
+:STREAMINFO, :APPLICATION, :SEEKTABLE, :VORBIS-COMMENT, :CUESHEET, :PICTURE."
   (let ((*dump-spec* (or spec *dump-spec*)))
     (dump :file (load-file file) 0)))
 
