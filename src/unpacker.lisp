@@ -1,4 +1,4 @@
-(in-package :gamebox-sprite-packer)
+(in-package :box.sprite-packer)
 
 (defun make-sprite-path (directory id)
   (uiop/pathname:merge-pathnames*
@@ -25,17 +25,17 @@
                     :y (round (* atlas-height y))
                     :w (round (* atlas-width w))
                     :h (round (* atlas-height h)))))
-        (with-slots (y h) rect
+        (with-slots (%y %h) rect
           (when flip-y
-            (setf y (- atlas-height y h))))
+            (setf %y (- atlas-height %y %h))))
         rect))))
 
 (defun write-sprite (atlas rect out-file)
-  (with-slots (x y w h) rect
-    (let ((sprite (opticl:make-8-bit-rgba-image h w)))
+  (with-slots (%x %y %w %h) rect
+    (let ((sprite (opticl:make-8-bit-rgba-image %h %w)))
       (opticl:do-pixels (i j) sprite
         (setf (opticl:pixel sprite i j)
-              (opticl:pixel atlas (+ i y) (+ j x))))
+              (opticl:pixel atlas (+ i %y) (+ j %x))))
       (opticl:write-image-file out-file sprite))))
 
 (defun unpack-sprite (atlas data denormalize flip-y out-path)
@@ -46,5 +46,5 @@
 (defun unpack-atlas (atlas-file &key out-path denormalize flip-y)
   (loop :with atlas = (opticl:read-png-file atlas-file)
         :with spec-file = (make-pathname :defaults atlas-file :type "spec")
-        :for data :in (fs-utils:read-file spec-file)
+        :for data :in (uiop/stream:safe-read-file-form spec-file)
         :do (unpack-sprite atlas data denormalize flip-y out-path)))
