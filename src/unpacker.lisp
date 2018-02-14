@@ -44,6 +44,16 @@
     (write-sprite atlas rect out-file)))
 
 (defun unpack-atlas (atlas-file &key out-path denormalize flip-y)
+  "Unpack the sprites contained in the image, specified by the filesystem path, ATLAS-FILE. A file
+  of the same name with a \"spec\" file extension must also exist in the same directory on the
+  filesystem.
+
+OUT-PATH: A pathname specifying a directory to write all the sprite images to.
+
+DENORMALIZE: Boolean specifying whether to convert metadata normalized in the [0..1] range, back
+into pixel coordinates.
+
+FLIP-Y: Boolean specifying whether to flip the Y axis when reading the metadata."
   (loop :with atlas = (opticl:read-png-file atlas-file)
         :with spec-file = (make-pathname :defaults atlas-file :type "spec")
         :for data :in (uiop/stream:safe-read-file-form spec-file)

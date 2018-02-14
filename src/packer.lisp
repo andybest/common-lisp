@@ -186,6 +186,23 @@
       (write data :stream out))))
 
 (defun make-atlas (file-spec &key out-file width height normalize flip-y (padding 0))
+  "Pack the sprites defined by FILE-SPEC into a spritesheet.
+
+OUT-FILE: A pathname specifying where to write the image file.
+
+WIDTH: The width in pixels of the spritesheet.
+
+HEIGHT: The height in pixels of the spritesheet.
+
+NORMALIZE: Boolean specifying whether to map the metadata's coordinates to the [0..1] range.
+
+FLIP-Y: Boolean specifying whether to flip the Y axis when writing the metadata.
+
+PADDING: The padding in pixels to use around each sprite in the spritesheet.
+
+See MAKE-ATLAS-FROM-DIRECTORY if you want to automatically generate FILE-SPEC from the files under a
+given filesystem path.
+"
   (loop :with atlas = (opticl:make-8-bit-rgba-image width height)
         :with rects = (add-padding (make-rects file-spec) padding)
         :for rect :in (remove-padding (pack-rects rects width height) padding)
@@ -199,6 +216,25 @@
 
 (defun make-atlas-from-directory (path &key recursive out-file width height normalize flip-y
                                          (padding 0))
+  "Pack the sprites located under the given filesystem path, PATH.
+
+RECURSIVE: Boolean specifying whether to scan recursively for files.
+
+OUT-FILE: A pathname specifying where to write the image file.
+
+WIDTH: The width in pixels of the spritesheet.
+
+HEIGHT: The height in pixels of the spritesheet.
+
+NORMALIZE: Boolean specifying whether to normalize the metadata's coordinates in the [0..1] range.
+
+FLIP-Y: Boolean specifying whether to flip the Y axis when writing the metadata.
+
+PADDING: The padding in pixels to use around each sprite in the spritesheet.
+
+See MAKE-ATLAS if you want to manually specify a file-spec, in case you want to be in control of the
+names chosen to identify the sprites written to the metadata file.
+"
   (let ((file-spec (collect-files path :recursive recursive)))
     (make-atlas file-spec
                 :out-file out-file
