@@ -9,8 +9,7 @@
   :version "1.0.5"
   :encoding :utf-8
   :long-description #.(uiop:read-file-string (uiop/pathname:subpathname *load-pathname* "README.md"))
-  :depends-on (#:alexandria
-               #:pngload
+  :depends-on (#:pngload
                #:opticl)
   :pathname "src"
   :serial t
