@@ -80,7 +80,7 @@ layout.
 VALUE: A value to write, such as a scalar or matrix depending on the type of the member PATH refers
 to. To write to an array, use a sequence of values.
 
-Note: Writing to arrays which contain other aggregates types (other arrays or structures) is not
+Note: Writing to arrays which contain other aggregate types (other arrays or structures) is not
 possible. This is a design decision to allow this library to have a simple \"path-based\" buffer
 writing interface."
   (with-slots (%id %target %layout) (buffer-by-name buffer-name)
