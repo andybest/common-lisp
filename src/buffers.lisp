@@ -77,7 +77,7 @@
 PATH: A \"dot-separated\" keyword symbol, where each part denotes a member in the buffers block
 layout.
 
-Value: A value to write, such as a scalar or matrix depending on the type of the member PATH refers
+VALUE: A value to write, such as a scalar or matrix depending on the type of the member PATH refers
 to. To write to an array, use a sequence of values.
 
 Note: Writing to arrays which contain other aggregates types (other arrays or structures) is not
