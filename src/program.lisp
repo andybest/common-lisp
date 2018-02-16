@@ -99,7 +99,7 @@ PRIMITIVE: The drawing primitive to use for the vertex stage."
   `(%make-shader-program ,name ,version ,primitive ',body))
 
 (defmacro with-shader-program (name &body body)
-  "Run a body of code which uses (as in glUSeProgram) the program identified by NAME."
+  "Run a body of code which uses (as in glUseProgram) the program identified by NAME."
   `(let ((*active-shader-program* (program-by-name ,name)))
      (gl:use-program (id *active-shader-program*))
      ,@body
