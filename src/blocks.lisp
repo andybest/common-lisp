@@ -52,6 +52,7 @@
       (error "Cannot bind a block to a binding point with existing blocks of a different layout.")))
 
 (defun bind-uniform-block (program-name block-id binding-point)
+  "Bind a uniform block to a binding point."
   (with-accessors ((id id) (blocks blocks)) (program-by-name program-name)
     (let* ((block (gethash (cons :uniform block-id) blocks))
            (index (%gl:get-uniform-block-index id (name block))))
@@ -60,6 +61,7 @@
       (%gl:uniform-block-binding id index binding-point))))
 
 (defun bind-shader-storage-block (program-name block-id binding-point)
+  "Bind a shader storage block to a binding point."
   (with-accessors ((id id) (blocks blocks)) (program-by-name program-name)
     (let* ((block (gethash (cons :buffer block-id) blocks))
            (index (gl:get-program-resource-index id :shader-storage-block (name block))))

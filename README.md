@@ -141,11 +141,11 @@ GPUs. We still have to compile the shader stages and link the final program obje
 
 At this point, a valid OpenGL context is needed to continue.
 
-To compile a program's stages and link them into a program, you can use the `BUILD-PROGRAM`
+To compile a program's stages and link them into a program, you can use the `BUILD-SHADER_PROGRAM`
 function:
 
 ```lisp
-(build-program :example-program)
+(build-shader-program :example-program)
 ```
 
 This will compile all of the stages previously translated to GLSL in our `:example-game` program,
@@ -179,8 +179,6 @@ stable.
 
 ## License
 
-Copyright © 2018 Michael Fiano <mail@michaelfiano.com>.
+Copyright © 2018 [Michael Fiano](mailto:mail@michaelfiano.com).
 
 Licensed under the MIT License.
-
-A copy of the license is available [here](LICENSE).

@@ -3,9 +3,9 @@
   :author "Michael Fiano <mail@michaelfiano.com>"
   :maintainer "Michael Fiano <mail@michaelfiano.com>"
   :license "MIT"
-  :homepage "https://github.com/mfiano/shadow"
-  :bug-tracker "https://github.com/mfiano/shadow/issues"
+  :homepage "https://www.michaelfiano.com/projects/shadow"
   :source-control (:git "git@github.com:mfiano/shadow.git")
+  :bug-tracker "https://github.com/mfiano/shadow/issues"
   :version "1.0.0"
   :encoding :utf-8
   :long-description #.(uiop:read-file-string (uiop/pathname:subpathname *load-pathname* "README.md"))

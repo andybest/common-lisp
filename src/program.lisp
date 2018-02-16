@@ -60,6 +60,10 @@
     program))
 
 (defun build-shader-program (name)
+  "Compile the shader stages of NAME, linking them into a program. NAME refers a a previously
+defined shader program using MAKE-SHADER-PROGRAM.
+
+See MAKE-SHADER-PROGRAM"
   (let* ((program (program-by-name name))
          (shaders (compile-stages program))
          (id (link-program shaders)))
@@ -69,6 +73,9 @@
     id))
 
 (defun build-shader-dictionary ()
+  "Compile all shader programs defined with MAKE-SHADER-PROGRAM.
+
+See MAKE-SHADER-PROGRAM"
   (dolist (program-name (alexandria:hash-table-keys (programs *shader-info*)))
     (build-shader-program program-name)))
 
@@ -84,9 +91,15 @@
     program))
 
 (defmacro make-shader-program (name (&key (version :330) (primitive :triangles)) &body body)
+  "Create a new shader program using the stage-specs defined in BODY.
+
+VERSION: The default version shader stages use, and can be overridden on a per-function basis.
+
+PRIMITIVE: The drawing primitive to use for the vertex stage."
   `(%make-shader-program ,name ,version ,primitive ',body))
 
 (defmacro with-shader-program (name &body body)
+  "Run a body of code which uses (as in glUSeProgram) the program identified by NAME."
   `(let ((*active-shader-program* (program-by-name ,name)))
      (gl:use-program (id *active-shader-program*))
      ,@body

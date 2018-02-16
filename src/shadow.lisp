@@ -13,6 +13,7 @@
 (defvar *shader-info* (make-instance 'shader-info))
 
 (defun initialize-shaders ()
+  "Initialize the shaders."
   (setf *shader-info* (make-instance 'shader-info)))
 
 (defun find-gpu-function (func-spec)
@@ -59,3 +60,11 @@
 
 (setf (macro-function 'defstruct-gpu) (macro-function 'varjo:v-defstruct)
       (macro-function 'defun-gpu) (macro-function 'varjo:v-defun))
+
+(setf (documentation 'defstruct-gpu 'function)
+      "Define a GPU structure. This is an alias for VARI:V-DEFSTRUCT. For more information, see the
+      Varjo source.")
+
+(setf (documentation 'defun-gpu 'function)
+      "Define a GPU function. This is an alias for VARI:V-DEFUN. For more information, see the Varjo
+      source.")

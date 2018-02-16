@@ -20,6 +20,7 @@
     (:ssbo :shader-storage-buffer)))
 
 (defun create-buffer (type name binding-point)
+  "Create a buffer of the given TYPE and NAME, binding it to a binding point."
   (let ((target (buffer-type->target type))
         (bound-blocks (get-bound-blocks type binding-point)))
     (if bound-blocks
@@ -32,6 +33,7 @@
         (error "Cannot bind a buffer unless a block is bound to the same binding point."))))
 
 (defun delete-buffer (buffer-name)
+  "Delete the buffer having a name of BUFFER-NAME."
   (let ((buffer (buffer-by-name buffer-name)))
     (gl:delete-buffers (list (id buffer)))
     (remhash buffer-name (buffers *shader-info*))))
@@ -70,6 +72,17 @@
             (%gl:buffer-sub-data target %offset (* count %byte-stride) ptr)))))))
 
 (defun write-buffer-path (buffer-name path value)
+  "Write VALUE to the buffer with the name BUFFER-NAME, starting at the given PATH.
+
+PATH: A \"dot-separated\" keyword symbol, where each part denotes a member in the buffers block
+layout.
+
+Value: A value to write, such as a scalar or matrix depending on the type of the member PATH refers
+to. To write to an array, use a sequence of values.
+
+Note: Writing to arrays which contain other aggregates types (other arrays or structures) is not
+possible. This is a design decision to allow this library to have a simple \"path-based\" buffer
+writing interface."
   (with-slots (%id %target %layout) (buffer-by-name buffer-name)
     (let ((member (gethash path (members %layout))))
       (check-type value sequence)
