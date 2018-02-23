@@ -74,7 +74,7 @@
 (defun write-buffer-path (buffer-name path value)
   "Write VALUE to the buffer with the name BUFFER-NAME, starting at the given PATH.
 
-PATH: A \"dot-separated\" keyword symbol, where each part denotes a member in the buffers block
+PATH: A \"dot-separated\" keyword symbol, where each part denotes a member in the buffer's block
 layout.
 
 VALUE: A value to write, such as a scalar or matrix depending on the type of the member PATH refers

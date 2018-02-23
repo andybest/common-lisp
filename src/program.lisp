@@ -77,7 +77,8 @@ See MAKE-SHADER-PROGRAM"
 
 See MAKE-SHADER-PROGRAM"
   (dolist (program-name (alexandria:hash-table-keys (programs *shader-info*)))
-    (build-shader-program program-name)))
+    (build-shader-program program-name))
+  (programs *shader-info*))
 
 (defun %make-shader-program (name version primitive stage-specs)
   (let ((program (make-instance 'program))

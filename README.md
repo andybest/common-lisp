@@ -141,7 +141,7 @@ GPUs. We still have to compile the shader stages and link the final program obje
 
 At this point, a valid OpenGL context is needed to continue.
 
-To compile a program's stages and link them into a program, you can use the `BUILD-SHADER_PROGRAM`
+To compile a program's stages and link them into a program, you can use the `BUILD-SHADER-PROGRAM`
 function:
 
 ```lisp
