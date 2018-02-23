@@ -8,6 +8,7 @@
                     (#:m3 #:box.math.mat3)
                     (#:m4 #:box.math.mat4))
   (:inherit #:cl
+            #:box.math.vectors
             #:vari)
   (:import-from #:varjo
                 #:v-def-glsl-template-fun
@@ -17,7 +18,8 @@
                 #:v-vec4
                 #:v-mat4)
   (:import-from #:box.math.vectors
-                #:%swizzle/component-groups))
+                #:%swizzle/component-groups
+                #:%swizzle/char-position))
 
 (in-package :box.math.vari)
 
@@ -69,12 +71,18 @@
 
 ;;; swizzling
 
-(defmacro define-varjo-swizzle-macros ()
-  `(progn
-     ,@(loop :for masks :in (%swizzle/component-groups)
-             :for name = (alexandria:symbolicate "." masks)
-             :append `((export ',name)
-                       (v-defmacro ,name (vector)
-                         `(swizzle ,vector ,,(alexandria:make-keyword masks)))))))
+(defmacro define-vari-swizzle-macros ()
+  (flet ((map-swizzle (mask)
+           (alexandria:make-keyword
+            (map 'string
+                 (lambda (x)
+                   (elt "XYZW" (%swizzle/char-position mask (position x mask))))
+                 mask))))
+    `(progn
+       ,@(loop :for mask :in (%swizzle/component-groups)
+               :for op = (alexandria:symbolicate "." mask)
+               :collect `(export ',op)
+               :collect `(v-defmacro ,op (vector)
+                           `(swizzle ,vector ,,(map-swizzle mask)))))))
 
-(define-varjo-swizzle-macros)
+(define-vari-swizzle-macros)
