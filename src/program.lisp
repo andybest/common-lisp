@@ -97,7 +97,7 @@ See MAKE-SHADER-PROGRAM"
 VERSION: The default version shader stages use, and can be overridden on a per-function basis.
 
 PRIMITIVE: The drawing primitive to use for the vertex stage."
-  `(%make-shader-program ,name ,version ,primitive ',body))
+  `(%make-shader-program ',name ,version ,primitive ',body))
 
 (defmacro with-shader-program (name &body body)
   "Run a body of code which uses (as in glUseProgram) the program identified by NAME."
