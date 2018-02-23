@@ -1,7 +1,7 @@
 (in-package :box.math.vectors)
 
 (eval-when (:compile-toplevel :load-toplevel)
-  (defun %swizzle/permutations (n items)
+  (defun %swizzle/combinations (n items)
     (if (= n 1)
         (mapcar #'list items)
         (mapcan
@@ -9,7 +9,7 @@
            (mapcar
             (lambda (y)
               (cons x y))
-            (%swizzle/permutations (1- n) items)))
+            (%swizzle/combinations (1- n) items)))
          items)))
 
   (defun %swizzle/component-groups ()
@@ -18,7 +18,7 @@
           (loop :with size = 4
                 :with set = (subseq masks 0 size)
                 :for i from 1 :to size
-                :for items = (%swizzle/permutations i set)
+                :for items = (%swizzle/combinations i set)
                 :append (mapcar (lambda (x) (format nil "~{~a~}" x)) items))))
 
   (defun %swizzle/char-position (components index)
