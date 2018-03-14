@@ -20,5 +20,11 @@
                   ((or symbol string) (format s "~a~a" separator part))
                   (integer (format s "[~a]" part)))))))
 
+(defgeneric get-qualifiers (type)
+  (:method ((type varjo:v-type))
+    (varjo.internals:qualifiers type))
+  (:method ((type varjo.internals::shader-variable))
+    (varjo:qualifiers (varjo.internals:v-type-of type))))
+
 (defun has-qualifier-p (type qualifier)
-  (member qualifier (varjo:qualifiers type) :test #'varjo.internals:qualifier=))
+  (member qualifier (get-qualifiers type) :test #'varjo.internals:qualifier=))
