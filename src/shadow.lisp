@@ -1,5 +1,7 @@
 (in-package :shadow)
 
+(defvar *shader-info*)
+
 (defclass shader-info ()
   ((%programs :reader programs
               :initform (make-hash-table))
@@ -9,8 +11,6 @@
                            :initform (make-hash-table))
    (%buffers :reader buffers
              :initform (make-hash-table))))
-
-(defvar *shader-info* (make-instance 'shader-info))
 
 (defun initialize-shaders ()
   "Initialize the shaders."
