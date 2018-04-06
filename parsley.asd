@@ -4,7 +4,7 @@
   :maintainer "Michael Fiano <mail@michaelfiano.com>"
   :license "MIT"
   :homepage "https://www.michaelfiano.com/projects/parsley"
-  :source-control (:git "git@github.com:mfiano/parsley.git")
+  :source-control (:git "https://github.com/mfiano/parsley.git")
   :bug-tracker "https://github.com/mfiano/parsley/issues"
   :version "0.1.0"
   :encoding :utf-8
