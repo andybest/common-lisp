@@ -33,7 +33,7 @@ of a 2-dimensional transformation matrix."
 (defun mref (matrix row column)
   "A virtualized matrix component reader. Use this instead of AREF to prevent unintended behavior
 should ordering of a matrix ever change."
-  (aref matrix (+ row (cl:* column 2))))
+  (aref matrix (cl:+ row (cl:* column 2))))
 
 (declaim (inline (setf mref)))
 (declaim (ftype (function (single-float matrix (integer 0 3) (integer 0 3)) single-float)
@@ -153,15 +153,49 @@ matrix, OUT."
 allocated matrix."
   (clamp! (zero) matrix :min min :max max))
 
+(declaim (inline +!))
+(declaim (ftype (function (matrix matrix matrix) matrix) +!))
+(defun +! (out matrix1 matrix2)
+  "Calculate the sum of MATRIX1 and MATRIX2, storing the result in the existing matrix, OUT."
+  (with-components ((o out) (a matrix1) (b matrix2))
+    (psetf o00 (cl:+ a00 b00)
+           o10 (cl:+ a10 b10)
+           o01 (cl:+ a01 b01)
+           o11 (cl:+ a11 b11)))
+  out)
+
+(declaim (inline +))
+(declaim (ftype (function (matrix matrix) matrix) +))
+(defun + (matrix1 matrix2)
+  "Calculate the sum of MATRIX1 and MATRIX2, storing the result in a freshly allocated matrix."
+  (+! (zero) matrix1 matrix2))
+
+(declaim (inline -!))
+(declaim (ftype (function (matrix matrix matrix) matrix) -!))
+(defun -! (out matrix1 matrix2)
+  "Calculate the difference of MATRIX2 from MATRIX1, storing the result in the existing matrix, OUT."
+  (with-components ((o out) (a matrix1) (b matrix2))
+    (psetf o00 (cl:- a00 b00)
+           o10 (cl:- a10 b10)
+           o01 (cl:- a01 b01)
+           o11 (cl:- a11 b11)))
+  out)
+
+(declaim (inline -))
+(declaim (ftype (function (matrix matrix) matrix) -))
+(defun - (matrix1 matrix2)
+  "Calculate the difference of MATRIX2 from MATRIX1, storing the result in a freshly allocated matrix."
+  (-! (zero) matrix1 matrix2))
+
 (declaim (inline *!))
 (declaim (ftype (function (matrix matrix matrix) matrix) *!))
 (defun *! (out matrix1 matrix2)
   "Calculate the product of MATRIX1 and MATRIX2, storing the result in the existing matrix, OUT."
   (with-components ((o out) (a matrix1) (b matrix2))
-    (psetf o00 (+ (cl:* a00 b00) (cl:* a01 b10))
-           o10 (+ (cl:* a10 b00) (cl:* a11 b10))
-           o01 (+ (cl:* a00 b01) (cl:* a01 b11))
-           o11 (+ (cl:* a10 b01) (cl:* a11 b11))))
+    (psetf o00 (cl:+ (cl:* a00 b00) (cl:* a01 b10))
+           o10 (cl:+ (cl:* a10 b00) (cl:* a11 b10))
+           o01 (cl:+ (cl:* a00 b01) (cl:* a01 b11))
+           o11 (cl:+ (cl:* a10 b01) (cl:* a11 b11))))
   out)
 
 (declaim (inline *))
@@ -217,7 +251,7 @@ This allocates a fresh matrix, leaving the original un-modified."
       (let* ((angle (float angle 1.0f0))
              (s (sin angle))
              (c (cos angle)))
-        (psetf m00 c m01 (- s)
+        (psetf m00 c m01 (cl:- s)
                m10 s m11 c)
         (*! out out m))))
   out)
@@ -278,8 +312,8 @@ leaving the origin un-modified."
   "Calculate the product of MATRIX and VEC, storing the result in the existing vector, OUT."
   (v2:with-components ((v vec) (o out))
     (with-components ((m matrix))
-      (psetf ox (+ (cl:* m00 vx) (cl:* m01 vy))
-             oy (+ (cl:* m10 vx) (cl:* m11 vy)))))
+      (psetf ox (cl:+ (cl:* m00 vx) (cl:* m01 vy))
+             oy (cl:+ (cl:* m10 vx) (cl:* m11 vy)))))
   out)
 
 (declaim (inline *v2))
@@ -313,7 +347,7 @@ columns) being perpendicular to each other, and of unit length."
 (defun trace (matrix)
   "Calculates the sum of the components along the main diagonal of MATRIX."
   (with-components ((m matrix))
-    (+ m00 m11)))
+    (cl:+ m00 m11)))
 
 (declaim (inline diagonalp))
 (declaim (ftype (function (matrix) boolean) diagonalp))

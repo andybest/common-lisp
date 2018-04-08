@@ -5,6 +5,8 @@
   (:use #:cl
         #:box.math.base)
   (:shadow #:=
+           #:+
+           #:-
            #:*
            #:trace)
   (:export #:matrix
@@ -23,6 +25,10 @@
            #:copy
            #:clamp!
            #:clamp
+           #:+!
+           #:+
+           #:-!
+           #:-
            #:*!
            #:*
            #:rotation-axis-to-vec2!
@@ -55,6 +61,8 @@
   (:use #:cl
         #:box.math.base)
   (:shadow #:=
+           #:+
+           #:-
            #:*
            #:trace)
   (:export #:matrix
@@ -73,6 +81,10 @@
            #:copy
            #:clamp!
            #:clamp
+           #:+!
+           #:+
+           #:-!
+           #:-
            #:*!
            #:*
            #:translation-to-vec2!
@@ -113,6 +125,8 @@
   (:use #:cl
         #:box.math.base)
   (:shadow #:=
+           #:+
+           #:-
            #:*
            #:trace)
   (:export #:matrix
@@ -131,6 +145,10 @@
            #:copy
            #:clamp!
            #:clamp
+           #:+!
+           #:+
+           #:-!
+           #:-
            #:*!
            #:*
            #:translation-to-vec3!

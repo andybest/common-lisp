@@ -2,7 +2,7 @@
 
 (setf *default-test-function* #'equalp)
 
-(plan 48)
+(plan 58)
 
 (diag "identity")
 (let ((m (m2:id))
@@ -26,6 +26,28 @@
   (is o r)
   (is (m2:clamp m :min -1.0 :max 1.0) r)
   (is (m2:clamp m) m))
+
+(diag "addition")
+(let ((m1 (m2:make 0.50253403 0.64249194 0.51019014 0.64168155))
+      (m2 (m2:make 0.11914015 0.88014805 0.39815342 0.82533318))
+      (o (m2:zero))
+      (r (m2:make 0.6216742 1.52264 0.90834355 1.4670148)))
+  (is (m2:+! o m1 m2) r)
+  (is o r)
+  (is (m2:+ m1 m2) r)
+  (is (m2:+ m1 m2:+zero+) m1)
+  (is (m2:+ m2 m2:+zero+) m2))
+
+(diag "subtraction")
+(let ((m1 (m2:make 0.50253403 0.64249194 0.51019014 0.64168155))
+      (m2 (m2:make 0.11914015 0.88014805 0.39815342 0.82533318))
+      (o (m2:zero))
+      (r (m2:make 0.38339388 -0.23765612 0.112036705 -0.18365163)))
+  (is (m2:-! o m1 m2) r)
+  (is o r)
+  (is (m2:- m1 m2) r)
+  (is (m2:- m1 m2:+zero+) m1)
+  (is (m2:- m2 m2:+zero+) m2))
 
 (diag "multiplication")
 (let ((m (m2:make 1 5 2 6))
