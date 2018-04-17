@@ -14,6 +14,7 @@
            #:delete-buffer
            #:write-buffer-path
            #:with-shader-program
+           #:uniforms
            #:uniform-int
            #:uniform-int-array
            #:uniform-float
