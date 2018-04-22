@@ -19,18 +19,36 @@
     (:ubo :uniform-buffer)
     (:ssbo :shader-storage-buffer)))
 
-(defun create-buffer (type name binding-point)
-  "Create a buffer of the given TYPE and NAME, binding it to a binding point."
-  (let ((target (buffer-type->target type))
-        (bound-blocks (get-bound-blocks type binding-point)))
-    (if bound-blocks
-        (let ((buffer (%make-buffer target (layout (first bound-blocks)))))
-          (gl:bind-buffer target (id buffer))
-          (%gl:buffer-data target (size (layout buffer)) (cffi:null-pointer) :static-draw)
-          (%gl:bind-buffer-base target binding-point (id buffer))
-          (%gl:bind-buffer target 0)
-          (setf (gethash name (buffers *shader-info*)) buffer))
-        (error "Cannot bind a buffer unless a block is bound to the same binding point."))))
+(defun buffer-type->block-type (type)
+  (ecase type
+    (:ubo :uniform)
+    (:ssbo :buffer)))
+
+(defun find-buffer-block (buffer-type program-name block-id)
+  (let ((block-type (buffer-type->block-type buffer-type)))
+    (find-block program-name block-type block-id)))
+
+(defun find-buffer (buffer-name)
+  (gethash buffer-name (buffers *shader-info*)))
+
+(defun create-buffer (type name program-name block-id)
+  "Create a buffer of the given TYPE and NAME, using the block BLOCK-ID of PROGRAM-NAME."
+  (alexandria:if-let ((block (find-buffer-block type program-name block-id)))
+    (let* ((target (buffer-type->target type))
+           (buffer (%make-buffer target (layout block))))
+      (with-slots (%id %layout) buffer
+        (%gl:bind-buffer target %id)
+        (%gl:buffer-data target (size %layout) (cffi:null-pointer) :static-draw)
+        (setf (gethash name (buffers *shader-info*)) buffer)))
+    (error "Cannot find the block ~s when attempting to create a buffer." block-id)))
+
+(defun bind-buffer (buffer-name binding-point)
+  "Bind buffer with name BUFFER-NAME to BINDING-POINT."
+  (alexandria:if-let ((buffer (find-buffer buffer-name)))
+    (with-slots (%target %id) buffer
+      (%gl:bind-buffer-base %target binding-point %id)
+      (%gl:bind-buffer %target 0))
+    (error "Cannot find buffer ~s." buffer-name)))
 
 (defun delete-buffer (buffer-name)
   "Delete the buffer having a name of BUFFER-NAME."

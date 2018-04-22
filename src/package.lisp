@@ -11,6 +11,7 @@
            #:bind-uniform-block
            #:bind-shader-storage-block
            #:create-buffer
+           #:bind-buffer
            #:delete-buffer
            #:write-buffer-path
            #:with-shader-program

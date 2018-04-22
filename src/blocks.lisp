@@ -14,14 +14,10 @@
       (when (has-qualifier-p struct :ssbo)
         (values :buffer :ssbo))))
 
-(defgeneric get-bound-blocks (block-or-buffer-type binding-point)
-  (:method ((block-or-buffer-type (eql :uniform)) binding-point)
+(defgeneric get-bound-blocks (block-type binding-point)
+  (:method ((block-type (eql :uniform)) binding-point)
     (gethash binding-point (uniform-block-bindings *shader-info*)))
-  (:method ((block-or-buffer-type (eql :ubo)) binding-point)
-    (gethash binding-point (uniform-block-bindings *shader-info*)))
-  (:method ((block-or-buffer-type (eql :buffer)) binding-point)
-    (gethash binding-point (buffer-block-bindings *shader-info*)))
-  (:method ((block-or-buffer-type (eql :ssbo)) binding-point)
+  (:method ((block-type (eql :buffer)) binding-point)
     (gethash binding-point (buffer-block-bindings *shader-info*))))
 
 (defun make-block (program layout)
