@@ -22,7 +22,7 @@
   type
   (location -1))
 
-(defun program-by-name (program-name)
+(defun find-program (program-name)
   (gethash program-name (programs *shader-info*)))
 
 (defun compile-stages (program)
@@ -64,10 +64,10 @@
 defined shader program using MAKE-SHADER-PROGRAM.
 
 See MAKE-SHADER-PROGRAM"
-  (let* ((program (program-by-name name))
+  (let* ((program (find-program name))
          (shaders (compile-stages program))
          (id (link-program shaders)))
-    (setf (slot-value program'%id) id)
+    (setf (slot-value program '%id) id)
     (store-attribute-locations program)
     (store-uniform-locations program)
     id))
@@ -101,7 +101,7 @@ PRIMITIVE: The drawing primitive to use for the vertex stage."
 
 (defmacro with-shader-program (name &body body)
   "Run a body of code which uses (as in glUseProgram) the program identified by NAME."
-  `(let ((*active-shader-program* (program-by-name ,name)))
+  `(let ((*active-shader-program* (find-program ,name)))
      (gl:use-program (id *active-shader-program*))
      ,@body
      (gl:use-program 0)))

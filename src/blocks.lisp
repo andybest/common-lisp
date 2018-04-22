@@ -39,6 +39,10 @@
 (defun store-blocks (program stage)
   (map nil (lambda (layout) (make-block program layout)) (collect-layouts stage)))
 
+(defun find-block (program-name block-type block-id)
+  (alexandria:when-let ((program (find-program program-name)))
+    (gethash (cons block-type block-id) (blocks program))))
+
 (defun block-binding-valid-p (block binding-point)
   (every
    (lambda (x)
@@ -53,18 +57,18 @@
 
 (defun bind-uniform-block (program-name block-id binding-point)
   "Bind a uniform block to a binding point."
-  (with-accessors ((id id) (blocks blocks)) (program-by-name program-name)
-    (let* ((block (gethash (cons :uniform block-id) blocks))
-           (index (%gl:get-uniform-block-index id (name block))))
-      (ensure-valid-block-binding block binding-point)
-      (pushnew block (gethash binding-point (uniform-block-bindings *shader-info*)))
-      (%gl:uniform-block-binding id index binding-point))))
+  (let* ((program-id (id (find-program program-name)))
+         (block (find-block program-name :uniform block-id))
+         (index (%gl:get-uniform-block-index program-id (name block))))
+    (ensure-valid-block-binding block binding-point)
+    (pushnew block (gethash binding-point (uniform-block-bindings *shader-info*)))
+    (%gl:uniform-block-binding program-id index binding-point)))
 
 (defun bind-shader-storage-block (program-name block-id binding-point)
   "Bind a shader storage block to a binding point."
-  (with-accessors ((id id) (blocks blocks)) (program-by-name program-name)
-    (let* ((block (gethash (cons :buffer block-id) blocks))
-           (index (gl:get-program-resource-index id :shader-storage-block (name block))))
-      (ensure-valid-block-binding block binding-point)
-      (pushnew block (gethash binding-point (buffer-block-bindings *shader-info*)))
-      (%gl:shader-storage-block-binding id index binding-point))))
+  (let* ((program-id (id (find-program program-name)))
+         (block (find-block program-name :buffer block-id))
+         (index (gl:get-program-resource-index program-id :shader-storage-block (name block))))
+    (ensure-valid-block-binding block binding-point)
+    (pushnew block (gethash binding-point (buffer-block-bindings *shader-info*)))
+    (%gl:shader-storage-block-binding program-id index binding-point)))
