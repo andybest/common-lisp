@@ -1,22 +1,26 @@
-(in-package :box.math.vec2)
+(in-package :box.math.vec4i)
 
 ;;; Structure
 
-(deftype vec () '(simple-array single-float (2)))
+(deftype vec () '(simple-array int32 (4)))
 
-(defstruct (vec (:type (vector single-float))
-                (:constructor %make (x y))
+(defstruct (vec (:type (vector int32))
+                (:constructor make (x y z w))
                 (:conc-name nil)
                 (:copier nil))
-  "A Euclidean vector of 2 single-float components."
-  (x 0.0f0 :type single-float)
-  (y 0.0f0 :type single-float))
+  "A Euclidean vector of 4 32-bit integer components."
+  (x 0 :type int32)
+  (y 0 :type int32)
+  (z 0 :type int32)
+  (w 0 :type int32))
 
 (defmacro with-components (((prefix vec) &rest rest) &body body)
   "A convenience macro for concisely accessing the components of vectors."
   `(with-accessors ((,prefix identity)
-                    (,(box.math.base::%make-accessor-symbol prefix 'x) x)
-                    (,(box.math.base::%make-accessor-symbol prefix 'y) y))
+                    (,(box.math.common::%make-accessor-symbol prefix 'x) x)
+                    (,(box.math.common::%make-accessor-symbol prefix 'y) y)
+                    (,(box.math.common::%make-accessor-symbol prefix 'z) z)
+                    (,(box.math.common::%make-accessor-symbol prefix 'w) w))
        ,vec
      ,(if rest
           `(with-components ,rest ,@body)
@@ -24,32 +28,29 @@
 
 ;;; Constants
 
-(alexandria:define-constant +zero+
-    (make-array 2 :element-type 'single-float :initial-contents '(0.0f0 0.0f0))
+(au:define-constant +zero+ (make-array 4 :element-type 'int32 :initial-contents '(0 0 0 0))
   :test #'equalp
   :documentation "A vector with each component as zero.")
 
-;;; Operations
+;;; Swizzling
 
-(declaim (inline make))
-(declaim (ftype (function (real real) vec) make))
-(defun make (x y)
-  "Create a new vector."
-  (%make (float x 1.0f0) (float y 1.0f0)))
+(box.math.common::%generate-swizzle-functions 4)
+
+;;; Operations
 
 (declaim (inline zero!))
 (declaim (ftype (function (vec) vec) zero!))
 (defun zero! (vec)
   "Set each component of VEC to zero."
   (with-components ((v vec))
-    (psetf vx 0.0f0 vy 0.0f0))
+    (psetf vx 0 vy 0 vz 0 vw 0))
   vec)
 
 (declaim (inline zero))
 (declaim (ftype (function () vec) zero))
 (defun zero ()
   "Create a new vector with all components initialized to zero."
-  (make 0 0))
+  (make 0 0 0 0))
 
 (declaim (inline zerop))
 (declaim (ftype (function (vec) boolean) zerop))
@@ -57,14 +58,16 @@
   "Check if each component of VEC is zero."
   (with-components ((v vec))
     (and (cl:zerop vx)
-         (cl:zerop vy))))
+         (cl:zerop vy)
+         (cl:zerop vz)
+         (cl:zerop vw))))
 
 (declaim (inline copy!))
 (declaim (ftype (function (vec vec) vec) copy!))
 (defun copy! (out vec)
   "Copy each component of VEC to the existing vector, OUT."
   (with-components ((o out) (v vec))
-    (psetf ox vx oy vy))
+    (psetf ox vx oy vy oz vz ow vw))
   out)
 
 (declaim (inline copy))
@@ -74,47 +77,30 @@
   (copy! (zero) vec))
 
 (declaim (inline clamp!))
-(declaim (ftype (function (vec vec &key (:min single-float) (:max single-float)) vec) clamp!))
-(defun clamp! (out vec &key (min most-negative-single-float) (max most-positive-single-float))
+(declaim (ftype (function (vec vec &key (:min int32) (:max int32)) vec) clamp!))
+(defun clamp! (out vec &key (min (cl:- (expt 2 31))) (max (1- (expt 2 31))))
   "Clamp each component of VEC within the range of [MIN, MAX], storing the result in the existing
 vector, OUT."
   (with-components ((o out) (v vec))
-    (psetf ox (alexandria:clamp vx min max)
-           oy (alexandria:clamp vy min max)))
+    (psetf ox (au:clamp vx min max)
+           oy (au:clamp vy min max)
+           oz (au:clamp vz min max)
+           ow (au:clamp vw min max)))
   out)
 
 (declaim (inline clamp))
-(declaim (ftype (function (vec &key (:min single-float) (:max single-float)) vec) clamp))
-(defun clamp (vec &key (min most-negative-single-float) (max most-positive-single-float))
+(declaim (ftype (function (vec &key (:min int32) (:max int32)) vec) clamp))
+(defun clamp (vec &key (min (cl:- (expt 2 31))) (max (1- (expt 2 31))))
   "Clamp each component of VEC within the range of [MIN, MAX], storing the result in a freshly
 allocated vector."
   (clamp! (zero) vec :min min :max max))
-
-(declaim (inline stabilize!))
-(declaim (ftype (function (vec vec &key (:tolerance single-float)) vec) stabilize!))
-(defun stabilize! (out vec &key (tolerance +epsilon+))
-  "Adjust each component of VEC to zero if it's below TOLERANCE, storing the result in the existing
-vector, OUT."
-  (with-components ((o out) (v vec))
-    (macrolet ((stabilize (place)
-                 `(if (cl:< (cl:abs ,place) tolerance) 0.0f0 ,place)))
-      (psetf ox (stabilize vx)
-             oy (stabilize vy))))
-  out)
-
-(declaim (inline stabilize))
-(declaim (ftype (function (vec &key (:tolerance single-float)) vec) stabilize))
-(defun stabilize (vec &key (tolerance +epsilon+))
-  "Adjust each component of VEC to zero if it's below TOLERANCE, storing the result in a freshly
-allocated vector."
-  (stabilize! (zero) vec :tolerance tolerance))
 
 (declaim (inline to-list))
 (declaim (ftype (function (vec) list) to-list))
 (defun to-list (vec)
   "Convert VEC to a list of its components."
   (with-components ((v vec))
-    (list vx vy)))
+    (list vx vy vz vw)))
 
 (declaim (inline from-list))
 (declaim (ftype (function (list) vec) from-list))
@@ -128,16 +114,9 @@ allocated vector."
   "Check if all components of VEC1 are numerically equal to the components of VEC2."
   (with-components ((v1 vec1) (v2 vec2))
     (and (cl:= v1x v2x)
-         (cl:= v1y v2y))))
-
-(declaim (inline ~))
-(declaim (ftype (function (vec vec &key (:tolerance single-float)) boolean) ~))
-(defun ~ (vec1 vec2 &key (tolerance +epsilon+))
-  "Check if all components of VEC1 are approximately equal to the components of VEC2, according to
-TOLERANCE."
-  (with-components ((v1 vec1) (v2 vec2))
-    (and (box.math.base::%~ v1x v2x tolerance)
-         (box.math.base::%~ v1y v2y tolerance))))
+         (cl:= v1y v2y)
+         (cl:= v1z v2z)
+         (cl:= v1w v2w))))
 
 (declaim (inline +!))
 (declaim (ftype (function (vec vec vec) vec) +!))
@@ -145,7 +124,9 @@ TOLERANCE."
   "Calculate the sum of VEC1 and VEC2, storing the result in the existing vector, OUT."
   (with-components ((o out) (v1 vec1) (v2 vec2))
     (psetf ox (cl:+ v1x v2x)
-           oy (cl:+ v1y v2y)))
+           oy (cl:+ v1y v2y)
+           oz (cl:+ v1z v2z)
+           ow (cl:+ v1w v2w)))
   out)
 
 (declaim (inline +))
@@ -160,7 +141,9 @@ TOLERANCE."
   "Calculate the difference of VEC2 from VEC1, storing the result in the existing vector, OUT."
   (with-components ((o out) (v1 vec1) (v2 vec2))
     (psetf ox (cl:- v1x v2x)
-           oy (cl:- v1y v2y)))
+           oy (cl:- v1y v2y)
+           oz (cl:- v1z v2z)
+           ow (cl:- v1w v2w)))
   out)
 
 (declaim (inline -))
@@ -176,7 +159,9 @@ TOLERANCE."
 existing vector, OUT."
   (with-components ((o out) (v1 vec1) (v2 vec2))
     (psetf ox (cl:* v1x v2x)
-           oy (cl:* v1y v2y)))
+           oy (cl:* v1y v2y)
+           oz (cl:* v1z v2z)
+           ow (cl:* v1w v2w)))
   out)
 
 (declaim (inline *))
@@ -192,8 +177,10 @@ allocated vector."
   "Calculate the Hadamard (component-wise) quotient of VEC1 by VEC2, storing the result in the
 existing vector, OUT."
   (with-components ((o out) (v1 vec1) (v2 vec2))
-    (psetf ox (if (cl:zerop v2x) 0.0f0 (cl:/ v1x v2x))
-           oy (if (cl:zerop v2y) 0.0f0 (cl:/ v1y v2y))))
+    (psetf ox (if (cl:zerop v2x) 0 (round v1x v2x))
+           oy (if (cl:zerop v2y) 0 (round v1y v2y))
+           oz (if (cl:zerop v2z) 0 (round v1z v2z))
+           ow (if (cl:zerop v2w) 0 (round v1w v2w))))
   out)
 
 (declaim (inline /))
@@ -204,29 +191,31 @@ allocated vector."
   (/! (zero) vec1 vec2))
 
 (declaim (inline scale!))
-(declaim (ftype (function (vec vec single-float) vec) scale!))
+(declaim (ftype (function (vec vec real) vec) scale!))
 (defun scale! (out vec scalar)
   "Scale VEC by SCALAR, storing the result in the existing vector, OUT."
   (with-components ((o out) (v vec))
-    (psetf ox (cl:* vx scalar)
-           oy (cl:* vy scalar)))
+    (psetf ox (round (cl:* vx scalar))
+           oy (round (cl:* vy scalar))
+           oz (round (cl:* vz scalar))
+           ow (round (cl:* vw scalar))))
   out)
 
 (declaim (inline scale))
-(declaim (ftype (function (vec single-float) vec) scale))
+(declaim (ftype (function (vec real) vec) scale))
 (defun scale (vec scalar)
   "Scale VEC by SCALAR, storing the result in a freshly allocated vector."
   (scale! (zero) vec scalar))
 
 (declaim (inline dot))
-(declaim (ftype (function (vec vec) single-float) dot))
+(declaim (ftype (function (vec vec) (signed-byte 64)) dot))
 (defun dot (vec1 vec2)
   "Calculate the dot product of VEC1 and VEC2. Returns a scalar."
   (with-components ((v1 vec1) (v2 vec2))
-    (cl:+ (cl:* v1x v2x) (cl:* v1y v2y))))
+    (cl:+ (cl:* v1x v2x) (cl:* v1y v2y) (cl:* v1z v2z) (cl:* v1w v2w))))
 
 (declaim (inline magnitude-squared))
-(declaim (ftype (function (vec) single-float) magnitude-squared))
+(declaim (ftype (function (vec) (signed-byte 64)) magnitude-squared))
 (defun magnitude-squared (vec)
   "Calculate the magnitude (also known as length or Euclidean norm) of VEC. This results in a
 squared value, which is cheaper to compute. It is useful when you want to compare relative lengths,
@@ -244,38 +233,6 @@ See MAGNITUDE-SQUARED if you only need to compare lengths, as it is cheaper to c
 square root call of this function."
   (sqrt (magnitude-squared vec)))
 
-(declaim (inline normalize!))
-(declaim (ftype (function (vec vec) vec) normalize!))
-(defun normalize! (out vec)
-  "Convert VEC to be of unit length, storing the result in the existing vector, OUT."
-  (let ((magnitude (magnitude vec)))
-    (unless (cl:zerop magnitude)
-      (scale! out vec (cl:/ magnitude))))
-  out)
-
-(declaim (inline normalize))
-(declaim (ftype (function (vec) vec) normalize))
-(defun normalize (vec)
-  "Convert VEC to be of unit length, storing the result in a freshly allocated vector."
-  (normalize! (zero) vec))
-
-(declaim (inline round!))
-(declaim (ftype (function (vec vec) vec) round!))
-(defun round! (out vec)
-  "Round each component of VEC to the nearest integer, storing the result in the existing vector,
-OUT."
-  (with-components ((o out) (v vec))
-    (psetf ox (fround vx)
-           oy (fround vy)))
-  out)
-
-(declaim (inline round))
-(declaim (ftype (function (vec) vec) round))
-(defun round (vec)
-  "Round each component of VEC to the nearest integer, storing the result in a freshly allocated
-vector."
-  (round! (zero) vec))
-
 (declaim (inline abs!))
 (declaim (ftype (function (vec vec) vec) abs!))
 (defun abs! (out vec)
@@ -283,7 +240,9 @@ vector."
 OUT."
   (with-components ((o out) (v vec))
     (psetf ox (cl:abs vx)
-           oy (cl:abs vy)))
+           oy (cl:abs vy)
+           oz (cl:abs vz)
+           ow (cl:abs vw)))
   out)
 
 (declaim (inline abs))
@@ -313,20 +272,16 @@ vector."
         (m*m (cl:* (magnitude vec1) (magnitude vec2))))
     (if (cl:zerop m*m) 0.0f0 (acos (cl:/ dot m*m)))))
 
-(declaim (inline direction=))
-(declaim (ftype (function (vec vec) boolean) direction=))
-(defun direction= (vec1 vec2)
-  "Check if the directions of VEC1 and VEC2 are approximately equal."
-  (cl:>= (dot (normalize vec1) (normalize vec2)) (cl:- 1 +epsilon+)))
-
 (declaim (inline lerp!))
 (declaim (ftype (function (vec vec vec single-float) vec) lerp!))
 (defun lerp! (out vec1 vec2 factor)
   "Linearly interpolate between VEC1 and VEC2 by FACTOR, storing the result in the existing vector,
 OUT."
   (with-components ((o out) (v1 vec1) (v2 vec2))
-    (psetf ox (alexandria:lerp factor v1x v2x)
-           oy (alexandria:lerp factor v1y v2y)))
+    (psetf ox (round (au:lerp factor v1x v2x))
+           oy (round (au:lerp factor v1y v2y))
+           oz (round (au:lerp factor v1z v2z))
+           ow (round (au:lerp factor v1w v2w))))
   out)
 
 (declaim (inline lerp))
@@ -342,7 +297,9 @@ vector."
   "Check if each component of VEC1 is less than the same component of VEC2."
   (with-components ((v1 vec1) (v2 vec2))
     (and (cl:< v1x v2x)
-         (cl:< v1y v2y))))
+         (cl:< v1y v2y)
+         (cl:< v1z v2z)
+         (cl:< v1w v2w))))
 
 (declaim (inline <=))
 (declaim (ftype (function (vec vec) boolean) <=))
@@ -350,7 +307,9 @@ vector."
   "Check if each component of VEC1 is less than or equal to the same component of VEC2."
   (with-components ((v1 vec1) (v2 vec2))
     (and (cl:<= v1x v2x)
-         (cl:<= v1y v2y))))
+         (cl:<= v1y v2y)
+         (cl:<= v1z v2z)
+         (cl:<= v1w v2w))))
 
 (declaim (inline >))
 (declaim (ftype (function (vec vec) boolean) >))
@@ -358,7 +317,9 @@ vector."
   "Check if each component of VEC1 is greater than the same component of VEC2."
   (with-components ((v1 vec1) (v2 vec2))
     (and (cl:> v1x v2x)
-         (cl:> v1y v2y))))
+         (cl:> v1y v2y)
+         (cl:> v1z v2z)
+         (cl:> v1w v2w))))
 
 (declaim (inline >=))
 (declaim (ftype (function (vec vec) boolean) >=))
@@ -366,7 +327,9 @@ vector."
   "Check if each component of VEC1 is greater than or equal to the same component of VEC2."
   (with-components ((v1 vec1) (v2 vec2))
     (and (cl:>= v1x v2x)
-         (cl:>= v1y v2y))))
+         (cl:>= v1y v2y)
+         (cl:>= v1z v2z)
+         (cl:>= v1w v2w))))
 
 (declaim (inline min!))
 (declaim (ftype (function (vec vec vec) vec) min!))
@@ -374,13 +337,15 @@ vector."
   "Return the minimum of each component in VEC1 and VEC2, into the existing vector, OUT."
   (with-components ((o out) (v1 vec1) (v2 vec2))
     (psetf ox (cl:min v1x v2x)
-           oy (cl:min v1y v2y)))
+           oy (cl:min v1y v2y)
+           oz (cl:min v1z v2z)
+           ow (cl:min v1w v2w)))
   out)
 
 (declaim (inline min))
 (declaim (ftype (function (vec vec) vec) min))
 (defun min (vec1 vec2)
-  "Return the minimum of each component in VEC1 and VEC2, into a freshly allocated vector."
+  "Return the minimum each component in VEC1 and VEC2, into a freshly allocated vector."
   (min! (zero) vec1 vec2))
 
 (declaim (inline max!))
@@ -389,7 +354,9 @@ vector."
   "Return the maximum of each component in VEC1 and VEC2, into the existing vector, OUT."
   (with-components ((o out) (v1 vec1) (v2 vec2))
     (psetf ox (cl:max v1x v2x)
-           oy (cl:max v1y v2y)))
+           oy (cl:max v1y v2y)
+           oz (cl:max v1z v2z)
+           ow (cl:max v1w v2w)))
   out)
 
 (declaim (inline max))

@@ -1,4 +1,4 @@
-(in-package :box.math.vec3)
+(in-package :box.math.vec3f)
 
 ;;; Structure
 
@@ -16,9 +16,9 @@
 (defmacro with-components (((prefix vec) &rest rest) &body body)
   "A convenience macro for concisely accessing the components of vectors."
   `(with-accessors ((,prefix identity)
-                    (,(box.math.base::%make-accessor-symbol prefix 'x) x)
-                    (,(box.math.base::%make-accessor-symbol prefix 'y) y)
-                    (,(box.math.base::%make-accessor-symbol prefix 'z) z))
+                    (,(box.math.common::%make-accessor-symbol prefix 'x) x)
+                    (,(box.math.common::%make-accessor-symbol prefix 'y) y)
+                    (,(box.math.common::%make-accessor-symbol prefix 'z) z))
        ,vec
      ,(if rest
           `(with-components ,rest ,@body)
@@ -26,10 +26,14 @@
 
 ;;; Constants
 
-(alexandria:define-constant +zero+
+(au:define-constant +zero+
     (make-array 3 :element-type 'single-float :initial-contents '(0.0f0 0.0f0 0.0f0))
   :test #'equalp
   :documentation "A vector with each component as zero.")
+
+;;; Swizzling
+
+(box.math.common::%generate-swizzle-functions 3)
 
 ;;; Operations
 
@@ -82,9 +86,9 @@
   "Clamp each component of VEC within the range of [MIN, MAX], storing the result in the existing
 vector, OUT."
   (with-components ((o out) (v vec))
-    (psetf ox (alexandria:clamp vx min max)
-           oy (alexandria:clamp vy min max)
-           oz (alexandria:clamp vz min max)))
+    (psetf ox (au:clamp vx min max)
+           oy (au:clamp vy min max)
+           oz (au:clamp vz min max)))
   out)
 
 (declaim (inline clamp))
@@ -142,9 +146,9 @@ allocated vector."
   "Check if all components of VEC1 are approximately equal to the components of VEC2, according to
 TOLERANCE."
   (with-components ((v1 vec1) (v2 vec2))
-    (and (box.math.base::%~ v1x v2x tolerance)
-         (box.math.base::%~ v1y v2y tolerance)
-         (box.math.base::%~ v1z v2z tolerance))))
+    (and (box.math.common::%~ v1x v2x tolerance)
+         (box.math.common::%~ v1y v2y tolerance)
+         (box.math.common::%~ v1z v2z tolerance))))
 
 (declaim (inline +!))
 (declaim (ftype (function (vec vec vec) vec) +!))
@@ -367,9 +371,9 @@ vector."
   "Linearly interpolate between VEC1 and VEC2 by FACTOR, storing the result in the existing vector,
 OUT."
   (with-components ((o out) (v1 vec1) (v2 vec2))
-    (psetf ox (alexandria:lerp factor v1x v2x)
-           oy (alexandria:lerp factor v1y v2y)
-           oz (alexandria:lerp factor v1z v2z)))
+    (psetf ox (au:lerp factor v1x v2x)
+           oy (au:lerp factor v1y v2y)
+           oz (au:lerp factor v1z v2z)))
   out)
 
 (declaim (inline lerp))

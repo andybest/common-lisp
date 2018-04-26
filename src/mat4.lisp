@@ -33,22 +33,22 @@ transformation matrix."
 (defmacro with-components (((prefix matrix) &rest rest) &body body)
   "A convenience macro for concisely accessing the components of matrices."
   `(with-accessors ((,prefix identity)
-                    (,(box.math.base::%make-accessor-symbol prefix "00") m00)
-                    (,(box.math.base::%make-accessor-symbol prefix "01") m01)
-                    (,(box.math.base::%make-accessor-symbol prefix "02") m02)
-                    (,(box.math.base::%make-accessor-symbol prefix "03") m03)
-                    (,(box.math.base::%make-accessor-symbol prefix "10") m10)
-                    (,(box.math.base::%make-accessor-symbol prefix "11") m11)
-                    (,(box.math.base::%make-accessor-symbol prefix "12") m12)
-                    (,(box.math.base::%make-accessor-symbol prefix "13") m13)
-                    (,(box.math.base::%make-accessor-symbol prefix "20") m20)
-                    (,(box.math.base::%make-accessor-symbol prefix "21") m21)
-                    (,(box.math.base::%make-accessor-symbol prefix "22") m22)
-                    (,(box.math.base::%make-accessor-symbol prefix "23") m23)
-                    (,(box.math.base::%make-accessor-symbol prefix "30") m30)
-                    (,(box.math.base::%make-accessor-symbol prefix "31") m31)
-                    (,(box.math.base::%make-accessor-symbol prefix "32") m32)
-                    (,(box.math.base::%make-accessor-symbol prefix "33") m33))
+                    (,(box.math.common::%make-accessor-symbol prefix "00") m00)
+                    (,(box.math.common::%make-accessor-symbol prefix "01") m01)
+                    (,(box.math.common::%make-accessor-symbol prefix "02") m02)
+                    (,(box.math.common::%make-accessor-symbol prefix "03") m03)
+                    (,(box.math.common::%make-accessor-symbol prefix "10") m10)
+                    (,(box.math.common::%make-accessor-symbol prefix "11") m11)
+                    (,(box.math.common::%make-accessor-symbol prefix "12") m12)
+                    (,(box.math.common::%make-accessor-symbol prefix "13") m13)
+                    (,(box.math.common::%make-accessor-symbol prefix "20") m20)
+                    (,(box.math.common::%make-accessor-symbol prefix "21") m21)
+                    (,(box.math.common::%make-accessor-symbol prefix "22") m22)
+                    (,(box.math.common::%make-accessor-symbol prefix "23") m23)
+                    (,(box.math.common::%make-accessor-symbol prefix "30") m30)
+                    (,(box.math.common::%make-accessor-symbol prefix "31") m31)
+                    (,(box.math.common::%make-accessor-symbol prefix "32") m32)
+                    (,(box.math.common::%make-accessor-symbol prefix "33") m33))
        ,matrix
      ,(if rest
           `(with-components ,rest ,@body)
@@ -70,7 +70,7 @@ behavior should ordering of a matrix ever change."
 
 ;;; Constants
 
-(alexandria:define-constant +zero+
+(au:define-constant +zero+
     (make-array 16 :element-type 'single-float
                    :initial-contents '(0.0f0 0.0f0 0.0f0 0.0f0
                                        0.0f0 0.0f0 0.0f0 0.0f0
@@ -79,7 +79,7 @@ behavior should ordering of a matrix ever change."
   :test #'equalp
   :documentation "A matrix with each component as zero.")
 
-(alexandria:define-constant +id+
+(au:define-constant +id+
     (make-array 16 :element-type 'single-float
                    :initial-contents '(1.0f0 0.0f0 0.0f0 0.0f0
                                        0.0f0 1.0f0 0.0f0 0.0f0
@@ -158,22 +158,22 @@ behavior should ordering of a matrix ever change."
   "Check if all components of MATRIX1 are approximately equal to the components of MATRIX2,
 according to TOLERANCE."
   (with-components ((a matrix1) (b matrix2))
-    (and (box.math.base::%~ a00 b00 tolerance)
-         (box.math.base::%~ a01 b01 tolerance)
-         (box.math.base::%~ a02 b02 tolerance)
-         (box.math.base::%~ a03 b03 tolerance)
-         (box.math.base::%~ a10 b10 tolerance)
-         (box.math.base::%~ a11 b11 tolerance)
-         (box.math.base::%~ a12 b12 tolerance)
-         (box.math.base::%~ a13 b13 tolerance)
-         (box.math.base::%~ a20 b20 tolerance)
-         (box.math.base::%~ a21 b21 tolerance)
-         (box.math.base::%~ a22 b22 tolerance)
-         (box.math.base::%~ a23 b23 tolerance)
-         (box.math.base::%~ a30 b30 tolerance)
-         (box.math.base::%~ a31 b31 tolerance)
-         (box.math.base::%~ a32 b32 tolerance)
-         (box.math.base::%~ a33 b33 tolerance))))
+    (and (box.math.common::%~ a00 b00 tolerance)
+         (box.math.common::%~ a01 b01 tolerance)
+         (box.math.common::%~ a02 b02 tolerance)
+         (box.math.common::%~ a03 b03 tolerance)
+         (box.math.common::%~ a10 b10 tolerance)
+         (box.math.common::%~ a11 b11 tolerance)
+         (box.math.common::%~ a12 b12 tolerance)
+         (box.math.common::%~ a13 b13 tolerance)
+         (box.math.common::%~ a20 b20 tolerance)
+         (box.math.common::%~ a21 b21 tolerance)
+         (box.math.common::%~ a22 b22 tolerance)
+         (box.math.common::%~ a23 b23 tolerance)
+         (box.math.common::%~ a30 b30 tolerance)
+         (box.math.common::%~ a31 b31 tolerance)
+         (box.math.common::%~ a32 b32 tolerance)
+         (box.math.common::%~ a33 b33 tolerance))))
 
 (declaim (inline copy!))
 (declaim (ftype (function (matrix matrix) matrix) copy!))
@@ -198,22 +198,22 @@ according to TOLERANCE."
   "Clamp each component of MATRIX within the range of [MIN, MAX], storing the result in the existing
 matrix, OUT."
   (with-components ((o out) (m matrix))
-    (psetf o00 (alexandria:clamp m00 min max)
-           o01 (alexandria:clamp m01 min max)
-           o02 (alexandria:clamp m02 min max)
-           o03 (alexandria:clamp m03 min max)
-           o10 (alexandria:clamp m10 min max)
-           o11 (alexandria:clamp m11 min max)
-           o12 (alexandria:clamp m12 min max)
-           o13 (alexandria:clamp m13 min max)
-           o20 (alexandria:clamp m20 min max)
-           o21 (alexandria:clamp m21 min max)
-           o22 (alexandria:clamp m22 min max)
-           o23 (alexandria:clamp m23 min max)
-           o30 (alexandria:clamp m30 min max)
-           o31 (alexandria:clamp m31 min max)
-           o32 (alexandria:clamp m32 min max)
-           o33 (alexandria:clamp m33 min max)))
+    (psetf o00 (au:clamp m00 min max)
+           o01 (au:clamp m01 min max)
+           o02 (au:clamp m02 min max)
+           o03 (au:clamp m03 min max)
+           o10 (au:clamp m10 min max)
+           o11 (au:clamp m11 min max)
+           o12 (au:clamp m12 min max)
+           o13 (au:clamp m13 min max)
+           o20 (au:clamp m20 min max)
+           o21 (au:clamp m21 min max)
+           o22 (au:clamp m22 min max)
+           o23 (au:clamp m23 min max)
+           o30 (au:clamp m30 min max)
+           o31 (au:clamp m31 min max)
+           o32 (au:clamp m32 min max)
+           o33 (au:clamp m33 min max)))
   out)
 
 (declaim (inline clamp))

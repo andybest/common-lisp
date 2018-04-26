@@ -15,8 +15,8 @@
 (defmacro with-components (((prefix dquat) . rest) &body body)
   "A convenience macro for concisely accessing the components of dual quaternions."
   `(q:with-components ((,prefix ,dquat)
-                       (,(box.math.base::%make-accessor-symbol prefix '.r) (dq-real ,dquat))
-                       (,(box.math.base::%make-accessor-symbol prefix '.d) (dq-dual ,dquat)))
+                       (,(box.math.common::%make-accessor-symbol prefix '.r) (dq-real ,dquat))
+                       (,(box.math.common::%make-accessor-symbol prefix '.d) (dq-dual ,dquat)))
      ,dquat
      ,(if rest
           `(with-components ,rest ,@body)
@@ -400,7 +400,7 @@ matrix."
 (defun to-screw (dquat)
   "Convert DQUAT to a set of Screw parameters."
   (with-components ((d (normalize dquat)))
-    (let* ((angle (cl:* 2 (acos (alexandria:clamp d.rw -1 1))))
+    (let* ((angle (cl:* 2 (acos (au:clamp d.rw -1 1))))
            (dir (v3:normalize (q:to-vec3 d.r)))
            (tr (translation-to-vec3 dquat))
            (pitch (v3:dot tr dir))

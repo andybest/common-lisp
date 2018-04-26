@@ -6,31 +6,24 @@
   :homepage "https://github.com/mfiano/gamebox-math"
   :source-control (:git "git@github.com:mfiano/gamebox-math.git")
   :bug-tracker "https://github.com/mfiano/gamebox-math/issues"
-  :version "6.1.1"
+  :version "6.2.0"
   :encoding :utf-8
   :long-description #.(uiop:read-file-string (uiop/pathname:subpathname *load-pathname* "README.md"))
-  :depends-on (#:alexandria
+  :depends-on (#:golden-utils
                #:defpackage-plus)
   :pathname "src"
   :serial t
   :components
   ((:file "package")
    (:file "common")
-   (:module "vector"
-    :components
-    ((:file "package")
-     (:file "swizzle")
-     (:file "vector2")
-     (:file "vector3")
-     (:file "vector4")))
-   (:module "matrix"
-    :components
-    ((:file "package")
-     (:file "matrix2")
-     (:file "matrix3")
-     (:file "matrix4")))
-   (:module "quaternion"
-    :components
-    ((:file "package")
-     (:file "quaternion")
-     (:file "dual-quaternion")))))
+   (:file "vec2i")
+   (:file "vec2f")
+   (:file "vec3i")
+   (:file "vec3f")
+   (:file "vec4i")
+   (:file "vec4f")
+   (:file "mat2")
+   (:file "mat3")
+   (:file "mat4")
+   (:file "quat")
+   (:file "dquat")))

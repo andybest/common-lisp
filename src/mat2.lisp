@@ -19,10 +19,10 @@ of a 2-dimensional transformation matrix."
 (defmacro with-components (((prefix matrix) &rest rest) &body body)
   "A convenience macro for concisely accessing the components of matrices."
   `(with-accessors ((,prefix identity)
-                    (,(box.math.base::%make-accessor-symbol prefix "00") m00)
-                    (,(box.math.base::%make-accessor-symbol prefix "01") m01)
-                    (,(box.math.base::%make-accessor-symbol prefix "10") m10)
-                    (,(box.math.base::%make-accessor-symbol prefix "11") m11))
+                    (,(box.math.common::%make-accessor-symbol prefix "00") m00)
+                    (,(box.math.common::%make-accessor-symbol prefix "01") m01)
+                    (,(box.math.common::%make-accessor-symbol prefix "10") m10)
+                    (,(box.math.common::%make-accessor-symbol prefix "11") m11))
        ,matrix
      ,(if rest
           `(with-components ,rest ,@body)
@@ -45,14 +45,14 @@ behavior should ordering of a matrix ever change."
 
 ;;; Constants
 
-(alexandria:define-constant +zero+
+(au:define-constant +zero+
     (make-array 4 :element-type 'single-float
                   :initial-contents '(0.0f0 0.0f0
                                       0.0f0 0.0f0))
   :test #'equalp
   :documentation "A matrix with each component as zero.")
 
-(alexandria:define-constant +id+
+(au:define-constant +id+
     (make-array 4 :element-type 'single-float
                   :initial-contents '(1.0f0 0.0f0
                                       0.0f0 1.0f0))
@@ -114,10 +114,10 @@ behavior should ordering of a matrix ever change."
   "Check if all components of MATRIX1 are approximately equal to the components of MATRIX2,
 according to TOLERANCE."
   (with-components ((a matrix1) (b matrix2))
-    (and (box.math.base::%~ a00 b00 tolerance)
-         (box.math.base::%~ a01 b01 tolerance)
-         (box.math.base::%~ a10 b10 tolerance)
-         (box.math.base::%~ a11 b11 tolerance))))
+    (and (box.math.common::%~ a00 b00 tolerance)
+         (box.math.common::%~ a01 b01 tolerance)
+         (box.math.common::%~ a10 b10 tolerance)
+         (box.math.common::%~ a11 b11 tolerance))))
 
 (declaim (inline copy!))
 (declaim (ftype (function (matrix matrix) matrix) copy!))
@@ -140,10 +140,10 @@ according to TOLERANCE."
   "Clamp each component of MATRIX within the range of [MIN, MAX], storing the result in the existing
 matrix, OUT."
   (with-components ((o out) (m matrix))
-    (psetf o00 (alexandria:clamp m00 min max)
-           o01 (alexandria:clamp m01 min max)
-           o10 (alexandria:clamp m10 min max)
-           o11 (alexandria:clamp m11 min max)))
+    (psetf o00 (au:clamp m00 min max)
+           o01 (au:clamp m01 min max)
+           o10 (au:clamp m10 min max)
+           o11 (au:clamp m11 min max)))
   out)
 
 (declaim (inline clamp))

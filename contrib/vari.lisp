@@ -1,14 +1,13 @@
 (in-package :defpackage+-user-1)
 
 (defpackage+ #:box.math.vari
-  (:local-nicknames (#:v2 #:box.math.vec2)
-                    (#:v3 #:box.math.vec3)
-                    (#:v4 #:box.math.vec4)
+  (:local-nicknames (#:v2 #:box.math.vec2f)
+                    (#:v3 #:box.math.vec3f)
+                    (#:v4 #:box.math.vec4f)
                     (#:m2 #:box.math.mat2)
                     (#:m3 #:box.math.mat3)
                     (#:m4 #:box.math.mat4))
   (:inherit #:cl
-            #:box.math.vectors
             #:vari)
   (:import-from #:varjo
                 #:v-def-glsl-template-fun
@@ -17,7 +16,7 @@
                 #:v-vec3
                 #:v-vec4
                 #:v-mat4)
-  (:import-from #:box.math.vectors
+  (:import-from #:box.math.common
                 #:%swizzle/component-groups
                 #:%swizzle/char-position))
 
@@ -69,20 +68,19 @@
 (v-def-glsl-template-fun m4:make (a b c d) "mat4(~a,~a,~a,~a)" (v-vec4 v-vec4 v-vec4 v-vec4)
                          v-mat4 :pure t)
 
-;;; swizzling
+;;; Swizzling
 
 (defmacro define-vari-swizzle-macros ()
   (flet ((map-swizzle (mask)
-           (alexandria:make-keyword
+           (au:make-keyword
             (map 'string
                  (lambda (x)
                    (elt "XYZW" (%swizzle/char-position mask (position x mask))))
                  mask))))
     `(progn
-       ,@(loop :for mask :in (%swizzle/component-groups)
-               :for op = (alexandria:symbolicate "." mask)
+       ,@(loop :for mask :in (%swizzle/component-groups 4)
+               :for op = (au:symbolicate "." mask)
                :collect `(export ',op)
-               :collect `(v-defmacro ,op (vector)
-                           `(swizzle ,vector ,,(map-swizzle mask)))))))
+               :collect `(v-defmacro ,op (vector) `(swizzle ,vector ,,(map-swizzle mask)))))))
 
 (define-vari-swizzle-macros)

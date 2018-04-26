@@ -17,10 +17,10 @@
 (defmacro with-components (((prefix quat) &rest rest) &body body)
   "A convenience macro for concisely accessing the components of quaternions."
   `(with-accessors ((,prefix identity)
-                    (,(box.math.base::%make-accessor-symbol prefix 'w) w)
-                    (,(box.math.base::%make-accessor-symbol prefix 'x) x)
-                    (,(box.math.base::%make-accessor-symbol prefix 'y) y)
-                    (,(box.math.base::%make-accessor-symbol prefix 'z) z))
+                    (,(box.math.common::%make-accessor-symbol prefix 'w) w)
+                    (,(box.math.common::%make-accessor-symbol prefix 'x) x)
+                    (,(box.math.common::%make-accessor-symbol prefix 'y) y)
+                    (,(box.math.common::%make-accessor-symbol prefix 'z) z))
        ,quat
      ,(if rest
           `(with-components ,rest ,@body)
@@ -28,12 +28,12 @@
 
 ;;; Constants
 
-(alexandria:define-constant +zero+
+(au:define-constant +zero+
     (make-array 4 :element-type 'single-float :initial-contents '(0.0f0 0.0f0 0.0f0 0.0f0))
   :test #'equalp
   :documentation "A quaternion with each component as zero.")
 
-(alexandria:define-constant +id+
+(au:define-constant +id+
     (make-array 4 :element-type 'single-float :initial-contents '(1.0f0 0.0f0 0.0f0 0.0f0))
   :test #'equalp
   :documentation "An identity quaternion.")
@@ -88,10 +88,10 @@
   "Check if all components of QUAT1 are approximately equal to the components of QUAT2, according to
 TOLERANCE."
   (with-components ((q1 quat1) (q2 quat2))
-    (and (box.math.base::%~ q1w q2w tolerance)
-         (box.math.base::%~ q1x q2x tolerance)
-         (box.math.base::%~ q1y q2y tolerance)
-         (box.math.base::%~ q1z q2z tolerance))))
+    (and (box.math.common::%~ q1w q2w tolerance)
+         (box.math.common::%~ q1x q2x tolerance)
+         (box.math.common::%~ q1y q2y tolerance)
+         (box.math.common::%~ q1z q2z tolerance))))
 
 (declaim (inline copy!))
 (declaim (ftype (function (quat quat) quat) copy!))
@@ -456,11 +456,11 @@ the existing quaternion, OUT."
         (negate! q2 q2)
         (setf dot (cl:- dot)))
       (if (> (abs dot) 0.9995f0)
-          (psetf ow (alexandria:lerp factor q1w q2w)
-                 ox (alexandria:lerp factor q1x q2x)
-                 oy (alexandria:lerp factor q1y q2y)
-                 oz (alexandria:lerp factor q1z q2z))
-          (let* ((angle (acos (alexandria:clamp dot 0 1)))
+          (psetf ow (au:lerp factor q1w q2w)
+                 ox (au:lerp factor q1x q2x)
+                 oy (au:lerp factor q1y q2y)
+                 oz (au:lerp factor q1z q2z))
+          (let* ((angle (acos (au:clamp dot 0 1)))
                  (sin-angle (sin angle))
                  (scale1 (/ (sin (cl:* angle (cl:- 1 factor))) sin-angle))
                  (scale2 (/ (sin (cl:* factor angle)) sin-angle)))

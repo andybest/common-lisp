@@ -7,15 +7,18 @@
   :depends-on (#:gamebox-math
                #:defpackage-plus
                #:prove)
-  :pathname "t"
+  :pathname "tests"
   :serial t
   :components
   ( (:file "package")
-   (:test-file "vector2")
-   (:test-file "vector3")
-   (:test-file "vector4")
-   (:test-file "matrix2")
-   (:test-file "matrix3")
-   (:test-file "matrix4")
-   (:test-file "quaternion")
-   (:test-file "dual-quaternion")))
+    (:test-file "vec2i")
+    (:test-file "vec2f")
+    (:test-file "vec3i")
+    (:test-file "vec3f")
+    (:test-file "vec4i")
+    (:test-file "vec4f")
+    (:test-file "mat2")
+    (:test-file "mat3")
+    (:test-file "mat4")
+    (:test-file "quat")
+    (:test-file "dquat")))
