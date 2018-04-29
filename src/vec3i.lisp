@@ -270,7 +270,7 @@ vector."
   (cross! (zero) vec1 vec2))
 
 (declaim (inline box))
-(declaim (ftype (function (vec vec vec) single-float) box))
+(declaim (ftype (function (vec vec vec) (signed-byte 64)) box))
 (defun box (vec1 vec2 vec3)
   "Calculate the box product (scalar triple product) of VEC1, VEC2, and VEC3. Returns a scalar."
   (dot (cross vec1 vec2) vec3))
