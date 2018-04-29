@@ -50,6 +50,20 @@
   "Create a new vector with all components initialized to zero."
   (make 0 0 0))
 
+(declaim (inline one!))
+(declaim (ftype (function (vec) vec) one!))
+(defun one! (vec)
+  "Set each component of VEC to one."
+  (with-components ((v vec))
+    (psetf vx 1 vy 1 vz 1))
+  vec)
+
+(declaim (inline one))
+(declaim (ftype (function () vec) one))
+(defun one ()
+  "Create a new vector with all components initialized to one."
+  (make 1 1 1))
+
 (declaim (inline zerop))
 (declaim (ftype (function (vec) boolean) zerop))
 (defun zerop (vec)

@@ -29,6 +29,8 @@
            #:+zero+
            #:zero!
            #:zero
+           #:one!
+           #:one
            #:zerop
            #:copy!
            #:copy
@@ -92,6 +94,8 @@
            #:+zero+
            #:zero!
            #:zero
+           #:one!
+           #:one
            #:zerop
            #:copy!
            #:copy
@@ -162,6 +166,8 @@
            #:+zero+
            #:zero!
            #:zero
+           #:one!
+           #:one
            #:zerop
            #:copy!
            #:copy
@@ -229,6 +235,8 @@
            #:+zero+
            #:zero!
            #:zero
+           #:one!
+           #:one
            #:zerop
            #:copy!
            #:copy
@@ -304,6 +312,8 @@
            #:+zero+
            #:zero!
            #:zero
+           #:one!
+           #:one
            #:zerop
            #:copy!
            #:copy
@@ -369,6 +379,8 @@
            #:+zero+
            #:zero!
            #:zero
+           #:one!
+           #:one
            #:zerop
            #:copy!
            #:copy

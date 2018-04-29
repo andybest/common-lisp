@@ -2,7 +2,7 @@
 
 (setf *default-test-function* #'equalp)
 
-(plan 90)
+(plan 93)
 
 (diag "accessors")
 (let ((v (v2:make 1 2)))
@@ -42,6 +42,13 @@
   (is (v2:zero! v) v2:+zero+)
   (is v v2:+zero+)
   (is (v2:zero) v2:+zero+))
+
+(diag "one")
+(let ((v (v2i:make -81 92))
+      (r (v2i:make 1 1)))
+  (is (v2i:one! v) r)
+  (is v r)
+  (is (v2i:one) r))
 
 (diag "list conversion")
 (is (v2:to-list (v2:make 1 2)) '(1 2))
