@@ -41,7 +41,7 @@ should ordering of a matrix ever change."
 (defun (setf mref) (value matrix row column)
   "A virtualized matrix component writer. Use this instead of (SETF AREF) to prevent unintended
 behavior should ordering of a matrix ever change."
-  (setf (aref matrix (+ row (cl:* column 2))) value))
+  (setf (aref matrix (cl:+ row (cl:* column 2))) value))
 
 ;;; Constants
 
