@@ -5,6 +5,8 @@
 (defclass program ()
   ((%id :reader id
         :initform 0)
+   (%stages :reader stages
+            :initform nil)
    (%source :reader source
             :initform (make-hash-table))
    (%attributes :reader attributes
@@ -88,7 +90,8 @@ See MAKE-SHADER-PROGRAM"
       (store-attributes program stage)
       (store-uniforms program stage)
       (store-blocks program stage))
-    (setf (gethash name (programs *shader-info*)) program)
+    (setf (gethash name (programs *shader-info*)) program
+          (slot-value program '%stages) stages)
     program))
 
 (defmacro make-shader-program (name (&key (version :330) (primitive :triangles)) &body body)
