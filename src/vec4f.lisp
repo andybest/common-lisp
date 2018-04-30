@@ -64,7 +64,7 @@
 (defun one! (vec)
   "Set each component of VEC to one."
   (with-components ((v vec))
-    (psetf vx 1 vy 1 vz 1 vw 1))
+    (psetf vx 1.0 vy 1.0 vz 1.0 vw 1.0))
   vec)
 
 (declaim (inline one))
