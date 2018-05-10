@@ -7,6 +7,8 @@
               :initform (au:dict #'eq))
    (%block-bindings :reader block-bindings
                     :initform (au:dict #'eq :uniform (au:dict) :buffer (au:dict)))
+   (%function-table :reader function-table
+                    :initform (au:dict #'equal))
    (%buffers :reader buffers
              :initform (au:dict #'eq))))
 
@@ -19,6 +21,9 @@
     (find types (varjo.internals::get-external-function-by-name name nil)
           :key (lambda (x) (mapcar #'second (varjo.internals:in-args x)))
           :test #'equal)))
+
+(defun get-function-spec (function)
+  (cons (varjo:name function) (mapcar #'second (varjo.internals:in-args function))))
 
 (defun stage-type (stage)
   (varjo.internals::stage-obj-to-name stage))
@@ -57,10 +62,21 @@
           (subseq source (1+ (position #\newline source)) (- (length source) 2)))))
 
 (defmacro defstruct-gpu (name context &body slots)
-  "Define a GPU structure. For more information, see the Varjo source."
+  "Define a GPU structure."
   `(varjo:v-defstruct ,name ,context ,@slots))
 
 (defmacro defun-gpu (name args &body body)
-  "Define a GPU function. For more information, see the Varjo source."
-  `(progn
-     (varjo:v-defun ,name ,args ,@body)))
+  "Define a GPU function."
+  (au:with-unique-names (split-details fn used-fns)
+    (let ((split-args (varjo.utils:split-arguments args '(&uniform &context))))
+      (destructuring-bind (in-args uniforms context) split-args
+        `(let* ((,split-details (varjo:test-translate-function-split-details
+                                 ',name ',in-args ',uniforms ',context ',body))
+                (,fn (varjo:add-external-function ',name ',in-args ',uniforms ',body))
+                (,used-fns (varjo:used-external-functions (first ,split-details))))
+           (symbol-macrolet ((fn-deps (au:href (function-table *shader-info*)
+                                               (get-function-spec ,fn))))
+             (setf fn-deps nil)
+             (dolist (dep ,used-fns)
+               (pushnew (get-function-spec dep) fn-deps)))
+           ,fn)))))
