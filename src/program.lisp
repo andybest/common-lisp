@@ -66,7 +66,7 @@
     program))
 
 (defun build-shader-program (name)
-  "Compile the shader stages of NAME, linking them into a program. NAME refers a a previously
+  "Compile the shader stages of NAME, linking them into a program. NAME refers to a previously
 defined shader program using MAKE-SHADER-PROGRAM.
 
 See MAKE-SHADER-PROGRAM"
