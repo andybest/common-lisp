@@ -9,6 +9,10 @@
                        :initform nil)
    (%source :reader source
             :initform (au:dict #'eq))
+   (%primitive :reader primitive
+               :initarg :primitive)
+   (%stage-specs :reader stage-specs
+                 :initarg :stage-specs)
    (%attributes :reader attributes
                 :initform (au:dict #'eq))
    (%uniforms :reader uniforms
@@ -82,7 +86,7 @@ See MAKE-SHADER-PROGRAM"
   (programs *shader-info*))
 
 (defun %make-shader-program (name version primitive stage-specs)
-  (let ((program (make-instance 'program))
+  (let ((program (make-instance 'program :primitive primitive :stage-specs stage-specs))
         (stages (translate-stages version primitive stage-specs)))
     (dolist (stage stages)
       (store-source program stage)
