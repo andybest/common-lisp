@@ -3,7 +3,7 @@
 (defun ensure-keyword (x)
   (etypecase x
     ((or number string symbol)
-     (alexandria:make-keyword (format nil "~a" x)))))
+     (au:make-keyword (format nil "~a" x)))))
 
 (defun parts->string (parts &optional (filter #'identity))
   (with-output-to-string (s)
@@ -23,7 +23,7 @@
 (defgeneric get-qualifiers (type)
   (:method ((type varjo:v-type))
     (varjo.internals:qualifiers type))
-  (:method ((type varjo.internals::shader-variable))
+  (:method ((type varjo.internals:shader-variable))
     (varjo:qualifiers (varjo.internals:v-type-of type))))
 
 (defun has-qualifier-p (type qualifier)

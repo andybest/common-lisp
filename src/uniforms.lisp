@@ -27,7 +27,7 @@
                    :append (get-uniform-data type (list (varjo:name uniform))))))
     (loop :for (parts type-spec) :in (%get-uniforms stage)
           :for id = (ensure-keyword (parts->string parts))
-          :do (setf (gethash id (uniforms program))
+          :do (setf (au:href (uniforms program) id)
                     (make-stage-variable
                      :name (parts->string parts #'varjo.internals:safe-glsl-name-string)
                      :type type-spec)))))
@@ -35,18 +35,17 @@
 (defun store-uniform-locations (program)
   (let ((id (id program)))
     (gl:use-program id)
-    (maphash
-     (lambda (k v)
-       (declare (ignore k))
-       (setf (stage-variable-location v) (gl:get-uniform-location id (stage-variable-name v))))
+    (au:maphash-values
+     (lambda (x)
+       (setf (stage-variable-location x) (gl:get-uniform-location id (stage-variable-name x))))
      (uniforms program))
     (gl:use-program 0)))
 
 (defun get-uniform-location (uniform)
-  (stage-variable-location (gethash uniform (uniforms *active-shader-program*))))
+  (stage-variable-location (au:href (uniforms *active-shader-program*) uniform)))
 
 (defmacro %uniform-array (location func component-count element-type sequence)
-  (alexandria:with-gensyms (count sv)
+  (au:with-unique-names (count sv)
     `(let ((,count (length ,sequence)))
        (static-vectors:with-static-vector
            (,sv (* ,count ,component-count)

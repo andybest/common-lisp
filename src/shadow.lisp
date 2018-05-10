@@ -55,7 +55,7 @@
 
 (defun store-source (program stage)
   (let ((source (varjo:glsl-code stage)))
-    (setf (gethash (stage-type stage) (source program))
+    (setf (au:href (source program) (stage-type stage))
           (subseq source (1+ (position #\newline source)) (- (length source) 2)))))
 
 (setf (macro-function 'defstruct-gpu) (macro-function 'varjo:v-defstruct)

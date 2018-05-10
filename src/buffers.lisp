@@ -26,22 +26,22 @@
     (find-block program-name block-type block-id)))
 
 (defun find-buffer (buffer-name)
-  (gethash buffer-name (buffers *shader-info*)))
+  (au:href (buffers *shader-info*) buffer-name))
 
 (defun create-buffer (type name program-name block-id)
   "Create a buffer of the given TYPE and NAME, using the block BLOCK-ID of PROGRAM-NAME."
-  (alexandria:if-let ((block (find-buffer-block type program-name block-id)))
+  (au:if-let ((block (find-buffer-block type program-name block-id)))
     (let* ((target (buffer-type->target type))
            (buffer (%make-buffer target (layout block))))
       (with-slots (%id %layout) buffer
         (%gl:bind-buffer target %id)
         (%gl:buffer-data target (size %layout) (cffi:null-pointer) :static-draw)
-        (setf (gethash name (buffers *shader-info*)) buffer)))
+        (setf (au:href (buffers *shader-info*) name) buffer)))
     (error "Cannot find the block ~s when attempting to create a buffer." block-id)))
 
 (defun bind-buffer (buffer-name binding-point)
   "Bind buffer with name BUFFER-NAME to BINDING-POINT."
-  (alexandria:if-let ((buffer (find-buffer buffer-name)))
+  (au:if-let ((buffer (find-buffer buffer-name)))
     (with-slots (%target %id) buffer
       (%gl:bind-buffer-base %target binding-point %id)
       (%gl:bind-buffer %target 0))

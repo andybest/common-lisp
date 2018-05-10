@@ -9,11 +9,11 @@
   :version "1.0.0"
   :encoding :utf-8
   :long-description #.(uiop:read-file-string (uiop/pathname:subpathname *load-pathname* "README.md"))
-  :depends-on (#:alexandria
-               #:static-vectors
+  :depends-on (#:static-vectors
                #:glsl-packing
                #:varjo
-               #:cl-opengl)
+               #:cl-opengl
+               #:golden-utils)
   :pathname "src"
   :serial t
   :components

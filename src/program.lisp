@@ -25,7 +25,7 @@
   (location -1))
 
 (defun find-program (program-name)
-  (gethash program-name (programs *shader-info*)))
+  (au:href (programs *shader-info*) program-name))
 
 (defun compile-stages (program)
   (let ((shaders))
@@ -78,8 +78,7 @@ See MAKE-SHADER-PROGRAM"
   "Compile all shader programs defined with MAKE-SHADER-PROGRAM.
 
 See MAKE-SHADER-PROGRAM"
-  (dolist (program-name (alexandria:hash-table-keys (programs *shader-info*)))
-    (build-shader-program program-name))
+  (au:maphash-keys #'build-shader-program (programs *shader-info*))
   (programs *shader-info*))
 
 (defun %make-shader-program (name version primitive stage-specs)
@@ -90,7 +89,7 @@ See MAKE-SHADER-PROGRAM"
       (store-attributes program stage)
       (store-uniforms program stage)
       (store-blocks program stage))
-    (setf (gethash name (programs *shader-info*)) program
+    (setf (au:href (programs *shader-info*) name) program
           (slot-value program '%stages) stages)
     program))
 
