@@ -4,11 +4,9 @@
 
 (defclass shader-info ()
   ((%programs :reader programs
-   (%uniform-block-bindings :reader uniform-block-bindings
-                            :initform (make-hash-table))
-   (%buffer-block-bindings :reader buffer-block-bindings
-                           :initform (make-hash-table))
               :initform (au:dict #'eq))
+   (%block-bindings :reader block-bindings
+                    :initform (au:dict #'eq :uniform (au:dict) :buffer (au:dict)))
    (%buffers :reader buffers
              :initform (au:dict #'eq))))
 

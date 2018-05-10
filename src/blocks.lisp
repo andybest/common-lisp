@@ -15,12 +15,6 @@
     ((has-qualifier-p struct :ssbo)
      (values :buffer :ssbo))))
 
-(defgeneric get-bound-blocks (block-type binding-point)
-  (:method ((block-type (eql :uniform)) binding-point)
-    (au:href (uniform-block-bindings *shader-info*) binding-point))
-  (:method ((block-type (eql :buffer)) binding-point)
-    (au:href (buffer-block-bindings *shader-info*) binding-point)))
-
 (defun make-block (program layout)
   (let* ((uniform (uniform layout))
          (id (ensure-keyword (varjo:name uniform)))
@@ -46,7 +40,7 @@
      (varjo:v-type-eq
       (varjo:v-type-of (uniform (layout block)))
       (varjo:v-type-of (uniform (layout x)))))
-   (get-bound-blocks (block-type block) binding-point)))
+   (au:href (block-bindings *shader-info*) (block-type block) binding-point)))
 
 (defun ensure-valid-block-binding (block binding-point)
   (or (block-binding-valid-p block binding-point)
@@ -58,7 +52,7 @@
          (block (find-block program-name :uniform block-id))
          (index (%gl:get-uniform-block-index program-id (name block))))
     (ensure-valid-block-binding block binding-point)
-    (pushnew block (au:href (uniform-block-bindings *shader-info*) binding-point))
+    (pushnew block (au:href (block-bindings *shader-info*) :uniform binding-point))
     (%gl:uniform-block-binding program-id index binding-point)))
 
 (defun bind-shader-storage-block (program-name block-id binding-point)
@@ -67,5 +61,5 @@
          (block (find-block program-name :buffer block-id))
          (index (gl:get-program-resource-index program-id :shader-storage-block (name block))))
     (ensure-valid-block-binding block binding-point)
-    (pushnew block (au:href (buffer-block-bindings *shader-info*) binding-point))
+    (pushnew block (au:href (block-bindings *shader-info*) :buffer binding-point))
     (%gl:shader-storage-block-binding program-id index binding-point)))
