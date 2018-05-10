@@ -56,13 +56,11 @@
     (setf (au:href (source program) (stage-type stage))
           (subseq source (1+ (position #\newline source)) (- (length source) 2)))))
 
-(setf (macro-function 'defstruct-gpu) (macro-function 'varjo:v-defstruct)
-      (macro-function 'defun-gpu) (macro-function 'varjo:v-defun))
+(defmacro defstruct-gpu (name context &body slots)
+  "Define a GPU structure. For more information, see the Varjo source."
+  `(varjo:v-defstruct ,name ,context ,@slots))
 
-(setf (documentation 'defstruct-gpu 'function)
-      "Define a GPU structure. This is an alias for VARI:V-DEFSTRUCT. For more information, see the
-      Varjo source.")
-
-(setf (documentation 'defun-gpu 'function)
-      "Define a GPU function. This is an alias for VARI:V-DEFUN. For more information, see the Varjo
-      source.")
+(defmacro defun-gpu (name args &body body)
+  "Define a GPU function. For more information, see the Varjo source."
+  `(progn
+     (varjo:v-defun ,name ,args ,@body)))
