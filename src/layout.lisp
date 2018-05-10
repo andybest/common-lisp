@@ -5,7 +5,7 @@
           :initarg :type)
    (%size :accessor size)
    (%members :reader members
-             :initform (make-hash-table))
+             :initform (au:dict #'eq))
    (%uniform :reader uniform
              :initarg :uniform)))
 

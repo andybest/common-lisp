@@ -4,13 +4,13 @@
 
 (defclass shader-info ()
   ((%programs :reader programs
-              :initform (make-hash-table))
    (%uniform-block-bindings :reader uniform-block-bindings
                             :initform (make-hash-table))
    (%buffer-block-bindings :reader buffer-block-bindings
                            :initform (make-hash-table))
+              :initform (au:dict #'eq))
    (%buffers :reader buffers
-             :initform (make-hash-table))))
+             :initform (au:dict #'eq))))
 
 (defun initialize-shaders ()
   "Initialize the shaders."

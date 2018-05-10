@@ -8,13 +8,13 @@
    (%stages :reader stages
             :initform nil)
    (%source :reader source
-            :initform (make-hash-table))
+            :initform (au:dict #'eq))
    (%attributes :reader attributes
-                :initform (make-hash-table))
+                :initform (au:dict #'eq))
    (%uniforms :reader uniforms
-              :initform (make-hash-table))
+              :initform (au:dict #'eq))
    (%blocks :reader blocks
-            :initform (make-hash-table :test #'equal))))
+            :initform (au:dict #'equal))))
 
 (defstruct (stage-variable (:type vector)
                            (:constructor make-stage-variable (&key name type location))
