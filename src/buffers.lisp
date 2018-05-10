@@ -11,9 +11,6 @@
 (defun %make-buffer (target layout)
   (make-instance 'shader-buffer :target target :layout layout))
 
-(defun buffer-by-name (buffer-name)
-  (gethash buffer-name (buffers *shader-info*)))
-
 (defun buffer-type->target (type)
   (ecase type
     (:ubo :uniform-buffer)
@@ -52,7 +49,7 @@
 
 (defun delete-buffer (buffer-name)
   "Delete the buffer having a name of BUFFER-NAME."
-  (let ((buffer (buffer-by-name buffer-name)))
+  (let ((buffer (find-buffer buffer-name)))
     (gl:delete-buffers (list (id buffer)))
     (remhash buffer-name (buffers *shader-info*))))
 
@@ -101,8 +98,8 @@ to. To write to an array, use a sequence of values.
 Note: Writing to arrays which contain other aggregate types (other arrays or structures) is not
 possible. This is a design decision to allow this library to have a simple \"path-based\" buffer
 writing interface."
-  (with-slots (%id %target %layout) (buffer-by-name buffer-name)
-    (let ((member (gethash path (members %layout))))
+  (with-slots (%id %target %layout) (find-buffer buffer-name)
+    (let ((member (au:href (members %layout) path)))
       (check-type value sequence)
       (gl:bind-buffer %target %id)
       (if (cdr (dimensions member))
