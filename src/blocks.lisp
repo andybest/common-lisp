@@ -9,10 +9,11 @@
             :initarg :layout)))
 
 (defun get-block-type (struct)
-  (if (has-qualifier-p struct :ubo)
-      (values :uniform :ubo)
-      (when (has-qualifier-p struct :ssbo)
-        (values :buffer :ssbo))))
+  (cond
+    ((has-qualifier-p struct :ubo)
+     (values :uniform :ubo))
+    ((has-qualifier-p struct :ssbo)
+     (values :buffer :ssbo))))
 
 (defgeneric get-bound-blocks (block-type binding-point)
   (:method ((block-type (eql :uniform)) binding-point)
