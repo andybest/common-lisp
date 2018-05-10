@@ -20,7 +20,7 @@
   ((:file "package")
    (:file "common")
    (:file "shadow")
-   (:file "function")
+   (:file "functions")
    (:file "program")
    (:file "packing")
    (:file "attributes")
