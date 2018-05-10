@@ -5,8 +5,8 @@
 (defclass program ()
   ((%id :reader id
         :initform 0)
-   (%stages :reader stages
-            :initform nil)
+   (%translated-stages :reader translated-stages
+                       :initform nil)
    (%source :reader source
             :initform (au:dict #'eq))
    (%attributes :reader attributes
@@ -90,7 +90,7 @@ See MAKE-SHADER-PROGRAM"
       (store-uniforms program stage)
       (store-blocks program stage))
     (setf (au:href (programs *shader-info*) name) program
-          (slot-value program '%stages) stages)
+          (slot-value program '%translated-stages) stages)
     program))
 
 (defmacro make-shader-program (name (&key (version :330) (primitive :triangles)) &body body)
