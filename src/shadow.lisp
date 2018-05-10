@@ -7,8 +7,11 @@
               :initform (au:dict #'eq))
    (%block-bindings :reader block-bindings
                     :initform (au:dict #'eq :uniform (au:dict) :buffer (au:dict)))
-   (%function-table :reader function-table
-                    :initform (au:dict #'equal))
+   (%dependencies :reader dependencies
+                  :initform (au:dict #'eq
+                                     :fn->fn-deps (au:dict #'equal)
+                                     :fn-dep->fns (au:dict #'equal)
+                                     :stage-fn->programs (au:dict #'equal)))
    (%buffers :reader buffers
              :initform (au:dict #'eq))))
 
@@ -58,16 +61,12 @@
 
 (defmacro defun-gpu (name args &body body)
   "Define a GPU function."
-  (au:with-unique-names (split-details fn used-fns)
+  (au:with-unique-names (split-details deps fn)
     (let ((split-args (varjo.utils:split-arguments args '(&uniform &context))))
       (destructuring-bind (in-args uniforms context) split-args
         `(let* ((,split-details (varjo:test-translate-function-split-details
                                  ',name ',in-args ',uniforms ',context ',body))
-                (,fn (varjo:add-external-function ',name ',in-args ',uniforms ',body))
-                (,used-fns (varjo:used-external-functions (first ,split-details))))
-           (symbol-macrolet ((fn-deps (au:href (function-table *shader-info*)
-                                               (get-function-spec ,fn))))
-             (setf fn-deps nil)
-             (dolist (dep ,used-fns)
-               (pushnew (get-function-spec dep) fn-deps)))
+                (,deps (varjo:used-external-functions (first ,split-details)))
+                (,fn (varjo:add-external-function ',name ',in-args ',uniforms ',body)))
+           (store-function-dependencies ,fn ,deps)
            ,fn)))))
