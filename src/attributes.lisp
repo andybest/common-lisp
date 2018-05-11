@@ -12,8 +12,6 @@
 (defun store-attribute-locations (program)
   (let ((id (id program)))
     (gl:use-program id)
-    (au:maphash-values
-     (lambda (x)
-       (setf (stage-variable-location x) (gl:get-attrib-location id (stage-variable-name x))))
-     (attributes program))
+    (au:do-hash-values (v (attributes program))
+      (setf (stage-variable-location v) (gl:get-attrib-location id (stage-variable-name v))))
     (gl:use-program 0)))

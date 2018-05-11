@@ -21,15 +21,15 @@
                       (dep-fns (au:href (dependencies *shader-info*) :dep->fns)))
       (ensure-function-dependency-tables spec fn-deps dep-fns)
       (au:do-hash-keys (k (au:href fn-deps spec))
-        (au:when-found (key (au:href dep-fns x))
-          (remhash spec key)))
+        (au:when-found (dep-key (au:href dep-fns k))
+          (remhash spec dep-key)))
       (dolist (dep dependencies)
         (let ((dep-spec (get-function-spec dep)))
           (unless (au:href dep-fns dep-spec)
             (setf (au:href dep-fns dep-spec) (au:dict #'equal)))
           (au:do-hash-keys (k (au:href dep-fns spec))
-            (setf (au:href fn-deps spec x dep-spec) dep-spec
-                  (au:href dep-fns dep-spec x) x))
+            (setf (au:href fn-deps spec k dep-spec) dep-spec
+                  (au:href dep-fns dep-spec k) k))
           (setf (au:href fn-deps spec dep-spec) dep-spec
                 (au:href dep-fns dep-spec spec) spec))))))
 

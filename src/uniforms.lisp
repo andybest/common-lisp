@@ -35,10 +35,8 @@
 (defun store-uniform-locations (program)
   (let ((id (id program)))
     (gl:use-program id)
-    (au:maphash-values
-     (lambda (x)
-       (setf (stage-variable-location x) (gl:get-uniform-location id (stage-variable-name x))))
-     (uniforms program))
+    (au:do-hash-values (v (uniforms program))
+      (setf (stage-variable-location v) (gl:get-uniform-location id (stage-variable-name v))))
     (gl:use-program 0)))
 
 (defun get-uniform-location (uniform)
