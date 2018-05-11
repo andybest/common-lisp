@@ -7,6 +7,8 @@
         :initform 0)
    (%name :reader name
           :initarg :name)
+   (%version :reader version
+             :initarg :version)
    (%translated-stages :reader translated-stages
                        :initform nil)
    (%source :reader source
@@ -43,8 +45,7 @@
          (gl:compile-shader shader)
          (push shader shaders)
          (unless (gl:get-shader shader :compile-status)
-           (error "Failed to compile ~a shader stage:~%~a~%"
-                  type (gl:get-shader-info-log shader)))))
+           (error "Failed to compile ~a shader stage:~%~a~%" type (gl:get-shader-info-log shader)))))
      (source program))
     shaders))
 
@@ -60,8 +61,7 @@
             (gl:attach-shader program shader))
           (gl:link-program program)
           (unless (gl:get-program program :link-status)
-            (error "Failed to link shader program: ~a"
-                   (gl:get-program-info-log program)))
+            (error "Failed to link shader program: ~a" (gl:get-program-info-log program)))
           (dolist (shader shaders)
             (gl:detach-shader program shader)
             (gl:delete-shader shader))))
@@ -94,19 +94,26 @@ See MAKE-SHADER-PROGRAM"
       (pushnew (name program)
                (au:href (dependencies *shader-info*) :stage-fn->programs func-spec)))))
 
+(defun translate-program (program-name)
+  (let ((program (find-program program-name)))
+    (with-slots (%name %version %primitive %stage-specs) program
+      (let ((stages (translate-stages %version %primitive %stage-specs)))
+        (dolist (stage stages)
+          (store-source program stage)
+          (store-attributes program stage)
+          (store-uniforms program stage)
+          (store-blocks program stage))
+        (setf (slot-value program '%translated-stages) stages)))))
+
 (defun %make-shader-program (name version primitive stage-specs)
-  (let ((program (make-instance 'program :name name
-                                         :primitive primitive
-                                         :stage-specs stage-specs))
-        (stages (translate-stages version primitive stage-specs)))
-    (dolist (stage stages)
-      (store-source program stage)
-      (store-attributes program stage)
-      (store-uniforms program stage)
-      (store-blocks program stage))
+  (let ((program (make-instance 'program
+                                :name name
+                                :version version
+                                :primitive primitive
+                                :stage-specs stage-specs)))
+    (setf (au:href (programs *shader-info*) name) program)
+    (translate-program name)
     (store-stage-program-dependencies program)
-    (setf (au:href (programs *shader-info*) name) program
-          (slot-value program '%translated-stages) stages)
     program))
 
 (defmacro make-shader-program (name (&key (version :330) (primitive :triangles)) &body body)
