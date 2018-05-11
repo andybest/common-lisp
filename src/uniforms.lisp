@@ -18,19 +18,20 @@
           :collect (list (reverse parts) (cons (varjo:type->type-spec element-type) dimensions))
         :append (get-uniform-data element-type (cons i parts))))
 
-(defun store-uniforms (program stage)
+(defun store-uniforms (program)
   (flet ((%get-uniforms (stage)
            (loop :for uniform :in (varjo:uniform-variables stage)
                  :for type = (varjo:v-type-of uniform)
                  :unless (or (has-qualifier-p uniform :ubo)
                              (has-qualifier-p uniform :ssbo))
                    :append (get-uniform-data type (list (varjo:name uniform))))))
-    (loop :for (parts type-spec) :in (%get-uniforms stage)
-          :for id = (ensure-keyword (parts->string parts))
-          :do (setf (au:href (uniforms program) id)
-                    (make-stage-variable
-                     :name (parts->string parts #'varjo.internals:safe-glsl-name-string)
-                     :type type-spec)))))
+    (dolist (stage (translated-stages program))
+      (loop :for (parts type-spec) :in (%get-uniforms stage)
+            :for id = (ensure-keyword (parts->string parts))
+            :do (setf (au:href (uniforms program) id)
+                      (make-stage-variable
+                       :name (parts->string parts #'varjo.internals:safe-glsl-name-string)
+                       :type type-spec))))))
 
 (defun store-uniform-locations (program)
   (let ((id (id program)))

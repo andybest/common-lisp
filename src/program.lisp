@@ -100,8 +100,6 @@ See MAKE-SHADER-PROGRAM"
       (let ((stages (translate-stages %version %primitive %stage-specs)))
         (dolist (stage stages)
           (store-source program stage)
-          (store-attributes program stage)
-          (store-uniforms program stage)
           (store-blocks program stage))
         (setf (slot-value program '%translated-stages) stages)))))
 
@@ -113,6 +111,8 @@ See MAKE-SHADER-PROGRAM"
                                 :stage-specs stage-specs)))
     (setf (au:href (programs *shader-info*) name) program)
     (translate-program name)
+    (store-attributes program)
+    (store-uniforms program)
     (store-stage-program-dependencies program)
     program))
 
@@ -123,6 +123,17 @@ VERSION: The default version shader stages use, and can be overridden on a per-f
 
 PRIMITIVE: The drawing primitive to use for the vertex stage."
   `(%make-shader-program ',name ,version ,primitive ',body))
+
+(defun update-shader-programs (program-list)
+  "Re-translate and re-compile a collection of shader programs denoted by `PROGRAM-LIST`, which is a
+list of their names"
+  (dolist (program program-list)
+    (translate-program program)
+    (build-shader-program program)))
+
+(defun set-modify-hook (function)
+  "Specify a function to be called when shader programs need to be updated."
+  (setf (modify-hook *shader-info*) function))
 
 (defmacro with-shader-program (name &body body)
   "Run a body of code which uses (as in glUseProgram) the program identified by NAME."

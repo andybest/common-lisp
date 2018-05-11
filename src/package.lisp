@@ -8,6 +8,8 @@
            #:make-shader-program
            #:build-shader-program
            #:build-shader-dictionary
+           #:update-shader-programs
+           #:set-modify-hook
            #:bind-uniform-block
            #:bind-shader-storage-block
            #:create-buffer
