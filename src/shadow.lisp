@@ -12,6 +12,8 @@
                                      :fn->deps (au:dict #'equal)
                                      :dep->fns (au:dict #'equal)
                                      :stage-fn->programs (au:dict #'equal)))
+   (%modify-hook :accessor modify-hook
+                 :initform (constantly nil))
    (%buffers :reader buffers
              :initform (au:dict #'eq))))
 
