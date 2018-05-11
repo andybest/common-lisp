@@ -5,6 +5,8 @@
 (defclass program ()
   ((%id :reader id
         :initform 0)
+   (%name :reader name
+          :initarg :name)
    (%translated-stages :reader translated-stages
                        :initform nil)
    (%source :reader source
@@ -85,14 +87,24 @@ See MAKE-SHADER-PROGRAM"
   (au:maphash-keys #'build-shader-program (programs *shader-info*))
   (programs *shader-info*))
 
+(defun store-stage-program-dependencies (program)
+  (dolist (stage-spec (stage-specs program))
+    (destructuring-bind (stage-type () func-spec) stage-spec
+      (declare (ignore stage-type))
+      (pushnew (name program)
+               (au:href (dependencies *shader-info*) :stage-fn->programs func-spec)))))
+
 (defun %make-shader-program (name version primitive stage-specs)
-  (let ((program (make-instance 'program :primitive primitive :stage-specs stage-specs))
+  (let ((program (make-instance 'program :name name
+                                         :primitive primitive
+                                         :stage-specs stage-specs))
         (stages (translate-stages version primitive stage-specs)))
     (dolist (stage stages)
       (store-source program stage)
       (store-attributes program stage)
       (store-uniforms program stage)
       (store-blocks program stage))
+    (store-stage-program-dependencies program)
     (setf (au:href (programs *shader-info*) name) program
           (slot-value program '%translated-stages) stages)
     program))
