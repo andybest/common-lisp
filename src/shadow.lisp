@@ -9,8 +9,8 @@
                     :initform (au:dict #'eq :uniform (au:dict) :buffer (au:dict)))
    (%dependencies :reader dependencies
                   :initform (au:dict #'eq
-                                     :fn->fn-deps (au:dict #'equal)
-                                     :fn-dep->fns (au:dict #'equal)
+                                     :fn->deps (au:dict #'equal)
+                                     :dep->fns (au:dict #'equal)
                                      :stage-fn->programs (au:dict #'equal)))
    (%buffers :reader buffers
              :initform (au:dict #'eq))))
