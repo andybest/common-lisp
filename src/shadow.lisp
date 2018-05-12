@@ -60,3 +60,7 @@
 (defmacro defstruct-gpu (name context &body slots)
   "Define a GPU structure."
   `(varjo:v-defstruct ,name ,context ,@slots))
+
+(defmacro defmacro-gpu (name lambda-list &body body)
+  "Define a GPU macro."
+  `(varjo:v-defmacro ,name ,lambda-list ,@body))
