@@ -4,6 +4,7 @@
   (:use #:cl)
   (:export #:defun-gpu
            #:defstruct-gpu
+           #:defmacro-gpu
            #:initialize-shaders
            #:make-shader-program
            #:build-shader-program
