@@ -28,7 +28,7 @@
         (unless (au:href dep-fns dep-spec)
           (setf (au:href dep-fns dep-spec) (au:dict #'equal)))
         (au:do-hash-keys (k (au:href dep-fns spec))
-          (setf (au:href fn-deps spec k dep-spec) dep-spec
+          (setf (au:href fn-deps k dep-spec) dep-spec
                 (au:href dep-fns dep-spec k) k))
         (setf (au:href fn-deps spec dep-spec) dep-spec
               (au:href dep-fns dep-spec spec) spec)))))
