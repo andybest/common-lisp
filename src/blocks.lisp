@@ -40,7 +40,7 @@
      (varjo:v-type-eq
       (varjo:v-type-of (uniform (layout block)))
       (varjo:v-type-of (uniform (layout x)))))
-   (au:href (block-bindings *shader-info*) (block-type block) binding-point)))
+   (au:href (block-bindings *state*) (block-type block) binding-point)))
 
 (defun ensure-valid-block-binding (block binding-point)
   (or (block-binding-valid-p block binding-point)
@@ -52,7 +52,7 @@
          (block (find-block program-name :uniform block-id))
          (index (%gl:get-uniform-block-index program-id (name block))))
     (ensure-valid-block-binding block binding-point)
-    (pushnew block (au:href (block-bindings *shader-info*) :uniform binding-point))
+    (pushnew block (au:href (block-bindings *state*) :uniform binding-point))
     (%gl:uniform-block-binding program-id index binding-point)))
 
 (defun bind-shader-storage-block (program-name block-id binding-point)
@@ -61,5 +61,5 @@
          (block (find-block program-name :buffer block-id))
          (index (gl:get-program-resource-index program-id :shader-storage-block (name block))))
     (ensure-valid-block-binding block binding-point)
-    (pushnew block (au:href (block-bindings *shader-info*) :buffer binding-point))
+    (pushnew block (au:href (block-bindings *state*) :buffer binding-point))
     (%gl:shader-storage-block-binding program-id index binding-point)))

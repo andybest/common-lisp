@@ -1,8 +1,6 @@
 (in-package :shadow)
 
-(defvar *shader-info*)
-
-(defclass shader-info ()
+(defclass state ()
   ((%programs :reader programs
               :initform (au:dict #'eq))
    (%block-bindings :reader block-bindings
@@ -17,9 +15,7 @@
    (%buffers :reader buffers
              :initform (au:dict #'eq))))
 
-(defun initialize-shaders ()
-  "Initialize the shaders."
-  (setf *shader-info* (make-instance 'shader-info)))
+(defvar *state* (make-instance 'state))
 
 (defun store-source (program stage)
   (let ((source (varjo:glsl-code stage)))

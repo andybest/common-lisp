@@ -26,7 +26,7 @@
     (find-block program-name block-type block-id)))
 
 (defun find-buffer (buffer-name)
-  (au:href (buffers *shader-info*) buffer-name))
+  (au:href (buffers *state*) buffer-name))
 
 (defun create-buffer (type name program-name block-id)
   "Create a buffer of the given TYPE and NAME, using the block BLOCK-ID of PROGRAM-NAME."
@@ -36,7 +36,7 @@
       (with-slots (%id %layout) buffer
         (%gl:bind-buffer target %id)
         (%gl:buffer-data target (size %layout) (cffi:null-pointer) :static-draw)
-        (setf (au:href (buffers *shader-info*) name) buffer)))
+        (setf (au:href (buffers *state*) name) buffer)))
     (error "Cannot find the block ~s when attempting to create a buffer." block-id)))
 
 (defun bind-buffer (buffer-name binding-point)
@@ -51,7 +51,7 @@
   "Delete the buffer having a name of BUFFER-NAME."
   (let ((buffer (find-buffer buffer-name)))
     (gl:delete-buffers (list (id buffer)))
-    (remhash buffer-name (buffers *shader-info*))))
+    (remhash buffer-name (buffers *state*))))
 
 (defun %write-buffer-member (target member value)
   (with-slots (%element-type %offset %element-stride %byte-stride) member

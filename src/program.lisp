@@ -33,7 +33,7 @@
   (location -1))
 
 (defun find-program (program-name)
-  (au:href (programs *shader-info*) program-name))
+  (au:href (programs *state*) program-name))
 
 (defun compile-stages (program)
   (let ((shaders))
@@ -84,15 +84,15 @@ See MAKE-SHADER-PROGRAM"
   "Compile all shader programs defined with MAKE-SHADER-PROGRAM.
 
 See MAKE-SHADER-PROGRAM"
-  (au:maphash-keys #'build-shader-program (programs *shader-info*))
-  (programs *shader-info*))
+  (au:maphash-keys #'build-shader-program (programs *state*))
+  (programs *state*))
 
 (defun store-stage-program-dependencies (program)
   (dolist (stage-spec (stage-specs program))
     (destructuring-bind (stage-type () func-spec) stage-spec
       (declare (ignore stage-type))
       (pushnew (name program)
-               (au:href (dependencies *shader-info*) :stage-fn->programs func-spec)))))
+               (au:href (dependencies *state*) :stage-fn->programs func-spec)))))
 
 (defun translate-program (program-name)
   (let ((program (find-program program-name)))
@@ -109,7 +109,7 @@ See MAKE-SHADER-PROGRAM"
                                 :version version
                                 :primitive primitive
                                 :stage-specs stage-specs)))
-    (setf (au:href (programs *shader-info*) name) program)
+    (setf (au:href (programs *state*) name) program)
     (translate-program name)
     (store-attributes program)
     (store-uniforms program)
@@ -133,7 +133,7 @@ list of their names"
 
 (defun set-modify-hook (function)
   "Specify a function to be called when shader programs need to be updated."
-  (setf (modify-hook *shader-info*) function))
+  (setf (modify-hook *state*) function))
 
 (defmacro with-shader-program (name &body body)
   "Run a body of code which uses (as in glUseProgram) the program identified by NAME."

@@ -15,8 +15,8 @@
   (setf (au:href fn-deps spec) (au:dict #'equal)))
 
 (defun store-function-dependencies (spec dependencies)
-  (symbol-macrolet ((fn-deps (au:href (dependencies *shader-info*) :fn->deps))
-                    (dep-fns (au:href (dependencies *shader-info*) :dep->fns)))
+  (symbol-macrolet ((fn-deps (au:href (dependencies *state*) :fn->deps))
+                    (dep-fns (au:href (dependencies *state*) :dep->fns)))
     (when (au:href fn-deps spec)
       (au:do-hash-keys (k (au:href fn-deps spec))
         (au:when-found (dep-key (au:href dep-fns k))
@@ -34,13 +34,13 @@
 
 (defun compute-outdated-programs (spec)
   (let ((programs)
-        (spec-fns (au:href (dependencies *shader-info*) :dep->fns spec)))
+        (spec-fns (au:href (dependencies *state*) :dep->fns spec)))
     (maphash
      (lambda (k v)
        (when (or (au:href spec-fns k)
                  (equal k spec))
          (setf programs (union v programs :test #'equal))))
-     (au:href (dependencies *shader-info*) :stage-fn->programs))
+     (au:href (dependencies *state*) :stage-fn->programs))
     programs))
 
 (defun generate-pseudo-lisp-function (name args-spec)
@@ -64,5 +64,5 @@
                     (,spec (get-function-spec ,fn)))
                (store-function-dependencies ,spec ,deps)
                ,(generate-pseudo-lisp-function name in-args)
-               (funcall (modify-hook *shader-info*) (compute-outdated-programs ,spec))
+               (funcall (modify-hook *state*) (compute-outdated-programs ,spec))
                ,fn)))))))
