@@ -31,7 +31,7 @@
 
 (defun lisp-symbol->glsl-type (symbol)
   (when (boundp symbol)
-    (typecase (symbol-value symbol)
+    (etypecase (symbol-value symbol)
       (boolean :bool)
       (single-float :float)
       (double-float :double)
@@ -42,3 +42,19 @@
       ((simple-array single-float (4)) :vec4)
       ((simple-array single-float (9)) :mat3)
       ((simple-array single-float (16)) :mat4))))
+
+(defun lisp-constant->glsl-constant (constant)
+  (when (constantp constant)
+    (let ((value (symbol-value constant)))
+      (etypecase value
+        (null 0)
+        (boolean 1)
+        (single-float value)
+        (double-float value)
+        ((signed-byte 32) value)
+        ((unsigned-byte 32) value)
+        ((simple-array single-float (2)) value)
+        ((simple-array single-float (3)) value)
+        ((simple-array single-float (4)) value)
+        ((simple-array single-float (9)) value)
+        ((simple-array single-float (16)) value)))))

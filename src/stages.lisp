@@ -26,8 +26,9 @@
          (varjo.internals:primitive-name-to-instance primitive))))))
 
 (defun translate-stages (version primitive stage-specs)
-  (varjo:with-stemcell-infer-hook #'lisp-symbol->glsl-type
-    (varjo:rolling-translate
-     (mapcar
-      (lambda (x) (make-stage version primitive x))
-      stage-specs))))
+  (varjo:with-constant-inject-hook #'lisp-constant->glsl-constant
+    (varjo:with-stemcell-infer-hook #'lisp-symbol->glsl-type
+      (varjo:rolling-translate
+       (mapcar
+        (lambda (x) (make-stage version primitive x))
+        stage-specs)))))

@@ -55,13 +55,14 @@
   (au:with-unique-names (split-details deps fn spec)
     (let ((split-args (varjo.utils:split-arguments args '(&uniform &context))))
       (destructuring-bind (in-args uniforms context) split-args
-        `(varjo:with-stemcell-infer-hook #'lisp-symbol->glsl-type
-           (let* ((,split-details (varjo:test-translate-function-split-details
-                                   ',name ',in-args ',uniforms ',context ',body))
-                  (,deps (varjo:used-external-functions (first ,split-details)))
-                  (,fn (varjo:add-external-function ',name ',in-args ',uniforms ',body))
-                  (,spec (get-function-spec ,fn)))
-             (store-function-dependencies ,spec ,deps)
-             ,(generate-pseudo-lisp-function name in-args)
-             (funcall (modify-hook *shader-info*) (compute-outdated-programs ,spec))
-             ,fn))))))
+        `(varjo:with-constant-inject-hook #'lisp-constant->glsl-constant
+           (varjo:with-stemcell-infer-hook #'lisp-symbol->glsl-type
+             (let* ((,split-details (varjo:test-translate-function-split-details
+                                     ',name ',in-args ',uniforms ',context ',body))
+                    (,deps (varjo:used-external-functions (first ,split-details)))
+                    (,fn (varjo:add-external-function ',name ',in-args ',uniforms ',body))
+                    (,spec (get-function-spec ,fn)))
+               (store-function-dependencies ,spec ,deps)
+               ,(generate-pseudo-lisp-function name in-args)
+               (funcall (modify-hook *shader-info*) (compute-outdated-programs ,spec))
+               ,fn)))))))
