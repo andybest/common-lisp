@@ -141,3 +141,9 @@ list of their names"
      (gl:use-program (id *active-shader-program*))
      ,@body
      (gl:use-program 0)))
+
+(defun reset-program-state ()
+  (clrhash (au:href (programs *state*)))
+  (clrhash (au:href (block-bindings *state*) :uniform))
+  (clrhash (au:href (block-bindings *state*) :buffer))
+  (clrhash (au:href (buffers *state*))))

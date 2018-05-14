@@ -5,7 +5,7 @@
   (:export #:defun-gpu
            #:defstruct-gpu
            #:defmacro-gpu
-           #:initialize-state
+           #:reset-program-state
            #:make-shader-program
            #:build-shader-program
            #:build-shader-dictionary
