@@ -12,8 +12,7 @@
 (defun ensure-function-dependency-tables (spec fn-deps dep-fns)
   (unless (au:href dep-fns spec)
     (setf (au:href dep-fns spec) (au:dict #'equal)))
-  (unless (au:href fn-deps spec)
-    (setf (au:href fn-deps spec) (au:dict #'equal))))
+  (setf (au:href fn-deps spec) (au:dict #'equal)))
 
 (defun store-function-dependencies (spec dependencies)
   (symbol-macrolet ((fn-deps (au:href (dependencies *shader-info*) :fn->deps))
