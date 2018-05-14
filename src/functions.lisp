@@ -43,6 +43,13 @@
      (au:href (dependencies *shader-info*) :stage-fn->programs))
     programs))
 
+(defun generate-pseudo-lisp-function (name args-spec)
+  (let ((args (au:alist-keys args-spec)))
+    `(setf (symbol-function ',name)
+           (lambda ,args
+             (declare (ignore ,@args))
+             (error "The GPU function ~a cannot be called from Lisp." ',name)))))
+
 (defmacro defun-gpu (name args &body body)
   "Define a GPU function."
   (au:with-unique-names (split-details deps fn spec)
@@ -54,6 +61,6 @@
                 (,fn (varjo:add-external-function ',name ',in-args ',uniforms ',body))
                 (,spec (get-function-spec ,fn)))
            (store-function-dependencies ,spec ,deps)
-           (funcall (modify-hook *shader-info*)
-                    (compute-outdated-programs ,spec))
+           ,(generate-pseudo-lisp-function name in-args)
+           (funcall (modify-hook *shader-info*) (compute-outdated-programs ,spec))
            ,fn)))))
