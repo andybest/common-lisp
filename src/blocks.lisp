@@ -1,12 +1,17 @@
 (in-package :shadow)
 
 (defclass shader-block ()
-  ((%name :reader name
+  ((%id :reader id
+        :initarg :id)
+   (%name :reader name
           :initarg :name)
    (%type :reader block-type
           :initarg :type)
    (%layout :reader layout
             :initarg :layout)))
+
+(au:define-printer (shader-block stream :type nil)
+  (format stream "BLOCK ~s" (id shader-block)))
 
 (defun get-block-type (struct)
   (cond
@@ -23,16 +28,20 @@
     (au:mvlet ((block-type buffer-type (get-block-type type)))
       (setf (au:href (blocks program) (cons block-type id))
             (make-instance 'shader-block
+                           :id id
                            :name (format nil "_~a_~a" buffer-type name)
                            :type block-type
                            :layout layout)))))
 
 (defun store-blocks (program stage)
-  (map nil (lambda (layout) (make-block program layout)) (collect-layouts stage)))
+  (dolist (layout (collect-layouts stage))
+    (make-block program layout)))
 
 (defun find-block (program-name block-type block-id)
-  (au:when-let ((program (find-program program-name)))
-    (au:href (blocks program) (cons block-type block-id))))
+  (if (keywordp block-id)
+      (au:when-let ((program (find-program program-name)))
+        (au:href (blocks program) (cons block-type block-id)))
+      (error "Block ID must be a keyword symbol: ~a" block-id)))
 
 (defun block-binding-valid-p (block binding-point)
   (every
