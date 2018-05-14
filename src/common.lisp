@@ -28,3 +28,17 @@
 
 (defun has-qualifier-p (type qualifier)
   (member qualifier (get-qualifiers type) :test #'varjo.internals:qualifier=))
+
+(defun lisp-symbol->glsl-type (symbol)
+  (when (boundp symbol)
+    (typecase (symbol-value symbol)
+      (boolean :bool)
+      (single-float :float)
+      (double-float :double)
+      ((signed-byte 32) :int)
+      ((unsigned-byte 32) :uint)
+      ((simple-array single-float (2)) :vec2)
+      ((simple-array single-float (3)) :vec3)
+      ((simple-array single-float (4)) :vec4)
+      ((simple-array single-float (9)) :mat3)
+      ((simple-array single-float (16)) :mat4))))

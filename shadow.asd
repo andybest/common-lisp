@@ -21,6 +21,7 @@
    (:file "common")
    (:file "shadow")
    (:file "functions")
+   (:file "stages")
    (:file "program")
    (:file "packing")
    (:file "attributes")
