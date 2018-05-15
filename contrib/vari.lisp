@@ -54,8 +54,9 @@
 
 ;;; mat3
 
-(v-def-glsl-template-fun m3:make (a b c d e f) "mat3(~a,~a,~a,~a,~a,~a)"
-                         (v-float v-float v-float v-float v-float v-float) v-mat3 :pure t)
+(v-def-glsl-template-fun m3:make (a b c d e f g h i) "mat3(~a,~a,~a,~a,~a,~a,~a,~a,~a)"
+                         (v-float v-float v-float v-float v-float v-float v-float v-float v-float)
+                         v-mat3 :pure t)
 (v-def-glsl-template-fun m3:make (a b c) "mat3(~a,~a,~a)" (v-vec3 v-vec3 v-vec3) v-mat3 :pure t)
 
 ;;; mat4
