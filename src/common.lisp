@@ -46,15 +46,10 @@
 (defun lisp-constant->glsl-constant (constant)
   (when (constantp constant)
     (let ((value (symbol-value constant)))
-      (etypecase value
+      (typecase value
         (null 0)
         (boolean 1)
         (single-float value)
         (double-float value)
         ((signed-byte 32) value)
-        ((unsigned-byte 32) value)
-        ((simple-array single-float (2)) value)
-        ((simple-array single-float (3)) value)
-        ((simple-array single-float (4)) value)
-        ((simple-array single-float (9)) value)
-        ((simple-array single-float (16)) value)))))
+        ((unsigned-byte 32) value)))))
