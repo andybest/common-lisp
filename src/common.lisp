@@ -30,7 +30,8 @@
   (member qualifier (get-qualifiers type) :test #'varjo.internals:qualifier=))
 
 (defun lisp-symbol->glsl-type (symbol)
-  (when (boundp symbol)
+  (when (and (boundp symbol)
+             (not (constantp symbol)))
     (etypecase (symbol-value symbol)
       (boolean :bool)
       (single-float :float)
