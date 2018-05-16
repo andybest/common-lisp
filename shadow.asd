@@ -10,6 +10,7 @@
   :encoding :utf-8
   :long-description #.(uiop:read-file-string (uiop/pathname:subpathname *load-pathname* "README.md"))
   :depends-on (#:static-vectors
+               #:defpackage-plus
                #:glsl-packing
                #:varjo
                #:cl-opengl

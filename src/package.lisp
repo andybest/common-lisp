@@ -1,7 +1,8 @@
-(in-package :cl-user)
+(in-package :defpackage+-user-1)
 
-(defpackage #:shadow
+(defpackage+ #:shadow
   (:use #:cl)
+  (:inherit #:vari)
   (:export #:defun-gpu
            #:defstruct-gpu
            #:defmacro-gpu
