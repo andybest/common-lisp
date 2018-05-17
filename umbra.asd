@@ -18,4 +18,5 @@
   ((:file "package")
    (:file "math")
    (:file "color")
-   (:file "easing")))
+   (:file "easing")
+   (:file "graph")))

@@ -64,3 +64,9 @@
            #:bounce-out
            #:bounce-in
            #:bounce-in-out))
+
+(defpackage+ #:umbra.graph
+  (:use #:shadow #:box.math.vari)
+  (:local-nicknames (#:v2 #:box.math.vec2)
+                    (#:v4 #:box.math.vec4))
+  (:export #:graph))
