@@ -14,7 +14,7 @@
   (1+ (sin (* (1- x) +half-pi+))))
 
 (defun-gpu sine-in-out ((x :float))
-  (* -0.5 (1- (cos (* x +pi+)))))
+  (* 0.5 (1- (cos (* x +pi+)))))
 
 (defun-gpu quadratic-out ((x :float))
   (- (* x (- x 2))))
@@ -47,10 +47,10 @@
 (defun-gpu quartic-in-out ((x :float))
   (if (< x 0.5)
       (* (expt x 4) 8)
-      (1+ (* -8 (expt (- 1 x) 4)))))
+      (1+ (* -8 (expt (1- x) 4)))))
 
 (defun-gpu quintic-out ((x :float))
-  (1+ (* (expt (- 1 x) 5) (1- x))))
+  (1+ (expt (1- x) 5)))
 
 (defun-gpu quintic-in ((x :float))
   (expt x 5))
@@ -58,7 +58,7 @@
 (defun-gpu quintic-in-out ((x :float))
   (if (< x 0.5)
       (* (expt x 5) 16)
-      (1+ (* -0.5 (expt (- 2 (* x 2)) 5)))))
+      (1+ (* 0.5 (expt (- (* x 2) 2) 5)))))
 
 (defun-gpu exponential-out ((x :float))
   (if (= x 1)
@@ -92,7 +92,7 @@
 
 (defun-gpu back-out ((x :float))
   (let ((v (- 1 x)))
-    (- 1 (- (expt v 3) (* v (sin (* v +pi+)))))))
+    (- 1 (- (expt v 3)) (* v (sin (* v +pi+))))))
 
 (defun-gpu back-in ((x :float))
   (- (expt x 3) (* x (sin (* x +pi+)))))
