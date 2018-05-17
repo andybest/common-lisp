@@ -1,11 +1,13 @@
 (in-package :defpackage+-user-1)
 
 (defpackage+ #:umbra.math
-  (:use #:shadow)
-  (:export #:saturate))
+  (:use #:cl #:shadow)
+  (:export #:+pi+
+           #:+half-pi+
+           #:saturate))
 
 (defpackage+ #:umbra.color
-  (:use #:shadow #:box.math.vari)
+  (:use #:cl #:shadow #:box.math.vari)
   (:local-nicknames (#:v3 #:box.math.vec3)
                     (#:v4 #:box.math.vec4)
                     (#:m3 #:box.math.mat3))
@@ -30,4 +32,35 @@
            #:xyy->rgb))
 
 (defpackage+ #:umbra.easing
-  (:use #:shadow))
+  (:use #:cl #:shadow #:umbra.math)
+  (:export #:linear
+           #:sine-out
+           #:sine-in
+           #:sine-in-out
+           #:quadratic-out
+           #:quadratic-in
+           #:quadratic-in-out
+           #:cubic-out
+           #:cubic-in
+           #:cubic-in-out
+           #:quartic-out
+           #:quartic-in
+           #:quartic-in-out
+           #:quintic-out
+           #:quintic-in
+           #:quintic-in-out
+           #:exponential-out
+           #:exponential-in
+           #:exponential-in-out
+           #:circular-out
+           #:circular-in
+           #:circular-in-out
+           #:back-out
+           #:back-in
+           #:back-in-out
+           #:elastic-out
+           #:elastic-in
+           #:elastic-in-out
+           #:bounce-out
+           #:bounce-in
+           #:bounce-in-out))

@@ -1,5 +1,10 @@
 (in-package :umbra.math)
 
+;;; Constants
+
+(defconstant +pi+ (float pi 1.0f0))
+(defconstant +half-pi+ (/ +pi+ 2))
+
 ;;; Saturate
 ;;; Clamp a value within the [0, 1] range. From HLSL.
 
