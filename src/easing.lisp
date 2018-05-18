@@ -87,7 +87,7 @@
      (1+ (* -0.5 (expt 2 (+ (* x -20) 10)))))))
 
 (defun-gpu circular-out ((x :float))
-  (sqrt (* (- 2 x) x))
+  (sqrt (* (- 2 x) x)))
 
 (defun-gpu circular-in ((x :float))
   (- 1 (sqrt (- 1 (* x x)))))
