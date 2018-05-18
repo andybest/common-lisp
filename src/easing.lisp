@@ -38,7 +38,7 @@
   (if (< x 0.5)
       (* x x x 4)
       (let ((f (- (* x 2) 2)))
-        (1+ (* 0.5 f f f))))))
+        (1+ (* 0.5 f f f)))))
 
 (defun-gpu quartic-out ((x :float))
   (let ((f (1- x)))
