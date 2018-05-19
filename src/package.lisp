@@ -8,6 +8,7 @@
   (:export #:+epsilon+
            #:+pi+
            #:+half-pi+
+           #:log10
            #:saturate))
 
 (defpackage+ #:umbra.color
