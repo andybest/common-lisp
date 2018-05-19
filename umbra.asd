@@ -17,6 +17,6 @@
   :components
   ((:file "package")
    (:file "math")
-   (:file "color")
+   (:file "color-space")
    (:file "easing")
    (:file "graph")))
