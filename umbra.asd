@@ -18,5 +18,6 @@
   ((:file "package")
    (:file "math")
    (:file "color-space")
+   (:file "color-grading")
    (:file "easing")
    (:file "graph")))
