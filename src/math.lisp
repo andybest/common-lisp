@@ -2,6 +2,7 @@
 
 ;;; Constants
 
+(defconstant +epsilon+ 1e-20)
 (defconstant +pi+ (float pi 1.0f0))
 (defconstant +half-pi+ (/ +pi+ 2))
 

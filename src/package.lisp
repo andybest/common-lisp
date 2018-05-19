@@ -1,16 +1,21 @@
 (in-package :defpackage+-user-1)
 
+(defpackage+ #:umbra.common
+  (:inherit #:cl #:shadow #:box.math.vari))
+
 (defpackage+ #:umbra.math
-  (:use #:cl #:shadow)
-  (:export #:+pi+
+  (:use #:umbra.common)
+  (:export #:+epsilon+
+           #:+pi+
            #:+half-pi+
            #:saturate))
 
 (defpackage+ #:umbra.color
-  (:use #:cl #:shadow #:box.math.vari)
+  (:use #:umbra.common #:umbra.math)
   (:local-nicknames (#:v3 #:box.math.vec3)
                     (#:v4 #:box.math.vec4)
                     (#:m3 #:box.math.mat3))
+  ;; color space conversion
   (:export #:rgb->grayscale
            #:hue->rgb
            #:rgb->hcv
@@ -29,10 +34,19 @@
            #:xyy->xyz
            #:xyz->xyy
            #:rgb->xyy
-           #:xyy->rgb))
+           #:xyy->rgb)
+  ;; color grading
+  (:export #:set-exposure
+           #:set-saturation
+           #:set-contrast
+           #:set-brightness
+           #:set-gamma
+           #:color-filter
+           #:tone-map-linear
+           #:tone-map-reinhard))
 
 (defpackage+ #:umbra.easing
-  (:use #:cl #:shadow #:umbra.math)
+  (:use #:umbra.common #:umbra.math)
   (:export #:linear
            #:sine-out
            #:sine-in
@@ -66,7 +80,7 @@
            #:bounce-in-out))
 
 (defpackage+ #:umbra.graph
-  (:use #:shadow #:box.math.vari)
+  (:use #:umbra.common)
   (:local-nicknames (#:v2 #:box.math.vec2)
                     (#:v4 #:box.math.vec4))
   (:export #:graph))

@@ -7,7 +7,6 @@
 ;;;; https://en.wikipedia.org/wiki/SRGB
 ;;;; https://en.wikipedia.org/wiki/CIE_1931_color_space
 
-(defconstant +epsilon+ 1e-20)
 (defconstant +gamma+ (/ 2.2))
 (defconstant +gamma-inverse+ 2.2)
 
