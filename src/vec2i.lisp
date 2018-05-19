@@ -16,7 +16,11 @@
   "A convenience macro for concisely accessing the components of vectors."
   `(with-accessors ((,prefix identity)
                     (,(box.math.common::%make-accessor-symbol prefix 'x) x)
-                    (,(box.math.common::%make-accessor-symbol prefix 'y) y))
+                    (,(box.math.common::%make-accessor-symbol prefix 'y) y)
+                    (,(box.math.common::%make-accessor-symbol prefix 'r) .r)
+                    (,(box.math.common::%make-accessor-symbol prefix 'g) .g)
+                    (,(box.math.common::%make-accessor-symbol prefix 's) .s)
+                    (,(box.math.common::%make-accessor-symbol prefix 't) .t))
        ,vec
      ,(if rest
           `(with-components ,rest ,@body)

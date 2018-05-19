@@ -18,7 +18,13 @@
   `(with-accessors ((,prefix identity)
                     (,(box.math.common::%make-accessor-symbol prefix 'x) x)
                     (,(box.math.common::%make-accessor-symbol prefix 'y) y)
-                    (,(box.math.common::%make-accessor-symbol prefix 'z) z))
+                    (,(box.math.common::%make-accessor-symbol prefix 'z) z)
+                    (,(box.math.common::%make-accessor-symbol prefix 'r) .r)
+                    (,(box.math.common::%make-accessor-symbol prefix 'g) .g)
+                    (,(box.math.common::%make-accessor-symbol prefix 'b) .b)
+                    (,(box.math.common::%make-accessor-symbol prefix 's) .s)
+                    (,(box.math.common::%make-accessor-symbol prefix 't) .t)
+                    (,(box.math.common::%make-accessor-symbol prefix 'p) .p))
        ,vec
      ,(if rest
           `(with-components ,rest ,@body)
