@@ -66,6 +66,7 @@
   (v4:make (color-filter (.rgb color) filter exposure) (.a color)))
 
 ;;; Tone mapping
+;;; http://filmicworlds.com/blog/filmic-tonemapping-operators/
 
 (defun-gpu tone-map-linear ((color :vec3)
                             (exposure :int))
@@ -83,3 +84,47 @@
 (defun-gpu tone-map-reinhard ((color :vec4)
                               (exposure :int))
   (v4:make (tone-map-reinhard (.rgb color) exposure) (.a color)))
+
+(defun-gpu tone-map-haarm-peter-duiker ((color :vec3)
+                                        (exposure :int)
+                                        (film-lut :sampler-2d))
+  (let* ((color (set-exposure color exposure))
+         (log-color (saturate (/ (+ (* (/ (log10 (* 0.4 color)) 0.002) 0.45) 444) 1023.0)))
+         (padding (/ 0.5 256))
+         (r (v2:make (mix padding (- 1 padding) (.r color)) 0.5))
+         (g (v2:make (mix padding (- 1 padding) (.g color)) 0.5))
+         (b (v2:make (mix padding (- 1 padding) (.b color)) 0.5)))
+    (v3:make (.r (texture film-lut r))
+             (.r (texture film-lut g))
+             (.r (texture film-lut b)))))
+
+(defun-gpu tone-map-haarm-peter-duiker ((color :vec4)
+                                        (exposure :int)
+                                        (film-lut :sampler-2d))
+  (v4:make (tone-map-haarm-peter-duiker (.rgb color) exposure film-lut) (.a color)))
+
+(defun-gpu tone-map-hejl-burgess-dawson ((color :vec3)
+                                         (exposure :int))
+  (let* ((color (set-exposure color exposure))
+         (x (max (v3:make 0) (- color 0.004)))
+         (y (* 6.2 x)))
+    (/ (* x (+ y 0.5))
+       (+ (* x (+ y 1.7)) 0.06))))
+
+(defun-gpu tone-map-hejl-burgess-dawson ((color :vec4)
+                                         (exposure :int))
+  (v4:make (tone-map-hejl-burgess-dawson (.rgb color) exposure) (.a color)))
+
+(defun-gpu tone-map-uncharted2 ((color :vec3)
+                                (exposure :int))
+  (flet ((tone-map ((x :vec3))
+           (- (/ (+ (* x (+ (* 0.15 x) 0.05)) 0.004)
+                 (+ (* x (+ (* 0.15 x) 0.5)) 0.06))
+              0.006)))
+    (expt (* (tone-map (* 2 (set-exposure color exposure)))
+             (/ (tone-map (v3:make 11.2))))
+          (v3:make +gamma+))))
+
+(defun-gpu tone-map-uncharted2 ((color :vec4)
+                                (exposure :int))
+  (v4:make (tone-map-uncharted2 (.rgb color) exposure) (.a color)))

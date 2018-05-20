@@ -13,7 +13,8 @@
 
 (defpackage+ #:umbra.color
   (:use #:umbra.common #:umbra.math)
-  (:local-nicknames (#:v3 #:box.math.vec3)
+  (:local-nicknames (#:v2 #:box.math.vec2)
+                    (#:v3 #:box.math.vec3)
                     (#:v4 #:box.math.vec4)
                     (#:m3 #:box.math.mat3))
   ;; color space conversion
@@ -44,7 +45,10 @@
            #:set-gamma
            #:color-filter
            #:tone-map-linear
-           #:tone-map-reinhard))
+           #:tone-map-reinhard
+           #:tone-map-haarm-peter-duiker
+           #:tone-map-hejl-burgess-dawson
+           #:tone-map-uncharted2))
 
 (defpackage+ #:umbra.easing
   (:use #:umbra.common #:umbra.math)
