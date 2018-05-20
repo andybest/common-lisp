@@ -32,7 +32,7 @@
   type
   (location -1))
 
-(defun find-progra(program-name)
+(defun find-program (program-name)
   (au:href (programs *state*) program-name))
 
 (defun compile-stages (program)

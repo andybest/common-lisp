@@ -26,10 +26,6 @@
     (:uniform :ubo)
     (:buffer :ssbo)))
 
-(defun find-buffer-block (buffer-type program-name block-id)
-  (let ((block-type (buffer-type->block-type buffer-type)))
-    (find-block program-name block-type block-id)))
-
 (defun find-buffer (buffer-name)
   (au:href (buffers *state*) buffer-name))
 
