@@ -3,13 +3,14 @@
 (defclass state ()
   ((%programs :reader programs
               :initform (au:dict #'eq))
-   (%block-bindings :reader block-bindings
-                    :initform (au:dict #'eq :uniform (au:dict) :buffer (au:dict)))
+   (%blocks :reader blocks
+            :initform (au:dict #'eq :bindings (au:dict #'eq :uniform (au:dict)
+                                                            :buffer (au:dict))
+                                    :aliases (au:dict #'equalp)))
    (%dependencies :reader dependencies
-                  :initform (au:dict #'eq
-                                     :fn->deps (au:dict #'equal)
-                                     :dep->fns (au:dict #'equal)
-                                     :stage-fn->programs (au:dict #'equal)))
+                  :initform (au:dict #'eq :fn->deps (au:dict #'equal)
+                                          :dep->fns (au:dict #'equal)
+                                          :stage-fn->programs (au:dict #'equal)))
    (%modify-hook :accessor modify-hook
                  :initform (constantly nil))
    (%buffers :reader buffers

@@ -8,7 +8,11 @@
    (%type :reader block-type
           :initarg :type)
    (%layout :reader layout
-            :initarg :layout)))
+            :initarg :layout)
+   (%program :reader program
+             :initarg :program)
+   (%binding-point :reader binding-point
+                   :initform 0)))
 
 (au:define-printer (shader-block stream :type nil)
   (format stream "BLOCK ~s" (id shader-block)))
@@ -31,17 +35,33 @@
                            :id id
                            :name (format nil "_~a_~a" buffer-type name)
                            :type block-type
-                           :layout layout)))))
+                           :layout layout
+                           :program program)))))
+
+(defun create-block-alias (block-type block-id program-name block-alias)
+  (let* ((program-name (name (find-program program-name)))
+         (block (%find-block program-name block-type block-id)))
+    (if (au:href (blocks *state*) :aliases block-alias)
+        (error "The block alias ~s is already in use." block-alias)
+        (setf (au:href (blocks *state*) :aliases block-alias) block))))
+
+(defun delete-block-alias (block-alias &key unbind-block)
+  (when unbind-block
+    (unbind-block block-alias))
+  (remhash block-alias (au:href (blocks *state*) :aliases)))
 
 (defun store-blocks (program stage)
   (dolist (layout (collect-layouts stage))
     (make-block program layout)))
 
-(defun find-block (program-name block-type block-id)
+(defun %find-block (program-name block-type block-id)
   (if (keywordp block-id)
       (au:when-let ((program (find-program program-name)))
         (au:href (blocks program) (cons block-type block-id)))
       (error "Block ID must be a keyword symbol: ~a" block-id)))
+
+(defun find-block (block-alias)
+  (au:href (blocks *state*) :aliases block-alias))
 
 (defun block-binding-valid-p (block binding-point)
   (every
@@ -49,26 +69,27 @@
      (varjo:v-type-eq
       (varjo:v-type-of (uniform (layout block)))
       (varjo:v-type-of (uniform (layout x)))))
-   (au:href (block-bindings *state*) (block-type block) binding-point)))
+   (au:href (blocks *state*) :bindings (block-type block) binding-point)))
 
-(defun ensure-valid-block-binding (block binding-point)
-  (or (block-binding-valid-p block binding-point)
-      (error "Cannot bind a block to a binding point with existing blocks of a different layout.")))
-
-(defun bind-uniform-block (program-name block-id binding-point)
-  "Bind a uniform block to a binding point."
-  (let* ((program-id (id (find-program program-name)))
-         (block (find-block program-name :uniform block-id))
+(defmethod %bind-block ((block-type (eql :uniform)) block binding-point)
+  (let* ((program-id (id (program block)))
          (index (%gl:get-uniform-block-index program-id (name block))))
-    (ensure-valid-block-binding block binding-point)
-    (pushnew block (au:href (block-bindings *state*) :uniform binding-point))
     (%gl:uniform-block-binding program-id index binding-point)))
 
-(defun bind-shader-storage-block (program-name block-id binding-point)
-  "Bind a shader storage block to a binding point."
-  (let* ((program-id (id (find-program program-name)))
-         (block (find-block program-name :buffer block-id))
+(defmethod %bind-block ((block-type (eql :buffer)) block binding-point)
+  (let* ((program-id (id (program block)))
          (index (gl:get-program-resource-index program-id :shader-storage-block (name block))))
-    (ensure-valid-block-binding block binding-point)
-    (pushnew block (au:href (block-bindings *state*) :buffer binding-point))
     (%gl:shader-storage-block-binding program-id index binding-point)))
+
+(defun bind-block (block-alias binding-point)
+  "Bind a block referenced by BLOCK-ALIAS to a binding point."
+  (let* ((block (find-block block-alias)))
+    (or (block-binding-valid-p block binding-point)
+        (error "Cannot bind a block to a binding point with existing blocks of a different layout."))
+    (pushnew block (au:href (blocks *state*) :bindings (block-type block) binding-point))
+    (%bind-block (block-type block) block binding-point)
+    (setf (slot-value block '%binding-point) binding-point)))
+
+(defun unbind-block (block-alias)
+  "Unbind a block with the alias BLOCK-ALIAS."
+  (bind-block block-alias 0))

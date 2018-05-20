@@ -12,10 +12,13 @@
            #:build-shader-dictionary
            #:update-shader-programs
            #:set-modify-hook
-           #:bind-uniform-block
-           #:bind-shader-storage-block
+           #:create-block-alias
+           #:find-block
+           #:bind-block
+           #:unbind-block
            #:create-buffer
            #:bind-buffer
+           #:unbind-buffer
            #:delete-buffer
            #:write-buffer-path
            #:with-shader-program

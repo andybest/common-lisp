@@ -32,7 +32,7 @@
   type
   (location -1))
 
-(defun find-program (program-name)
+(defun find-progra(program-name)
   (au:href (programs *state*) program-name))
 
 (defun compile-stages (program)
@@ -144,6 +144,7 @@ list of their names"
 
 (defun reset-program-state ()
   (clrhash (au:href (programs *state*)))
-  (clrhash (au:href (block-bindings *state*) :uniform))
-  (clrhash (au:href (block-bindings *state*) :buffer))
+  (clrhash (au:href (blocks *state*) :bindings :uniform))
+  (clrhash (au:href (blocks *state*) :bindings :buffer))
+  (clrhash (au:href (blocks *state*) :aliases))
   (clrhash (au:href (buffers *state*))))
