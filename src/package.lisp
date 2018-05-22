@@ -6,6 +6,7 @@
            #:+epsilon+))
 
 (defpackage+ #:box.math.vec2i
+  (:nicknames #:v2i)
   (:use #:cl
         #:box.math.common)
   (:shadow #:=
@@ -69,7 +70,7 @@
            #:max))
 
 (defpackage+ #:box.math.vec2f
-  (:nicknames #:box.math.vec2)
+  (:nicknames #:v2f #:v2)
   (:use #:cl
         #:box.math.common)
   (:shadow #:=
@@ -142,6 +143,7 @@
            #:max))
 
 (defpackage+ #:box.math.vec3i
+  (:nicknames #:v3i)
   (:use #:cl
         #:box.math.common)
   (:shadow #:=
@@ -209,7 +211,7 @@
            #:max))
 
 (defpackage+ #:box.math.vec3f
-  (:nicknames #:box.math.vec3)
+  (:nicknames #:v3f #:v3)
   (:use #:cl
         #:box.math.common)
   (:shadow #:=
@@ -287,6 +289,7 @@
            #:max))
 
 (defpackage+ #:box.math.vec4i
+  (:nicknames #:v4i)
   (:use #:cl
         #:box.math.common)
   (:shadow #:=
@@ -352,7 +355,7 @@
            #:max))
 
 (defpackage+ #:box.math.vec4f
-  (:nicknames #:box.math.vec4)
+  (:nicknames #:v4f #:v4)
   (:use #:cl
         #:box.math.common)
   (:shadow #:=
@@ -425,7 +428,7 @@
            #:max!
            #:max))
 (defpackage+ #:box.math.mat2
-  (:local-nicknames (#:v2 #:box.math.vec2f))
+  (:nicknames #:m2)
   (:use #:cl
         #:box.math.common)
   (:shadow #:=
@@ -480,8 +483,7 @@
            #:anti-diagonal))
 
 (defpackage+ #:box.math.mat3
-  (:local-nicknames (#:v2 #:box.math.vec2f)
-                    (#:v3 #:box.math.vec3f))
+  (:nicknames  #:m3)
   (:use #:cl
         #:box.math.common)
   (:shadow #:=
@@ -544,8 +546,7 @@
            #:anti-diagonal))
 
 (defpackage+ #:box.math.mat4
-  (:local-nicknames (#:v3 #:box.math.vec3f)
-                    (#:v4 #:box.math.vec4f))
+  (:nicknames #:m4)
   (:use #:cl
         #:box.math.common)
   (:shadow #:=
@@ -621,9 +622,7 @@
            #:perspective-projection))
 
 (defpackage+ #:box.math.quat
-  (:local-nicknames (#:v3 #:box.math.vec3f)
-                    (#:v4 #:box.math.vec4f)
-                    (#:m4 #:box.math.mat4))
+  (:nicknames #:q)
   (:use #:cl
         #:box.math.common)
   (:shadow #:=
@@ -687,9 +686,7 @@
            #:slerp))
 
 (defpackage+ #:box.math.dquat
-  (:local-nicknames (#:v3 #:box.math.vec3f)
-                    (#:m4 #:box.math.mat4)
-                    (#:q #:box.math.quat))
+  (:nicknames #:dq)
   (:use #:cl
         #:box.math.common)
   (:shadow #:=

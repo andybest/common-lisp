@@ -1,12 +1,6 @@
 (in-package :defpackage+-user-1)
 
 (defpackage+ #:box.math.vari
-  (:local-nicknames (#:v2 #:box.math.vec2f)
-                    (#:v3 #:box.math.vec3f)
-                    (#:v4 #:box.math.vec4f)
-                    (#:m2 #:box.math.mat2)
-                    (#:m3 #:box.math.mat3)
-                    (#:m4 #:box.math.mat4))
   (:inherit #:cl
             #:vari)
   (:import-from #:varjo
