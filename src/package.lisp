@@ -89,3 +89,13 @@
   (:local-nicknames (#:v2 #:box.math.vec2)
                     (#:v4 #:box.math.vec4))
   (:export #:graph))
+
+(defpackage+ #:umbra.hashing
+  (:use #:umbra.common)
+  (:local-nicknames (#:v2 #:box.math.vec2)
+                    (#:v4 #:box.math.vec4))
+  (:export #:blum-blum-shub
+           #:blum-blum-shub/hq
+           #:sgpp
+           #:fast32
+           #:fast32-2))

@@ -20,4 +20,5 @@
    (:file "color-space")
    (:file "color-grading")
    (:file "easing")
-   (:file "graph")))
+   (:file "graph")
+   (:file "hashing")))
