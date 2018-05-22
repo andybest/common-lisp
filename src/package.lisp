@@ -88,6 +88,6 @@
   (:use #:umbra.common)
   (:export #:blum-blum-shub
            #:blum-blum-shub/hq
-           #:sgpp
+           #:permutation-polynomial
            #:fast32
            #:fast32-2))
