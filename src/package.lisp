@@ -13,10 +13,6 @@
 
 (defpackage+ #:umbra.color
   (:use #:umbra.common #:umbra.math)
-  (:local-nicknames (#:v2 #:box.math.vec2)
-                    (#:v3 #:box.math.vec3)
-                    (#:v4 #:box.math.vec4)
-                    (#:m3 #:box.math.mat3))
   ;; color space conversion
   (:export #:rgb->grayscale
            #:hue->rgb
@@ -86,14 +82,10 @@
 
 (defpackage+ #:umbra.graph
   (:use #:umbra.common)
-  (:local-nicknames (#:v2 #:box.math.vec2)
-                    (#:v4 #:box.math.vec4))
   (:export #:graph))
 
 (defpackage+ #:umbra.hashing
   (:use #:umbra.common)
-  (:local-nicknames (#:v2 #:box.math.vec2)
-                    (#:v4 #:box.math.vec4))
   (:export #:blum-blum-shub
            #:blum-blum-shub/hq
            #:sgpp
