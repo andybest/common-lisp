@@ -21,4 +21,5 @@
    (:file "color-grading")
    (:file "easing")
    (:file "graph")
-   (:file "hashing")))
+   (:file "hashing")
+   (:file "signal")))

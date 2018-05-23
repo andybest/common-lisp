@@ -91,3 +91,14 @@
            #:permutation-polynomial
            #:fast32
            #:fast32-2))
+
+(defpackage+ #:umbra.signal
+  (:use #:umbra.common #:umbra.math)
+  (:export #:almost-identity
+           #:impulse
+           #:cubic-pulse
+           #:exponential-step
+           #:gain
+           #:parabola
+           #:power-curve
+           #:sinc-curve))
