@@ -46,8 +46,9 @@
            #:tone-map-hejl-burgess-dawson
            #:tone-map-uncharted2))
 
-(defpackage+ #:umbra.easing
+(defpackage+ #:umbra.shaping
   (:use #:umbra.common #:umbra.math)
+  ;; penner
   (:export #:linear
            #:sine-out
            #:sine-in
@@ -78,7 +79,16 @@
            #:elastic-in-out
            #:bounce-out
            #:bounce-in
-           #:bounce-in-out))
+           #:bounce-in-out)
+  ;; iq
+  (:export #:almost-identity
+           #:impulse
+           #:cubic-pulse
+           #:exponential-step
+           #:gain
+           #:parabola
+           #:power-curve
+           #:sinc-curve))
 
 (defpackage+ #:umbra.graph
   (:use #:umbra.common)
@@ -91,14 +101,3 @@
            #:permutation-polynomial
            #:fast32
            #:fast32-2))
-
-(defpackage+ #:umbra.signal
-  (:use #:umbra.common #:umbra.math)
-  (:export #:almost-identity
-           #:impulse
-           #:cubic-pulse
-           #:exponential-step
-           #:gain
-           #:parabola
-           #:power-curve
-           #:sinc-curve))

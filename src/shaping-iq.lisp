@@ -1,6 +1,6 @@
-(in-package :umbra.signal)
+(in-package :umbra.shaping)
 
-;;; Signal shaping functions
+;;; iq shaping functions
 ;;; Credits:
 ;;; Inigo Quilez http://www.iquilezles.org/www/articles/functions/functions.htm
 

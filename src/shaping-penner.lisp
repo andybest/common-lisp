@@ -1,6 +1,6 @@
-(in-package :umbra.easing)
+(in-package :umbra.shaping)
 
-;;;; Robert Penner's Easing functions
+;;;; Robert Penner's easing functions
 ;;;; Specify the rate of change for a parameter over time.
 ;;;; http://www.robertpenner.com/easing
 
