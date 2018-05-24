@@ -48,7 +48,6 @@
 
 (defpackage+ #:umbra.shaping
   (:use #:umbra.common #:umbra.math)
-  ;; penner
   (:export #:linear
            #:sine-out
            #:sine-in
@@ -79,16 +78,28 @@
            #:elastic-in-out
            #:bounce-out
            #:bounce-in
-           #:bounce-in-out)
-  ;; iq
-  (:export #:almost-identity
+           #:bounce-in-out
+           #:almost-identity
            #:impulse
            #:cubic-pulse
            #:exponential-step
            #:gain
            #:parabola
            #:power-curve
-           #:sinc-curve))
+           #:sinc-curve
+           #:exponential-emphasis
+           #:double-exponential-seat
+           #:double-exponential-sigmoid
+           #:logistic-sigmoid
+           #:double-circle-seat
+           #:double-circle-sigmoid
+           #:double-elliptical-seat
+           #:double-elliptical-sigmoid
+           #:blinn-wyvill-raised-inverted-cosine
+           #:double-cubic-seat
+           #:double-cubic-seat/linear-blend
+           #:double-odd-polynomial-seat
+           #:quadratic-point))
 
 (defpackage+ #:umbra.graph
   (:use #:umbra.common)
