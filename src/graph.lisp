@@ -24,4 +24,4 @@
                   (incf my-samples)
                   (incf count (1- (* (step 0 diff) 2)))))))
     (* (- 1 (/ (abs count) my-samples))
-       (v4:make (.xyz line-style) 1))))
+       (vec4 (.xyz line-style) 1))))
