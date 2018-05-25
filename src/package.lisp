@@ -140,4 +140,5 @@
            #:perlin
            #:perlin/surflet
            #:perlin/improved
-           #:value-perlin))
+           #:value-perlin
+           #:cubist))

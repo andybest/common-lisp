@@ -29,4 +29,6 @@
    (:file "hashing-fast32")
    (:file "hashing-fast32-2")
    (:file "noise-value")
-   (:file "noise-perlin")))
+   (:file "noise-perlin")
+   (:file "noise-value-perlin")
+   (:file "noise-cubist")))
