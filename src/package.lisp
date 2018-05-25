@@ -49,6 +49,7 @@
 
 (defpackage+ #:umbra.shaping
   (:use #:umbra.common #:umbra.math)
+  ;; penner
   (:export #:linear
            #:sine-out
            #:sine-in
@@ -79,16 +80,18 @@
            #:elastic-in-out
            #:bounce-out
            #:bounce-in
-           #:bounce-in-out
-           #:almost-identity
+           #:bounce-in-out)
+  ;; iq
+  (:export #:almost-identity
            #:impulse
            #:cubic-pulse
            #:exponential-step
            #:gain
            #:parabola
            #:power-curve
-           #:sinc-curve
-           #:exponential-emphasis
+           #:sinc-curve)
+  ;; levin
+  (:export #:exponential-emphasis
            #:double-exponential-seat
            #:double-exponential-sigmoid
            #:logistic-sigmoid
@@ -100,8 +103,9 @@
            #:double-cubic-seat
            #:double-cubic-seat/linear-blend
            #:double-odd-polynomial-seat
-           #:quadratic-point
-           #:hermite-curve
+           #:quadratic-point)
+  ;; misc
+  (:export #:hermite-curve
            #:quintic-curve
            #:quintic-curve/interpolate-derivative
            #:quintic-curv/derivative
@@ -132,7 +136,8 @@
 
 (defpackage+ #:umbra.noise
   (:use #:umbra.common #:umbra.math)
-  (:export #:value-noise
-           #:perlin-noise
-           #:perlin-noise/surflet
-           #:perlin-noise/improved))
+  (:export #:value
+           #:perlin
+           #:perlin/surflet
+           #:perlin/improved
+           #:value-perlin))
