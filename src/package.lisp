@@ -9,7 +9,8 @@
            #:+pi+
            #:+half-pi+
            #:log10
-           #:saturate))
+           #:saturate
+           #:map-domain))
 
 (defpackage+ #:umbra.color
   (:use #:umbra.common #:umbra.math)
