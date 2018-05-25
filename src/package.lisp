@@ -129,3 +129,10 @@
            #:fast32/cell
            #:fast32-2
            #:fast32-2/4-per-corner))
+
+(defpackage+ #:umbra.noise
+  (:use #:umbra.common #:umbra.math)
+  (:export #:value-noise
+           #:perlin-noise
+           #:perlin-noise/surflet
+           #:perlin-noise/improved))
