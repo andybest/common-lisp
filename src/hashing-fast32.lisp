@@ -118,7 +118,7 @@
 (defun-gpu fast32/4-per-corner ((grid-cell :vec3))
   (decf grid-cell (* (floor (* grid-cell (/ 69.0))) 69.0))
   (let* ((grid-cell-inc1 (* (step grid-cell (vec3 67.5)) (1+ grid-cell)))
-         (p (* (vec4 (.xy grid-cell) (.xy grid-cell-inc1))
+         (p (+ (vec4 (.xy grid-cell) (.xy grid-cell-inc1))
                (vec4 50 161 50 161)))
          (floats (vec4 "635.298681" "682.357502" "668.926525" "588.255119"))
          (z-inc (vec4 "48.500388" "65.294118" "63.934599" "63.279683"))
