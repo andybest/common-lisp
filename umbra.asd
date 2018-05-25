@@ -19,7 +19,6 @@
    (:file "math")
    (:file "color-space")
    (:file "color-grading")
-   (:file "shaping-penner")
-   (:file "shaping-iq")
+   (:file "shaping")
    (:file "graph")
    (:file "hashing")))

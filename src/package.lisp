@@ -99,7 +99,16 @@
            #:double-cubic-seat
            #:double-cubic-seat/linear-blend
            #:double-odd-polynomial-seat
-           #:quadratic-point))
+           #:quadratic-point
+           #:hermite-curve
+           #:quintic-curve
+           #:quintic-curve/interpolate-derivative
+           #:quintic-curv/derivative
+           #:quintic-curve/fast
+           #:quintic-hermite
+           #:quintic-hermite/derivative
+           #:falloff-squared-c1
+           #:falloff-squared-c2))
 
 (defpackage+ #:umbra.graph
   (:use #:umbra.common)
