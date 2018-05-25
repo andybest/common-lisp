@@ -141,4 +141,6 @@
            #:perlin/surflet
            #:perlin/improved
            #:value-perlin
-           #:cubist))
+           #:cubist
+           #:cellular
+           #:cellular/fast))

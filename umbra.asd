@@ -31,4 +31,5 @@
    (:file "noise-value")
    (:file "noise-perlin")
    (:file "noise-value-perlin")
-   (:file "noise-cubist")))
+   (:file "noise-cubist")
+   (:file "noise-cellular")))
