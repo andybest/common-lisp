@@ -140,9 +140,13 @@
            #:perlin
            #:perlin/surflet
            #:perlin/improved
+           #:perlin/simplex
            #:value-perlin
            #:cubist
            #:cellular
            #:cellular/fast
+           #:cellular/simplex
            #:polkadot
-           #:polkadot/box))
+           #:polkadot/simplex
+           #:polkadot/box
+           #:stars))

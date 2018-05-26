@@ -4,6 +4,8 @@
 ;;;; Value Perlin noise
 ;;;; A uniform blend between value and perlin noise
 
+(defconstant +value-perlin/scale+ (/ (sqrt 0.5)))
+
 (defun-gpu value-perlin ((p :vec2)
                          (blend-value :float)
                          (hash-fn (function (:vec2) (:vec4 :vec4 :vec4))))
@@ -16,7 +18,7 @@
                                 (* (inversesqrt (+ (* grad-x grad-x) (* grad-y grad-y)))
                                    (+ (* grad-x (.xzxz pf-pfmin1))
                                       (* grad-y (.yyww pf-pfmin1)))
-                                   "1.4142135623730950488016887242097")
+                                   +value-perlin/scale+)
                                 blend-value))
              (blend (umbra.shaping:quintic-curve (.xy pf-pfmin1)))
              (blend2 (vec4 blend (- 1 blend))))
@@ -49,7 +51,7 @@
                                     (+ (* (.xyxy (vec2 (.x pf) (.x pf-min1))) grad-x0)
                                        (* (.xxyy (vec2 (.y pf) (.y pf-min1))) grad-y0)
                                        (* (.z pf) grad-z0))
-                                    "1.1547005383792515290182975610039")
+                                    +perlin/scale+)
                                  blend-value))
              (grad-results1 (mix (1- (* hash1 2))
                                  (* (inversesqrt (+ (* grad-x1 grad-x1)
@@ -58,7 +60,7 @@
                                     (+ (* (.xyxy (vec2 (.x pf) (.x pf-min1))) grad-x1)
                                        (* (.xxyy (vec2 (.y pf) (.y pf-min1))) grad-y1)
                                        (* (.z pf-min1) grad-z1))
-                                    "1.1547005383792515290182975610039")
+                                    +perlin/scale+)
                                  blend-value))
              (blend (umbra.shaping:quintic-curve pf))
              (res0 (mix grad-results0 grad-results1 (.z blend)))

@@ -3,6 +3,9 @@
 ;;;; Noise functions
 ;;;; Perlin noise
 
+(defconstant +perlin/scale+ (/ (sqrt 0.75)))
+(defconstant +perlin/surflet-scale+ (/ (expt 0.75 3)))
+
 (defun-gpu perlin ((p :vec2)
                    (hash-fn (function (:vec2) (:vec4 :vec4))))
   (let* ((pi (floor p))
@@ -15,10 +18,8 @@
                                  (* grad-y (.yyww pf-pfmin1)))))
              (blend (umbra.shaping:quintic-curve (.xy pf-pfmin1)))
              (blend2 (vec4 blend (- 1 blend))))
-        (multf grad-results (vec4 "1.4142135623730950488016887242097"))
-        (map-domain
-         (dot grad-results (* (.zxzx blend2) (.wwyy blend2)))
-         -1 1 0 1)))))
+        (multf grad-results (vec4 1.4142135))
+        (map-domain (dot grad-results (* (.zxzx blend2) (.wwyy blend2))) -1 1 0 1)))))
 
 (defun-gpu perlin ((p :vec2))
   (perlin p (lambda ((x :vec2)) (umbra.hashing:fast32/2-per-corner x))))
@@ -35,12 +36,12 @@
                                  (* grad-y (.yyww pf-pfmin1)))))
              (vecs-len-sq (* pf-pfmin1 pf-pfmin1)))
         (setf vecs-len-sq (+ (.xzxz vecs-len-sq) (.yyww vecs-len-sq)))
-        (multf grad-results (vec4 "2.3703703703703703703703703703704"))
+        (multf grad-results (vec4 2.3703704))
         (map-domain
          (dot (umbra.shaping:falloff-squared-c2 (min (vec4 1) vecs-len-sq)) grad-results)
          -1 1 0 1)))))
 
-(defun-gpu perlin-noise/surflet ((p :vec2))
+(defun-gpu perlin/surflet ((p :vec2))
   (perlin/surflet p (lambda ((x :vec2)) (umbra.hashing:fast32/2-per-corner x))))
 
 (defun-gpu perlin/improved ((p :vec2)
@@ -52,12 +53,37 @@
                           (* (.yyww pf-pfmin1) (sign (- (abs hash) 0.25)))))
          (blend (umbra.shaping:quintic-curve (.xy pf-pfmin1)))
          (blend2 (vec4 blend (- 1 blend))))
-    (map-domain
-     (dot grad-results (* (.zxzx blend2) (.wwyy blend2)))
-     -1 1 0 1)))
+    (map-domain (dot grad-results (* (.zxzx blend2) (.wwyy blend2))) -1 1 0 1)))
 
 (defun-gpu perlin/improved ((p :vec2))
   (perlin/improved p (lambda ((x :vec2)) (umbra.hashing:fast32 x))))
+
+(defun-gpu perlin/simplex ((p :vec2)
+                           (hash-fn (function (:vec2) (:vec4 :vec4))))
+  (let* ((simplex-points (vec3 (- 1 +simplex-2d/unskew-factor+)
+                               (- +simplex-2d/unskew-factor+)
+                               (- 1 (* 2 +simplex-2d/unskew-factor+))))
+         (p (* p +simplex-2d/triangle-height+))
+         (pi (floor (+ p (dot p (vec2 +simplex-2d/skew-factor+)))))
+         (v0 (- pi (dot pi (vec2 +simplex-2d/unskew-factor+)) p)))
+    (multiple-value-bind (x y) (funcall hash-fn pi)
+      (let* ((v1pos-v1hash (if (< (.x v0) (.y v0))
+                               (vec4 (.xy simplex-points) (.y x) (.y y))
+                               (vec4 (.yx simplex-points) (.z x) (.z y))))
+             (v12 (+ (vec4 (.xy v1pos-v1hash) (.zz simplex-points)) (.xyxy v0)))
+             (grad-x (- (vec3 (.x x) (.z v1pos-v1hash) (.w x)) 0.49999))
+             (grad-y (- (vec3 (.x y) (.w v1pos-v1hash) (.w y)) 0.49999))
+             (grad-results (* (inversesqrt (+ (* grad-x grad-x) (* grad-y grad-y)))
+                              (+ (* grad-x (vec3 (.x v0) (.xz v12)))
+                                 (* grad-y (vec3 (.y v0) (.yw v12))))))
+             (m (+ (* (vec3 (.x v0) (.xz v12)) (vec3 (.x v0) (.xz v12)))
+                   (* (vec3 (.y v0) (.yw v12)) (vec3 (.y v0) (.yw v12))))))
+        (setf m (max (- 0.5 m) 0.0))
+        (multf m m)
+        (map-domain (* (dot (* m m) grad-results) +simplex-2d/norm-factor+) -1 1 0 1)))))
+
+(defun-gpu perlin/simplex ((p :vec2))
+  (perlin/simplex p (lambda ((x :vec2)) (umbra.hashing:fast32/2-per-corner x))))
 
 (defun-gpu perlin ((p :vec3)
                    (hash-fn (function (:vec3) (:vec4 :vec4 :vec4 :vec4 :vec4 :vec4))))
@@ -86,10 +112,7 @@
              (blend (umbra.shaping:quintic-curve pf))
              (res0 (mix grad-results0 grad-results1 (.z blend)))
              (blend2 (vec4 (.xy blend) (- 1 (.xy blend)))))
-        (map-domain
-         (* (dot res0 (* (.zxzx blend2) (.wwyy blend2)))
-            "1.1547005383792515290182975610039")
-         -1 1 0 1)))))
+        (map-domain (* (dot res0 (* (.zxzx blend2) (.wwyy blend2))) +perlin/scale+) -1 1 0 1)))))
 
 (defun-gpu perlin ((p :vec3))
   (perlin p (lambda ((x :vec3)) (umbra.hashing:fast32/3-per-corner x))))
@@ -127,7 +150,7 @@
                       grad-results0)
                  (dot (umbra.shaping:falloff-squared-c2 (min (vec4 1) (+ vecs-len-sq (.z pf-min1))))
                       grad-results1))
-              "2.3703703703703703703703703703704")
+              +perlin/surflet-scale+)
            -1 1 0 1))))))
 
 (defun-gpu perlin/surflet ((p :vec3))
@@ -162,9 +185,7 @@
       (let* ((blend (umbra.shaping:quintic-curve pf))
              (res0 (mix grad-results-0 grad-results-1 (.z blend)))
              (blend2 (vec4 (.xy blend) (- 1 (.xy blend)))))
-        (map-domain
-         (* (dot res0 (* (.zxzx blend2) (.wwyy blend2))) (/ 2 3.0))
-         -1 1 0 1)))))
+        (map-domain (* (dot res0 (* (.zxzx blend2) (.wwyy blend2))) (/ 2 3.0)) -1 1 0 1)))))
 
 (defun-gpu perlin/improved ((p :vec3))
   (perlin/improved p (lambda ((x :vec3)) (umbra.hashing:fast32 x))))
@@ -227,9 +248,7 @@
                (res1 (+ grad-results-z1w0 (* (- grad-results-z1w1 grad-results-z1w0) (.w blend)))))
           (incf res0 (* (- res1 res0) (.z blend)))
           (setf (.zw blend) (- 1 (.xy blend)))
-          (map-domain
-           (dot res0 (* (.zxzx blend) (.wwyy blend)))
-           -1 1 0 1))))))
+          (map-domain (dot res0 (* (.zxzx blend) (.wwyy blend))) -1 1 0 1))))))
 
 (defun-gpu perlin ((p :vec4))
   (perlin p (lambda ((x :vec4)) (umbra.hashing:fast32-2/4-per-corner x))))
