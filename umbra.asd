@@ -32,4 +32,5 @@
    (:file "noise-perlin")
    (:file "noise-value-perlin")
    (:file "noise-cubist")
-   (:file "noise-cellular")))
+   (:file "noise-cellular")
+   (:file "noise-polkadot")))

@@ -143,4 +143,6 @@
            #:value-perlin
            #:cubist
            #:cellular
-           #:cellular/fast))
+           #:cellular/fast
+           #:polkadot
+           #:polkadot/box))
