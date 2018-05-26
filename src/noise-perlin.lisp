@@ -232,4 +232,4 @@
            -1 1 0 1))))))
 
 (defun-gpu perlin ((p :vec4))
-  (perlin-noise p (lambda ((x :vec4)) (umbra.hashing:fast32-2/4-per-corner x))))
+  (perlin p (lambda ((x :vec4)) (umbra.hashing:fast32-2/4-per-corner x))))
