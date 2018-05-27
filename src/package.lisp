@@ -108,7 +108,7 @@
   (:export #:hermite-curve
            #:quintic-curve
            #:quintic-curve/interpolate-derivative
-           #:quintic-curv/derivative
+           #:quintic-curve/derivative
            #:quintic-curve/fast
            #:quintic-hermite
            #:quintic-hermite/derivative
@@ -137,6 +137,7 @@
 (defpackage+ #:umbra.noise
   (:use #:umbra.common #:umbra.math)
   (:export #:value
+           #:value/deriv
            #:perlin
            #:perlin/surflet
            #:perlin/improved

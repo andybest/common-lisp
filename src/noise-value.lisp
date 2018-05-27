@@ -3,8 +3,8 @@
 ;;;; Noise functions
 ;;;; Value noise
 
-(defun-gpu value-noise ((p :vec2)
-                        (hash-fn (function (:vec2) :vec4)))
+(defun-gpu value ((p :vec2)
+                  (hash-fn (function (:vec2) :vec4)))
   (let* ((pi (floor p))
          (pf (- p pi))
          (hash (funcall hash-fn pi))
@@ -12,11 +12,24 @@
          (blend2 (vec4 blend (- 1 blend))))
     (dot hash (* (.zxzx blend2) (.wwyy blend2)))))
 
-(defun-gpu value-noise ((p :vec2))
-  (value-noise p (lambda ((x :vec2)) (umbra.hashing:fast32 x))))
+(defun-gpu value ((p :vec2))
+  (value p (lambda ((x :vec2)) (umbra.hashing:fast32 x))))
 
-(defun-gpu value-noise ((p :vec3)
-                        (hash-fn (function (:vec3) (:vec4 :vec4))))
+(defun-gpu value/deriv ((p :vec2)
+                        (hash-fn (function (:vec2) :vec4)))
+  (let* ((pi (floor p))
+         (pf (- p pi))
+         (hash (funcall hash-fn pi))
+         (blend (umbra.shaping:quintic-curve/interpolate-derivative pf))
+         (res0 (mix (.xyxz hash) (.zwyw hash) (.yyxx blend))))
+    (+ (vec3 (.x res0) 0 0)
+       (* (- (.yyw res0) (.xxz res0)) (.xzw blend)))))
+
+(defun-gpu value/deriv ((p :vec2))
+  (value/deriv p (lambda ((x :vec2)) (umbra.hashing:fast32 x))))
+
+(defun-gpu value ((p :vec3)
+                  (hash-fn (function (:vec3) (:vec4 :vec4))))
   (let* ((pi (floor p))
          (pf (- p pi)))
     (multiple-value-bind (low-z high-z) (funcall hash-fn pi)
@@ -25,11 +38,30 @@
              (blend2 (vec4 (.xy blend) (- 1 (.xy blend)))))
         (dot res0 (* (.zxzx blend2) (.wwyy blend2)))))))
 
-(defun-gpu value-noise ((p :vec3))
-  (value-noise p (lambda ((x :vec3)) (umbra.hashing:fast32 x))))
+(defun-gpu value ((p :vec3))
+  (value p (lambda ((x :vec3)) (umbra.hashing:fast32 x))))
 
-(defun-gpu value-noise ((p :vec4)
-                        (hash-fn (function (:vec4) (:vec4 :vec4 :vec4 :vec4))))
+(defun-gpu value/deriv ((p :vec3)
+                        (hash-fn (function (:vec3) (:vec4 :vec4))))
+  (let* ((pi (floor p))
+         (pf (- p pi)))
+    (multiple-value-bind (low-z high-z) (funcall hash-fn pi)
+      (let* ((blend (umbra.shaping:quintic-curve pf))
+             (res0 (mix low-z high-z (.z blend)))
+             (res1 (mix (.xyxz res0) (.zwyw res0) (.yyxx blend)))
+             (res3 (mix (vec4 (.xy low-z) (.xy high-z))
+                        (vec4 (.zw low-z) (.zw high-z))
+                        (.y blend)))
+             (res4 (mix (.xz res3) (.yw res3) (.x blend))))
+        (+ (vec4 (.x res1) 0 0 0)
+           (* (- (vec4 (.yyw res1) (.y res4)) (vec4 (.xxz res1) (.x res4)))
+              (vec4 (.x blend) (umbra.shaping:quintic-curve/derivative pf))))))))
+
+(defun-gpu value/deriv ((p :vec3))
+  (value/deriv p (lambda ((x :vec3)) (umbra.hashing:fast32 x))))
+
+(defun-gpu value ((p :vec4)
+                  (hash-fn (function (:vec4) (:vec4 :vec4 :vec4 :vec4))))
   (let* ((pi (floor p))
          (pf (- p pi)))
     (multiple-value-bind (z0w0 z1w0 z0w1 z1w1) (funcall hash-fn pi)
@@ -40,5 +72,5 @@
         (setf (.zw blend) (- 1 (.xy blend)))
         (dot res0 (* (.zxzx blend) (.wwyy blend)))))))
 
-(defun-gpu value-noise ((p :vec4))
-  (value-noise p (lambda ((x :vec4)) (umbra.hashing:fast32-2 x))))
+(defun-gpu value ((p :vec4))
+  (value p (lambda ((x :vec4)) (umbra.hashing:fast32-2 x))))
