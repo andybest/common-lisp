@@ -149,4 +149,6 @@
            #:polkadot
            #:polkadot/simplex
            #:polkadot/box
-           #:stars))
+           #:stars
+           #:hermite
+           #:value-hermite))

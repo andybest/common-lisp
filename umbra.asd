@@ -36,4 +36,5 @@
    (:file "noise-cellular")
    (:file "noise-polkadot")
    (:file "noise-stars")
-   (:file "noise-hermite")))
+   (:file "noise-hermite")
+   (:file "noise-value-hermite")))

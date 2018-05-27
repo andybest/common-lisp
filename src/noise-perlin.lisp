@@ -190,6 +190,22 @@
 (defun-gpu perlin/improved ((p :vec3))
   (perlin/improved p (lambda ((x :vec3)) (umbra.hashing:fast32 x))))
 
+(defun-gpu perlin/simplex ((p :vec3)
+                           (hash-fn (function (:vec3 :vec3 :vec3) (:vec4 :vec4 :vec4))))
+  (multiple-value-bind (pi pi1 pi2 v1234-x v1234-y v1234-z) (simplex/get-corner-vectors p)
+    (multiple-value-bind (x y z) (funcall hash-fn pi pi1 pi2)
+      (decf x (vec4 0.49999))
+      (decf y (vec4 0.49999))
+      (decf z (vec4 0.49999))
+      (let ((grad-results (* (inversesqrt (+ (* x x) (* y y) (* z z)))
+                             (+ (* x v1234-x) (* y v1234-y) (* z v1234-z))))
+            (weights (simplex/get-surflet-weights v1234-x v1234-y v1234-z)))
+        (map-domain (* (dot weights grad-results) +simplex-3d/norm-factor+) -1 1 0 1)))))
+
+(defun-gpu perlin/simplex ((p :vec3))
+  (perlin/simplex p (lambda ((x :vec3) (y :vec3) (z :vec3))
+                      (umbra.hashing:fast32/3-per-corner x y z))))
+
 (defun-gpu perlin ((p :vec4)
                    (hash-fn (function (:vec4) (:vec4 :vec4 :vec4 :vec4
                                                :vec4 :vec4 :vec4 :vec4
