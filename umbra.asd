@@ -35,4 +35,5 @@
    (:file "noise-cubist")
    (:file "noise-cellular")
    (:file "noise-polkadot")
-   (:file "noise-stars")))
+   (:file "noise-stars")
+   (:file "noise-hermite")))
