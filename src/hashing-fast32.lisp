@@ -60,12 +60,11 @@
          ((mod-vals :vec4)))
     (multf p p)
     (setf v1xy-v2xy (mix (.xyxy p) (.zwzw p) (vec4 (.xy v1-mask) (.xy v2-mask)))
-          p (* (vec4 (.x p) (.xy v1xy-v2xy) (.z p))
-               (vec4 (.y p) (.yw v1xy-v2xy) (.w p))))
-    (if (< (.z v1-mask) 0.5)
-        (setf v1z-v2z (.zz grid-cell))
-        (setf v1z-v2z (.zz grid-cell-inc1)))
-    (setf mod-vals (/ (+ 635.2987
+          p (* (vec4 (.x p) (.xz v1xy-v2xy) (.z p))
+               (vec4 (.y p) (.yw v1xy-v2xy) (.w p)))
+          v1z-v2z (vec2 (if (< (.z v1-mask) 0.5) (.z grid-cell) (.z grid-cell-inc1))
+                        (if (< (.z v2-mask) 0.5) (.z grid-cell) (.z grid-cell-inc1)))
+          mod-vals (/ (+ 635.2987
                          (* (vec4 (.z grid-cell) v1z-v2z (.z grid-cell-inc1)) 48.500388))))
     (fract (* p mod-vals))))
 
