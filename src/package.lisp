@@ -1,7 +1,8 @@
 (in-package :defpackage+-user-1)
 
 (defpackage+ #:umbra.common
-  (:inherit #:cl #:shadow #:box.math.vari))
+  (:inherit #:cl #:shadow #:box.math.vari)
+  (:export #:mvlet*))
 
 (defpackage+ #:umbra.math
   (:use #:umbra.common)

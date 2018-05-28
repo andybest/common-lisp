@@ -16,6 +16,7 @@
   :serial t
   :components
   ((:file "package")
+   (:file "common")
    (:file "math")
    (:file "graph")
    (:file "color-space")
