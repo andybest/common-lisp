@@ -13,10 +13,10 @@
   (- x (* (floor (* x (/ 289.0))) 289.0)))
 
 (defun-gpu sgpp/permute ((x :vec4))
-  (* (fract (* x (+ (* (/ 34.0 289.0) x) (/ 289.0)))) 289.0))
+  (* (fract (* x (+ (* 0.11764706 x) (/ 289.0)))) 289.0))
 
 (defun-gpu sgpp/resolve ((x :vec4))
-  (fract (* x (/ 7.0 288.0))))
+  (fract (* x 0.024305556)))
 
 (defun-gpu sgpp ((grid-cell :vec2))
   (let ((hash-coord (sgpp/coord-prepare (vec4 grid-cell (1+ grid-cell)))))
@@ -48,11 +48,12 @@
          (coords3 (* (step coords0 (vec3 287.5)) (1+ coords0)))
          (coords1 (mix coords0 coords3 v1-mask))
          (coords2 (mix coords0 coords3 v2-mask))
-         (hash2 (sgpp/permute
+         (hash1 (sgpp/permute
                  (sgpp/permute
                   (+ (sgpp/permute (vec4 (.x coords0) (.x coords1) (.x coords2) (.x coords3)))
                      (vec4 (.y coords0) (.y coords1) (.y coords2) (.y coords3))
-                     (vec4 (.z coords0) (.z coords1) (.z coords2) (.z coords3)))))))
-    (values (sgpp/resolve hash2)
-            (sgpp/resolve (setf hash2 (sgpp/permute hash2)))
+                     (vec4 (.z coords0) (.z coords1) (.z coords2) (.z coords3))))))
+         (hash2 (sgpp/permute hash1)))
+    (values (sgpp/resolve hash1)
+            (sgpp/resolve hash2)
             (sgpp/resolve (sgpp/permute hash2)))))

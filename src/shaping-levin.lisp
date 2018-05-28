@@ -84,8 +84,8 @@
 
 (defun-gpu blinn-wyvill-raised-inverted-cosine ((x :float))
   (let* ((x2 (* x x))
-         (x4 (* x² x²))
-         (x6 (* x⁴ x²)))
+         (x4 (* x2 x2))
+         (x6 (* x4 x2)))
     (+ (- (* (/ 4 9.0) x6) (* (/ 17 9.0) x4))
        (* (/ 22 9.0) x2))))
 

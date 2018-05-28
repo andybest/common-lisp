@@ -68,29 +68,29 @@
 ;;; Tone mapping
 ;;; http://filmicworlds.com/blog/filmic-tonemapping-operators/
 
-(defun-gpu tone-map-linear ((color :vec3)
+(defun-gpu tone-map/linear ((color :vec3)
                             (exposure :int))
   (set-gamma (set-exposure color exposure) +gamma+))
 
-(defun-gpu tone-map-linear ((color :vec4)
+(defun-gpu tone-map/linear ((color :vec4)
                             (exposure :int))
-  (vec4 (tone-map-linear (.rgb color) exposure) (.a color)))
+  (vec4 (tone-map/linear (.rgb color) exposure) (.a color)))
 
-(defun-gpu tone-map-reinhard ((color :vec3)
+(defun-gpu tone-map/reinhard ((color :vec3)
                               (exposure :int))
   (let ((color (set-exposure color exposure)))
     (set-gamma (/ color (1+ color)) +gamma+)))
 
-(defun-gpu tone-map-reinhard ((color :vec4)
+(defun-gpu tone-map/reinhard ((color :vec4)
                               (exposure :int))
-  (vec4 (tone-map-reinhard (.rgb color) exposure) (.a color)))
+  (vec4 (tone-map/reinhard (.rgb color) exposure) (.a color)))
 
-(defun-gpu tone-map-haarm-peter-duiker ((color :vec3)
+(defun-gpu tone-map/haarm-peter-duiker ((color :vec3)
                                         (exposure :int)
                                         (film-lut :sampler-2d))
   (let* ((color (set-exposure color exposure))
          (log-color (saturate (/ (+ (* (/ (log10 (* 0.4 color)) 0.002) 0.45) 444) 1023.0)))
-         (padding (/ 0.5 256))
+         (padding 0.001953125)
          (r (vec2 (mix padding (- 1 padding) (.r color)) 0.5))
          (g (vec2 (mix padding (- 1 padding) (.g color)) 0.5))
          (b (vec2 (mix padding (- 1 padding) (.b color)) 0.5)))
@@ -98,12 +98,12 @@
           (.r (texture film-lut g))
           (.r (texture film-lut b)))))
 
-(defun-gpu tone-map-haarm-peter-duiker ((color :vec4)
+(defun-gpu tone-map/haarm-peter-duiker ((color :vec4)
                                         (exposure :int)
                                         (film-lut :sampler-2d))
-  (vec4 (tone-map-haarm-peter-duiker (.rgb color) exposure film-lut) (.a color)))
+  (vec4 (tone-map/haarm-peter-duiker (.rgb color) exposure film-lut) (.a color)))
 
-(defun-gpu tone-map-hejl-burgess-dawson ((color :vec3)
+(defun-gpu tone-map/hejl-burgess-dawson ((color :vec3)
                                          (exposure :int))
   (let* ((color (set-exposure color exposure))
          (x (max (vec3 0) (- color 0.004)))
@@ -111,11 +111,11 @@
     (/ (* x (+ y 0.5))
        (+ (* x (+ y 1.7)) 0.06))))
 
-(defun-gpu tone-map-hejl-burgess-dawson ((color :vec4)
+(defun-gpu tone-map/hejl-burgess-dawson ((color :vec4)
                                          (exposure :int))
-  (vec4 (tone-map-hejl-burgess-dawson (.rgb color) exposure) (.a color)))
+  (vec4 (tone-map/hejl-burgess-dawson (.rgb color) exposure) (.a color)))
 
-(defun-gpu tone-map-uncharted2 ((color :vec3)
+(defun-gpu tone-map/uncharted2 ((color :vec3)
                                 (exposure :int))
   (flet ((tone-map ((x :vec3))
            (- (/ (+ (* x (+ (* 0.15 x) 0.05)) 0.004)
@@ -125,6 +125,6 @@
              (/ (tone-map (vec3 11.2))))
           (vec3 +gamma+))))
 
-(defun-gpu tone-map-uncharted2 ((color :vec4)
+(defun-gpu tone-map/uncharted2 ((color :vec4)
                                 (exposure :int))
-  (vec4 (tone-map-uncharted2 (.rgb color) exposure) (.a color)))
+  (vec4 (tone-map/uncharted2 (.rgb color) exposure) (.a color)))

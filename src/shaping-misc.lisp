@@ -81,6 +81,15 @@
   (let ((x (saturate (/ (- x min) (- max min)))))
     (quintic-curve x)))
 
+(defun-gpu quintic-curve/interpolate-derivative ((x :vec2))
+  (let ((x (.xyxy x)))
+    (* x x (+ (* x (+ (* x (+ (* x (vec4 6 6 0 0)) (vec4 -15 -15 30 30)))
+                      (vec4 10 10 -60 -60)))
+              (vec4 0 0 30 30)))))
+
+(defun-gpu quintic-curve/derivative ((x :vec3))
+  (* x x (+ (* x (- (* x 30) 60)) 30)))
+
 ;;; Fast quintic curve
 ;;; Brian Sharpe https://github.com/BrianSharpe/GPU-Noise-Lib
 
@@ -123,15 +132,6 @@
                                (max :float))
   (let ((x (saturate (/ (- x min) (- max min)))))
     (quintic-curve/fast x)))
-
-(defun-gpu quintic-curve/interpolate-derivative ((x :vec2))
-  (let ((x (.xyxy x)))
-    (* x x (+ (* x (+ (* x (+ (* x (vec4 6 6 0 0)) (vec4 -15 -15 30 30)))
-                      (vec4 10 10 -60 -60)))
-              (vec4 0 0 30 30)))))
-
-(defun-gpu quintic-curve/derivative ((x :vec3))
-  (* x x (+ (* x (- (* x 30) 60)) 30)))
 
 ;;; Quintic Hermite interpolation
 ;;; David L. Finn https://www.rose-hulman.edu/~finn/CCLI/Notes/day09.pdf

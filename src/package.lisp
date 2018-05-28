@@ -13,6 +13,10 @@
            #:saturate
            #:map-domain))
 
+(defpackage+ #:umbra.graph
+  (:use #:umbra.common)
+  (:export #:graph))
+
 (defpackage+ #:umbra.color
   (:use #:umbra.common #:umbra.math)
   ;; color space conversion
@@ -42,11 +46,11 @@
            #:set-brightness
            #:set-gamma
            #:color-filter
-           #:tone-map-linear
-           #:tone-map-reinhard
-           #:tone-map-haarm-peter-duiker
-           #:tone-map-hejl-burgess-dawson
-           #:tone-map-uncharted2))
+           #:tone-map/linear
+           #:tone-map/reinhard
+           #:tone-map/haarm-peter-duiker
+           #:tone-map/hejl-burgess-dawson
+           #:tone-map/uncharted2))
 
 (defpackage+ #:umbra.shaping
   (:use #:umbra.common #:umbra.math)
@@ -115,10 +119,6 @@
            #:quintic-hermite/derivative
            #:falloff-squared-c1
            #:falloff-squared-c2))
-
-(defpackage+ #:umbra.graph
-  (:use #:umbra.common)
-  (:export #:graph))
 
 (defpackage+ #:umbra.hashing
   (:use #:umbra.common)
