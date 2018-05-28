@@ -140,7 +140,9 @@
   (:export #:value
            #:value/deriv
            #:perlin
+           #:perlin/deriv
            #:perlin/surflet
+           #:perlin/surflet/deriv
            #:perlin/improved
            #:perlin/simplex
            #:value-perlin
