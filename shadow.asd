@@ -19,8 +19,8 @@
   :serial t
   :components
   ((:file "package")
-   (:file "common")
    (:file "shadow")
+   (:file "common")
    (:file "functions")
    (:file "stages")
    (:file "program")
