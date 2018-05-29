@@ -89,7 +89,7 @@ See MAKE-SHADER-PROGRAM"
 
 (defun store-stage-program-dependencies (program)
   (dolist (stage-spec (stage-specs program))
-    (destructuring-bind (stage-type () func-spec) stage-spec
+    (destructuring-bind (stage-type func-spec) stage-spec
       (declare (ignore stage-type))
       (pushnew (name program)
                (au:href (dependencies *state*) :stage-fn->programs func-spec)))))

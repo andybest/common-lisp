@@ -13,7 +13,7 @@
     (:compute :compute-shader)))
 
 (defun make-stage (version primitive stage-spec)
-  (destructuring-bind (stage-type (&key (version version)) func-spec) stage-spec
+  (destructuring-bind (stage-type func-spec) stage-spec
     (let ((func (find-gpu-function func-spec)))
       (varjo:make-stage
        stage-type
