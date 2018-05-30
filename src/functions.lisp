@@ -9,45 +9,6 @@
 (defun get-function-spec (function)
   (cons (varjo:name function) (mapcar #'second (varjo.internals:in-args function))))
 
-(defun ensure-function-dependency-tables (spec fn-deps dep-fns)
-  (unless (au:href dep-fns spec)
-    (setf (au:href dep-fns spec) (au:dict #'equal)))
-  (setf (au:href fn-deps spec) (au:dict #'equal)))
-
-(defun store-function-dependencies (spec dependencies)
-  (symbol-macrolet ((fn-deps (au:href (dependencies *state*) :fn->deps))
-                    (dep-fns (au:href (dependencies *state*) :dep->fns)))
-    (when (au:href fn-deps spec)
-      (au:do-hash-keys (k (au:href fn-deps spec))
-        (au:when-found (dep-key (au:href dep-fns k))
-          (remhash spec dep-key))))
-    (ensure-function-dependency-tables spec fn-deps dep-fns)
-    (dolist (dep dependencies)
-      (let ((dep-spec (get-function-spec dep)))
-        (unless (au:href dep-fns dep-spec)
-          (setf (au:href dep-fns dep-spec) (au:dict #'equal)))
-        (au:do-hash-keys (k (au:href dep-fns spec))
-          (setf (au:href fn-deps k dep-spec) dep-spec
-                (au:href dep-fns dep-spec k) k))
-        (setf (au:href fn-deps spec dep-spec) dep-spec
-              (au:href dep-fns dep-spec spec) spec)))))
-
-(defun compute-outdated-programs (spec)
-  (let ((programs)
-        (spec-fns (au:href (dependencies *state*) :dep->fns spec)))
-    (maphash
-     (lambda (k v)
-       (when (or (au:href spec-fns k)
-                 (equal k spec))
-         (setf programs (union v programs :test #'equal))))
-     (au:href (dependencies *state*) :stage-fn->programs))
-    programs))
-
-(defun compute-outdated-programs2 (spec)
-  (when (au:href (dependencies *state*) :fn->programs spec)
-    (print spec)
-    (alexandria:hash-table-keys (au:href (dependencies *state*) :fn->programs spec))))
-
 (defun generate-pseudo-lisp-function (name args-spec)
   (let ((args (au:alist-keys args-spec)))
     `(setf (symbol-function ',name)
@@ -59,21 +20,9 @@
   "Define a GPU function."
   (au:with-unique-names (fn spec)
     (destructuring-bind (in-args uniforms) (varjo.utils:split-arguments args '(&uniform))
-      `(varjo:with-constant-inject-hook #'lisp-constant->glsl-constant
-         (varjo:with-stemcell-infer-hook #'lisp-symbol->glsl-type
-           (let* ((,fn (varjo:add-external-function ',name ',in-args ',uniforms ',body))
-                  (,spec (get-function-spec ,fn)))
-             ,(generate-pseudo-lisp-function name in-args)
-             (funcall (modify-hook *state*) (compute-outdated-programs2 ,spec))
-             ,fn)
-
-
-           #++(let* ((,split-details (varjo:test-translate-function-split-details
-                                      ',name ',in-args ',uniforms ',context ',body))
-                     (,deps (varjo:used-external-functions (first ,split-details)))
-                     (,fn (varjo:add-external-function ',name ',in-args ',uniforms ',body))
-                     (,spec (get-function-spec ,fn)))
-                (store-function-dependencies ,spec ,deps)
-                ,(generate-pseudo-lisp-function name in-args)
-                (funcall (modify-hook *state*) (compute-outdated-programs ,spec))
-                ,fn))))))
+      `(let* ((,fn (varjo:add-external-function ',name ',in-args ',uniforms ',body))
+              (,spec (get-function-spec ,fn)))
+         ,(generate-pseudo-lisp-function name in-args)
+         (au:when-found (programs (au:href (dependencies *state*) :fn->programs ,spec))
+           (funcall (modify-hook *state*) (au:hash-keys programs)))
+         ,fn))))

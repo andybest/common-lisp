@@ -87,56 +87,39 @@ See MAKE-SHADER-PROGRAM"
   (au:maphash-keys #'build-shader-program (programs *state*))
   (programs *state*))
 
-(defun store-stage-program-dependencies (program)
-  (dolist (stage-spec (stage-specs program))
-    (destructuring-bind (stage-type func-spec) stage-spec
-      (declare (ignore stage-type))
-      (pushnew (name program)
-               (au:href (dependencies *state*) :stage-fn->programs func-spec)))))
+(defun update-dependencies (program-name spec)
+  (symbol-macrolet ((programs (au:href (dependencies *state*) :fn->programs spec))
+                    (deps (au:href (dependencies *state*) :program->fns program-name)))
+    (unless programs
+      (setf programs (au:dict #'equal)))
+    (setf (au:href programs program-name) program-name
+          (au:href deps spec) spec)))
 
-;;
-
-(defun store-stage-deps (program stage)
-  (symbol-macrolet ((fn->programs (au:href (dependencies *state*) :fn->programs))
-                    (program->fns (au:href (dependencies *state*) :program->fns)))
-    (let ((program-name (name program)))
-      ;; step 1
-      (if (au:href program->fns program-name)
+(defun store-dependencies (program stage)
+  (let ((program-name (name program)))
+    (symbol-macrolet ((programs (au:href (dependencies *state*) :fn->programs))
+                      (deps (au:href (dependencies *state*) :program->fns program-name)))
+      (if deps
           (progn
-            (au:do-hash-keys (spec (au:href program->fns program-name))
-              (au:when-found (program-key (au:href fn->programs spec))
+            (au:do-hash-keys (spec deps)
+              (au:when-found (program-key (au:href programs spec))
                 (remhash program-name program-key)))
-            (clrhash (au:href program->fns program-name)))
-          (setf (au:href program->fns program-name) (au:dict #'eq)))
-
-      ;; step 3
+            (clrhash deps))
+          (setf deps (au:dict #'eq)))
       (dolist (func (varjo:used-external-functions stage))
         (let ((spec (get-function-spec func)))
-          (unless (au:href fn->programs spec)
-            (setf (au:href fn->programs spec) (au:dict #'equal)))
-          (setf (au:href fn->programs spec program-name) program-name
-                (au:href program->fns program-name spec) spec)))
-
-      ;; also add stage functions
+          (update-dependencies program-name spec)))
       (loop :for (nil spec) :in (stage-specs program)
-            :do
-               (unless (au:href fn->programs spec)
-                 (setf (au:href fn->programs spec) (au:dict #'equal)))
-               (setf (au:href fn->programs spec program-name) program-name
-                     (au:href program->fns program-name spec) spec))
-      )))
+            :do (update-dependencies program-name spec)))))
 
-;;
-
-(defun translate-program (program-name)
-  (let ((program (find-program program-name)))
-    (with-slots (%name %version %primitive %stage-specs) program
-      (let ((stages (translate-stages %version %primitive %stage-specs)))
-        (dolist (stage stages)
-          (store-stage-deps program stage)
-          (store-source program stage)
-          (store-blocks program stage))
-        (setf (slot-value program '%translated-stages) stages)))))
+(defun translate-program (program)
+  (with-slots (%name %version %primitive %stage-specs) program
+    (let ((stages (translate-stages %version %primitive %stage-specs)))
+      (dolist (stage stages)
+        (store-dependencies program stage)
+        (store-source program stage)
+        (store-blocks program stage))
+      (setf (slot-value program '%translated-stages) stages))))
 
 (defun %make-shader-program (name version primitive stage-specs)
   (let ((program (make-instance 'program
@@ -145,10 +128,9 @@ See MAKE-SHADER-PROGRAM"
                                 :primitive primitive
                                 :stage-specs stage-specs)))
     (setf (au:href (programs *state*) name) program)
-    (translate-program name)
+    (translate-program program)
     (store-attributes program)
     (store-uniforms program)
-    (store-stage-program-dependencies program)
     program))
 
 (defmacro make-shader-program (name (&key (version :330) (primitive :triangles)) &body body)
@@ -159,12 +141,16 @@ VERSION: The default version shader stages use, and can be overridden on a per-f
 PRIMITIVE: The drawing primitive to use for the vertex stage."
   `(%make-shader-program ',name ,version ,primitive ',body))
 
-(defun update-shader-programs (program-list)
-  "Re-translate and re-compile a collection of shader programs denoted by `PROGRAM-LIST`, which is a
-list of their names"
-  (dolist (program program-list)
-    (translate-program program)
-    (build-shader-program program)))
+(defun translate-shader-programs (program-list)
+  "Re-translate a collection of shader programs."
+  (dolist (program-name program-list)
+    (let ((program (find-program program-name)))
+      (translate-program program))))
+
+(defun build-shader-programs (program-list)
+  "Recompile a collection of shader programs."
+  (dolist (program-name program-list)
+    (build-shader-program program-name)))
 
 (defun set-modify-hook (function)
   "Specify a function to be called when shader programs need to be updated."

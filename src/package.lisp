@@ -9,8 +9,9 @@
            #:reset-program-state
            #:make-shader-program
            #:build-shader-program
+           #:build-shader-programs
            #:build-shader-dictionary
-           #:update-shader-programs
+           #:translate-shader-programs
            #:set-modify-hook
            #:create-block-alias
            #:find-block
