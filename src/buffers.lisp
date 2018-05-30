@@ -3,13 +3,15 @@
 (defclass shader-buffer ()
   ((%id :reader id
         :initform (gl:gen-buffer))
+   (%name :reader name
+          :initarg :name)
    (%target :reader target
             :initarg :target)
    (%layout :reader layout
             :initarg :layout)))
 
-(defun %make-buffer (target layout)
-  (make-instance 'shader-buffer :target target :layout layout))
+(defun %make-buffer (name target layout)
+  (make-instance 'shader-buffer :name name :target target :layout layout))
 
 (defun buffer-type->target (buffer-type)
   (ecase buffer-type
@@ -34,12 +36,12 @@
   (au:if-let ((block (find-block block-alias)))
     (let* ((type (block-type->buffer-type (block-type block)))
            (target (buffer-type->target type))
-           (buffer (%make-buffer target (layout block))))
+           (buffer (%make-buffer buffer-name target (layout block))))
       (with-slots (%id %layout) buffer
         (%gl:bind-buffer target %id)
         (%gl:buffer-data target (size %layout) (cffi:null-pointer) :static-draw)
         (setf (au:href (buffers *state*) buffer-name) buffer)
-        buffer-name))
+        buffer))
     (error "Cannot find the block with alias ~s when attempting to create a buffer." block-alias)))
 
 (defun bind-buffer (buffer-name binding-point)
