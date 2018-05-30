@@ -16,6 +16,7 @@
            #:find-block
            #:bind-block
            #:unbind-block
+           #:buffer-name
            #:create-buffer
            #:bind-buffer
            #:unbind-buffer
