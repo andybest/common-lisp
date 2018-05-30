@@ -94,11 +94,46 @@ See MAKE-SHADER-PROGRAM"
       (pushnew (name program)
                (au:href (dependencies *state*) :stage-fn->programs func-spec)))))
 
+;;
+
+(defun store-stage-deps (program stage)
+  (symbol-macrolet ((fn->programs (au:href (dependencies *state*) :fn->programs))
+                    (program->fns (au:href (dependencies *state*) :program->fns)))
+    (let ((program-name (name program)))
+      ;; step 1
+      (if (au:href program->fns program-name)
+          (progn
+            (au:do-hash-keys (spec (au:href program->fns program-name))
+              (au:when-found (program-key (au:href fn->programs spec))
+                (remhash program-name program-key)))
+            (clrhash (au:href program->fns program-name)))
+          (setf (au:href program->fns program-name) (au:dict #'eq)))
+
+      ;; step 3
+      (dolist (func (varjo:used-external-functions stage))
+        (let ((spec (get-function-spec func)))
+          (unless (au:href fn->programs spec)
+            (setf (au:href fn->programs spec) (au:dict #'equal)))
+          (setf (au:href fn->programs spec program-name) program-name
+                (au:href program->fns program-name spec) spec)))
+
+      ;; also add stage functions
+      (loop :for (nil spec) :in (stage-specs program)
+            :do
+               (unless (au:href fn->programs spec)
+                 (setf (au:href fn->programs spec) (au:dict #'equal)))
+               (setf (au:href fn->programs spec program-name) program-name
+                     (au:href program->fns program-name spec) spec))
+      )))
+
+;;
+
 (defun translate-program (program-name)
   (let ((program (find-program program-name)))
     (with-slots (%name %version %primitive %stage-specs) program
       (let ((stages (translate-stages %version %primitive %stage-specs)))
         (dolist (stage stages)
+          (store-stage-deps program stage)
           (store-source program stage)
           (store-blocks program stage))
         (setf (slot-value program '%translated-stages) stages)))))

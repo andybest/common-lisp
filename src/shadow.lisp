@@ -10,7 +10,10 @@
    (%dependencies :reader dependencies
                   :initform (au:dict #'eq :fn->deps (au:dict #'equal)
                                           :dep->fns (au:dict #'equal)
-                                          :stage-fn->programs (au:dict #'equal)))
+                                          :stage-fn->programs (au:dict #'equal)
+                                          ;; new
+                                          :fn->programs (au:dict #'equal)
+                                          :program->fns (au:dict #'eq)))
    (%modify-hook :accessor modify-hook
                  :initform (constantly nil))
    (%buffers :reader buffers
@@ -30,3 +33,11 @@
 (defmacro defmacro-gpu (name lambda-list &body body)
   "Define a GPU macro."
   `(varjo:v-defmacro ,name ,lambda-list ,@body))
+
+;; maps fn specs to a table of program names pointing to themselves
+;; this allows us to remove a program name for a given spec
+;; fn->programs = spec -> prog-name -> prog-name
+
+;; maps program names to a table of fn specs pointing to themselves
+;; this allows us to remove a fn spec for a given program
+;; program->fns = prog-name -> spec -> spec

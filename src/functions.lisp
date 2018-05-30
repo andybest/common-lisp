@@ -43,6 +43,11 @@
      (au:href (dependencies *state*) :stage-fn->programs))
     programs))
 
+(defun compute-outdated-programs2 (spec)
+  (when (au:href (dependencies *state*) :fn->programs spec)
+    (print spec)
+    (alexandria:hash-table-keys (au:href (dependencies *state*) :fn->programs spec))))
+
 (defun generate-pseudo-lisp-function (name args-spec)
   (let ((args (au:alist-keys args-spec)))
     `(setf (symbol-function ',name)
@@ -52,17 +57,23 @@
 
 (defmacro defun-gpu (name args &body body)
   "Define a GPU function."
-  (au:with-unique-names (split-details deps fn spec)
-    (let ((split-args (varjo.utils:split-arguments args '(&uniform &context))))
-      (destructuring-bind (in-args uniforms context) split-args
-        `(varjo:with-constant-inject-hook #'lisp-constant->glsl-constant
-           (varjo:with-stemcell-infer-hook #'lisp-symbol->glsl-type
-             (let* ((,split-details (varjo:test-translate-function-split-details
-                                     ',name ',in-args ',uniforms ',context ',body))
-                    (,deps (varjo:used-external-functions (first ,split-details)))
-                    (,fn (varjo:add-external-function ',name ',in-args ',uniforms ',body))
-                    (,spec (get-function-spec ,fn)))
-               (store-function-dependencies ,spec ,deps)
-               ,(generate-pseudo-lisp-function name in-args)
-               (funcall (modify-hook *state*) (compute-outdated-programs ,spec))
-               ,fn)))))))
+  (au:with-unique-names (fn spec)
+    (destructuring-bind (in-args uniforms) (varjo.utils:split-arguments args '(&uniform))
+      `(varjo:with-constant-inject-hook #'lisp-constant->glsl-constant
+         (varjo:with-stemcell-infer-hook #'lisp-symbol->glsl-type
+           (let* ((,fn (varjo:add-external-function ',name ',in-args ',uniforms ',body))
+                  (,spec (get-function-spec ,fn)))
+             ,(generate-pseudo-lisp-function name in-args)
+             (funcall (modify-hook *state*) (compute-outdated-programs2 ,spec))
+             ,fn)
+
+
+           #++(let* ((,split-details (varjo:test-translate-function-split-details
+                                      ',name ',in-args ',uniforms ',context ',body))
+                     (,deps (varjo:used-external-functions (first ,split-details)))
+                     (,fn (varjo:add-external-function ',name ',in-args ',uniforms ',body))
+                     (,spec (get-function-spec ,fn)))
+                (store-function-dependencies ,spec ,deps)
+                ,(generate-pseudo-lisp-function name in-args)
+                (funcall (modify-hook *state*) (compute-outdated-programs ,spec))
+                ,fn))))))
