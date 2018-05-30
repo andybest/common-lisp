@@ -38,7 +38,8 @@
       (with-slots (%id %layout) buffer
         (%gl:bind-buffer target %id)
         (%gl:buffer-data target (size %layout) (cffi:null-pointer) :static-draw)
-        (setf (au:href (buffers *state*) buffer-name) buffer)))
+        (setf (au:href (buffers *state*) buffer-name) buffer)
+        buffer-name))
     (error "Cannot find the block with alias ~s when attempting to create a buffer." block-alias)))
 
 (defun bind-buffer (buffer-name binding-point)
