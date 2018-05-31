@@ -24,6 +24,14 @@
    (%blocks :reader blocks
             :initform (au:dict #'equal))))
 
+(defstruct (stage-variable (:type vector)
+                           (:constructor make-stage-variable (&key name type location))
+                           (:copier nil)
+                           (:predicate nil))
+  name
+  type
+  (location -1))
+
 (defun find-program (program-name)
   (au:href (programs *state*) program-name))
 

@@ -7,13 +7,12 @@
             :for id = (ensure-keyword (varjo:name attr))
             :for type = (varjo:v-type-of attr)
             :do (setf (au:href (attributes program) id)
-                      (au:dict #'eq
-                               :name (varjo:glsl-name attr)
-                               :type (varjo:type->type-spec type)))))))
+                      (make-stage-variable :name (varjo:glsl-name attr)
+                                           :type (varjo:type->type-spec type)))))))
 
 (defun store-attribute-locations (program)
   (let ((id (id program)))
     (gl:use-program id)
     (au:do-hash-values (v (attributes program))
-      (setf (au:href v :location) (gl:get-attrib-location id (au:href v :name))))
+      (setf (stage-variable-location v) (gl:get-attrib-location id (stage-variable-name v))))
     (gl:use-program 0)))

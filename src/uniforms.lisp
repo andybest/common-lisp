@@ -29,19 +29,19 @@
       (loop :for (parts type-spec) :in (%get-uniforms stage)
             :for id = (ensure-keyword (parts->string parts))
             :do (setf (au:href (uniforms program) id)
-                      (au:dict #'eq
-                               :name (parts->string parts #'varjo.internals:safe-glsl-name-string)
-                               :type type-spec))))))
+                      (make-stage-variable
+                       :name (parts->string parts #'varjo.internals:safe-glsl-name-string)
+                       :type type-spec))))))
 
 (defun store-uniform-locations (program)
   (let ((id (id program)))
     (gl:use-program id)
     (au:do-hash-values (v (uniforms program))
-      (setf (au:href v :location) (gl:get-uniform-location id (au:href v :name))))
+      (setf (stage-variable-location v) (gl:get-uniform-location id (stage-variable-name v))))
     (gl:use-program 0)))
 
 (defun get-uniform-location (uniform)
-  (au:href (uniforms *active-shader-program*) uniform))
+  (stage-variable-location (au:href (uniforms *active-shader-program*) uniform)))
 
 (defmacro %uniform-array (location func component-count element-type sequence)
   (au:with-unique-names (count sv)
