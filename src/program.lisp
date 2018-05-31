@@ -35,10 +35,6 @@
 (defun find-program (program-name)
   (au:href (programs *state*) program-name))
 
-(defun view-source (program-name stage)
-  (au:when-let ((program (find-program program-name)))
-    (format t "~a" (au:href (source program) stage))))
-
 (defun compile-stages (program)
   (let ((shaders))
     (maphash
