@@ -24,16 +24,12 @@
    (%blocks :reader blocks
             :initform (au:dict #'equal))))
 
-(defstruct (stage-variable (:type vector)
-                           (:constructor make-stage-variable (&key name type location))
-                           (:copier nil)
-                           (:predicate nil))
-  name
-  type
-  (location -1))
-
 (defun find-program (program-name)
   (au:href (programs *state*) program-name))
+
+(defun view-source (program-name stage)
+  (au:when-let ((program (find-program program-name)))
+    (format t "~a" (au:href (source program) stage))))
 
 (defun compile-stages (program)
   (let ((shaders))
@@ -133,7 +129,7 @@ See MAKE-SHADER-PROGRAM"
     (store-uniforms program)
     program))
 
-(defmacro make-shader-program (name (&key (version :330) (primitive :triangles)) &body body)
+(defmacro define-shader (name (&key (version :330) (primitive :triangles)) &body body)
   "Create a new shader program using the stage-specs defined in BODY.
 
 VERSION: The default version shader stages use, and can be overridden on a per-function basis.

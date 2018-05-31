@@ -7,7 +7,9 @@
            #:defstruct-gpu
            #:defmacro-gpu
            #:reset-program-state
-           #:make-shader-program
+           #:define-shader
+           #:find-program
+           #:view-source
            #:build-shader-program
            #:build-shader-programs
            #:build-shader-dictionary
