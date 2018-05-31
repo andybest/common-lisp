@@ -11,6 +11,7 @@
            #:stages
            #:uniforms
            #:find-program
+           #:view-source
            #:build-shader-program
            #:build-shader-programs
            #:build-shader-dictionary
