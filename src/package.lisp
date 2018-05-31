@@ -7,9 +7,7 @@
            #:defstruct-gpu
            #:defmacro-gpu
            #:reset-program-state
-           #:define-shader
-           #:stages
-           #:uniforms
+           #:make-shader-program
            #:build-shader-program
            #:build-shader-programs
            #:build-shader-dictionary
@@ -26,6 +24,7 @@
            #:delete-buffer
            #:write-buffer-path
            #:with-shader-program
+           #:uniforms
            #:uniform-int
            #:uniform-int-array
            #:uniform-float
