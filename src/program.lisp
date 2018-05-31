@@ -110,7 +110,7 @@ See MAKE-SHADER-PROGRAM"
 
 (defun translate-program (program)
   (with-slots (%name %version %primitive %stage-specs) program
-    (let ((stages (translate-stages %version %primitive %stage-specs)))
+    (let ((stages (translate-stages program %version %primitive %stage-specs)))
       (dolist (stage stages)
         (store-dependencies program stage)
         (store-source program stage)
@@ -124,9 +124,9 @@ See MAKE-SHADER-PROGRAM"
                                 :primitive primitive
                                 :stage-specs stage-specs)))
     (setf (au:href (programs *state*) name) program)
+    (store-uniforms program uniforms)
     (translate-program program)
     (store-attributes program)
-    (store-uniforms program)
     program))
 
 (defmacro define-shader (name (&key (version :330) (primitive :triangles)) &body body)

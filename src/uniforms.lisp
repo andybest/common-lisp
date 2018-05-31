@@ -1,37 +1,10 @@
 (in-package :shadow)
 
-(defgeneric get-uniform-data (type parts)
-  (:method (type parts)
-    (list (list (reverse parts) (varjo:type->type-spec type)))))
-
-(defmethod get-uniform-data ((type varjo:v-user-struct) parts)
-  (cons
-   (list (reverse parts) (varjo:type->type-spec type))
-   (loop :for (slot-name slot-type . nil) :in (varjo.internals:v-slots type)
-         :append (get-uniform-data slot-type (cons slot-name parts)))))
-
-(defmethod get-uniform-data ((type varjo:v-array) parts)
-  (loop :with dimensions = (first (varjo:v-dimensions type))
-        :with element-type = (varjo:v-element-type type)
-        :for i :below dimensions
-        :when (zerop i)
-          :collect (list (reverse parts) (cons (varjo:type->type-spec element-type) dimensions))
-        :append (get-uniform-data element-type (cons i parts))))
-
-(defun store-uniforms (program)
-  (flet ((%get-uniforms (stage)
-           (loop :for uniform :in (varjo:uniform-variables stage)
-                 :for type = (varjo:v-type-of uniform)
-                 :unless (or (has-qualifier-p uniform :ubo)
-                             (has-qualifier-p uniform :ssbo))
-                   :append (get-uniform-data type (list (varjo:name uniform))))))
-    (dolist (stage (translated-stages program))
-      (loop :for (parts type-spec) :in (%get-uniforms stage)
-            :for id = (ensure-keyword (parts->string parts))
-            :do (setf (au:href (uniforms program) id)
-                      (au:dict #'eq
-                               :name (parts->string parts #'varjo.internals:safe-glsl-name-string)
-                               :type type-spec))))))
+(defun store-uniforms (program uniforms)
+  (loop :for (symbol type) :in uniforms
+        :for name = (varjo.internals:safe-glsl-name-string symbol)
+        :do (setf (au:href (uniforms program) (au:make-keyword symbol))
+                  (au:dict #'eq :name name :type type))))
 
 (defun store-uniform-locations (program)
   (let ((id (id program)))
@@ -41,7 +14,7 @@
     (gl:use-program 0)))
 
 (defun get-uniform-location (uniform)
-  (au:href (uniforms *active-shader-program*) uniform))
+  (au:href (uniforms *active-shader-program*) uniform :location))
 
 (defmacro %uniform-array (location func component-count element-type sequence)
   (au:with-unique-names (count sv)

@@ -25,9 +25,17 @@
        (when (eq stage-type :vertex)
          (varjo.internals:primitive-name-to-instance primitive))))))
 
-(defun translate-stages (version primitive stage-specs)
+(defun generate-implicit-uniform-hook (program)
+  (lambda (symbol)
+    (au:if-found (uniform (au:href (uniforms program) symbol))
+                 (au:href uniform :type)
+                 (error "The symbol ~s is not defined as a uniform for program ~s."
+                        symbol
+                        (name program)))))
+
+(defun translate-stages (program version primitive stage-specs)
   (varjo:with-constant-inject-hook #'lisp-constant->glsl-constant
-    (varjo:with-stemcell-infer-hook #'lisp-symbol->glsl-type
+    (varjo:with-stemcell-infer-hook (funcall #'generate-implicit-uniform-hook program)
       (varjo:rolling-translate
        (mapcar
         (lambda (x) (make-stage version primitive x))
