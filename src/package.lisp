@@ -10,7 +10,6 @@
            #:define-shader
            #:stages
            #:uniforms
-           #:find-program
            #:build-shader-program
            #:build-shader-programs
            #:build-shader-dictionary
