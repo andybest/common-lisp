@@ -16,11 +16,18 @@
              (declare (ignore ,@args))
              (error "The GPU function ~a cannot be called from Lisp." ',name)))))
 
+(defun ensure-buffer-uniforms (fn-name args)
+  (destructuring-bind (args buffers) (varjo.utils:split-arguments args '(&buffer))
+    (dolist (buffer buffers)
+      (unless (= (length buffer) 4)
+        (error "Shader function ~s specifies an invalid buffer binding: ~s." fn-name buffer)))
+    (values args buffers)))
+
 (defmacro defun-gpu (name args &body body)
   "Define a GPU function."
   (au:with-unique-names (fn spec)
-    (destructuring-bind (in-args uniforms) (varjo.utils:split-arguments args '(&uniform))
-      `(let* ((,fn (varjo:add-external-function ',name ',in-args ',uniforms ',body))
+    (au:mvlet ((in-args buffers (ensure-buffer-uniforms name args)))
+      `(let* ((,fn (varjo:add-external-function ',name ',in-args ',buffers ',body))
               (,spec (get-function-spec ,fn)))
          ,(generate-pseudo-lisp-function name in-args)
          (au:when-found (programs (au:href (dependencies *state*) :fn->programs ,spec))
