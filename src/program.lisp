@@ -121,7 +121,7 @@ See MAKE-SHADER-PROGRAM"
         (store-blocks program stage))
       (setf (slot-value program '%translated-stages) stages))))
 
-(defun %make-shader-program (name version primitive stage-specs)
+(defun %make-shader-program (name version primitive stage-specs uniforms)
   (let ((program (make-instance 'program
                                 :name name
                                 :version version
@@ -133,13 +133,15 @@ See MAKE-SHADER-PROGRAM"
     (store-uniforms program)
     program))
 
-(defmacro make-shader-program (name (&key (version :330) (primitive :triangles)) &body body)
+(defmacro define-shader (name (&key (version :330) (primitive :triangles)) &body body)
   "Create a new shader program using the stage-specs defined in BODY.
 
 VERSION: The default version shader stages use, and can be overridden on a per-function basis.
 
 PRIMITIVE: The drawing primitive to use for the vertex stage."
-  `(%make-shader-program ',name ,version ,primitive ',body))
+  (let ((stages (au:alist-get body 'stages))
+        (uniforms (au:alist-get body 'uniforms)))
+    `(%make-shader-program ',name ,version ,primitive ',stages ',uniforms)))
 
 (defun translate-shader-programs (program-list)
   "Re-translate a collection of shader programs."
