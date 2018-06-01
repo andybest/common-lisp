@@ -22,6 +22,33 @@
 (defun-gpu hermite ((point :vec2))
   (hermite point (lambda ((x :vec2)) (umbra.hashing:fast32/2-per-corner x))))
 
+(defun-gpu hermite/deriv ((point :vec2)
+                          (hash-fn (function (:vec2) (:vec4 :vec4))))
+  (mvlet* ((cell (floor point))
+           (vec (- point cell))
+           (hash-x hash-y (funcall hash-fn cell))
+           (grad-x (- hash-x 0.5 +epsilon+))
+           (grad-y (- hash-y 0.5 +epsilon+))
+           (norm (inversesqrt (+ (* grad-x grad-x) (* grad-y grad-y))))
+           (grad-x (* grad-x norm))
+           (grad-y (* grad-y norm))
+           (temp-x (umbra.shaping:quintic-hermite
+                    (.y vec) (.xy grad-x) (.zw grad-x) (.xy grad-y) (.zw grad-y)))
+           (temp-y (umbra.shaping:quintic-hermite
+                    (.x vec) (.xz grad-y) (.yw grad-y) (.xz grad-x) (.yw grad-x)))
+           (noise (umbra.shaping:quintic-hermite
+                   (.x vec) (.x temp-x) (.y temp-x) (.z temp-x) (.w temp-x)))
+           (noise (map-domain noise -0.4419417 0.4419417 0 1))
+           (derivs (* (vec2 (umbra.shaping:quintic-hermite/derivative
+                             (.x vec) (.x temp-x) (.y temp-x) (.z temp-x) (.w temp-x))
+                            (umbra.shaping:quintic-hermite/derivative
+                             (.y vec) (.x temp-y) (.y temp-y) (.z temp-y) (.w temp-y)))
+                      1.1313709)))
+    (vec3 noise derivs)))
+
+(defun-gpu hermite/deriv ((point :vec2))
+  (hermite/deriv point (lambda ((x :vec2)) (umbra.hashing:fast32/2-per-corner x))))
+
 (defun-gpu hermite ((point :vec3)
                     (hash-fn (function (:vec3) (:vec4 :vec4 :vec4 :vec4 :vec4 :vec4))))
   (mvlet* ((cell (floor point))
@@ -35,14 +62,14 @@
            (hash-z1 (- hash-z1 0.5 +epsilon+))
            (norm0 (inversesqrt (+ (* hash-x0 hash-x0) (* hash-y0 hash-y0) (* hash-z0 hash-z0))))
            (norm1 (inversesqrt (+ (* hash-x1 hash-x1) (* hash-y1 hash-y1) (* hash-z1 hash-z1))))
-           (hash-x0 (* hash-x0 norm0))
-           (hash-y0 (* hash-y0 norm0))
-           (hash-z0 (* hash-z0 norm0))
-           (hash-x1 (* hash-x1 norm1))
-           (hash-y1 (* hash-y1 norm1))
-           (hash-z1 (* hash-z1 norm1))
+           (grad-x0 (* hash-x0 norm0))
+           (grad-y0 (* hash-y0 norm0))
+           (grad-z0 (* hash-z0 norm0))
+           (grad-x1 (* hash-x1 norm1))
+           (grad-y1 (* hash-y1 norm1))
+           (grad-z1 (* hash-z1 norm1))
            (ival igrad-x igrad-y (umbra.shaping:quintic-hermite
-                                  (.z vec) hash-x0 hash-x1 hash-y0 hash-y1 hash-z0 hash-z1))
+                                  (.z vec) grad-x0 grad-x1 grad-y0 grad-y1 grad-z0 grad-z1))
            (out (umbra.shaping:quintic-hermite
                  (.y vec)
                  (vec4 (.xy ival) (.xy igrad-x))
@@ -55,3 +82,65 @@
 
 (defun-gpu hermite ((point :vec3))
   (hermite point (lambda ((x :vec3)) (umbra.hashing:fast32/3-per-corner x))))
+
+(defun-gpu hermite/deriv ((point :vec3)
+                          (hash-fn (function (:vec3) (:vec4 :vec4 :vec4 :vec4 :vec4 :vec4))))
+  (mvlet* ((cell (floor point))
+           (vec (- point cell))
+           (hash-x0 hash-y0 hash-z0 hash-x1 hash-y1 hash-z1 (funcall hash-fn cell))
+           (grad-x0 (- hash-x0 0.5 +epsilon+))
+           (grad-y0 (- hash-y0 0.5 +epsilon+))
+           (grad-z0 (- hash-z0 0.5 +epsilon+))
+           (grad-x1 (- hash-x1 0.5 +epsilon+))
+           (grad-y1 (- hash-y1 0.5 +epsilon+))
+           (grad-z1 (- hash-z1 0.5 +epsilon+))
+           (norm0 (inversesqrt (+ (* grad-x0 grad-x0) (* grad-y0 grad-y0) (* grad-z0 grad-z0))))
+           (norm1 (inversesqrt (+ (* grad-x1 grad-x1) (* grad-y1 grad-y1) (* grad-z1 grad-z1))))
+           (grad-x0 (* grad-x0 norm0))
+           (grad-y0 (* grad-y0 norm0))
+           (grad-z0 (* grad-z0 norm0))
+           (grad-x1 (* grad-x1 norm1))
+           (grad-y1 (* grad-y1 norm1))
+           (grad-z1 (* grad-z1 norm1))
+           (ival-z igrad-xz igrad-yz (umbra.shaping:quintic-hermite
+                                      (.z vec) grad-x0 grad-x1 grad-y0 grad-y1 grad-z0 grad-z1))
+           (ival-y igrad-xy igrad-zy (umbra.shaping:quintic-hermite
+                                      (.y vec)
+                                      (vec4 (.xy grad-x0) (.xy grad-x1))
+                                      (vec4 (.zw grad-x0) (.zw grad-x1))
+                                      (vec4 (.xy grad-z0) (.xy grad-z1))
+                                      (vec4 (.zw grad-z0) (.zw grad-z1))
+                                      (vec4 (.xy grad-y0) (.xy grad-y1))
+                                      (vec4 (.zw grad-y0) (.zw grad-y1))))
+           (temp-x (umbra.shaping:quintic-hermite
+                    (.y vec)
+                    (vec4 (.xy ival-z) (.xy igrad-xz))
+                    (vec4 (.zw ival-z) (.zw igrad-xz))
+                    (vec4 (.xy igrad-yz) 0 0)
+                    (vec4 (.zw igrad-yz) 0 0)))
+           (temp-y (umbra.shaping:quintic-hermite
+                    (.x vec)
+                    (vec4 (.xz ival-z) (.xz igrad-yz))
+                    (vec4 (.yw ival-z) (.yw igrad-yz))
+                    (vec4 (.xz igrad-xz) 0 0)
+                    (vec4 (.yw igrad-xz) 0 0)))
+           (temp-z (umbra.shaping:quintic-hermite
+                    (.x vec)
+                    (vec4 (.xz ival-y) (.xz igrad-zy))
+                    (vec4 (.yw ival-y) (.yw igrad-zy))
+                    (vec4 (.xz igrad-xy) 0 0)
+                    (vec4 (.yw igrad-xy) 0 0)))
+           (noise (umbra.shaping:quintic-hermite
+                   (.x vec) (.x temp-x) (.y temp-x) (.z temp-x) (.w temp-x)))
+           (noise (map-domain noise -0.5412659 0.5412659 0 1))
+           (derivs (* (vec3 (umbra.shaping:quintic-hermite/derivative
+                             (.x vec) (.x temp-x) (.y temp-x) (.z temp-x) (.w temp-x))
+                            (umbra.shaping:quintic-hermite/derivative
+                             (.y vec) (.x temp-y) (.y temp-y) (.z temp-y) (.w temp-y))
+                            (umbra.shaping:quintic-hermite/derivative
+                             (.z vec) (.x temp-z) (.y temp-z) (.z temp-z) (.w temp-z)))
+                      0.92376035)))
+    (vec4 noise derivs)))
+
+(defun-gpu hermite/deriv ((point :vec3))
+  (hermite/deriv point (lambda ((x :vec3)) (umbra.hashing:fast32/3-per-corner x))))

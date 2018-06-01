@@ -157,4 +157,5 @@
            #:polkadot/box
            #:stars
            #:hermite
+           #:hermite/deriv
            #:value-hermite))
