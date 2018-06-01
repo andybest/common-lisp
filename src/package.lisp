@@ -145,9 +145,11 @@
            #:perlin/surflet/deriv
            #:perlin/improved
            #:perlin/simplex
+           #:perlin/simplex/deriv
            #:value-perlin
            #:cubist
            #:cellular
+           #:cellular/deriv
            #:cellular/fast
            #:cellular/simplex
            #:polkadot
