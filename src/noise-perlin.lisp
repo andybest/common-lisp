@@ -153,7 +153,7 @@
            (temp1 (* (inversesqrt (+ (* grad-x0 grad-x0) (* grad-y0 grad-y0) (* grad-z0 grad-z0)))
                      (+ (* (.xyxy (vec2 (.x vec) (.x vec-1))) grad-x0)
                         (* (.xxyy (vec2 (.y vec) (.y vec-1))) grad-y0)
-                        (* (.z vec) (.z grad-z0)))))
+                        (* (.z vec) grad-z0))))
            (temp2 (* (inversesqrt (+ (* grad-x1 grad-x1) (* grad-y1 grad-y1) (* grad-z1 grad-z1)))
                      (+ (* (.xyxy (vec2 (.x vec) (.x vec-1))) grad-x1)
                         (* (.xxyy (vec2 (.y vec) (.y vec-1))) grad-y1)
