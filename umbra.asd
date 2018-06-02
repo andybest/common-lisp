@@ -1,5 +1,5 @@
 (asdf:defsystem #:umbra
-  :description "A collection of general purpose reusable GPU shader functions."
+  :description "A library of reusable GPU shader functions."
   :author ("Michael Fiano <mail@michaelfiano.com>")
   :maintainer "Michael Fiano <mail@michaelfiano.com>"
   :license "MIT"
