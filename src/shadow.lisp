@@ -22,10 +22,18 @@
     (setf (au:href (source program) (stage-type stage))
           (subseq source (1+ (position #\newline source)) (- (length source) 2)))))
 
-(defmacro defstruct-gpu (name context &body slots)
+(defmacro defstruct-gpu (name () &body slots)
   "Define a GPU structure."
-  `(varjo:v-defstruct ,name ,context ,@slots))
+  `(varjo:define-vari-struct ,name () ,@slots))
+
+(defmacro shadow.lang:defstruct (name &body slots)
+  "Define a GPU structure."
+  `(varjo:define-vari-struct ,name () ,@slots))
 
 (defmacro defmacro-gpu (name lambda-list &body body)
   "Define a GPU macro."
-  `(varjo:v-defmacro ,name ,lambda-list ,@body))
+  `(varjo:define-vari-macro ,name ,lambda-list ,@body))
+
+(defmacro shadow.lang:defmacro (name lambda-list &body body)
+  "Define a GPU macro."
+  `(varjo:define-vari-macro ,name ,lambda-list ,@body))

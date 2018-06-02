@@ -43,3 +43,9 @@
            #:uniform-mat3-array
            #:uniform-mat4
            #:uniform-mat4-array))
+
+(defpackage+ #:shadow.lang
+  (:inherit-except #:box.math.vari #:defun #:defstruct #:defmacro)
+  (:export #:defun
+           #:defstruct
+           #:defmacro))

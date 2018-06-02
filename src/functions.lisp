@@ -26,3 +26,6 @@
          (au:when-found (programs (au:href (dependencies *state*) :fn->programs ,spec))
            (funcall (modify-hook *state*) (au:hash-keys programs)))
          ,fn))))
+
+(defmacro shadow.lang:defun (name args &body body)
+  `(defun-gpu ,name ,args ,@body))
