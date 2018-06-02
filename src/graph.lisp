@@ -5,11 +5,11 @@
 ;;;; Mikael Hvidtfeldt Christensen http://blog.hvidtfeldts.net/index.php/2011/07/plotting-high-frequency-functions-using-a-gpu/
 ;;;; Chris Bagley https://github.com/cbaggers/nineveh/blob/master/graphing/graph.lisp
 
-(defun-gpu graph ((func (function (:float) :float))
-                  (uv :vec2)
-                  (xy-range :vec4)
-                  (line-style :vec4)
-                  (samples :int))
+(defun graph ((func (function (:float) :float))
+              (uv :vec2)
+              (xy-range :vec4)
+              (line-style :vec4)
+              (samples :int))
   (decf (.xz xy-range) (.ww line-style))
   (let* ((diff (- (.yw xy-range) (.xz xy-range)))
          (uv (+ (* uv diff) (.xz xy-range)))

@@ -1,11 +1,11 @@
 (in-package :defpackage+-user-1)
 
 (defpackage+ #:umbra.common
-  (:inherit #:cl #:shadow #:box.math.vari)
+  (:inherit #:shadow.lang)
   (:export #:mvlet*))
 
 (defpackage+ #:umbra.math
-  (:use #:umbra.common)
+  (:use #:shadow.lang)
   (:export #:+epsilon+
            #:+pi+
            #:+half-pi+
@@ -142,7 +142,6 @@
            #:perlin-surflet
            #:perlin-surflet/derivs
            #:perlin-improved
-
            #:cellular
            #:cellular/derivs
            #:cellular-fast
@@ -150,17 +149,13 @@
            #:polkadot-box
            #:hermite
            #:hermite/derivs
-
            #:simplex-perlin
            #:simplex-perlin/derivs
            #:simplex-cellular
            #:simplex-polkadot
-
            #:value
            #:value/derivs
            #:value-perlin
            #:value-hermite
-
            #:cubist
-           #:stars
-           ))
+           #:stars))
