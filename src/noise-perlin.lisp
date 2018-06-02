@@ -246,7 +246,7 @@
            (temp1 (* (inversesqrt (+ (* grad-x0 grad-x0) (* grad-y0 grad-y0) (* grad-z0 grad-z0)))
                      (+ (* (.xyxy (vec2 (.x vec) (.x vec-1))) grad-x0)
                         (* (.xxyy (vec2 (.y vec) (.y vec-1))) grad-y0)
-                        (* (.z vec) (.z grad-z0)))))
+                        (* (.z vec) grad-z0))))
            (temp2 (* (inversesqrt (+ (* grad-x1 grad-x1) (* grad-y1 grad-y1) (* grad-z1 grad-z1)))
                      (+ (* (.xyxy (vec2 (.x vec) (.x vec-1))) grad-x1)
                         (* (.xxyy (vec2 (.y vec) (.y vec-1))) grad-y1)
@@ -263,6 +263,11 @@
                            temp2))
                    2.3703704)))
     (map-domain out -1 1 0 1)))
+
+#|
+float final = dot( Falloff_Xsq_C2( min( vec4( 1.0 ), vecs_len_sq + Pf.zzzz ) ), grad_results_0 ) +
+dot( Falloff_Xsq_C2( min( vec4( 1.0 ), vecs_len_sq + Pf_min1.zzzz ) ), grad_results_1 );
+|#
 
 (defun perlin-surflet ((point :vec3))
   (perlin-surflet point (lambda ((x :vec3)) (umbra.hashing:fast32/3-per-corner x))))
