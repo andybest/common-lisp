@@ -7,7 +7,7 @@
 ;;; 2D Perlin noise
 
 (defun perlin ((point :vec2)
-                   (hash-fn (function (:vec2) (:vec4 :vec4))))
+               (hash-fn (function (:vec2) (:vec4 :vec4))))
   (mvlet* ((origin (floor point))
            (vecs (- (.xyxy point) (vec4 origin (1+ origin))))
            (hash-x hash-y (funcall hash-fn origin))
@@ -27,7 +27,7 @@
 ;;; 2D Perlin noise with derivatives
 
 (defun perlin/derivs ((point :vec2)
-                          (hash-fn (function (:vec2) (:vec4 :vec4))))
+                      (hash-fn (function (:vec2) (:vec4 :vec4))))
   (mvlet* ((cell (floor point))
            (vecs (- (.xyxy point) (vec4 cell (1+ cell))))
            (hash-x hash-y (funcall hash-fn cell))
@@ -61,7 +61,7 @@
 ;;; http://briansharpe.wordpress.com/2012/03/09/modifications-to-classic-perlin-noise/
 
 (defun perlin-surflet ((point :vec2)
-                           (hash-fn (function (:vec2) (:vec4 :vec4))))
+                       (hash-fn (function (:vec2) (:vec4 :vec4))))
   (mvlet* ((cell (floor point))
            (vecs (- (.xyxy point) (vec4 cell (1+ cell))))
            (hash-x hash-y (funcall hash-fn cell))
@@ -81,7 +81,7 @@
 ;;; 2D Perlin Surflet noise with derivatives
 
 (defun perlin-surflet/derivs ((point :vec2)
-                                  (hash-fn (function (:vec2) (:vec4 :vec4))))
+                              (hash-fn (function (:vec2) (:vec4 :vec4))))
   (mvlet* ((cell (floor point))
            (vecs (- (.xyxy point) (vec4 cell (1+ cell))))
            (hash-x hash-y (funcall hash-fn cell))
@@ -109,7 +109,7 @@
 ;;; Ken Perlin's improved version
 
 (defun perlin-improved ((point :vec2)
-                            (hash-fn (function (:vec2) :vec4)))
+                        (hash-fn (function (:vec2) :vec4)))
   (let* ((cell (floor point))
          (vecs (- (.xyxy point) (vec4 cell (1+ cell))))
          (hash (- (funcall hash-fn cell) 0.5))
@@ -126,7 +126,7 @@
 ;;; 3D Perlin noise
 
 (defun perlin ((point :vec3)
-                   (hash-fn (function (:vec3) (:vec4 :vec4 :vec4 :vec4 :vec4 :vec4))))
+               (hash-fn (function (:vec3) (:vec4 :vec4 :vec4 :vec4 :vec4 :vec4))))
   (mvlet* ((cell (floor point))
            (vec (- point cell))
            (vec-1 (1- vec))
@@ -385,10 +385,10 @@
                          (* (.z vec) a2)
                          (* (.w vec) a3))))
            (temp-b (* (inversesqrt (+ (* b0 b0) (* b1 b1) (* b2 b2) (* b3 b3)))
-                      (+ (* (.xyxy (vec2 (.x vec) (.x vec-1))) a0)
-                         (* (.xxyy (vec2 (.y vec) (.y vec-1))) a1)
-                         (* (.z vec-1) a2)
-                         (* (.w vec) a3))))
+                      (+ (* (.xyxy (vec2 (.x vec) (.x vec-1))) b0)
+                         (* (.xxyy (vec2 (.y vec) (.y vec-1))) b1)
+                         (* (.z vec-1) b2)
+                         (* (.w vec) b3))))
            (temp-c (* (inversesqrt (+ (* c0 c0) (* c1 c1) (* c2 c2) (* c3 c3)))
                       (+ (* (.xyxy (vec2 (.x vec) (.x vec-1))) c0)
                          (* (.xxyy (vec2 (.y vec) (.y vec-1))) c1)

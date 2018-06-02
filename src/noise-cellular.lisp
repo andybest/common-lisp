@@ -10,7 +10,7 @@
 ;;; 2D Cellular noise
 
 (defun cellular ((point :vec2)
-                     (hash-fn (function (:vec2) (:vec4 :vec4))))
+                 (hash-fn (function (:vec2) (:vec4 :vec4))))
   (mvlet* ((cell (floor point))
            (vec (- point cell))
            (jitter-window 0.25)
@@ -155,7 +155,7 @@
            (hash-z0 (+ (* hash-z0 (.x jitter-window) 2) (.y jitter-window)))
            (hash-x1 (+ (* hash-x1 (.x jitter-window) 2) (.yzyz jitter-window)))
            (hash-y1 (+ (* hash-y1 (.x jitter-window) 2) (.yyzz jitter-window)))
-           (hash-z1 (+ (* hash-z0 (.x jitter-window) 2) (.z jitter-window)))
+           (hash-z1 (+ (* hash-z1 (.x jitter-window) 2) (.z jitter-window)))
            (dx1 (- (.x vec) hash-x0))
            (dy1 (- (.y vec) hash-y0))
            (dz1 (- (.z vec) hash-z0))

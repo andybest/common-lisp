@@ -208,7 +208,7 @@
          (c1 (vec3 6 -3 -3))
          (c2 (vec3 10 -6 -4))
          (h123 (* (+ (* (+ c0 (* c1 x)) x) c2) x x x)))
-    (values (+ (* egrad0 (vec4 (* (.y h123) x)))
+    (values (+ (* egrad0 (vec4 (+ (.y h123) x)))
                (* egrad1 (.z h123)))
             (+ igrad-x0 (* (- igrad-x1 igrad-x0) (.x h123)))
             (+ igrad-y0 (* (- igrad-y1 igrad-y0) (.x h123))))))

@@ -5,9 +5,9 @@
 ;;; 2D Value noise
 
 (defun value ((point :vec2)
-                  (hash-fn (function (:vec2) :vec4)))
+              (hash-fn (function (:vec2) :vec4)))
   (let* ((cell (floor point))
-         (vec (- point pi))
+         (vec (- point cell))
          (hash (funcall hash-fn cell))
          (blend (umbra.shaping:quintic-curve vec))
          (blend (vec4 blend (- 1 blend))))
@@ -19,7 +19,7 @@
 ;;; 2D Value noise with derivatives
 
 (defun value/derivs ((point :vec2)
-                         (hash-fn (function (:vec2) :vec4)))
+                     (hash-fn (function (:vec2) :vec4)))
   (let* ((cell (floor point))
          (vec (- point cell))
          (hash (funcall hash-fn cell))
@@ -34,9 +34,9 @@
 ;;; 3D Value noise
 
 (defun value ((point :vec3)
-                  (hash-fn (function (:vec3) (:vec4 :vec4))))
+              (hash-fn (function (:vec3) (:vec4 :vec4))))
   (mvlet* ((cell (floor point))
-           (vec (- point pi))
+           (vec (- point cell))
            (low-z high-z (funcall hash-fn cell))
            (blend (umbra.shaping:quintic-curve vec))
            (out (mix low-z high-z (.z blend)))
@@ -49,9 +49,9 @@
 ;;; 3D Value noise with derivatives
 
 (defun value/derivs ((point :vec3)
-                         (hash-fn (function (:vec3) (:vec4 :vec4))))
+                     (hash-fn (function (:vec3) (:vec4 :vec4))))
   (mvlet* ((cell (floor point))
-           (vec (- point pi))
+           (vec (- point cell))
            (low-z high-z (funcall hash-fn cell))
            (blend (umbra.shaping:quintic-curve vec))
            (temp1 (mix low-z high-z (.z blend)))
@@ -72,12 +72,12 @@
 (defun value ((point :vec4)
               (hash-fn (function (:vec4) (:vec4 :vec4 :vec4 :vec4))))
   (mvlet* ((cell (floor point))
-           (vec (- point pi))
+           (vec (- point cell))
            (z0w0 z1w0 z0w1 z1w1 (funcall hash-fn cell))
            (blend (umbra.shaping:quintic-curve vec))
            (temp (+ z0w0 (* (- z0w1 z0w0) (.w blend))))
            (temp (+ temp (* (- (+ z1w0 (* (- z1w1 z1w0) (.w blend))) temp) (.z blend))))
-           (blend (vec4 (.zw blend) (- 1 (.xy blend)))))
+           (blend (vec4 (.xy blend) (- 1 (.xy blend)))))
     (dot temp (* (.zxzx blend) (.wwyy blend)))))
 
 (defun value ((point :vec4))

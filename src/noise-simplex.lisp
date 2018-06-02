@@ -33,8 +33,8 @@
     (values cell1 cell2 cell3 v1234-x v1234-y v1234-z)))
 
 (defun simplex/get-surflet-weights ((v1234-x :vec4)
-                                        (v1234-y :vec4)
-                                        (v1234-z :vec4))
+                                    (v1234-y :vec4)
+                                    (v1234-z :vec4))
   (let* ((surflet-weights (+ (* v1234-x v1234-x) (* v1234-y v1234-y) (* v1234-z v1234-z)))
          (surflet-weights (max (- 0.5 surflet-weights) 0)))
     (* surflet-weights surflet-weights surflet-weights)))
@@ -42,7 +42,7 @@
 ;;; 2D Simplex Perlin noise
 
 (defun simplex-perlin ((point :vec2)
-                           (hash-fn (function (:vec2) (:vec4 :vec4))))
+                       (hash-fn (function (:vec2) (:vec4 :vec4))))
   (mvlet* ((simplex-points (vec3 (- 1 +simplex-2d/unskew-factor+)
                                  (- +simplex-2d/unskew-factor+)
                                  (- 1 (* 2 +simplex-2d/unskew-factor+))))
@@ -72,7 +72,7 @@
 ;;; 2D Simplex Perlin noise with derivatives
 
 (defun simplex-perlin/derivs ((point :vec2)
-                                  (hash-fn (function (:vec2) (:vec4 :vec4))))
+                              (hash-fn (function (:vec2) (:vec4 :vec4))))
   (mvlet* ((simplex-points (vec3 (- 1 +simplex-2d/unskew-factor+)
                                  (- +simplex-2d/unskew-factor+)
                                  (- 1 (* 2 +simplex-2d/unskew-factor+))))
@@ -109,7 +109,7 @@
 ;;; 3D Simplex Perlin noise
 
 (defun simplex-perlin ((point :vec3)
-                           (hash-fn (function (:vec3 :vec3 :vec3) (:vec4 :vec4 :vec4))))
+                       (hash-fn (function (:vec3 :vec3 :vec3) (:vec4 :vec4 :vec4))))
   (mvlet* ((cell1 cell2 cell3 corners-x corners-y corners-z (simplex/get-corner-vectors point))
            (hash0 hash1 hash2 (funcall hash-fn cell1 cell2 cell3))
            (hash0 (- hash0 0.5 +epsilon+))
