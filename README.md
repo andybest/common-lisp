@@ -1,17 +1,17 @@
 # shadow
 
-A lightweight system to help with defining and managing OpenGL shader programs.
+A lispy system for defining OpenGL shader programs and associated buffer objects.
 
 ## Overview
 
 Under the hood, Shadow is just a wrapper around the [Varjo](https://github.com/cbaggers/varjo)
 library used for writing shader programs, and some fluff to allow referencing shader programs by
-name, querying for basic information about them, as well as modifying uniform variables throughout
-the lifecycle of an OpenGL application. Limited and experimental support for writing to uniform
-buffer objects is also available.
+name, querying for basic information about them, modifying uniform variables throughout the
+lifecycle of an OpenGL application, and managing certain OpenGL buffer object types (UBO, SSBO
+currently).
 
 The goal of Shadow is to be a simple solution to ease the task of writing and managing OpenGL shader
-programs, and as such, does not and will not contain every feature you might need.
+programs and associated buffers.
 
 ## Install
 
@@ -26,8 +26,8 @@ programs, and as such, does not and will not contain every feature you might nee
 Using Shadow is not very straightforward, mostly due to the borrowing of the "Vari" language used to
 write shader programs, which does not have much documentation. It does however try to stay familiar
 and resembles Common Lisp. Additionally, there are [several
-videos](https://www.youtube.com/watch?v=82o5NeyZtvw&list=PL2VAYZE_4wRITJBv6saaKouj4sWSG1FcS) of its
-usage created by its author.
+videos](https://www.youtube.com/watch?v=82o5NeyZtvw&list=PL2VAYZE_4wRITJBv6saaKouj4sWSG1FcS) of
+Vari's usage created by its author.
 
 Shader programs are written using a series of `DEFUN-GPU` and `DEFSTRUCT-GPU` forms representing GPU
 functions and structures respectively. As mentioned, their bodies follow the language rules of
@@ -52,43 +52,38 @@ This defines 2 GPU functions, `foo-vert` and `foo-frag` that will serve as a ver
 once translated and compiled.
 
 To use this program it first must be translated from the Lisp-like "Vari" language, into GLSL. This
-is done with the `MAKE-SHADER-PROGRAM` macro:
+is done with the `DEFINE-SHADER` macro:
 
 ```lisp
-(make-shader-program :example-program (:version 330 :primitive :points)
-  (:vertex () (foo-vert :vec3 :vec2))
-  (:fragment () (foo-frag :vec4)))
+(define-shader :example-program (:version 330 :primitive :points)
+  (:vertex (foo-vert :vec3 :vec2))
+  (:fragment (foo-frag :vec4)))
 ```
 
-Above, we call `MAKE-SHADER-PROGRAM` with a name to call our program, `:example-program`, the
-default stage version to use, `:version 330`, and the OpenGL drawing primitive the vertex stage
-should use, `:primitive :points`, followed by a sequence of "stage-specs" of the form: `(stage-type
-(version) function-spec)`:
+Above, we call `DEFINE-SHADER` with a name to call our program, `:example-program`, the default
+stage version to use, `:version 330`, and the OpenGL drawing primitive the vertex stage should use,
+`:primitive :points`, followed by a sequence of "stage-specs" of the form: `(stage-type
+function-spec)`:
 
 `stage-type` may be one of: `:vertex`, `:tessellation-control`, `:tessellation-evaluation`,
 `:geometry`, `:fragment`, or `:compute`.
-
-`version` is a number, string, or symbol representing a GLSL version to use when compiling this
-stage, for example `330`, `"330"`, `:330`, or `'|330|` are all equivalent. The default version if
-not specified is derived from the options list of the containing `MAKE-SHADER-PROGRAM` form.
 
 `func-spec` specifies which `DEFUN-GPU` function to use for this stage, and is a list consisting of
 the function name followed by the types of all of its input arguments. The types are important
 because the "Vari" shader language allows the same function name to exist with different signatures,
 so you must be explicit in which function you want to translate to GLSL.
 
-Issuing the call to `MAKE-SHADER-PROGRAM` produces a `PROGRAM` object, which includes some useful
+Issuing the call to `DEFINE-SHADER` produces a `PROGRAM` object, which includes some useful
 information:
 
-The `SOURCE` reader method is a hash table with keys consisting of shader stage keyword symbols, and
-values being strings of the translated "Vari" to GLSL source code:
+The `VIEW-SOURCE` function can be used to retrieve the translated Varo -> GLSL source for a given
+program and stage type:
 
 ```lisp
-(make-shader-program ...)
+(define-shader ...)
 
-(source *) ; => #<HASH-TABLE :TEST EQL :COUNT 2 {10020C7603}>
+(view-source * :vertex)
 
-(gethash :vertex *)
 #|
 "#version 330
 
@@ -111,7 +106,8 @@ void main()
 T
 |#
 
-(gethash :fragment **)
+(view-source ** :fragment)
+
 #|
 "#version 330
 
@@ -137,7 +133,7 @@ as input arguments to the fragment stage, `(vec4 1 0 0 1)`, which takes that for
 fragment color of the pipeline.
 
 So far, we have only translated the "Vari" shader language into the GLSL language understood by
-GPUs. We still have to compile the shader stages and link the final program object on the GPU.
+OpenGL. We still have to compile the shader stages and link the final program object on the GPU.
 
 At this point, a valid OpenGL context is needed to continue.
 
@@ -167,15 +163,146 @@ macro:
 Here, we specify that we want to use `:example-program` during rendering, modifying a single 4x4
 matrix uniform value. Here `*matrix*` refers to an imaginary matrix that you should have created for
 the object you wish to render. There are quite a few `UNIFORM-*` functions, and the full list can be
-viewed in the [package's exported symbols](src/package.lisp). Note that each uniform
-function takes the name of a uniform variable as a keyword symbol, followed by the value to modify
-it with.
+viewed in the [package's exported symbols](src/package.lisp). Note that each uniform function takes
+the name of a uniform variable as a keyword symbol, followed by the value to modify it with.
 
 ### UBO/SSBO Support
 
-Shadow also includes experimental support for uniform buffer objects (UBO's) and shader storage
-buffer objects (SSBO's). Usage will be documented at a later time when their implementation is more
-stable.
+Shadow also includes support for uniform buffer objects (UBO's) and shader storage
+buffer objects (SSBO's).
+
+A buffer-backed interface block in Shadow is implemented as a struct with `DEFSTRUCT-GPU`. Anytime a
+particular shader function wishes to read or write to this buffer, it must be specified in that
+function's signature using the `&uniform` part of its lambda list. To do this, you must know the
+name of the struct, whether you want to access a UBO or SSBO buffer, and the packing layout of that
+buffer (std140 or std430). For example, this function binds the symbol `var` using the previously
+defined struct, `foo-block`, which will be later filled as an SSBO using the layout rules of the
+std430 specification:
+
+```lisp
+(defun foo (&uniform (var foo-block :ssbo :std430)
+  ...))
+```
+
+This special uniform syntax must be present for each function that needs to access a buffer.
+
+#### Creating block aliases
+
+On the CPU side, we can create aliases for blocks. This is useful, because the same block name can
+refer to multiple blocks, even in the context of the same shader program. To create a block alias,
+use `CREATE-BLOCK-ALIAS`:
+
+```lisp
+(create-block-alias <block-type> <block-id> <program-name> <block-alias>)
+```
+
+* `<block-type>`: The keyword symbol :buffer or :uniform, depending if this block is a block which
+  should be used with an SSBO or UBO, respectively.
+
+* `<block-id>`: The name of the block. This is always a keyword symbol, derived from the name given to
+the struct.
+
+* `<program-name>`: A symbol denoting the name of the program where this block can be found, as
+  defined with `DEFINE-SHADER`.
+
+* `<block-alias>`: An identifier to be used to reference this block. May be a symbol, keyword
+  symbol, or a case-sensitive string.
+
+#### Deleting block aliases
+
+It may be useful to delete a block alias. You can do so using `DELETE-BLOCK-ALIAS`:
+
+```lisp
+(delete-block-alias <block-alias> &key unbind-block)
+```
+
+* `<block-alias>`: An identifier to be used to reference this block. May be a symbol, keyword
+  symbol, or a case-sensitive string.
+
+* `<unbind-buffer>`: When non-NIL, also disassociates the block from a binding point.
+
+#### Referencing Blocks
+
+To find a block object in Shadow's state, you can use `FIND-BLOCK`:
+
+```lisp
+(find-block <block-alias>)
+```
+
+* `<block-alias>`: A symbol, keyword symbol, or case-sensitive string denoting an alias previously
+  defined with `CREATE-BLOCK-ALIAS`.
+
+#### Binding Blocks
+
+A block must be bound to a "binding point" for use. A buffer is then bound to this same binding
+point to associate them with each other. To bind a block to a binding point, use `BIND-BLOCK`:
+
+```lisp
+(bind-block <block-alias> <binding-point>)
+```
+
+* `<block-alias>`: A symbol, keyword symbol, or case-sensitive string denoting an alias previously
+defined with `CREATE-BLOCK-ALIAS`.
+
+* `<binding-point>`: An integer to bind the block to. This ranges from 1 to a driver-dependent
+  maximum.
+
+#### Unbinding Blocks
+
+To disassociate a block from a binding point, use `UNBIND-BLOCK`:
+
+```lisp
+(unbind-block <block-alias>)
+```
+
+* `<block-alias>`: A symbol, keyword symbol, or case-sensitive string denoting an alias previously
+  defined with `CREATE-BLOCK-ALIAS`.
+
+#### Creating Buffers
+
+To create a buffer, you first need to create a block alias as per the above instructions. You can
+then create a buffer which uses the layout of a particular block, using `CREATE-BUFFER`:
+
+```lisp
+(create-buffer <buffer-name> <block-alias>)
+````
+
+* `<buffer-name>`: A symbol that can later be used as a reference to the created buffer.
+
+* `<block-alias>`: A symbol, keyword symbol, or case-sensitive string denoting an alias previously
+  defined with `CREATE-BLOCK-ALIAS`.
+
+#### Binding Buffers
+
+To bind a buffer to a binding point, use `BIND-BUFFER`:
+
+```lisp
+(bind-buffer <buffer-name> <binding-point>)
+```
+
+* `<buffer-name>`: The name of a buffer that was defined with `CREATE-BUFFER`.
+
+* `<binding-point>`: An integer to bind the buffer to. This ranges from 1 to a driver-dependent
+  maximum.
+
+#### Unbinding Buffers
+
+To disassociate a buffer from a binding point, use `UNBIND-BUFFER`:
+
+```lisp
+(unbind-buffer <buffer-name>)
+```
+
+* `<buffer-name>`: The name of a buffer that was defined with `CREATE-BUFFER`.
+
+#### Deleting Buffers
+
+```lisp
+(delete-buffer <buffer-name>)
+```
+
+* `<buffer-name>`: The name of a buffer that was defined with `CREATE-BUFFER`.
+
 
 ## License
 
