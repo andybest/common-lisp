@@ -1,7 +1,10 @@
 (in-package :umbra.noise)
 
-;;;; Noise functions
 ;;;; Perlin noise
+;;;; Original implementation by Ken Perlin
+;;;; Brian Sharpe https://github.com/BrianSharpe/GPU-Noise-Lib
+
+;;; 2D Perlin noise
 
 (defun-gpu perlin ((point :vec2)
                    (hash-fn (function (:vec2) (:vec4 :vec4))))
@@ -21,8 +24,10 @@
 (defun-gpu perlin ((point :vec2))
   (perlin point (lambda ((x :vec2)) (umbra.hashing:fast32/2-per-corner x))))
 
-(defun-gpu perlin/deriv ((point :vec2)
-                         (hash-fn (function (:vec2) (:vec4 :vec4))))
+;;; 2D Perlin noise with derivatives
+
+(defun-gpu perlin/derivs ((point :vec2)
+                          (hash-fn (function (:vec2) (:vec4 :vec4))))
   (mvlet* ((cell (floor point))
            (vecs (- (.xyxy point) (vec4 cell (1+ cell))))
            (hash-x hash-y (funcall hash-fn cell))
@@ -49,10 +54,13 @@
                       0.70710677)))
     (vec3 noise derivs)))
 
-(defun-gpu perlin/deriv ((point :vec2))
-  (perlin/deriv point (lambda ((x :vec2)) (umbra.hashing:fast32/2-per-corner x))))
+(defun-gpu perlin/derivs ((point :vec2))
+  (perlin/derivs point (lambda ((x :vec2)) (umbra.hashing:fast32/2-per-corner x))))
 
-(defun-gpu perlin/surflet ((point :vec2)
+;;; 2D Perlin Surflet noise
+;;; http://briansharpe.wordpress.com/2012/03/09/modifications-to-classic-perlin-noise/
+
+(defun-gpu perlin-surflet ((point :vec2)
                            (hash-fn (function (:vec2) (:vec4 :vec4))))
   (mvlet* ((cell (floor point))
            (vecs (- (.xyxy point) (vec4 cell (1+ cell))))
@@ -67,11 +75,13 @@
                         2.3703704))))
     (map-domain out -1 1 0 1)))
 
-(defun-gpu perlin/surflet ((point :vec2))
-  (perlin/surflet point (lambda ((x :vec2)) (umbra.hashing:fast32/2-per-corner x))))
+(defun-gpu perlin-surflet ((point :vec2))
+  (perlin-surflet point (lambda ((x :vec2)) (umbra.hashing:fast32/2-per-corner x))))
 
-(defun-gpu perlin/surflet/deriv ((point :vec2)
-                                 (hash-fn (function (:vec2) (:vec4 :vec4))))
+;;; 2D Perlin Surflet noise with derivatives
+
+(defun-gpu perlin-surflet/derivs ((point :vec2)
+                                  (hash-fn (function (:vec2) (:vec4 :vec4))))
   (mvlet* ((cell (floor point))
            (vecs (- (.xyxy point) (vec4 cell (1+ cell))))
            (hash-x hash-y (funcall hash-fn cell))
@@ -92,10 +102,13 @@
                       1.1851852)))
     (vec3 noise derivs)))
 
-(defun-gpu perlin/surflet/deriv ((point :vec2))
-  (perlin/surflet/deriv point (lambda ((x :vec2)) (umbra.hashing:fast32/2-per-corner x))))
+(defun-gpu perlin-surflet/derivs ((point :vec2))
+  (perlin-surflet/derivs point (lambda ((x :vec2)) (umbra.hashing:fast32/2-per-corner x))))
 
-(defun-gpu perlin/improved ((point :vec2)
+;;; 2D Perlin noise improved
+;;; Ken Perlin's improved version
+
+(defun-gpu perlin-improved ((point :vec2)
                             (hash-fn (function (:vec2) :vec4)))
   (let* ((cell (floor point))
          (vecs (- (.xyxy point) (vec4 cell (1+ cell))))
@@ -107,71 +120,10 @@
                    (* (.zxzx blend) (.wwyy blend)))))
     (map-domain out -1 1 0 1)))
 
-(defun-gpu perlin/improved ((point :vec2))
-  (perlin/improved point (lambda ((x :vec2)) (umbra.hashing:fast32 x))))
+(defun-gpu perlin-improved ((point :vec2))
+  (perlin-improved point (lambda ((x :vec2)) (umbra.hashing:fast32 x))))
 
-(defun-gpu perlin/simplex ((point :vec2)
-                           (hash-fn (function (:vec2) (:vec4 :vec4))))
-  (mvlet* ((simplex-points (vec3 (- 1 +simplex-2d/unskew-factor+)
-                                 (- +simplex-2d/unskew-factor+)
-                                 (- 1 (* 2 +simplex-2d/unskew-factor+))))
-           (point (* point +simplex-2d/triangle-height+))
-           (cell (floor (+ point (dot point (vec2 +simplex-2d/skew-factor+)))))
-           (hash-x hash-y (funcall hash-fn cell))
-           (v0 (- cell (dot cell (vec2 +simplex-2d/unskew-factor+)) point))
-           (v1pos-v1hash (if (< (.x v0) (.y v0))
-                             (vec4 (.xy simplex-points) (.y hash-x) (.y hash-y))
-                             (vec4 (.yx simplex-points) (.z hash-x) (.z hash-y))))
-           (v12 (+ (vec4 (.xy v1pos-v1hash) (.zz simplex-points)) (.xyxy v0)))
-           (grad-x (- (vec3 (.x hash-x) (.z v1pos-v1hash) (.w hash-x)) 0.5 +epsilon+))
-           (grad-y (- (vec3 (.x hash-y) (.w v1pos-v1hash) (.w hash-y)) 0.5 +epsilon+))
-           (m (expt (max (- 0.5 (+ (* (vec3 (.x v0) (.xz v12)) (vec3 (.x v0) (.xz v12)))
-                                   (* (vec3 (.y v0) (.yw v12)) (vec3 (.y v0) (.yw v12)))))
-                         0)
-                    (vec3 4)))
-           (out (* (dot m (* (inversesqrt (+ (* grad-x grad-x) (* grad-y grad-y)))
-                             (+ (* grad-x (vec3 (.x v0) (.xz v12)))
-                                (* grad-y (vec3 (.y v0) (.yw v12))))))
-                   +simplex-2d/norm-factor+)))
-    (map-domain out -1 1 0 1)))
-
-(defun-gpu perlin/simplex ((point :vec2))
-  (perlin/simplex point (lambda ((x :vec2)) (umbra.hashing:fast32/2-per-corner x))))
-
-(defun-gpu perlin/simplex/deriv ((point :vec2)
-                                 (hash-fn (function (:vec2) (:vec4 :vec4))))
-  (mvlet* ((simplex-points (vec3 (- 1 +simplex-2d/unskew-factor+)
-                                 (- +simplex-2d/unskew-factor+)
-                                 (- 1 (* 2 +simplex-2d/unskew-factor+))))
-           (point (* point +simplex-2d/triangle-height+))
-           (cell (floor (+ point (dot point (vec2 +simplex-2d/skew-factor+)))))
-           (hash-x hash-y (funcall hash-fn cell))
-           (v0 (- cell (dot cell (vec2 +simplex-2d/unskew-factor+)) point))
-           (v1pos-v1hash (if (< (.x v0) (.y v0))
-                             (vec4 (.xy simplex-points) (.y hash-x) (.y hash-y))
-                             (vec4 (.yx simplex-points) (.z hash-x) (.z hash-y))))
-           (v12 (+ (vec4 (.xy v1pos-v1hash) (.zz simplex-points)) (.xyxy v0)))
-           (grad-x (- (vec3 (.x hash-x) (.z v1pos-v1hash) (.w hash-x)) 0.5 +epsilon+))
-           (grad-y (- (vec3 (.x hash-y) (.w v1pos-v1hash) (.w hash-y)) 0.5 +epsilon+))
-           (norm (inversesqrt (+ (* grad-x grad-x) (* grad-y grad-y))))
-           (grad-x (* grad-x norm))
-           (grad-y (* grad-y norm))
-           (grad-results (+ (* grad-x (vec3 (.x v0) (.xz v12)))
-                            (* grad-y (vec3 (.y v0) (.yw v12)))))
-           (m (max (- 0.5 (+ (* (vec3 (.x v0) (.xz v12)) (vec3 (.x v0) (.xz v12)))
-                             (* (vec3 (.y v0) (.yw v12)) (vec3 (.y v0) (.yw v12)))))
-                   0))
-           (m2 (* m m))
-           (m4 (* m2 m2))
-           (temp (* 8 m2 m grad-results))
-           (noise (map-domain (dot m4 grad-results) -0.010080204 0.010080204 0 1))
-           (derivs (* (vec2 (- (dot temp (vec3 (.x v0) (.xz v12))) (dot m4 grad-x))
-                            (- (dot temp (vec3 (.y v0) (.yw v12))) (dot m4 grad-x)))
-                      49.60217)))
-    (vec3 noise derivs)))
-
-(defun-gpu perlin/simplex/deriv ((point :vec2))
-  (perlin/simplex/deriv point (lambda ((x :vec2)) (umbra.hashing:fast32/2-per-corner x))))
+;;; 3D Perlin noise
 
 (defun-gpu perlin ((point :vec3)
                    (hash-fn (function (:vec3) (:vec4 :vec4 :vec4 :vec4 :vec4 :vec4))))
@@ -202,8 +154,10 @@
 (defun-gpu perlin ((point :vec3))
   (perlin point (lambda ((x :vec3)) (umbra.hashing:fast32/3-per-corner x))))
 
-(defun-gpu perlin/deriv ((point :vec3)
-                         (hash-fn (function (:vec3) (:vec4 :vec4 :vec4 :vec4 :vec4 :vec4))))
+;;; 3D Perlin noise with derivatives
+
+(defun-gpu perlin/derivs ((point :vec3)
+                          (hash-fn (function (:vec3) (:vec4 :vec4 :vec4 :vec4 :vec4 :vec4))))
   (mvlet* ((cell (floor point))
            (vec (- point cell))
            (vec-1 (1- vec))
@@ -271,10 +225,13 @@
                       0.57735026)))
     (vec4 noise derivs)))
 
-(defun-gpu perlin/deriv ((point :vec3))
-  (perlin/deriv point (lambda ((x :vec3)) (umbra.hashing:fast32/3-per-corner x))))
+(defun-gpu perlin/derivs ((point :vec3))
+  (perlin/derivs point (lambda ((x :vec3)) (umbra.hashing:fast32/3-per-corner x))))
 
-(defun-gpu perlin/surflet ((point :vec3)
+;;; 3D Perlin Surflet noise
+;;; http://briansharpe.wordpress.com/2012/03/09/modifications-to-classic-perlin-noise/
+
+(defun-gpu perlin-surflet ((point :vec3)
                            (hash-fn (function (:vec3) (:vec4 :vec4 :vec4 :vec4 :vec4 :vec4))))
   (mvlet* ((cell (floor point))
            (vec (- point cell))
@@ -307,11 +264,13 @@
                    2.3703704)))
     (map-domain out -1 1 0 1)))
 
-(defun-gpu perlin/surflet ((point :vec3))
-  (perlin/surflet point (lambda ((x :vec3)) (umbra.hashing:fast32/3-per-corner x))))
+(defun-gpu perlin-surflet ((point :vec3))
+  (perlin-surflet point (lambda ((x :vec3)) (umbra.hashing:fast32/3-per-corner x))))
 
-(defun-gpu perlin/surflet/deriv ((point :vec3)
-                                 (hash-fn (function (:vec3) (:vec4 :vec4 :vec4 :vec4 :vec4 :vec4))))
+;;; 3D Perlin Surflet noise with derivatives
+
+(defun-gpu perlin-surflet/derivs ((point :vec3)
+                                  (hash-fn (function (:vec3) (:vec4 :vec4 :vec4 :vec4 :vec4 :vec4))))
   (mvlet* ((cell (floor point))
            (vec (- point cell))
            (vec-1 (1- vec))
@@ -360,10 +319,13 @@
            (derivs (* (+ deriv0 deriv1) 1.1851852)))
     (vec4 noise derivs)))
 
-(defun-gpu perlin/surflet/deriv ((point :vec3))
-  (perlin/surflet/deriv point (lambda ((x :vec3)) (umbra.hashing:fast32/3-per-corner x))))
+(defun-gpu perlin-surflet/derivs ((point :vec3))
+  (perlin-surflet/derivs point (lambda ((x :vec3)) (umbra.hashing:fast32/3-per-corner x))))
 
-(defun-gpu perlin/improved ((point :vec3)
+;;; 3D Perlin noise improved
+;;; Ken Perlin's modified version
+
+(defun-gpu perlin-improved ((point :vec3)
                             (hash-fn (function (:vec3) (:vec4 :vec4))))
   (mvlet* ((cell (floor point))
            (vec (- point cell))
@@ -387,54 +349,10 @@
            (out (* (dot out (* (.zxzx blend) (.wwyy blend))) (/ 2 3.0))))
     (map-domain out -1 1 0 1)))
 
-(defun-gpu perlin/improved ((point :vec3))
-  (perlin/improved point (lambda ((x :vec3)) (umbra.hashing:fast32 x))))
+(defun-gpu perlin-improved ((point :vec3))
+  (perlin-improved point (lambda ((x :vec3)) (umbra.hashing:fast32 x))))
 
-(defun-gpu perlin/simplex ((point :vec3)
-                           (hash-fn (function (:vec3 :vec3 :vec3) (:vec4 :vec4 :vec4))))
-  (mvlet* ((cell1 cell2 cell3 corners-x corners-y corners-z (simplex/get-corner-vectors point))
-           (hash0 hash1 hash2 (funcall hash-fn cell1 cell2 cell3))
-           (hash0 (- hash0 0.5 +epsilon+))
-           (hash1 (- hash1 0.5 +epsilon+))
-           (hash2 (- hash2 0.5 +epsilon+))
-           (weights (simplex/get-surflet-weights corners-x corners-y corners-z))
-           (out (* (dot weights
-                        (* (inversesqrt (+ (* hash0 hash0) (* hash1 hash1) (* hash2 hash2)))
-                           (+ (* hash0 corners-x) (* hash1 corners-y) (* hash2 corners-z))))
-                   +simplex-3d/norm-factor+)))
-    (map-domain out -1 1 0 1)))
-
-(defun-gpu perlin/simplex ((point :vec3))
-  (perlin/simplex point (lambda ((x :vec3) (y :vec3) (z :vec3))
-                          (umbra.hashing:fast32/3-per-corner x y z))))
-
-(defun-gpu perlin/simplex/deriv ((point :vec3)
-                                 (hash-fn (function (:vec3 :vec3 :vec3) (:vec4 :vec4 :vec4))))
-  (mvlet* ((cell1 cell2 cell3 corners-x corners-y corners-z (simplex/get-corner-vectors point))
-           (hash0 hash1 hash2 (funcall hash-fn cell1 cell2 cell3))
-           (hash0 (- hash0 0.5 +epsilon+))
-           (hash1 (- hash1 0.5 +epsilon+))
-           (hash2 (- hash2 0.5 +epsilon+))
-           (norm (inversesqrt (+ (* hash0 hash0) (* hash1 hash1) (* hash2 hash2))))
-           (hash0 (* hash0 norm))
-           (hash1 (* hash1 norm))
-           (hash2 (* hash2 norm))
-           (grad-results (+ (* hash0 corners-x) (* hash1 corners-y) (* hash2 corners-z)))
-           (m (+ (* corners-x corners-x) (* corners-y corners-y) (* corners-z corners-z)))
-           (m (max (- 0.5 m) 0))
-           (m2 (* m m))
-           (m3 (* m m2))
-           (temp (* -6 m2 grad-results))
-           (noise (map-domain (dot m3 grad-results) -0.026428998 0.026428998 0 1))
-           (derivs (* (vec3 (+ (dot temp corners-x) (dot m3 hash0))
-                            (+ (dot temp corners-y) (dot m3 hash1))
-                            (+ (dot temp corners-z) (dot m3 hash2)))
-                      18.918613)))
-    (vec4 noise derivs)))
-
-(defun-gpu perlin/simplex/deriv ((point :vec3))
-  (perlin/simplex/deriv point (lambda ((x :vec3) (y :vec3) (z :vec3))
-                                (umbra.hashing:fast32/3-per-corner x y z))))
+;;; 4D Perlin noise
 
 (defun-gpu perlin ((point :vec4)
                    (hash-fn (function (:vec4) (:vec4 :vec4 :vec4 :vec4

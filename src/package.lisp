@@ -137,25 +137,30 @@
 
 (defpackage+ #:umbra.noise
   (:use #:umbra.common #:umbra.math)
-  (:export #:value
-           #:value/deriv
-           #:perlin
-           #:perlin/deriv
-           #:perlin/surflet
-           #:perlin/surflet/deriv
-           #:perlin/improved
-           #:perlin/simplex
-           #:perlin/simplex/deriv
-           #:value-perlin
-           #:cubist
+  (:export #:perlin
+           #:perlin/derivs
+           #:perlin-surflet
+           #:perlin-surflet/derivs
+           #:perlin-improved
+
            #:cellular
-           #:cellular/deriv
-           #:cellular/fast
-           #:cellular/simplex
+           #:cellular/derivs
+           #:cellular-fast
            #:polkadot
-           #:polkadot/simplex
-           #:polkadot/box
-           #:stars
+           #:polkadot-box
            #:hermite
-           #:hermite/deriv
-           #:value-hermite))
+           #:hermite/derivs
+
+           #:simplex-perlin
+           #:simplex-perlin/derivs
+           #:simplex-cellular
+           #:simplex-polkadot
+
+           #:value
+           #:value/derivs
+           #:value-perlin
+           #:value-hermite
+
+           #:cubist
+           #:stars
+           ))

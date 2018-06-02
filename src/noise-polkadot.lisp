@@ -1,7 +1,9 @@
 (in-package :umbra.noise)
 
-;;;; Noise functions
 ;;;; Polka-dot noise
+;;; Brian Sharpe https://github.com/BrianSharpe/GPU-Noise-Lib
+
+;;; 2D Polka-dot noise
 
 (defun-gpu polkadot ((point :vec2)
                      (radius-low :float)
@@ -22,7 +24,9 @@
                      (radius-high :float))
   (polkadot point radius-low radius-high (lambda ((x :vec2)) (umbra.hashing:fast32/cell x))))
 
-(defun-gpu polkadot/box ((point :vec2)
+;;; 2D Polka-dot noise (box version)
+
+(defun-gpu polkadot-box ((point :vec2)
                          (radius-low :float)
                          (radius-high :float)
                          (hash-fn (function (:vec2) :vec4)))
@@ -37,32 +41,12 @@
                     (vec2 2))))
     (* (umbra.shaping:falloff-squared-c2 (min (dot vec vec) 1.0)) value)))
 
-(defun-gpu polkadot/box ((point :vec2)
+(defun-gpu polkadot-box ((point :vec2)
                          (radius-low :float)
                          (radius-high :float))
-  (polkadot/box point radius-low radius-high (lambda ((x :vec2)) (umbra.hashing:fast32/cell x))))
+  (polkadot-box point radius-low radius-high (lambda ((x :vec2)) (umbra.hashing:fast32/cell x))))
 
-(defun-gpu polkadot/simplex ((point :vec2)
-                             (radius :float)
-                             (max-dimness :float)
-                             (hash-fn (function (:vec2) :vec4)))
-  (let* ((simplex-points (vec3 (- 1 +simplex-2d/unskew-factor+)
-                               (- +simplex-2d/unskew-factor+)
-                               (- 1 (* +simplex-2d/unskew-factor+ 2))))
-         (point (* point +simplex-2d/triangle-height+))
-         (cell (floor (+ point (dot point (vec2 +simplex-2d/skew-factor+)))))
-         (v0 (- cell (dot cell (vec2 +simplex-2d/unskew-factor+)) point))
-         (hash (funcall hash-fn cell))
-         (radius (/ +simplex-2d/inverse-triangle-half-edge-length+ radius))
-         (corners-x (* (+ (vec4 0 (.xyz simplex-points)) (.x v0)) radius))
-         (corners-y (* (+ (vec4 0 (.yxz simplex-points)) (.y v0)) radius))
-         (point-distance (max (vec4 0) (- 1 (+ (* corners-x corners-x) (* corners-y corners-y))))))
-    (dot (- 1 (* hash max-dimness)) (expt point-distance (vec4 3)))))
-
-(defun-gpu polkadot/simplex ((point :vec2)
-                             (radius :float)
-                             (max-dimness :float))
-  (polkadot/simplex point radius max-dimness (lambda ((x :vec2)) (umbra.hashing:fast32 x))))
+;;; 3D Polka-dot noise
 
 (defun-gpu polkadot ((point :vec3)
                      (radius-low :float)
@@ -83,7 +67,9 @@
                      (radius-high :float))
   (polkadot point radius-low radius-high (lambda ((x :vec3)) (umbra.hashing:fast32/cell x))))
 
-(defun-gpu polkadot/box ((point :vec3)
+;;; 3D Polka-dot noise (box version)
+
+(defun-gpu polkadot-box ((point :vec3)
                          (radius-low :float)
                          (radius-high :float)
                          (hash-fn (function (:vec3) :vec4)))
@@ -98,28 +84,7 @@
          (vec (* vec vec)))
     (* (umbra.shaping:falloff-squared-c2 (min (dot vec vec) 1)) value)))
 
-(defun-gpu polkadot/box ((point :vec3)
+(defun-gpu polkadot-box ((point :vec3)
                          (radius-low :float)
                          (radius-high :float))
-  (polkadot/box point radius-low radius-high (lambda ((x :vec3)) (umbra.hashing:fast32/cell x))))
-
-(defun-gpu polkadot/simplex ((point :vec3)
-                             (radius :float)
-                             (max-dimness :float)
-                             (hash-fn (function (:vec3 :vec3 :vec3) :vec4)))
-  (mvlet* ((cell1 cell2 cell3 corners-x corners-y corners-z (simplex/get-corner-vectors point))
-           (hash (funcall hash-fn cell1 cell2 cell3))
-           (radius (/ +simplex-3d/inverse-triangle-half-edge-length+ radius))
-           (vx (* corners-x radius))
-           (vy (* corners-y radius))
-           (vz (* corners-z radius))
-           (point-distance (max (vec4 0) (- 1 (+ (* vx vx) (* vy vy) (* vz vz))))))
-    (setf point-distance (* point-distance point-distance point-distance))
-    (dot (- 1 (* hash max-dimness)) point-distance)))
-
-(defun-gpu polkadot/simplex ((point :vec3)
-                             (radius :float)
-                             (max-dimness :float))
-  (polkadot/simplex point radius max-dimness
-                    (lambda ((x :vec3) (y :vec3) (z :vec3))
-                      (umbra.hashing:fast32 x y z))))
+  (polkadot-box point radius-low radius-high (lambda ((x :vec3)) (umbra.hashing:fast32/cell x))))

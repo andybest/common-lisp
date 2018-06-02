@@ -1,7 +1,9 @@
 (in-package :umbra.noise)
 
-;;;; Noise functions
-;;;; Cubist noise
+;;;; Miscellaneous noise functions
+;;; Brian Sharpe https://github.com/BrianSharpe/GPU-Noise-Lib
+
+;;; 2D Cubist noise
 
 (defun-gpu cubist ((point :vec2)
                    (range-clamp :vec2)
@@ -23,6 +25,8 @@
 (defun-gpu cubist ((point :vec2)
                    (range-clamp :vec2))
   (cubist point range-clamp (lambda ((x :vec2)) (umbra.hashing:fast32/3-per-corner x))))
+
+;;; 3D Cubist noise
 
 (defun-gpu cubist ((point :vec3)
                    (range-clamp :vec2)
@@ -61,3 +65,28 @@
 (defun-gpu cubist ((point :vec3)
                    (range-clamp :vec2))
   (cubist point range-clamp (lambda ((x :vec3)) (umbra.hashing:fast32/4-per-corner x))))
+
+;;; 2D Stars noise
+
+(defun-gpu stars ((point :vec2)
+                  (probability-threshold :float)
+                  (max-dimness :float)
+                  (radius :float)
+                  (hash-fn (function (:vec2) :vec4)))
+  (let* ((cell (floor point))
+         (vec (- point cell))
+         (hash (funcall hash-fn cell))
+         (value (- 1 (* max-dimness (.z hash)))))
+    (multf vec (vec2 radius))
+    (decf vec (vec2 (1- radius)))
+    (incf vec (* (.xy hash) (- radius 2)))
+    (if (< (.w hash) probability-threshold)
+        (* (umbra.shaping:falloff-squared-c1 (min (dot vec vec) 1)) value)
+        0.0)))
+
+(defun-gpu stars ((point :vec2)
+                  (probability-threshold :float)
+                  (max-dimness :float)
+                  (radius :float))
+  (stars point probability-threshold max-dimness radius
+         (lambda ((x :vec2)) (umbra.hashing:fast32/cell x))))

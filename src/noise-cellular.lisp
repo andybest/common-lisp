@@ -1,11 +1,13 @@
 (in-package :umbra.noise)
 
-;;;; Noise functions
 ;;;; Cellular noise
+;;;; Brian Sharpe https://github.com/BrianSharpe/GPU-Noise-Lib
 
 (defun-gpu cellular-weight-samples ((samples :vec4))
   (let ((samples (1- (* samples 2))))
     (- (* samples samples samples) (sign samples))))
+
+;;; 2D Cellular noise
 
 (defun-gpu cellular ((point :vec2)
                      (hash-fn (function (:vec2) (:vec4 :vec4))))
@@ -24,8 +26,10 @@
 (defun-gpu cellular ((point :vec2))
   (cellular point (lambda ((x :vec2)) (umbra.hashing:fast32/2-per-corner x))))
 
-(defun-gpu cellular/deriv ((point :vec2)
-                           (hash-fn (function (:vec2) (:vec4 :vec4))))
+;;; 2D Cellular noise with derivatives
+
+(defun-gpu cellular/derivs ((point :vec2)
+                            (hash-fn (function (:vec2) (:vec4 :vec4))))
   (mvlet* ((cell (floor point))
            (vec (- point cell))
            (jitter-window 0.25)
@@ -45,10 +49,12 @@
        (vec3 1 2 2)
        (/ 1.125))))
 
-(defun-gpu cellular/deriv ((point :vec2))
-  (cellular/deriv point (lambda ((x :vec2)) (umbra.hashing:fast32/2-per-corner x))))
+(defun-gpu cellular/derivs ((point :vec2))
+  (cellular/derivs point (lambda ((x :vec2)) (umbra.hashing:fast32/2-per-corner x))))
 
-(defun-gpu cellular/fast ((point :vec2)
+;;; 2D Cellular noise (fast version)
+
+(defun-gpu cellular-fast ((point :vec2)
                           (hash-fn (function (:vec2) (:vec4 :vec4))))
   (mvlet* ((cell (floor point))
            (vec (- point cell))
@@ -62,31 +68,10 @@
            (d (vec4 (min (.xy d) (.zw d)) (.zw d))))
     (* (min (.x d) (.y d)) (/ 1.125))))
 
-(defun-gpu cellular/fast ((point :vec2))
-  (cellular/fast point (lambda ((x :vec2)) (umbra.hashing:fast32/2-per-corner x))))
+(defun-gpu cellular-fast ((point :vec2))
+  (cellular-fast point (lambda ((x :vec2)) (umbra.hashing:fast32/2-per-corner x))))
 
-(defun-gpu cellular/simplex ((point :vec2)
-                             (hash-fn (function (:vec2) (:vec4 :vec4))))
-  (mvlet* ((jitter-window (* 0.105662435 +simplex-2d/inverse-triangle-height+))
-           (simplex-points (* (vec3 (- 1 +simplex-2d/unskew-factor+)
-                                    (- +simplex-2d/unskew-factor+)
-                                    (- 1 (* 2 +simplex-2d/unskew-factor+)))
-                              +simplex-2d/inverse-triangle-height+))
-           (point (* point +simplex-2d/triangle-height+))
-           (cell (floor (+ point (dot point (vec2 +simplex-2d/skew-factor+)))))
-           (p0 (* (- cell (dot cell (vec2 +simplex-2d/unskew-factor+)) point)
-                  +simplex-2d/inverse-triangle-height+))
-           (hash-x hash-y (funcall hash-fn cell))
-           (grad-x (+ (* (cellular-weight-samples hash-x) jitter-window) (.x p0)))
-           (grad-x (vec4 (.x grad-x) (+ (.yzw grad-x) (.xyz simplex-points))))
-           (grad-y (+ (* (cellular-weight-samples hash-y) jitter-window) (.y p0)))
-           (grad-y (vec4 (.x grad-y) (+ (.yzw grad-y) (.yxz simplex-points))))
-           (dist-sq (+ (* grad-x grad-x) (* grad-y grad-y)))
-           (temp (min (.xy dist-sq) (.zw dist-sq))))
-    (min (.x temp) (.y temp))))
-
-(defun-gpu cellular/simplex ((point :vec2))
-  (cellular/simplex point (lambda ((x :vec2)) (umbra.hashing:fast32/2-per-corner x))))
+;;; 3D Cellular noise
 
 (defun-gpu cellular ((point :vec3)
                      (hash-fn (function (:vec3) (:vec4 :vec4 :vec4 :vec4 :vec4 :vec4))))
@@ -114,8 +99,10 @@
 (defun-gpu cellular ((point :vec3))
   (cellular point (lambda ((x :vec3)) (umbra.hashing:fast32/3-per-corner x))))
 
-(defun-gpu cellular/deriv ((point :vec3)
-                           (hash-fn (function (:vec3) (:vec4 :vec4 :vec4 :vec4 :vec4 :vec4))))
+;;; 3D Cellular noise with derivatives
+
+(defun-gpu cellular/derivs ((point :vec3)
+                            (hash-fn (function (:vec3) (:vec4 :vec4 :vec4 :vec4 :vec4 :vec4))))
   (mvlet* ((cell (floor point))
            (vec (- point cell))
            (jitter-window 0.16666667)
@@ -152,10 +139,12 @@
        (vec4 1 2 2 2)
        0.75)))
 
-(defun-gpu cellular/deriv ((point :vec3))
-  (cellular/deriv point (lambda ((x :vec3)) (umbra.hashing:fast32/3-per-corner x))))
+(defun-gpu cellular/derivs ((point :vec3))
+  (cellular/derivs point (lambda ((x :vec3)) (umbra.hashing:fast32/3-per-corner x))))
 
-(defun-gpu cellular/fast ((point :vec3)
+;;; 3D Cellular noise (fast version)
+
+(defun-gpu cellular-fast ((point :vec3)
                           (hash-fn (function (:vec3) (:vec4 :vec4 :vec4 :vec4 :vec4 :vec4))))
   (mvlet* ((cell (floor point))
            (vec (- point cell))
@@ -178,25 +167,5 @@
            (d1 (min (.xy d1) (.wz d1)) ))
     (* (min (.x d1) (.y d1)) (/ 9 12.0))))
 
-(defun-gpu cellular/fast ((point :vec3))
-  (cellular/fast point (lambda ((x :vec3)) (umbra.hashing:fast32/3-per-corner x))))
-
-(defun-gpu cellular/simplex ((point :vec3)
-                             (hash-fn (function (:vec3 :vec3 :vec3) (:vec4 :vec4 :vec4))))
-  (mvlet* ((cell1 cell2 cell3 corners-x corners-y corners-z (simplex/get-corner-vectors point))
-           (hash-x hash-y hash-z (funcall hash-fn cell1 cell2 cell3))
-           (jitter-window (* 0.059786577 +simplex-3d/inverse-pyramid-height+))
-           (hash-x (* (cellular-weight-samples hash-x) jitter-window))
-           (hash-y (* (cellular-weight-samples hash-y) jitter-window))
-           (hash-z (* (cellular-weight-samples hash-z) jitter-window))
-           (corners-x (+ (* corners-x (vec4 +simplex-3d/inverse-pyramid-height+)) hash-x))
-           (corners-y (+ (* corners-y (vec4 +simplex-3d/inverse-pyramid-height+)) hash-y))
-           (corners-z (+ (* corners-z (vec4 +simplex-3d/inverse-pyramid-height+)) hash-z))
-           (dist-sq (+ (* corners-x corners-x) (* corners-y corners-y) (* corners-z corners-z))))
-    (min (min (.x dist-sq) (.y dist-sq))
-         (min (.z dist-sq) (.w dist-sq)))))
-
-(defun-gpu cellular/simplex ((point :vec3))
-  (cellular/simplex point
-                    (lambda ((x :vec3) (y :vec3) (z :vec3))
-                      (umbra.hashing:fast32/3-per-corner x y z))))
+(defun-gpu cellular-fast ((point :vec3))
+  (cellular-fast point (lambda ((x :vec3)) (umbra.hashing:fast32/3-per-corner x))))
