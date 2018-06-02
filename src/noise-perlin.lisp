@@ -264,11 +264,6 @@
                    2.3703704)))
     (map-domain out -1 1 0 1)))
 
-#|
-float final = dot( Falloff_Xsq_C2( min( vec4( 1.0 ), vecs_len_sq + Pf.zzzz ) ), grad_results_0 ) +
-dot( Falloff_Xsq_C2( min( vec4( 1.0 ), vecs_len_sq + Pf_min1.zzzz ) ), grad_results_1 );
-|#
-
 (defun perlin-surflet ((point :vec3))
   (perlin-surflet point (lambda ((x :vec3)) (umbra.hashing:fast32/3-per-corner x))))
 
