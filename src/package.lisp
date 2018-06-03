@@ -427,6 +427,7 @@
            #:min
            #:max!
            #:max))
+
 (defpackage+ #:box.math.mat2
   (:nicknames #:m2)
   (:use #:cl
