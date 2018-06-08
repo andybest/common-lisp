@@ -30,4 +30,5 @@
    (:file "uniforms")
    (:file "layout")
    (:file "blocks")
-   (:file "buffers")))
+   (:file "buffers")
+   (:file "vari")))
