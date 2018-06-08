@@ -6,6 +6,8 @@
   (:export #:defun-gpu
            #:defstruct-gpu
            #:defmacro-gpu
+           #:enable-dependency-tracking
+           #:disable-dependency-tracking
            #:reset-program-state
            #:define-shader
            #:find-program

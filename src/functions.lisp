@@ -16,16 +16,56 @@
              (declare (ignore ,@args))
              (error "The GPU function ~a cannot be called from Lisp." ',name)))))
 
+(defun ensure-function-dependency-tables (spec fn-deps dep-fns)
+  (unless (au:href dep-fns spec)
+    (setf (au:href dep-fns spec) (au:dict #'equal)))
+  (setf (au:href fn-deps spec) (au:dict #'equal)))
+
+(defun store-function-dependencies (spec dependencies)
+  (symbol-macrolet ((fn-deps (au:href (dependencies *state*) :fn->deps))
+                    (dep-fns (au:href (dependencies *state*) :dep->fns)))
+    (when (au:href fn-deps spec)
+      (au:do-hash-keys (k (au:href fn-deps spec))
+        (au:when-found (dep-key (au:href dep-fns k))
+          (remhash spec dep-key))))
+    (ensure-function-dependency-tables spec fn-deps dep-fns)
+    (dolist (dep dependencies)
+      (let ((dep-spec (get-function-spec dep)))
+        (unless (au:href dep-fns dep-spec)
+          (setf (au:href dep-fns dep-spec) (au:dict #'equal)))
+        (au:do-hash-keys (k (au:href dep-fns spec))
+          (setf (au:href fn-deps k dep-spec) dep-spec
+                (au:href dep-fns dep-spec k) k))
+        (setf (au:href fn-deps spec dep-spec) dep-spec
+              (au:href dep-fns dep-spec spec) spec)))))
+
+(defun compute-outdated-programs (spec)
+  (let ((programs)
+        (spec-fns (au:href (dependencies *state*) :dep->fns spec)))
+    (maphash
+     (lambda (k v)
+       (when (or (au:href spec-fns k)
+                 (equal k spec))
+         (setf programs (union v programs :test #'equal))))
+     (au:href (dependencies *state*) :stage-fn->programs))
+    programs))
+
 (defmacro defun-gpu (name args &body body)
   "Define a GPU function."
-  (au:with-unique-names (fn spec)
-    (destructuring-bind (in-args uniforms) (varjo.utils:split-arguments args '(&uniform))
-      `(let* ((,fn (varjo:add-external-function ',name ',in-args ',uniforms ',body))
-              (,spec (get-function-spec ,fn)))
-         ,(generate-pseudo-lisp-function name in-args)
-         (au:when-found (programs (au:href (dependencies *state*) :fn->programs ,spec))
-           (funcall (modify-hook *state*) (au:hash-keys programs)))
-         ,fn))))
+  (au:with-unique-names (split-details deps fn spec)
+    (let ((split-args (varjo.utils:split-arguments args '(&uniform &context))))
+      (destructuring-bind (in-args uniforms context) split-args
+        `(varjo:with-constant-inject-hook #'lisp-constant->glsl-constant
+           (varjo:with-stemcell-infer-hook #'lisp-symbol->glsl-type
+             (let* ((,fn (varjo:add-external-function ',name ',in-args ',uniforms ',body))
+                    (,spec (get-function-spec ,fn)))
+               (when (track-dependencies-p *state*)
+                 (let* ((,split-details (varjo:test-translate-function-split-details
+                                         ',name ',in-args ',uniforms ',context ',body))
+                        (,deps (varjo:used-external-functions (first ,split-details))))
+                   (store-function-dependencies ,spec ,deps)
+                   (funcall (modify-hook *state*) (compute-outdated-programs ,spec))))
+               ,fn)))))))
 
 (defmacro shadow.lang:defun (name args &body body)
   `(defun-gpu ,name ,args ,@body))

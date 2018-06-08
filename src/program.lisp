@@ -91,28 +91,17 @@ See MAKE-SHADER-PROGRAM"
     (setf (au:href programs program-name) program-name
           (au:href deps spec) spec)))
 
-(defun store-dependencies (program stage)
-  (let ((program-name (name program)))
-    (symbol-macrolet ((programs (au:href (dependencies *state*) :fn->programs))
-                      (deps (au:href (dependencies *state*) :program->fns program-name)))
-      (if deps
-          (progn
-            (au:do-hash-keys (spec deps)
-              (au:when-found (program-key (au:href programs spec))
-                (remhash program-name program-key)))
-            (clrhash deps))
-          (setf deps (au:dict #'eq)))
-      (dolist (func (varjo:used-external-functions stage))
-        (let ((spec (get-function-spec func)))
-          (update-dependencies program-name spec)))
-      (loop :for (nil spec) :in (stage-specs program)
-            :do (update-dependencies program-name spec)))))
+(defun store-stage-program-dependencies (program)
+  (dolist (stage-spec (stage-specs program))
+    (destructuring-bind (stage-type func-spec) stage-spec
+      (declare (ignore stage-type))
+      (pushnew (name program)
+               (au:href (dependencies *state*) :stage-fn->programs func-spec)))))
 
 (defun translate-program (program)
   (with-slots (%name %version %primitive %stage-specs) program
     (let ((stages (translate-stages %version %primitive %stage-specs)))
       (dolist (stage stages)
-        (store-dependencies program stage)
         (store-source program stage)
         (store-blocks program stage))
       (setf (slot-value program '%translated-stages) stages))))
@@ -127,6 +116,7 @@ See MAKE-SHADER-PROGRAM"
     (translate-program program)
     (store-attributes program)
     (store-uniforms program)
+    (store-stage-program-dependencies program)
     program))
 
 (defmacro define-shader (name (&key (version :330) (primitive :triangles)) &body body)
