@@ -2,19 +2,19 @@
 
 ;;; Structure
 
-(deftype dquat () '(simple-array q:quat (2)))
+(deftype dquat () '(simple-array quat:quat (2)))
 
 (defstruct (dquat (:type vector)
                   (:constructor %make (real dual))
                   (:conc-name dq-)
                   (:copier nil))
   "A set of quaternions that can describe both a rotation and translation in 3 dimensions."
-  (real (q:zero) :type q:quat)
-  (dual (q:zero) :type q:quat))
+  (real (quat:zero) :type quat:quat)
+  (dual (quat:zero) :type quat:quat))
 
 (defmacro with-components (((prefix dquat) . rest) &body body)
   "A convenience macro for concisely accessing the components of dual quaternions."
-  `(q:with-components ((,prefix ,dquat)
+  `(quat:with-components ((,prefix ,dquat)
                        (,(box.math.common::%make-accessor-symbol prefix '.r) (dq-real ,dquat))
                        (,(box.math.common::%make-accessor-symbol prefix '.d) (dq-dual ,dquat)))
      ,dquat
@@ -25,7 +25,7 @@
 ;;; Operations
 
 (declaim (inline make))
-(declaim (ftype (function (q:quat q:quat) dquat) make))
+(declaim (ftype (function (quat:quat quat:quat) dquat) make))
 (defun make (real dual)
   "Create a dual quaternion"
   (%make real dual))
@@ -35,7 +35,7 @@
 (defun id! (dquat)
   "Modify DQUAT to be an identity dual quaternion."
   (with-components ((d dquat))
-    (q:id! d.r)
+    (quat:id! d.r)
     (psetf d.dw 0.0f0 d.dx 0.0f0 d.dy 0.0f0 d.dz 0.0f0))
   dquat)
 
@@ -43,30 +43,30 @@
 (declaim (ftype (function () dquat) id))
 (defun id ()
   "Create an identity dual quaternion."
-  (id! (make (q:id) (q:zero))))
+  (id! (make (quat:id) (quat:zero))))
 
 (declaim (inline zero!))
 (declaim (ftype (function (dquat) dquat) zero!))
 (defun zero! (dquat)
   "Set each component of DQUAT to zero."
   (with-components ((d dquat))
-    (q:zero! d.r)
-    (q:zero! d.d))
+    (quat:zero! d.r)
+    (quat:zero! d.d))
   dquat)
 
 (declaim (inline zero))
 (declaim (ftype (function () dquat) zero))
 (defun zero ()
   "Create a new dual quaternion with all components initialized to zero."
-  (make (q:zero) (q:zero)))
+  (make (quat:zero) (quat:zero)))
 
 (declaim (inline =))
 (declaim (ftype (function (dquat dquat) boolean) =))
 (defun = (dquat1 dquat2)
   "Check if all components of QUAT1 are numerically equal to the components of QUAT2."
   (with-components ((d1 dquat1) (d2 dquat2))
-    (and (q:= d1.r d2.r)
-         (q:= d1.d d2.d))))
+    (and (quat:= d1.r d2.r)
+         (quat:= d1.d d2.d))))
 
 (declaim (inline ~))
 (declaim (ftype (function (dquat dquat &key (:tolerance single-float)) boolean) ~))
@@ -74,16 +74,16 @@
   "Check if all components of DQUAT1 are approximately equal to the components of QUAT2, according
 to TOLERANCE."
   (with-components ((d1 dquat1) (d2 dquat2))
-    (and (q:~ d1.r d2.r :tolerance tolerance)
-         (q:~ d1.d d2.d :tolerance tolerance))))
+    (and (quat:~ d1.r d2.r :tolerance tolerance)
+         (quat:~ d1.d d2.d :tolerance tolerance))))
 
 (declaim (inline copy!))
 (declaim (ftype (function (dquat dquat) dquat) copy!))
 (defun copy! (out dquat)
   "Copy each component of DQUAT to the existing dual quaternion, OUT."
   (with-components ((o out) (d dquat))
-    (q:copy! o.r d.r)
-    (q:copy! o.d d.d))
+    (quat:copy! o.r d.r)
+    (quat:copy! o.d d.d))
   out)
 
 (declaim (inline copy))
@@ -97,8 +97,8 @@ to TOLERANCE."
 (defun +! (out dquat1 dquat2)
   "Calculate the sum of DQUAT1 and DQUAT2, storing the result in the existing dual quaternion, OUT."
   (with-components ((o out) (d1 dquat1) (d2 dquat2))
-    (q:+! o.r d1.r d2.r)
-    (q:+! o.d d1.d d2.d))
+    (quat:+! o.r d1.r d2.r)
+    (quat:+! o.d d1.d d2.d))
   out)
 
 (declaim (inline +))
@@ -114,8 +114,8 @@ quaternion."
   "Calculate the difference of DQUAT2 from DQUAT1, storing the result in the existing dual
 quaternion, OUT."
   (with-components ((o out) (d1 dquat1) (d2 dquat2))
-    (q:-! o.r d1.r d2.r)
-    (q:-! o.d d1.d d2.d))
+    (quat:-! o.r d1.r d2.r)
+    (quat:-! o.d d1.d d2.d))
   out)
 
 (declaim (inline -))
@@ -129,13 +129,13 @@ quaternion."
 (defun *! (out dquat1 dquat2)
   "Calculate the product of DQUAT1 and DQUAT2, storing the result in the existing dual quaternion,
 OUT."
-  (let ((dual1 (q:zero))
-        (dual2 (q:zero)))
+  (let ((dual1 (quat:zero))
+        (dual2 (quat:zero)))
     (with-components ((o out) (d1 dquat1) (d2 dquat2))
-      (q:*! o.r d1.r d2.r)
-      (q:*! dual1 d1.r d2.d)
-      (q:*! dual2 d1.d d2.r)
-      (q:+! o.d dual1 dual2)))
+      (quat:*! o.r d1.r d2.r)
+      (quat:*! dual1 d1.r d2.d)
+      (quat:*! dual2 d1.d d2.r)
+      (quat:+! o.d dual1 dual2)))
   out)
 
 (declaim (inline *))
@@ -150,8 +150,8 @@ quaternion."
 (defun scale! (out dquat scalar)
   "Scale DQUAT by SCALAR, storing the result in the existing dual quaternion, OUT."
   (with-components ((o out) (d dquat))
-    (q:scale! o.r d.r scalar)
-    (q:scale! o.d d.d scalar))
+    (quat:scale! o.r d.r scalar)
+    (quat:scale! o.d d.d scalar))
   out)
 
 (declaim (inline dqscale))
@@ -165,8 +165,8 @@ quaternion."
 (defun conjugate! (out dquat)
   "Calculate the conjugate of DQUAT, storing the result in the existing dual quaternion, OUT."
   (with-components ((o out) (d dquat))
-    (q:conjugate! o.r d.r)
-    (q:conjugate! o.d d.d))
+    (quat:conjugate! o.r d.r)
+    (quat:conjugate! o.d d.d))
   out)
 
 (declaim (inline conjugate))
@@ -180,7 +180,7 @@ quaternion."
 (defun conjugate-full! (out dquat)
   "Calculate the full conjugate of DQUAT, storing the result in the existing dual quaternion, OUT."
   (with-components ((o out) (d dquat))
-    (q:conjugate! o.r d.r)
+    (quat:conjugate! o.r d.r)
     (psetf o.dw (cl:- d.dw) o.dx d.dx o.dy d.dy o.dz d.dz))
   out)
 
@@ -200,7 +200,7 @@ which does not need the expensive square root function.
 
 See MAGNITUDE for other cases."
   (with-components ((d dquat))
-    (q:magnitude-squared d.r)))
+    (quat:magnitude-squared d.r)))
 
 (declaim (inline magnitude))
 (declaim (ftype (function (dquat) single-float) magnitude))
@@ -257,14 +257,14 @@ quaternion."
 (defun dot (dquat1 dquat2)
   "Calculate the dot product of DQUAT1 and DQUAT2. Returns a scalar."
   (with-components ((d1 dquat1) (d2 dquat2))
-    (q:dot d1.r d2.r)))
+    (quat:dot d1.r d2.r)))
 
 (declaim (ftype (function (dquat dquat) dquat) inverse!))
 (defun inverse! (out dquat)
   "Calculate the inverse of DQUAT, storing the result in the existing dual quaternion, OUT."
   (with-components ((o out) (d dquat))
-    (q:inverse! o.r d.r)
-    (q:scale! o.d (q:* o.r (q:* d.d o.r)) -1.0f0))
+    (quat:inverse! o.r d.r)
+    (quat:scale! o.d (quat:* o.r (quat:* d.d o.r)) -1.0f0))
   out)
 
 (declaim (inline inverse))
@@ -277,13 +277,13 @@ quaternion."
 (declaim (ftype (function (v3:vec dquat) v3:vec) translation-to-vec3!))
 (defun translation-to-vec3! (out dquat)
   "Copy the translation part of DQUAT, storing the result in the existing vector, OUT."
-  (let ((s (q:zero))
-        (c (q:zero)))
+  (let ((s (quat:zero))
+        (c (quat:zero)))
     (v3:with-components ((o out))
       (with-components ((d dquat))
-        (q:scale! s d.d 2.0f0)
-        (q:conjugate! c d.r)
-        (q:with-components ((q (q:* s c)))
+        (quat:scale! s d.d 2.0f0)
+        (quat:conjugate! c d.r)
+        (quat:with-components ((q (quat:* s c)))
           (setf ox qx oy qy oz qz)))))
   out)
 
@@ -298,8 +298,8 @@ quaternion."
 (defun translation-from-vec3! (out vec)
   "Copy the components of VEC, storing the result in the existing dual quaternion, OUT."
   (with-components ((o (id! out)))
-    (q:from-vec3! o.d vec)
-    (q:scale! o.d o.d 0.5f0))
+    (quat:from-vec3! o.d vec)
+    (quat:scale! o.d o.d 0.5f0))
   out)
 
 (declaim (inline translation-from-vec3))
@@ -321,30 +321,30 @@ quaternion."
   (translate! (id) dquat vec))
 
 (declaim (inline rotation-to-quat!))
-(declaim (ftype (function (q:quat dquat) q:quat) rotation-to-quat!))
+(declaim (ftype (function (quat:quat dquat) quat:quat) rotation-to-quat!))
 (defun rotation-to-quat! (out dquat)
   "Copy the rotation part of DQUAT, storing the result in the existing quaternion, OUT."
   (with-components ((d dquat))
-    (q:copy! out d.r))
+    (quat:copy! out d.r))
   out)
 
 (declaim (inline rotation-to-quat))
-(declaim (ftype (function (dquat) q:quat) rotation-to-quat))
+(declaim (ftype (function (dquat) quat:quat) rotation-to-quat))
 (defun rotation-to-quat (dquat)
   "Copy the rotation part of DQUAT, storing the result in a freshly allocated quaternion."
-  (rotation-to-quat! (q:zero) dquat))
+  (rotation-to-quat! (quat:zero) dquat))
 
 (declaim (inline rotation-from-quat!))
-(declaim (ftype (function (dquat q:quat) dquat) rotation-from-quat!))
+(declaim (ftype (function (dquat quat:quat) dquat) rotation-from-quat!))
 (defun rotation-from-quat! (out quat)
   "Copy the components of QUAT, storing the result in the existing dual quaternion, OUT."
   (with-components ((o out))
-    (q:copy! o.r quat)
-    (q:zero! o.d))
+    (quat:copy! o.r quat)
+    (quat:zero! o.d))
   out)
 
 (declaim (inline rotation-from-quat))
-(declaim (ftype (function (q:quat) dquat) rotation-from-quat))
+(declaim (ftype (function (quat:quat) dquat) rotation-from-quat))
 (defun rotation-from-quat (quat)
   "Copy the components of QUAT, storing the result in a freshly allocated dual quaternion."
   (rotation-from-quat! (id) quat))
@@ -354,7 +354,7 @@ quaternion."
   "Rotate DQUAT by the vector of Euler angles, VEC, storing the result in the existing dual
 quaternion, OUT."
   (with-components ((o out) (d dquat))
-    (q:rotate! o.r d.r vec))
+    (quat:rotate! o.r d.r vec))
   out)
 
 (declaim (ftype (function (dquat v3:vec) dquat) rotate))
@@ -371,7 +371,7 @@ matrix, OUT."
   (m4:with-components ((o out))
     (with-components ((d dquat))
       (v3:with-components ((v (translation-to-vec3 dquat)))
-        (q:to-mat4! o d.r)
+        (quat:to-mat4! o d.r)
         (psetf o03 vx o13 vy o23 vz))))
   out)
 
@@ -385,7 +385,7 @@ matrix."
 (declaim (ftype (function (dquat m4:matrix) dquat) from-mat4!))
 (defun from-mat4! (out matrix)
   "Convert MATRIX to a dual quaternion, storing the result in the existing dual quaternion, OUT."
-  (let ((rot (rotation-from-quat (q:from-mat4 matrix)))
+  (let ((rot (rotation-from-quat (quat:from-mat4 matrix)))
         (tr (translation-from-vec3 (m4:translation-to-vec3 matrix))))
     (*! out tr rot))
   out)
@@ -401,7 +401,7 @@ matrix."
   "Convert DQUAT to a set of Screw parameters."
   (with-components ((d (normalize dquat)))
     (let* ((angle (cl:* 2 (acos (au:clamp d.rw -1 1))))
-           (dir (v3:normalize (q:to-vec3 d.r)))
+           (dir (v3:normalize (quat:to-vec3 d.r)))
            (tr (translation-to-vec3 dquat))
            (pitch (v3:dot tr dir))
            (moment (v3:scale (v3:+ (v3:cross tr dir)
@@ -420,8 +420,8 @@ quaternion, OUT."
          (s (sin half-angle)))
     (v3:with-components ((r (v3:scale direction s))
                          (d (v3:+ (v3:scale moment s) (v3:scale direction (cl:* pitch c 0.5f0)))))
-      (setf (dq-real out) (q:make c rx ry rz)
-            (dq-dual out) (q:make (cl:- (cl:* pitch s 0.5f0)) dx dy dz))))
+      (setf (dq-real out) (quat:make c rx ry rz)
+            (dq-dual out) (quat:make (cl:- (cl:* pitch s 0.5f0)) dx dy dz))))
   out)
 
 (declaim (inline from-screw))

@@ -623,7 +623,7 @@
            #:perspective-projection))
 
 (defpackage+ #:box.math.quat
-  (:nicknames #:q)
+  (:nicknames #:quat)
   (:use #:cl
         #:box.math.common)
   (:shadow #:=
@@ -687,7 +687,7 @@
            #:slerp))
 
 (defpackage+ #:box.math.dquat
-  (:nicknames #:dq)
+  (:nicknames #:dquat)
   (:use #:cl
         #:box.math.common)
   (:shadow #:=
