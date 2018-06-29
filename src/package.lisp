@@ -3,9 +3,9 @@
 (defpackage+ #:shadow
   (:use #:cl)
   (:inherit #:vari)
-  (:export #:defun-gpu
-           #:defstruct-gpu
-           #:defmacro-gpu
+  (:export #:define-gpu-function
+           #:define-gpu-struct
+           #:define-gpu-macro
            #:enable-dependency-tracking
            #:disable-dependency-tracking
            #:reset-program-state
