@@ -59,6 +59,7 @@
            (varjo:with-stemcell-infer-hook #'lisp-symbol->glsl-type
              (let* ((,fn (varjo:add-external-function ',name ',in-args ',uniforms ',body))
                     (,spec (get-function-spec ,fn)))
+               ,(generate-pseudo-lisp-function name in-args)
                (when (track-dependencies-p *state*)
                  (let* ((,split-details (varjo:test-translate-function-split-details
                                          ',name ',in-args ',uniforms ',context ',body))
