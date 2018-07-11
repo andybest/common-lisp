@@ -1,7 +1,7 @@
 (in-package :shadow)
 
 (defun stage-type (stage)
-  (varjo.internals::stage-obj-to-name stage))
+  (varjo:stage-kind stage))
 
 (defun stage-type->shader-type (stage-type)
   (ecase stage-type
