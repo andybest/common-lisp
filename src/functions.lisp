@@ -67,6 +67,3 @@
                    (store-function-dependencies ,spec ,deps)
                    (funcall (modify-hook *state*) (compute-outdated-programs ,spec))))
                ,fn)))))))
-
-(defmacro shadow.lang:defun (name args &body body)
-  `(define-gpu-function ,name ,args ,@body))

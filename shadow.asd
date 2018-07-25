@@ -14,8 +14,7 @@
                #:glsl-packing
                #:varjo
                #:cl-opengl
-               #:golden-utils
-               #:gamebox-math.vari)
+               #:golden-utils)
   :pathname "src"
   :serial t
   :components
