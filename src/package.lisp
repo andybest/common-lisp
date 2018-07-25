@@ -45,3 +45,14 @@
            #:uniform-mat3-array
            #:uniform-mat4
            #:uniform-mat4-array))
+
+(defpackage+ #:shadow.vari
+  (:inherit #:cl
+            #:vari)
+  (:import-from #:varjo
+                #:v-def-glsl-template-fun
+                #:v-float
+                #:v-vec2
+                #:v-vec3
+                #:v-vec4
+                #:v-mat4))
