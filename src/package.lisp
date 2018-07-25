@@ -1,12 +1,11 @@
 (in-package :defpackage+-user-1)
 
 (defpackage+ #:umbra.common
-  (:use #:cl)
-  (:inherit #:shadow)
+  (:inherit #:cl #:shadow #:shadow.vari)
   (:export #:mvlet*))
 
 (defpackage+ #:umbra.math
-  (:use #:cl #:shadow)
+  (:use #:umbra.common)
   (:export #:+epsilon+
            #:+pi+
            #:+half-pi+
@@ -15,11 +14,11 @@
            #:map-domain))
 
 (defpackage+ #:umbra.graph
-  (:use #:cl #:umbra.common)
+  (:use #:umbra.common)
   (:export #:graph))
 
 (defpackage+ #:umbra.color
-  (:use #:cl #:umbra.common #:umbra.math)
+  (:use #:umbra.common #:umbra.math)
   ;; color space conversion
   (:export #:rgb->grayscale
            #:hue->rgb
@@ -54,7 +53,7 @@
            #:tone-map/uncharted2))
 
 (defpackage+ #:umbra.shaping
-  (:use #:cl #:umbra.common #:umbra.math)
+  (:use #:umbra.common #:umbra.math)
   ;; penner
   (:export #:linear
            #:sine-out
@@ -122,7 +121,7 @@
            #:falloff-squared-c2))
 
 (defpackage+ #:umbra.hashing
-  (:use #:cl #:umbra.common)
+  (:use #:umbra.common)
   (:export #:blum-blum-shub
            #:blum-blum-shub/hq
            #:sgpp
@@ -137,7 +136,7 @@
            #:fast32-2/4-per-corner))
 
 (defpackage+ #:umbra.noise
-  (:use #:cl #:umbra.common #:umbra.math)
+  (:use #:umbra.common #:umbra.math)
   (:export #:perlin
            #:perlin/derivs
            #:perlin-surflet

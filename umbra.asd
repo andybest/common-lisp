@@ -9,8 +9,7 @@
   :version "0.1.0"
   :encoding :utf-8
   :long-description #.(uiop:read-file-string (uiop/pathname:subpathname *load-pathname* "README.md"))
-  :depends-on (#:gamebox-math.vari
-               #:shadow
+  :depends-on (#:shadow
                #:defpackage-plus)
   :pathname "src"
   :serial t
