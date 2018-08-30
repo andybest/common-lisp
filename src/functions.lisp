@@ -9,13 +9,6 @@
 (defun get-function-spec (function)
   (cons (varjo:name function) (mapcar #'second (varjo.internals:in-args function))))
 
-(defun generate-pseudo-lisp-function (name args-spec)
-  (let ((args (au:alist-keys args-spec)))
-    `(setf (symbol-function ',name)
-           (lambda ,args
-             (declare (ignore ,@args))
-             (error "The GPU function ~a cannot be called from Lisp." ',name)))))
-
 (defun ensure-function-dependency-tables (spec fn-deps dep-fns)
   (unless (au:href dep-fns spec)
     (setf (au:href dep-fns spec) (au:dict #'equal)))
@@ -59,7 +52,6 @@
            (varjo:with-stemcell-infer-hook #'lisp-symbol->glsl-type
              (let* ((,fn (varjo:add-external-function ',name ',in-args ',uniforms ',body))
                     (,spec (get-function-spec ,fn)))
-               ,(generate-pseudo-lisp-function name in-args)
                (when (track-dependencies-p *state*)
                  (let* ((,split-details (varjo:test-translate-function-split-details
                                          ',name ',in-args ',uniforms ',context ',body))
