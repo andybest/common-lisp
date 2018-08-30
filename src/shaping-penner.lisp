@@ -69,8 +69,7 @@
 (define-gpu-function exponential-out ((x :float))
   (if (= x 1)
       x
-      (let ((f (* x -10)))
-        (- 1 (expt 2 (* x -10))))))
+      (- 1 (expt 2 (* x -10)))))
 
 (define-gpu-function exponential-in ((x :float))
   (if (zerop x)
