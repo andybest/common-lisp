@@ -22,6 +22,7 @@
            #:bind-block
            #:unbind-block
            #:buffer-name
+           #:find-buffer
            #:create-buffer
            #:bind-buffer
            #:unbind-buffer
