@@ -15,13 +15,12 @@
     (varjo:v-struct (varjo:type->type-spec type))
     (varjo:v-container
      (let ((element-type (varjo:v-element-type type)))
-       (cond
-         ((or (typep element-type 'varjo:v-user-struct)
-              (typep element-type 'varjo:v-array))
-          (error "Shader blocks containing arrays of aggregates are not currently supported."))
-         (t (list* (pack-container type)
-                   (pack-type element-type)
-                   (varjo:v-dimensions type))))))))
+       (if (or (typep element-type 'varjo:v-user-struct)
+               (typep element-type 'varjo:v-array))
+           (error "Shader blocks containing arrays of aggregates are not currently supported.")
+           (list* (pack-container type)
+                  (pack-type element-type)
+                  (varjo:v-dimensions type)))))))
 
 (defun pack-struct (struct)
   (loop :with name = (varjo:type->type-spec struct)
