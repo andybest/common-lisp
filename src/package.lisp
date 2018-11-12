@@ -2,7 +2,6 @@
 
 (defpackage+ #:shadow
   (:use #:cl)
-  (:inherit #:vari)
   (:export #:define-gpu-function
            #:define-gpu-struct
            #:define-gpu-macro
