@@ -739,7 +739,7 @@ See INVERT-ORTHOGONAL"
                            (s (v3:normalize! s (v3:cross! s f up)))
                            (u (v3:cross! u s f)))
         (psetf o00 sx o10 ux o20 (cl:- fx)
-               o01 sy o11 uy o12 (cl:- fy)
+               o01 sy o11 uy o21 (cl:- fy)
                o02 sz o12 uz o22 (cl:- fz))
         (translation-from-vec3! translation (v3:negate! inv-eye eye))
         (*! out out translation))))

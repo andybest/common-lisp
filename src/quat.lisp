@@ -282,7 +282,7 @@ square root call of this function."
   "Rotate QUAT by the vector of Euler angles, VEC, storing the result in the existing quaternion,
 OUT."
   (v3:with-components ((v vec))
-    (with-components ((o out))
+    (with-components ((o out) (q (copy quat)))
       (let ((cx (cos (cl:* vx 0.5)))
             (sx (sin (cl:* vx 0.5)))
             (cy (cos (cl:* vy 0.5)))
@@ -293,8 +293,7 @@ OUT."
                ox (cl:- (cl:* cx sy sz) (cl:* sx cy cz))
                oy (cl:+ (cl:* cx sy cz) (cl:* sx cy sz))
                oz (cl:- (cl:* cx cy sz) (cl:* sx sy cz))))
-      (*! out out quat)))
-  out)
+      (*! out out q))))
 
 (declaim (ftype (function (quat v3:vec) quat) rotate))
 (defun rotate (quat vec)
