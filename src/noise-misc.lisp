@@ -5,9 +5,9 @@
 
 ;;; 2D Cubist noise
 
-(define-gpu-function cubist ((point :vec2)
-                             (range-clamp :vec2)
-                             (hash-fn (function (:vec2) (:vec4 :vec4 :vec4))))
+(shadow:define-gpu-function cubist ((point :vec2)
+                                    (range-clamp :vec2)
+                                    (hash-fn (function (:vec2) (:vec4 :vec4 :vec4))))
   (mvlet* ((cell (floor point))
            (vecs (- (.xyxy point) (vec4 cell (1+ cell))))
            (hash-x hash-y hash (funcall hash-fn cell))
@@ -22,17 +22,17 @@
            (out (dot temp (* (.zxzx blend) (.wwyy blend)))))
     (saturate (* (- out (.x range-clamp)) (.y range-clamp)))))
 
-(define-gpu-function cubist ((point :vec2)
-                             (range-clamp :vec2))
+(shadow:define-gpu-function cubist ((point :vec2)
+                                    (range-clamp :vec2))
   (cubist point range-clamp (lambda ((x :vec2)) (umbra.hashing:fast32/3-per-corner x))))
 
 ;;; 3D Cubist noise
 
-(define-gpu-function cubist ((point :vec3)
-                             (range-clamp :vec2)
-                             (hash-fn (function
-                                       (:vec3)
-                                       (:vec4 :vec4 :vec4 :vec4 :vec4 :vec4 :vec4 :vec4))))
+(shadow:define-gpu-function cubist ((point :vec3)
+                                    (range-clamp :vec2)
+                                    (hash-fn (function
+                                              (:vec3)
+                                              (:vec4 :vec4 :vec4 :vec4 :vec4 :vec4 :vec4 :vec4))))
   (mvlet* ((cell (floor point))
            (vec (- point cell))
            (vec-1 (1- vec))
@@ -64,17 +64,17 @@
                     (.x range-clamp))
                  (.y range-clamp)))))
 
-(define-gpu-function cubist ((point :vec3)
-                             (range-clamp :vec2))
+(shadow:define-gpu-function cubist ((point :vec3)
+                                    (range-clamp :vec2))
   (cubist point range-clamp (lambda ((x :vec3)) (umbra.hashing:fast32/4-per-corner x))))
 
 ;;; 2D Stars noise
 
-(define-gpu-function stars ((point :vec2)
-                            (probability-threshold :float)
-                            (max-dimness :float)
-                            (radius :float)
-                            (hash-fn (function (:vec2) :vec4)))
+(shadow:define-gpu-function stars ((point :vec2)
+                                   (probability-threshold :float)
+                                   (max-dimness :float)
+                                   (radius :float)
+                                   (hash-fn (function (:vec2) :vec4)))
   (let* ((cell (floor point))
          (vec (- point cell))
          (hash (funcall hash-fn cell))
@@ -86,7 +86,7 @@
         (* (umbra.shaping:falloff-squared-c1 (min (dot vec vec) 1)) value)
         0.0)))
 
-(define-gpu-function stars ((point :vec2)
+(shadow:define-gpu-function stars ((point :vec2)
                             (probability-threshold :float)
                             (max-dimness :float)
                             (radius :float))

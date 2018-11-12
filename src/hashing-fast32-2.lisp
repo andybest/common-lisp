@@ -5,7 +5,7 @@
 ;;;; Brian Sharpe
 ;;;; https://github.com/BrianSharpe/GPU-Noise-Lib/blob/master/gpu_noise_lib.glsl
 
-(define-gpu-function fast32-2 ((grid-cell :vec2))
+(shadow:define-gpu-function fast32-2 ((grid-cell :vec2))
   (let ((p (vec4 grid-cell (1+ grid-cell))))
     (setf p (+ (* (- p (* (floor (* p (/ 69.0))) 69.0))
                   (.xyxy (vec2 2.009842 1.372549)))
@@ -13,7 +13,7 @@
     (multf p p)
     (fract (* (.xzxz p) (.yyww p) (/ 32745.708984)))))
 
-(define-gpu-function fast32-2 ((grid-cell :vec3))
+(shadow:define-gpu-function fast32-2 ((grid-cell :vec3))
   (decf grid-cell (* (floor (* grid-cell (/ 69.0))) 69.0))
   (let* ((offset (vec3 55.882355 63.167774 52.941177))
          (scale (vec3 0.235142 0.205890 0.216449))
@@ -27,7 +27,7 @@
     (values (fract (* x (.z grid-cell) (/ 69412.07)))
             (fract (* x (.z grid-cell-inc1) (/ 69412.07))))))
 
-(define-gpu-function fast32-2 ((grid-cell :vec4))
+(shadow:define-gpu-function fast32-2 ((grid-cell :vec4))
   (decf grid-cell (* (floor (* grid-cell (/ 69.0))) 69.0))
   (let* ((offset (vec4 16.84123 18.774548 16.873274 13.664607))
          (scale (vec4 0.102007 0.114473 0.139651 0.08455))
@@ -46,7 +46,7 @@
             (fract (* x (.z z)))
             (fract (* x (.w z))))))
 
-(define-gpu-function fast32-2/4-per-corner ((grid-cell :vec4))
+(shadow:define-gpu-function fast32-2/4-per-corner ((grid-cell :vec4))
   (decf grid-cell (* (floor (* grid-cell (/ 69.0))) 69.0))
   (let* ((offset (vec4 16.84123 18.774548 16.873274 13.664607))
          (scale (vec4 0.102007 0.114473 0.139651 0.08455))

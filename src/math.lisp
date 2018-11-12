@@ -9,57 +9,57 @@
 ;;; log10
 ;;; Base 10 logarithm
 
-(define-gpu-function log10 ((x :float))
+(shadow:define-gpu-function log10 ((x :float))
   (* (log2 x) 0.30103))
 
-(define-gpu-function log10 ((x :vec2))
+(shadow:define-gpu-function log10 ((x :vec2))
   (* (log2 x) 0.30103))
 
-(define-gpu-function log10 ((x :vec3))
+(shadow:define-gpu-function log10 ((x :vec3))
   (* (log2 x) 0.30103))
 
-(define-gpu-function log10 ((x :vec4))
+(shadow:define-gpu-function log10 ((x :vec4))
   (* (log2 x) 0.30103))
 
 ;;; Saturate
 ;;; Clamp a value within the [0, 1] range. From HLSL.
 
-(define-gpu-function saturate ((x :float))
+(shadow:define-gpu-function saturate ((x :float))
   (clamp x 0.0 1.0))
 
-(define-gpu-function saturate ((x :vec2))
+(shadow:define-gpu-function saturate ((x :vec2))
   (clamp x 0.0 1.0))
 
-(define-gpu-function saturate ((x :vec3))
+(shadow:define-gpu-function saturate ((x :vec3))
   (clamp x 0.0 1.0))
 
-(define-gpu-function saturate ((x :vec4))
+(shadow:define-gpu-function saturate ((x :vec4))
   (clamp x 0.0 1.0))
 
 ;;; Domain mapping
 
-(define-gpu-function map-domain ((x :float)
-                                 (source-min :float)
-                                 (source-max :float)
-                                 (dest-min :float)
-                                 (dest-max :float))
+(shadow:define-gpu-function map-domain ((x :float)
+                                        (source-min :float)
+                                        (source-max :float)
+                                        (dest-min :float)
+                                        (dest-max :float))
   (+ dest-min (* (- x source-min) (/ (- dest-max dest-min) (- source-max source-min)))))
 
-(define-gpu-function map-domain ((x :vec2)
-                                 (source-min :vec2)
-                                 (source-max :vec2)
-                                 (dest-min :vec2)
-                                 (dest-max :vec2))
+(shadow:define-gpu-function map-domain ((x :vec2)
+                                        (source-min :vec2)
+                                        (source-max :vec2)
+                                        (dest-min :vec2)
+                                        (dest-max :vec2))
   (+ dest-min (* (- x source-min) (/ (- dest-max dest-min) (- source-max source-min)))))
 
-(define-gpu-function map-domain ((x :vec3)
-                                 (source-min :vec3)
-                                 (source-max :vec3)
-                                 (dest-min :vec3)
-                                 (dest-max :vec3))
+(shadow:define-gpu-function map-domain ((x :vec3)
+                                        (source-min :vec3)
+                                        (source-max :vec3)
+                                        (dest-min :vec3)
+                                        (dest-max :vec3))
   (+ dest-min (* (- x source-min) (/ (- dest-max dest-min) (- source-max source-min)))))
 
-(define-gpu-function map-domain ((x :vec4)
+(shadow:define-gpu-function map-domain ((x :vec4)
                                  (source-min :vec4)
                                  (source-max :vec4)
                                  (dest-min :vec4)

@@ -1,6 +1,6 @@
 (in-package :umbra.common)
 
-(defmacro mvlet* ((&rest binds) &body body)
+(shadow:define-gpu-macro mvlet* ((&rest binds) &body body)
   (cond
     ((null binds)
      `(progn ,@body))

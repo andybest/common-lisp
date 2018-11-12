@@ -6,32 +6,32 @@
 ;;;; http://github.com/ashima/webgl-noise
 ;;;; http://www.itn.liu.se/~stegu/GLSL-cellular
 
-(define-gpu-function sgpp/coord-prepare ((x :vec3))
+(shadow:define-gpu-function sgpp/coord-prepare ((x :vec3))
   (- x (* (floor (* x (/ 289.0))) 289.0)))
 
-(define-gpu-function sgpp/coord-prepare ((x :vec4))
+(shadow:define-gpu-function sgpp/coord-prepare ((x :vec4))
   (- x (* (floor (* x (/ 289.0))) 289.0)))
 
-(define-gpu-function sgpp/permute ((x :vec4))
+(shadow:define-gpu-function sgpp/permute ((x :vec4))
   (* (fract (* x (+ (* 0.11764706 x) (/ 289.0)))) 289.0))
 
-(define-gpu-function sgpp/resolve ((x :vec4))
+(shadow:define-gpu-function sgpp/resolve ((x :vec4))
   (fract (* x 0.024305556)))
 
-(define-gpu-function sgpp ((grid-cell :vec2))
+(shadow:define-gpu-function sgpp ((grid-cell :vec2))
   (let ((hash-coord (sgpp/coord-prepare (vec4 grid-cell (1+ grid-cell)))))
     (sgpp/resolve
      (sgpp/permute
       (+ (sgpp/permute (.xzxz hash-coord))
          (.yyww hash-coord))))))
 
-(define-gpu-function sgpp/2-per-corner ((grid-cell :vec2))
+(shadow:define-gpu-function sgpp/2-per-corner ((grid-cell :vec2))
   (let* ((hash-coord (sgpp/coord-prepare (vec4 (.xy grid-cell) (1+ (.xy grid-cell)))))
          (hash0 (sgpp/permute (+ (sgpp/permute (.xzxz hash-coord)) (.yyww hash-coord)))))
     (values (sgpp/resolve hash0)
             (sgpp/resolve (sgpp/permute hash0)))))
 
-(define-gpu-function sgpp ((grid-cell :vec3))
+(shadow:define-gpu-function sgpp ((grid-cell :vec3))
   (let* ((grid-cell (sgpp/coord-prepare grid-cell))
          (grid-cell-inc1 (* (step grid-cell (vec3 287.5)) (1+ grid-cell)))
          (x (.xyxy (vec2 (.x grid-cell) (.x grid-cell-inc1))))
@@ -41,9 +41,9 @@
     (setf high-z (sgpp/resolve (sgpp/permute (+ high-z (.z grid-cell-inc1)))))
     (values low-z high-z)))
 
-(define-gpu-function sgpp/3-per-corner ((grid-cell :vec3)
-                                        (v1-mask :vec3)
-                                        (v2-mask :vec3))
+(shadow:define-gpu-function sgpp/3-per-corner ((grid-cell :vec3)
+                                               (v1-mask :vec3)
+                                               (v2-mask :vec3))
   (let* ((coords0 (- grid-cell (* (floor (* grid-cell (/ 289.0))) 289.0)))
          (coords3 (* (step coords0 (vec3 287.5)) (1+ coords0)))
          (coords1 (mix coords0 coords3 v1-mask))

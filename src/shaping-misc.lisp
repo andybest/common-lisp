@@ -6,128 +6,128 @@
 ;;; Hermite curve
 ;;; Identical to smoothstep
 
-(define-gpu-function hermite-curve ((x :float))
+(shadow:define-gpu-function hermite-curve ((x :float))
   (* x x (- 3 (* 2 x))))
 
-(define-gpu-function hermite-curve ((x :vec2))
+(shadow:define-gpu-function hermite-curve ((x :vec2))
   (* x x (- 3 (* 2 x))))
 
-(define-gpu-function hermite-curve ((x :vec3))
+(shadow:define-gpu-function hermite-curve ((x :vec3))
   (* x x (- 3 (* 2 x))))
 
-(define-gpu-function hermite-curve ((x :vec4))
+(shadow:define-gpu-function hermite-curve ((x :vec4))
   (* x x (- 3 (* 2 x))))
 
-(define-gpu-function hermite-curve ((x :float)
-                          (min :float)
-                          (max :float))
+(shadow:define-gpu-function hermite-curve ((x :float)
+                                           (min :float)
+                                           (max :float))
   (let ((x (saturate (/ (- x min) (- max min)))))
     (hermite-curve x)))
 
-(define-gpu-function hermite-curve ((x :vec2)
-                          (min :float)
-                          (max :float))
+(shadow:define-gpu-function hermite-curve ((x :vec2)
+                                           (min :float)
+                                           (max :float))
   (let ((x (saturate (/ (- x min) (- max min)))))
     (hermite-curve x)))
 
-(define-gpu-function hermite-curve ((x :vec3)
-                          (min :float)
-                          (max :float))
+(shadow:define-gpu-function hermite-curve ((x :vec3)
+                                           (min :float)
+                                           (max :float))
   (let ((x (saturate (/ (- x min) (- max min)))))
     (hermite-curve x)))
 
-(define-gpu-function hermite-curve ((x :vec4)
-                          (min :float)
-                          (max :float))
+(shadow:define-gpu-function hermite-curve ((x :vec4)
+                                           (min :float)
+                                           (max :float))
   (let ((x (saturate (/ (- x min) (- max min)))))
     (hermite-curve x)))
 
 ;;; Quintic curve
 ;;; Ken Perlin https://mrl.nyu.edu/~perlin/paper445.pdf
 
-(define-gpu-function quintic-curve ((x :float))
+(shadow:define-gpu-function quintic-curve ((x :float))
   (* x x x (+ (* x (- (* x 6) 15)) 10)))
 
-(define-gpu-function quintic-curve ((x :vec2))
+(shadow:define-gpu-function quintic-curve ((x :vec2))
   (* x x x (+ (* x (- (* x 6) 15)) 10)))
 
-(define-gpu-function quintic-curve ((x :vec3))
+(shadow:define-gpu-function quintic-curve ((x :vec3))
   (* x x x (+ (* x (- (* x 6) 15)) 10)))
 
-(define-gpu-function quintic-curve ((x :vec4))
+(shadow:define-gpu-function quintic-curve ((x :vec4))
   (* x x x (+ (* x (- (* x 6) 15)) 10)))
 
-(define-gpu-function quintic-curve ((x :float)
+(shadow:define-gpu-function quintic-curve ((x :float)
                           (min :float)
                           (max :float))
   (let ((x (saturate (/ (- x min) (- max min)))))
     (quintic-curve x)))
 
-(define-gpu-function quintic-curve ((x :vec2)
+(shadow:define-gpu-function quintic-curve ((x :vec2)
                           (min :float)
                           (max :float))
   (let ((x (saturate (/ (- x min) (- max min)))))
     (quintic-curve x)))
 
-(define-gpu-function quintic-curve ((x :vec3)
+(shadow:define-gpu-function quintic-curve ((x :vec3)
                           (min :float)
                           (max :float))
   (let ((x (saturate (/ (- x min) (- max min)))))
     (quintic-curve x)))
 
-(define-gpu-function quintic-curve ((x :vec4)
+(shadow:define-gpu-function quintic-curve ((x :vec4)
                           (min :float)
                           (max :float))
   (let ((x (saturate (/ (- x min) (- max min)))))
     (quintic-curve x)))
 
-(define-gpu-function quintic-curve/interpolate-derivative ((x :vec2))
+(shadow:define-gpu-function quintic-curve/interpolate-derivative ((x :vec2))
   (let ((x (.xyxy x)))
     (* x x (+ (* x (+ (* x (+ (* x (vec4 6 6 0 0)) (vec4 -15 -15 30 30)))
                       (vec4 10 10 -60 -60)))
               (vec4 0 0 30 30)))))
 
-(define-gpu-function quintic-curve/derivative ((x :vec3))
+(shadow:define-gpu-function quintic-curve/derivative ((x :vec3))
   (* x x (+ (* x (- (* x 30) 60)) 30)))
 
 ;;; Fast quintic curve
 ;;; Brian Sharpe https://github.com/BrianSharpe/GPU-Noise-Lib
 
-(define-gpu-function quintic-curve/fast ((x :float))
+(shadow:define-gpu-function quintic-curve/fast ((x :float))
   (let ((x3 (* x x x)))
     (* (+ 7 (* (- x3 7) x)) x3)))
 
-(define-gpu-function quintic-curve/fast ((x :vec2))
+(shadow:define-gpu-function quintic-curve/fast ((x :vec2))
   (let ((x3 (* x x x)))
     (* (+ 7 (* (- x3 7) x)) x3)))
 
-(define-gpu-function quintic-curve/fast ((x :vec3))
+(shadow:define-gpu-function quintic-curve/fast ((x :vec3))
   (let ((x3 (* x x x)))
     (* (+ 7 (* (- x3 7) x)) x3)))
 
-(define-gpu-function quintic-curve/fast ((x :vec4))
+(shadow:define-gpu-function quintic-curve/fast ((x :vec4))
   (let ((x3 (* x x x)))
     (* (+ 7 (* (- x3 7) x)) x3)))
 
-(define-gpu-function quintic-curve/fast ((x :float)
+(shadow:define-gpu-function quintic-curve/fast ((x :float)
                                (min :float)
                                (max :float))
   (let ((x (saturate (/ (- x min) (- max min)))))
     (quintic-curve/fast x)))
 
-(define-gpu-function quintic-curve/fast ((x :vec2)
+(shadow:define-gpu-function quintic-curve/fast ((x :vec2)
                                (min :float)
                                (max :float))
   (let ((x (saturate (/ (- x min) (- max min)))))
     (quintic-curve/fast x)))
 
-(define-gpu-function quintic-curve/fast ((x :vec3)
+(shadow:define-gpu-function quintic-curve/fast ((x :vec3)
                                          (min :float)
                                          (max :float))
   (let ((x (saturate (/ (- x min) (- max min)))))
     (quintic-curve/fast x)))
 
-(define-gpu-function quintic-curve/fast ((x :vec4)
+(shadow:define-gpu-function quintic-curve/fast ((x :vec4)
                                          (min :float)
                                          (max :float))
   (let ((x (saturate (/ (- x min) (- max min)))))
@@ -136,7 +136,7 @@
 ;;; Quintic Hermite interpolation
 ;;; David L. Finn https://www.rose-hulman.edu/~finn/CCLI/Notes/day09.pdf
 
-(define-gpu-function quintic-hermite ((x :float)
+(shadow:define-gpu-function quintic-hermite ((x :float)
                                       (ival0 :float)
                                       (ival1 :float)
                                       (egrad0 :float)
@@ -149,7 +149,7 @@
        (dot (vec3 (- ival1 ival0) egrad0 egrad1)
             (+ h123 (vec3 0 x 0))))))
 
-(define-gpu-function quintic-hermite ((x :float)
+(shadow:define-gpu-function quintic-hermite ((x :float)
                                       (ival0 :vec4)
                                       (ival1 :vec4)
                                       (egrad0 :vec4)
@@ -163,7 +163,7 @@
        (* egrad0 (vec4 (+ (.y h123) x)))
        (* egrad1 (.z h123)))))
 
-(define-gpu-function quintic-hermite ((x :float)
+(shadow:define-gpu-function quintic-hermite ((x :float)
                                       (igrad0 :vec2)
                                       (igrad1 :vec2)
                                       (egrad0 :vec2)
@@ -177,7 +177,7 @@
        (* (vec4 egrad0 (.xx h123))
           (vec4 (vec2 (+ (.y h123) x))  (- igrad1 igrad0))))))
 
-(define-gpu-function quintic-hermite ((x :float)
+(shadow:define-gpu-function quintic-hermite ((x :float)
                                       (ival0 :vec4)
                                       (ival1 :vec4)
                                       (igrad-x0 :vec4)
@@ -197,7 +197,7 @@
             (+ igrad-x0 (* (- igrad-x1 igrad-x0) (.x h123)))
             (+ igrad-y0 (* (- igrad-y1 igrad-y0) (.x h123))))))
 
-(define-gpu-function quintic-hermite ((x :float)
+(shadow:define-gpu-function quintic-hermite ((x :float)
                                       (igrad-x0 :vec4)
                                       (igrad-x1 :vec4)
                                       (igrad-y0 :vec4)
@@ -213,7 +213,7 @@
             (+ igrad-x0 (* (- igrad-x1 igrad-x0) (.x h123)))
             (+ igrad-y0 (* (- igrad-y1 igrad-y0) (.x h123))))))
 
-(define-gpu-function quintic-hermite/derivative ((x :float)
+(shadow:define-gpu-function quintic-hermite/derivative ((x :float)
                                                  (ival0 :float)
                                                  (ival1 :float)
                                                  (egrad0 :float)
@@ -228,14 +228,14 @@
 ;;; Falloff functions
 ;;; Brian Sharpe https://github.com/BrianSharpe/GPU-Noise-Lib
 
-(define-gpu-function falloff-squared-c1 ((x :float))
+(shadow:define-gpu-function falloff-squared-c1 ((x :float))
   (let ((x (- 1 x)))
     (* x x)))
 
-(define-gpu-function falloff-squared-c2 ((x :float))
+(shadow:define-gpu-function falloff-squared-c2 ((x :float))
   (let ((x (- 1 x)))
     (* x x x)))
 
-(define-gpu-function falloff-squared-c2 ((x :vec4))
+(shadow:define-gpu-function falloff-squared-c2 ((x :vec4))
   (let ((x (- 1 x)))
     (* x x x)))
