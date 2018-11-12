@@ -7,7 +7,7 @@
 ;;; 2D Perlin noise
 
 (define-gpu-function perlin ((point :vec2)
-               (hash-fn (function (:vec2) (:vec4 :vec4))))
+                             (hash-fn (function (:vec2) (:vec4 :vec4))))
   (mvlet* ((origin (floor point))
            (vecs (- (.xyxy point) (vec4 origin (1+ origin))))
            (hash-x hash-y (funcall hash-fn origin))
@@ -27,7 +27,7 @@
 ;;; 2D Perlin noise with derivatives
 
 (define-gpu-function perlin/derivs ((point :vec2)
-                      (hash-fn (function (:vec2) (:vec4 :vec4))))
+                                    (hash-fn (function (:vec2) (:vec4 :vec4))))
   (mvlet* ((cell (floor point))
            (vecs (- (.xyxy point) (vec4 cell (1+ cell))))
            (hash-x hash-y (funcall hash-fn cell))
@@ -61,7 +61,7 @@
 ;;; http://briansharpe.wordpress.com/2012/03/09/modifications-to-classic-perlin-noise/
 
 (define-gpu-function perlin-surflet ((point :vec2)
-                       (hash-fn (function (:vec2) (:vec4 :vec4))))
+                                     (hash-fn (function (:vec2) (:vec4 :vec4))))
   (mvlet* ((cell (floor point))
            (vecs (- (.xyxy point) (vec4 cell (1+ cell))))
            (hash-x hash-y (funcall hash-fn cell))
@@ -81,7 +81,7 @@
 ;;; 2D Perlin Surflet noise with derivatives
 
 (define-gpu-function perlin-surflet/derivs ((point :vec2)
-                              (hash-fn (function (:vec2) (:vec4 :vec4))))
+                                            (hash-fn (function (:vec2) (:vec4 :vec4))))
   (mvlet* ((cell (floor point))
            (vecs (- (.xyxy point) (vec4 cell (1+ cell))))
            (hash-x hash-y (funcall hash-fn cell))
@@ -109,7 +109,7 @@
 ;;; Ken Perlin's improved version
 
 (define-gpu-function perlin-improved ((point :vec2)
-                        (hash-fn (function (:vec2) :vec4)))
+                                      (hash-fn (function (:vec2) :vec4)))
   (let* ((cell (floor point))
          (vecs (- (.xyxy point) (vec4 cell (1+ cell))))
          (hash (- (funcall hash-fn cell) 0.5))
@@ -126,7 +126,7 @@
 ;;; 3D Perlin noise
 
 (define-gpu-function perlin ((point :vec3)
-               (hash-fn (function (:vec3) (:vec4 :vec4 :vec4 :vec4 :vec4 :vec4))))
+                             (hash-fn (function (:vec3) (:vec4 :vec4 :vec4 :vec4 :vec4 :vec4))))
   (mvlet* ((cell (floor point))
            (vec (- point cell))
            (vec-1 (1- vec))
