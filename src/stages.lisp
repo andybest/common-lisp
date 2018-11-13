@@ -14,7 +14,7 @@
 
 (defun make-stage (version primitive stage-spec)
   (destructuring-bind (stage-type func-spec) stage-spec
-    (let ((func (find-gpu-function func-spec)))
+    (au:if-let ((func (find-gpu-function func-spec)))
       (varjo:make-stage
        stage-type
        (varjo.internals:in-args func)
@@ -23,7 +23,9 @@
        (varjo.internals:code func)
        t
        (when (eq stage-type :vertex)
-         (varjo.internals:primitive-name-to-instance primitive))))))
+         (varjo.internals:primitive-name-to-instance primitive)))
+      (error "No function found for stage ~S with signature ~S"
+             stage-type func-spec))))
 
 (defun translate-stages (version primitive stage-specs)
   (varjo:with-constant-inject-hook #'lisp-constant->glsl-constant
