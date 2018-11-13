@@ -93,3 +93,16 @@
 (defun unbind-block (block-alias)
   "Unbind a block with the alias BLOCK-ALIAS."
   (bind-block block-alias 0))
+
+(defun rebind-blocks (programs)
+  "Rebind all blocks that are members of PROGRAMS."
+  (flet ((rebind (block-type)
+           (let ((table (au:href (blocks *state*) :bindings block-type)))
+             (au:do-hash-values (blocks table)
+               (dolist (block blocks)
+                 (with-slots (%program %binding-point) block
+                   (when (member (name %program) programs)
+                     (%bind-block :buffer block %binding-point))))))))
+    (rebind :uniform)
+    (rebind :buffer)
+    (au:noop)))

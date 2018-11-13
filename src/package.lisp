@@ -20,6 +20,7 @@
            #:find-block
            #:bind-block
            #:unbind-block
+           #:rebind-blocks
            #:buffer-name
            #:find-buffer
            #:create-buffer
