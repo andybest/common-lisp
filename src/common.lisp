@@ -1,4 +1,4 @@
-(in-package :umbra.common)
+(in-package :umbra)
 
 (shadow:define-gpu-macro mvlet* ((&rest binds) &body body)
   (cond
