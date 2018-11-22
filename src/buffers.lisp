@@ -65,7 +65,9 @@
 (defun %write-buffer-member (target member value)
   (with-slots (%element-type %offset %element-stride %byte-stride) member
     (let ((count (length value)))
-      (static-vectors:with-static-vector (sv (* count %element-stride) :element-type %element-type)
+      (static-vectors:with-static-vector (sv (* count %element-stride)
+                                             :element-type %element-type
+                                             :initial-element 0)
         (let ((ptr (static-vectors:static-vector-pointer sv))
               (i 0))
           (map nil
@@ -82,7 +84,8 @@
     (let ((count (length value)))
       (destructuring-bind (columns . rows) %dimensions
         (static-vectors:with-static-vector (sv (* count columns %element-stride)
-                                               :element-type %element-type)
+                                               :element-type %element-type
+                                               :initial-element 0)
           (let ((ptr (static-vectors:static-vector-pointer sv))
                 (i 0))
             (map nil
