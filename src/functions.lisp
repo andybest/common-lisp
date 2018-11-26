@@ -51,10 +51,11 @@
         `(varjo:with-constant-inject-hook #'lisp-constant->glsl-constant
            (varjo:with-stemcell-infer-hook #'lisp-symbol->glsl-type
              (let* ((,fn (varjo:add-external-function ',name ',in-args ',uniforms ',body))
-                    (,spec (get-function-spec ,fn))
-                    (,split-details (varjo:test-translate-function-split-details
-                                     ',name ',in-args ',uniforms ',context ',body))
-                    (,deps (varjo:used-external-functions (first ,split-details))))
-               (store-function-dependencies ,spec ,deps)
-               (funcall (modify-hook *state*) (compute-outdated-programs ,spec))
+                    (,spec (get-function-spec ,fn)))
+               (when (track-dependencies-p *state*)
+                 (let* ((,split-details (varjo:test-translate-function-split-details
+                                         ',name ',in-args ',uniforms ',context ',body))
+                        (,deps (varjo:used-external-functions (first ,split-details))))
+                   (store-function-dependencies ,spec ,deps)
+                   (funcall (modify-hook *state*) (compute-outdated-programs ,spec))))
                ,fn)))))))

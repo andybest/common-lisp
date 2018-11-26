@@ -6,6 +6,8 @@
    (%blocks :reader blocks
             :initform (au:dict #'eq :bindings (au:dict #'eq :uniform (au:dict) :buffer (au:dict))
                                     :aliases (au:dict #'equalp)))
+   (%track-dependencies-p :reader track-dependencies-p
+                          :initform nil)
    (%dependencies :reader dependencies
                   :initform (au:dict #'eq
                                      :fn->deps (au:dict #'equal)
@@ -17,6 +19,12 @@
              :initform (au:dict #'eq))))
 
 (defvar *state* (make-instance 'state))
+
+(defun enable-dependency-tracking ()
+  (setf (slot-value *state* '%track-dependencies-p) t))
+
+(defun disable-dependency-tracking ()
+  (setf (slot-value *state* '%track-dependencies-p) nil))
 
 (defun store-source (program stage)
   (let ((source (varjo:glsl-code stage)))
