@@ -58,4 +58,5 @@
                         (,deps (varjo:used-external-functions (first ,split-details))))
                    (store-function-dependencies ,spec ,deps)
                    (funcall (modify-hook *state*) (compute-outdated-programs ,spec))))
-               ,fn)))))))
+               ,fn))
+           (export ',name))))))

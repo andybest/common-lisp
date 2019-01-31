@@ -1,7 +1,5 @@
 (in-package :shadow)
 
-(defvar *active-shader-program*)
-
 (defclass program ()
   ((%id :reader id
         :initform 0)
@@ -125,7 +123,9 @@ See MAKE-SHADER-PROGRAM"
 VERSION: The default version shader stages use, and can be overridden on a per-function basis.
 
 PRIMITIVE: The drawing primitive to use for the vertex stage."
-  `(%make-shader-program ',name ,version ,primitive ',body))
+  `(progn
+     (%make-shader-program ',name ,version ,primitive ',body)
+     (export ',name)))
 
 (defun translate-shader-programs (program-list)
   "Re-translate a collection of shader programs."
@@ -144,9 +144,10 @@ PRIMITIVE: The drawing primitive to use for the vertex stage."
 
 (defmacro with-shader-program (name &body body)
   "Run a body of code which uses (as in glUseProgram) the program identified by NAME."
-  `(let ((*active-shader-program* (find-program ,name)))
-     (gl:use-program (id *active-shader-program*))
-     ,@body
+  `(unwind-protect
+        (progn
+          (gl:use-program (id (find-program ,name)))
+          ,@body)
      (gl:use-program 0)))
 
 (defun reset-program-state ()
