@@ -1,6 +1,7 @@
 (in-package :defpackage+-user-1)
 
 (defpackage+ #:shadow
+  (:local-nicknames (#:m #:game-math))
   (:use #:cl)
   (:export #:define-gpu-function
            #:define-gpu-struct
@@ -27,6 +28,7 @@
            #:bind-buffer
            #:unbind-buffer
            #:delete-buffer
+           #:read-buffer-path
            #:write-buffer-path
            #:with-shader-program
            #:uniforms
