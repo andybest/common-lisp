@@ -113,7 +113,7 @@
 (defun %read-buffer-member/vector (member data count)
   (with-slots (%dimensions %element-stride) member
     (let* ((size (car %dimensions))
-           (func (au:format-symbol :m "VEC~a" size)))
+           (func (au:format-symbol :game-math "VEC~a" size)))
       (flet ((make-vector (data index size)
                (let ((args (loop :for i :below size
                                  :collect (aref data (+ index i)))))
@@ -127,7 +127,7 @@
 (defun %read-buffer-member/matrix (member data count)
   (with-slots (%dimensions %element-stride) member
     (destructuring-bind (columns rows) %dimensions
-      (let ((func (au:format-symbol :m "MAT~d" columns)))
+      (let ((func (au:format-symbol :game-math "MAT~d" columns)))
         (flet ((make-matrix (data index)
                  (let ((args (loop :repeat columns
                                    :for i :from index :by %element-stride
