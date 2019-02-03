@@ -43,7 +43,7 @@
      (au:href (dependencies *state*) :stage-fn->programs))
     programs))
 
-(defmacro define-gpu-function (name args &body body)
+(defmacro define-function (name args &body body)
   "Define a GPU function."
   (au:with-unique-names (split-details deps fn spec)
     (let ((split-args (varjo.utils:split-arguments args '(&uniform &context))))

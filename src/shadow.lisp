@@ -31,10 +31,10 @@
     (setf (au:href (source program) (stage-type stage))
           (subseq source (1+ (position #\newline source)) (- (length source) 2)))))
 
-(defmacro define-gpu-struct (name () &body slots)
+(defmacro define-struct (name &body slots)
   "Define a GPU structure."
   `(varjo:define-vari-struct ,name () ,@slots))
 
-(defmacro define-gpu-macro (name lambda-list &body body)
+(defmacro define-macro (name lambda-list &body body)
   "Define a GPU macro."
   `(varjo:define-vari-macro ,name ,lambda-list ,@body))

@@ -3,9 +3,9 @@
 (defpackage+ #:shadow
   (:local-nicknames (#:m #:game-math))
   (:use #:cl)
-  (:export #:define-gpu-function
-           #:define-gpu-struct
-           #:define-gpu-macro
+  (:export #:define-function
+           #:define-struct
+           #:define-macro
            #:enable-dependency-tracking
            #:disable-dependency-tracking
            #:reset-program-state

@@ -117,7 +117,7 @@ See MAKE-SHADER-PROGRAM"
     (store-stage-program-dependencies program)
     program))
 
-(defmacro define-shader (name (&key (version :330) (primitive :triangles)) &body body)
+(defmacro define-shader (name (&key (version :430) (primitive :triangles)) &body body)
   "Create a new shader program using the stage-specs defined in BODY.
 
 VERSION: The default version shader stages use, and can be overridden on a per-function basis.
