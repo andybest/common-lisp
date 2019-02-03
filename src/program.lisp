@@ -151,7 +151,6 @@ PRIMITIVE: The drawing primitive to use for the vertex stage."
      (gl:use-program 0)))
 
 (defun reset-program-state ()
-  (clrhash (au:href (programs *state*)))
   (clrhash (au:href (blocks *state*) :bindings :uniform))
   (clrhash (au:href (blocks *state*) :bindings :buffer))
   (clrhash (au:href (blocks *state*) :aliases))
