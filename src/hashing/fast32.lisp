@@ -1,18 +1,18 @@
-(in-package :umbra.hashing)
+(in-package :umbra.hash)
 
 ;;;; Hashing functions
 ;;;; FAST32
 ;;;; Brian Sharpe
 ;;;; https://briansharpe.wordpress.com/2011/11/15/a-fast-and-simple-32bit-floating-point-hash-function/
 
-(shadow:define-gpu-function fast32 ((grid-cell :vec2))
+(define-function fast32 ((grid-cell :vec2))
   (let ((p (vec4 grid-cell (1+ grid-cell))))
     (decf p (* (floor (* p (/ 71.0))) 71.0))
     (incf p (vec4 26 161 26 161))
     (multf p p)
     (fract (* (.xzxz p) (.yyww p) (/ 951.135664)))))
 
-(shadow:define-gpu-function fast32/2-per-corner ((grid-cell :vec2))
+(define-function fast32/2-per-corner ((grid-cell :vec2))
   (let ((p (vec4 grid-cell (1+ grid-cell))))
     (decf p (* (floor (* p (/ 71.0))) 71.0))
     (incf p (vec4 26 161 26 161))
@@ -21,7 +21,7 @@
     (values (fract (* p (/ 951.135664)))
             (fract (* p (/ 642.949883))))))
 
-(shadow:define-gpu-function fast32/3-per-corner ((grid-cell :vec2))
+(define-function fast32/3-per-corner ((grid-cell :vec2))
   (let ((p (vec4 grid-cell (1+ grid-cell))))
     (decf p (* (floor (* p (/ 71.0))) 71.0))
     (incf p (vec4 26 161 26 161))
@@ -31,13 +31,13 @@
             (fract (* p (/ 642.949883)))
             (fract (* p (/ 803.202459))))))
 
-(shadow:define-gpu-function fast32/cell ((grid-cell :vec2))
+(define-function fast32/cell ((grid-cell :vec2))
   (let ((p (- grid-cell (* (floor (* grid-cell (/ 71.0))) 71.0))))
     (incf p (vec2 26 161))
     (multf p p)
     (fract (* (.x p) (.y p) (/ (vec4 951.1357 642.9499 803.202 986.97327))))))
 
-(shadow:define-gpu-function fast32 ((grid-cell :vec3))
+(define-function fast32 ((grid-cell :vec3))
   (decf grid-cell (* (floor (* grid-cell (/ 69.0))) 69.0))
   (let* ((grid-cell-inc1 (* (step grid-cell (vec3 67.5)) (1+ grid-cell)))
          (p (+ (vec4 (.xy grid-cell) (.xy grid-cell-inc1))
@@ -48,9 +48,9 @@
     (values (fract (* p (.x high-z)))
             (fract (* p (.y high-z))))))
 
-(shadow:define-gpu-function fast32 ((grid-cell :vec3)
-                                    (v1-mask :vec3)
-                                    (v2-mask :vec3))
+(define-function fast32 ((grid-cell :vec3)
+                         (v1-mask :vec3)
+                         (v2-mask :vec3))
   (decf grid-cell (* (floor (* grid-cell (/ 69.0))) 69.0))
   (let* ((grid-cell-inc1 (* (step grid-cell (vec3 67.5)) (1+ grid-cell)))
          (p (+ (vec4 (.xy grid-cell) (.xy grid-cell-inc1))
@@ -63,12 +63,13 @@
                (vec4 (.y p) (.yw v1xy-v2xy) (.w p))))
          (v1z-v2z (vec2 (if (< (.z v1-mask) 0.5) (.z grid-cell) (.z grid-cell-inc1))
                         (if (< (.z v2-mask) 0.5) (.z grid-cell) (.z grid-cell-inc1))))
-         (mod-vals (/ (+ 635.2987 (* (vec4 (.z grid-cell) v1z-v2z (.z grid-cell-inc1)) 48.500388)))))
+         (mod-vals (/ (+ 635.2987 (* (vec4 (.z grid-cell) v1z-v2z (.z grid-cell-inc1))
+                                     48.500388)))))
     (fract (* p mod-vals))))
 
-(shadow:define-gpu-function fast32/3-per-corner ((grid-cell :vec3)
-                                                 (v1-mask :vec3)
-                                                 (v2-mask :vec3))
+(define-function fast32/3-per-corner ((grid-cell :vec3)
+                                      (v1-mask :vec3)
+                                      (v2-mask :vec3))
   (decf grid-cell (* (floor (* grid-cell (/ 69.0))) 69.0))
   (let* ((grid-cell-inc1 (* (step grid-cell (vec3 67.5)) (1+ grid-cell)))
          (p (+ (vec4 (.xy grid-cell) (.xy grid-cell-inc1))
@@ -87,7 +88,7 @@
             (fract (* p (vec4 (.y low-z-mods) (.y v1-mask) (.y v2-mask) (.y high-z-mods))))
             (fract (* p (vec4 (.z low-z-mods) (.z v1-mask) (.z v2-mask) (.z high-z-mods)))))))
 
-(shadow:define-gpu-function fast32/3-per-corner ((grid-cell :vec3))
+(define-function fast32/3-per-corner ((grid-cell :vec3))
   (decf grid-cell (* (floor (* grid-cell (/ 69.0))) 69.0))
   (let* ((grid-cell-inc1 (* (step grid-cell (vec3 67.5)) (1+ grid-cell)))
          (p (+ (vec4 (.xy grid-cell) (.xy grid-cell-inc1))
@@ -105,7 +106,7 @@
             (fract (* p (.y high-z-mod)))
             (fract (* p (.z high-z-mod))))))
 
-(shadow:define-gpu-function fast32/4-per-corner ((grid-cell :vec3))
+(define-function fast32/4-per-corner ((grid-cell :vec3))
   (decf grid-cell (* (floor (* grid-cell (/ 69.0))) 69.0))
   (let* ((grid-cell-inc1 (* (step grid-cell (vec3 67.5)) (1+ grid-cell)))
          (p (+ (vec4 (.xy grid-cell) (.xy grid-cell-inc1))
@@ -125,7 +126,7 @@
             (fract (* p (.z high-z-3)))
             (fract (* p (.w high-z-3))))))
 
-(shadow:define-gpu-function fast32/cell ((grid-cell :vec3))
+(define-function fast32/cell ((grid-cell :vec3))
   (let ((floats (vec4 635.2987 682.3575 668.9265 588.2551))
         (z-inc (vec4 48.500388 65.29412 63.9346 63.279682)))
     (decf grid-cell (* (floor (* grid-cell (/ 71.0))) 71.0))

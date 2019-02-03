@@ -9,29 +9,58 @@
   :version "0.1.0"
   :encoding :utf-8
   :long-description #.(uiop:read-file-string (uiop/pathname:subpathname *load-pathname* "README.md"))
-  :depends-on (#:shadow
-               #:defpackage-plus)
+  :depends-on (#:golden-utils
+               #:defpackage-plus
+               #:shadow)
   :pathname "src"
   :serial t
   :components
-  ((:file "package")
-   (:file "common")
-   (:file "math")
-   (:file "graph")
-   (:file "color-space")
-   (:file "color-grading")
-   (:file "shaping-penner")
-   (:file "shaping-iq")
-   (:file "shaping-levin")
-   (:file "shaping-misc")
-   (:file "hashing-bbs")
-   (:file "hashing-sgpp")
-   (:file "hashing-fast32")
-   (:file "hashing-fast32-2")
-   (:file "noise-perlin")
-   (:file "noise-cellular")
-   (:file "noise-polkadot")
-   (:file "noise-hermite")
-   (:file "noise-simplex")
-   (:file "noise-value")
-   (:file "noise-misc")))
+  ((:module "common"
+    :components
+    ((:file "package")
+     (:file "common")
+     (:file "swizzle")
+     (:file "vari")
+     (:file "math")
+     (:file "structs")))
+   (:module "color"
+    :components
+    ((:file "package")
+     (:file "grading")
+     (:file "space")))
+   (:module "graph"
+    :components
+    ((:file "package")
+     (:file "graph")))
+   (:module "shaping"
+    :components
+    ((:file "package")
+     (:file "iq")
+     (:file "levin")
+     (:file "misc")
+     (:file "penner")))
+   (:module "hashing"
+    :components
+    ((:file "package")
+     (:file "bbs")
+     (:file "fast32")
+     (:file "fast32-2")
+     (:file "sgpp")))
+   (:module "noise"
+    :components
+    ((:file "package")
+     (:file "cellular")
+     (:file "hermite")
+     (:file "misc")
+     (:file "perlin")
+     (:file "polkadot")
+     (:file "simplex")
+     (:file "value")))
+   (:module "sdf"
+    :components
+    ((:file "package")
+     (:file "2d")))
+   (:module "sprite"
+    :components
+    ((:file "package")
+     (:file "sprite")))))

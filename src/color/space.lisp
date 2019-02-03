@@ -13,17 +13,17 @@
 ;;; Grayscale
 ;;; Uses the ITU-R Recommendation BT.709 standard for its luma coefficients.
 
-(shadow:define-gpu-function rgb->grayscale ((color :vec3))
+(define-function rgb->grayscale ((color :vec3))
   (vec3 (+ (* (.r color) 0.2126)
            (* (.g color) 0.7152)
            (* (.b color) 0.0722))))
 
-(shadow:define-gpu-function rgb->grayscale ((color :vec4))
+(define-function rgb->grayscale ((color :vec4))
   (vec4 (rgb->grayscale (.rgb color)) (.a color)))
 
 ;;; Hue
 
-(shadow:define-gpu-function hue->rgb ((hue :float))
+(define-function hue->rgb ((hue :float))
   (let ((v (* hue 6)))
     (saturate
      (vec3 (1- (abs (- v 3)))
@@ -32,7 +32,7 @@
 
 ;;; HCV (hue/chroma/value)
 
-(shadow:define-gpu-function rgb->hcv ((color :vec3))
+(define-function rgb->hcv ((color :vec3))
   (let* ((k (vec4 0 (/ -1 3.0) (/ 2 3.0) -1))
          (p (if (< (.g color) (.b color))
                 (vec4 (.bg color) (.wz k))
@@ -46,29 +46,29 @@
                     (.z q)))))
     (vec3 h d (.x q))))
 
-(shadow:define-gpu-function rgb->hcv ((color :vec4))
+(define-function rgb->hcv ((color :vec4))
   (vec4 (rgb->hcv (.rgb color)) (.a color)))
 
 ;;; HSV (hue/saturation/value)
 
-(shadow:define-gpu-function rgb->hsv ((color :vec3))
+(define-function rgb->hsv ((color :vec3))
   (let* ((hcv (rgb->hcv color))
          (s (/ (.y hcv) (+ (.z hcv) +epsilon+))))
     (vec3 (.x hcv) s (.z hcv))))
 
-(shadow:define-gpu-function rgb->hsv ((color :vec4))
+(define-function rgb->hsv ((color :vec4))
   (vec4 (rgb->hsv (.rgb color)) (.a color)))
 
-(shadow:define-gpu-function hsv->rgb ((color :vec3))
+(define-function hsv->rgb ((color :vec3))
   (let ((rgb (hue->rgb (.x color))))
     (* (1+ (* (1- rgb) (.y color))) (.z color))))
 
-(shadow:define-gpu-function hsv->rgb ((color :vec4))
+(define-function hsv->rgb ((color :vec4))
   (vec4 (hsv->rgb (.xyz color)) (.a color)))
 
 ;;; HCY (hue/saturation/luminance)
 
-(shadow:define-gpu-function rgb->hcy ((color :vec3))
+(define-function rgb->hcy ((color :vec3))
   (let* ((hcy-weights (vec3 0.299 0.587 0.114))
          (hcv (rgb->hcv color))
          (y (dot color hcy-weights))
@@ -78,10 +78,10 @@
         (multf (.y hcv) (/ (- 1 z) (- (1+ +epsilon+) y))))
     (vec3 (.xy hcv) y)))
 
-(shadow:define-gpu-function rgb->hcy ((color :vec4))
+(define-function rgb->hcy ((color :vec4))
   (vec4 (rgb->hcy (.rgb color)) (.a color)))
 
-(shadow:define-gpu-function hcy->rgb ((color :vec3))
+(define-function hcy->rgb ((color :vec3))
   (let* ((hcy-weights (vec3 0.299 0.587 0.114))
          (rgb (hue->rgb (.x color)))
          (z (dot rgb hcy-weights)))
@@ -92,106 +92,106 @@
        (multf (.y color) (/ (- 1 (.z color)) (- 1 z)))))
     (+ (* (- rgb z) (.y color)) (.z color))))
 
-(shadow:define-gpu-function hcy->rgb ((color :vec4))
+(define-function hcy->rgb ((color :vec4))
   (vec4 (hcy->rgb (.xyz color)) (.a color)))
 
 ;;; HSL (hue/saturation/lightness)
 
-(shadow:define-gpu-function rgb->hsl ((color :vec3))
+(define-function rgb->hsl ((color :vec3))
   (let* ((hcv (rgb->hcv color))
          (l (- (.z hcv) (* (.y hcv) 0.5)))
          (s (/ (.y hcv) (- 1 (+ (abs (1- (* l 2)))) +epsilon+))))
     (vec3 (.x hcv) s l)))
 
-(shadow:define-gpu-function rgb->hsl ((color :vec4))
+(define-function rgb->hsl ((color :vec4))
   (vec4 (rgb->hsl (.rgb color)) (.a color)))
 
-(shadow:define-gpu-function hsl->rgb ((color :vec3))
+(define-function hsl->rgb ((color :vec3))
   (let ((rgb (hue->rgb (.x color)))
         (c (* (- 1 (abs (1- (* 2 (.z color))))) (.y color))))
     (+ (* (- rgb 0.5) c) (.z color))))
 
-(shadow:define-gpu-function hsl->rgb ((color :vec4))
+(define-function hsl->rgb ((color :vec4))
   (vec4 (hsl->rgb (.xyz color)) (.a color)))
 
 ;;; SRGB
 
-(shadow:define-gpu-function rgb->srgb-approx ((color :vec3))
+(define-function rgb->srgb-approx ((color :vec3))
   (expt (.rgb color) (vec3 +gamma+)))
 
-(shadow:define-gpu-function rgb->srgb-approx ((color :vec4))
+(define-function rgb->srgb-approx ((color :vec4))
   (vec4 (rgb->srgb-approx (.rgb color)) (.a color)))
 
-(shadow:define-gpu-function rgb->srgb ((color :vec3))
+(define-function rgb->srgb ((color :vec3))
   (mix (* 12.92 color)
        (- (* 1.055 (expt color (vec3 (/ 2.4)))) 0.055)
        (step (vec3 0.0031308) color)))
 
-(shadow:define-gpu-function rgb->srgb ((color :vec4))
+(define-function rgb->srgb ((color :vec4))
   (vec4 (rgb->srgb (.rgb color)) (.a color)))
 
-(shadow:define-gpu-function srgb->rgb-approx ((color :vec3))
+(define-function srgb->rgb-approx ((color :vec3))
   (expt color (vec3 +gamma-inverse+)))
 
-(shadow:define-gpu-function srgb->rgb-approx ((color :vec4))
+(define-function srgb->rgb-approx ((color :vec4))
   (vec4 (srgb->rgb-approx (.rgb color)) (.a color)))
 
-(shadow:define-gpu-function srgb->rgb ((color :vec3))
+(define-function srgb->rgb ((color :vec3))
   (mix (/ color 12.92)
        (expt (/ (+ color 0.055) 1.055) (vec3 2.4))
        (step (vec3 0.04045) color)))
 
-(shadow:define-gpu-function srgb->rgb ((color :vec4))
+(define-function srgb->rgb ((color :vec4))
   (vec4 (srgb->rgb (.rgb color)) (.a color)))
 
 ;;; CIE XYZ 1931
 
-(shadow:define-gpu-function rgb->xyz ((color :vec3))
+(define-function rgb->xyz ((color :vec3))
   (let ((transform (mat3 0.4124564 0.3575761 0.1804375
                          0.2126729 0.7151522 0.072175
                          0.0193339 0.119192 0.9503041)))
     (* transform color)))
 
-(shadow:define-gpu-function rgb->xyz ((color :vec4))
+(define-function rgb->xyz ((color :vec4))
   (vec4 (rgb->xyz (.rgb color)) (.a color)))
 
-(shadow:define-gpu-function xyz->rgb ((color :vec3))
+(define-function xyz->rgb ((color :vec3))
   (let ((transform (mat3 3.2404542 -1.5371385 -0.4985314
                          -0.969266 1.8760108 0.041556
                          0.0556434 -0.2040259 1.0572252)))
     (* transform color)))
 
-(shadow:define-gpu-function xyz->rgb ((color :vec4))
+(define-function xyz->rgb ((color :vec4))
   (vec4 (xyz->rgb (.xyz color)) (.a color)))
 
 ;;; CIE xyY
 
-(shadow:define-gpu-function xyy->xyz ((color :vec3))
+(define-function xyy->xyz ((color :vec3))
   (let* ((y (.z color))
          (x (/ (* y (.x color)) (.y color)))
          (z (/ (* y (- 1 (.x color) (.y color))) (.y color))))
     (vec3 x y z)))
 
-(shadow:define-gpu-function xyy->xyz ((color :vec4))
+(define-function xyy->xyz ((color :vec4))
   (vec4 (xyy->xyz (.xyz color)) (.a color)))
 
-(shadow:define-gpu-function xyz->xyy ((color :vec3))
+(define-function xyz->xyy ((color :vec3))
   (let* ((v (+ (.x color) (.y color) (.z color)))
          (x (/ (.x color) v))
          (y (/ (.y color) v)))
     (vec3 x y (.y color))))
 
-(shadow:define-gpu-function xyz->xyy ((color :vec4))
+(define-function xyz->xyy ((color :vec4))
   (vec4 (xyz->xyy (.xyz color)) (.a color)))
 
-(shadow:define-gpu-function rgb->xyy ((color :vec3))
+(define-function rgb->xyy ((color :vec3))
   (xyz->xyy (rgb->xyz color)))
 
-(shadow:define-gpu-function rgb->xyy ((color :vec4))
+(define-function rgb->xyy ((color :vec4))
   (xyz->xyy (rgb->xyz color)))
 
-(shadow:define-gpu-function xyy->rgb ((color :vec3))
+(define-function xyy->rgb ((color :vec3))
   (xyz->rgb (xyy->xyz color)))
 
-(shadow:define-gpu-function xyy->rgb ((color :vec4))
+(define-function xyy->rgb ((color :vec4))
   (xyz->rgb (xyy->xyz color)))

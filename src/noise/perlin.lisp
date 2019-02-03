@@ -6,8 +6,8 @@
 
 ;;; 2D Perlin noise
 
-(shadow:define-gpu-function perlin ((point :vec2)
-                                    (hash-fn (function (:vec2) (:vec4 :vec4))))
+(define-function perlin ((point :vec2)
+                         (hash-fn (function (:vec2) (:vec4 :vec4))))
   (mvlet* ((origin (floor point))
            (vecs (- (.xyxy point) (vec4 origin (1+ origin))))
            (hash-x hash-y (funcall hash-fn origin))
@@ -21,13 +21,13 @@
                      (* (.zxzx blend) (.wwyy blend)))))
     (map-domain out -1 1 0 1)))
 
-(shadow:define-gpu-function perlin ((point :vec2))
-  (perlin point (lambda ((x :vec2)) (umbra.hashing:fast32/2-per-corner x))))
+(define-function perlin ((point :vec2))
+  (perlin point (lambda ((x :vec2)) (umbra.hash:fast32/2-per-corner x))))
 
 ;;; 2D Perlin noise with derivatives
 
-(shadow:define-gpu-function perlin/derivs ((point :vec2)
-                                           (hash-fn (function (:vec2) (:vec4 :vec4))))
+(define-function perlin/derivs ((point :vec2)
+                                (hash-fn (function (:vec2) (:vec4 :vec4))))
   (mvlet* ((cell (floor point))
            (vecs (- (.xyxy point) (vec4 cell (1+ cell))))
            (hash-x hash-y (funcall hash-fn cell))
@@ -54,14 +54,14 @@
                       0.70710677)))
     (vec3 noise derivs)))
 
-(shadow:define-gpu-function perlin/derivs ((point :vec2))
-  (perlin/derivs point (lambda ((x :vec2)) (umbra.hashing:fast32/2-per-corner x))))
+(define-function perlin/derivs ((point :vec2))
+  (perlin/derivs point (lambda ((x :vec2)) (umbra.hash:fast32/2-per-corner x))))
 
 ;;; 2D Perlin Surflet noise
 ;;; http://briansharpe.wordpress.com/2012/03/09/modifications-to-classic-perlin-noise/
 
-(shadow:define-gpu-function perlin-surflet ((point :vec2)
-                                            (hash-fn (function (:vec2) (:vec4 :vec4))))
+(define-function perlin-surflet ((point :vec2)
+                                 (hash-fn (function (:vec2) (:vec4 :vec4))))
   (mvlet* ((cell (floor point))
            (vecs (- (.xyxy point) (vec4 cell (1+ cell))))
            (hash-x hash-y (funcall hash-fn cell))
@@ -75,13 +75,13 @@
                         2.3703704))))
     (map-domain out -1 1 0 1)))
 
-(shadow:define-gpu-function perlin-surflet ((point :vec2))
-  (perlin-surflet point (lambda ((x :vec2)) (umbra.hashing:fast32/2-per-corner x))))
+(define-function perlin-surflet ((point :vec2))
+  (perlin-surflet point (lambda ((x :vec2)) (umbra.hash:fast32/2-per-corner x))))
 
 ;;; 2D Perlin Surflet noise with derivatives
 
-(shadow:define-gpu-function perlin-surflet/derivs ((point :vec2)
-                                                   (hash-fn (function (:vec2) (:vec4 :vec4))))
+(define-function perlin-surflet/derivs ((point :vec2)
+                                        (hash-fn (function (:vec2) (:vec4 :vec4))))
   (mvlet* ((cell (floor point))
            (vecs (- (.xyxy point) (vec4 cell (1+ cell))))
            (hash-x hash-y (funcall hash-fn cell))
@@ -102,14 +102,14 @@
                       1.1851852)))
     (vec3 noise derivs)))
 
-(shadow:define-gpu-function perlin-surflet/derivs ((point :vec2))
-  (perlin-surflet/derivs point (lambda ((x :vec2)) (umbra.hashing:fast32/2-per-corner x))))
+(define-function perlin-surflet/derivs ((point :vec2))
+  (perlin-surflet/derivs point (lambda ((x :vec2)) (umbra.hash:fast32/2-per-corner x))))
 
 ;;; 2D Perlin noise improved
 ;;; Ken Perlin's improved version
 
-(shadow:define-gpu-function perlin-improved ((point :vec2)
-                                             (hash-fn (function (:vec2) :vec4)))
+(define-function perlin-improved ((point :vec2)
+                                  (hash-fn (function (:vec2) :vec4)))
   (let* ((cell (floor point))
          (vecs (- (.xyxy point) (vec4 cell (1+ cell))))
          (hash (- (funcall hash-fn cell) 0.5))
@@ -120,13 +120,13 @@
                    (* (.zxzx blend) (.wwyy blend)))))
     (map-domain out -1 1 0 1)))
 
-(shadow:define-gpu-function perlin-improved ((point :vec2))
-  (perlin-improved point (lambda ((x :vec2)) (umbra.hashing:fast32 x))))
+(define-function perlin-improved ((point :vec2))
+  (perlin-improved point (lambda ((x :vec2)) (umbra.hash:fast32 x))))
 
 ;;; 3D Perlin noise
 
-(shadow:define-gpu-function perlin ((point :vec3)
-                             (hash-fn (function (:vec3) (:vec4 :vec4 :vec4 :vec4 :vec4 :vec4))))
+(define-function perlin ((point :vec3)
+                         (hash-fn (function (:vec3) (:vec4 :vec4 :vec4 :vec4 :vec4 :vec4))))
   (mvlet* ((cell (floor point))
            (vec (- point cell))
            (vec-1 (1- vec))
@@ -151,12 +151,12 @@
            (out (* (dot out (* (.zxzx blend) (.wwyy blend))) 1.1547005)))
     (map-domain out -1 1 0 1)))
 
-(shadow:define-gpu-function perlin ((point :vec3))
-  (perlin point (lambda ((x :vec3)) (umbra.hashing:fast32/3-per-corner x))))
+(define-function perlin ((point :vec3))
+  (perlin point (lambda ((x :vec3)) (umbra.hash:fast32/3-per-corner x))))
 
 ;;; 3D Perlin noise with derivatives
 
-(shadow:define-gpu-function perlin/derivs ((point :vec3)
+(define-function perlin/derivs ((point :vec3)
                                     (hash-fn (function
                                               (:vec3)
                                               (:vec4 :vec4 :vec4 :vec4 :vec4 :vec4))))
@@ -227,16 +227,16 @@
                       0.57735026)))
     (vec4 noise derivs)))
 
-(shadow:define-gpu-function perlin/derivs ((point :vec3))
-  (perlin/derivs point (lambda ((x :vec3)) (umbra.hashing:fast32/3-per-corner x))))
+(define-function perlin/derivs ((point :vec3))
+  (perlin/derivs point (lambda ((x :vec3)) (umbra.hash:fast32/3-per-corner x))))
 
 ;;; 3D Perlin Surflet noise
 ;;; http://briansharpe.wordpress.com/2012/03/09/modifications-to-classic-perlin-noise/
 
-(shadow:define-gpu-function perlin-surflet ((point :vec3)
-                                     (hash-fn (function
-                                               (:vec3)
-                                               (:vec4 :vec4 :vec4 :vec4 :vec4 :vec4))))
+(define-function perlin-surflet ((point :vec3)
+                                 (hash-fn (function
+                                           (:vec3)
+                                           (:vec4 :vec4 :vec4 :vec4 :vec4 :vec4))))
   (mvlet* ((cell (floor point))
            (vec (- point cell))
            (vec-1 (1- vec))
@@ -268,15 +268,15 @@
                    2.3703704)))
     (map-domain out -1 1 0 1)))
 
-(shadow:define-gpu-function perlin-surflet ((point :vec3))
-  (perlin-surflet point (lambda ((x :vec3)) (umbra.hashing:fast32/3-per-corner x))))
+(define-function perlin-surflet ((point :vec3))
+  (perlin-surflet point (lambda ((x :vec3)) (umbra.hash:fast32/3-per-corner x))))
 
 ;;; 3D Perlin Surflet noise with derivatives
 
-(shadow:define-gpu-function perlin-surflet/derivs ((point :vec3)
-                                            (hash-fn (function
-                                                      (:vec3)
-                                                      (:vec4 :vec4 :vec4 :vec4 :vec4 :vec4))))
+(define-function perlin-surflet/derivs ((point :vec3)
+                                        (hash-fn (function
+                                                  (:vec3)
+                                                  (:vec4 :vec4 :vec4 :vec4 :vec4 :vec4))))
   (mvlet* ((cell (floor point))
            (vec (- point cell))
            (vec-1 (1- vec))
@@ -325,14 +325,14 @@
            (derivs (* (+ deriv0 deriv1) 1.1851852)))
     (vec4 noise derivs)))
 
-(shadow:define-gpu-function perlin-surflet/derivs ((point :vec3))
-  (perlin-surflet/derivs point (lambda ((x :vec3)) (umbra.hashing:fast32/3-per-corner x))))
+(define-function perlin-surflet/derivs ((point :vec3))
+  (perlin-surflet/derivs point (lambda ((x :vec3)) (umbra.hash:fast32/3-per-corner x))))
 
 ;;; 3D Perlin noise improved
 ;;; Ken Perlin's modified version
 
-(shadow:define-gpu-function perlin-improved ((point :vec3)
-                                      (hash-fn (function (:vec3) (:vec4 :vec4))))
+(define-function perlin-improved ((point :vec3)
+                                  (hash-fn (function (:vec3) (:vec4 :vec4))))
   (mvlet* ((cell (floor point))
            (vec (- point cell))
            (vec-1 (1- vec))
@@ -355,16 +355,16 @@
            (out (* (dot out (* (.zxzx blend) (.wwyy blend))) (/ 2 3.0))))
     (map-domain out -1 1 0 1)))
 
-(shadow:define-gpu-function perlin-improved ((point :vec3))
-  (perlin-improved point (lambda ((x :vec3)) (umbra.hashing:fast32 x))))
+(define-function perlin-improved ((point :vec3))
+  (perlin-improved point (lambda ((x :vec3)) (umbra.hash:fast32 x))))
 
 ;;; 4D Perlin noise
 
-(shadow:define-gpu-function perlin ((point :vec4)
-                             (hash-fn (function (:vec4) (:vec4 :vec4 :vec4 :vec4
-                                                         :vec4 :vec4 :vec4 :vec4
-                                                         :vec4 :vec4 :vec4 :vec4
-                                                         :vec4 :vec4 :vec4 :vec4))))
+(define-function perlin ((point :vec4)
+                         (hash-fn (function (:vec4) (:vec4 :vec4 :vec4 :vec4
+                                                     :vec4 :vec4 :vec4 :vec4
+                                                     :vec4 :vec4 :vec4 :vec4
+                                                     :vec4 :vec4 :vec4 :vec4))))
   (mvlet* ((cell (floor point))
            (vec (- point cell))
            (vec-1 (1- vec))
@@ -411,5 +411,5 @@
            (blend (vec4 (.xy blend) (- 1 (.xy blend)))))
     (map-domain (dot temp (* (.zxzx blend) (.wwyy blend))) -1 1 0 1)))
 
-(shadow:define-gpu-function perlin ((point :vec4))
-  (perlin point (lambda ((x :vec4)) (umbra.hashing:fast32-2/4-per-corner x))))
+(define-function perlin ((point :vec4))
+  (perlin point (lambda ((x :vec4)) (umbra.hash:fast32-2/4-per-corner x))))
