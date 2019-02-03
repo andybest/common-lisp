@@ -157,9 +157,9 @@
 ;;; 3D Perlin noise with derivatives
 
 (define-function perlin/derivs ((point :vec3)
-                                    (hash-fn (function
-                                              (:vec3)
-                                              (:vec4 :vec4 :vec4 :vec4 :vec4 :vec4))))
+                                (hash-fn (function
+                                          (:vec3)
+                                          (:vec4 :vec4 :vec4 :vec4 :vec4 :vec4))))
   (mvlet* ((cell (floor point))
            (vec (- point cell))
            (vec-1 (1- vec))

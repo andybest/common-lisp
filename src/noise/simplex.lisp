@@ -186,7 +186,7 @@
 ;;; 3D Simplex Cellular noise
 
 (define-function simplex-cellular ((point :vec3)
-                                       (hash-fn (function (:vec3 :vec3 :vec3) (:vec4 :vec4 :vec4))))
+                                   (hash-fn (function (:vec3 :vec3 :vec3) (:vec4 :vec4 :vec4))))
   (mvlet* ((cell1 cell2 cell3 corners-x corners-y corners-z (simplex/get-corner-vectors point))
            (hash-x hash-y hash-z (funcall hash-fn cell1 cell2 cell3))
            (jitter-window (* 0.059786577 +simplex-3d/inverse-pyramid-height+))
@@ -208,9 +208,9 @@
 ;;; 2D Simplex Polka-dot noise
 
 (define-function simplex-polkadot ((point :vec2)
-                                       (radius :float)
-                                       (max-dimness :float)
-                                       (hash-fn (function (:vec2) :vec4)))
+                                   (radius :float)
+                                   (max-dimness :float)
+                                   (hash-fn (function (:vec2) :vec4)))
   (let* ((simplex-points (vec3 (- 1 +simplex-2d/unskew-factor+)
                                (- +simplex-2d/unskew-factor+)
                                (- 1 (* +simplex-2d/unskew-factor+ 2))))
@@ -225,16 +225,16 @@
     (dot (- 1 (* hash max-dimness)) (expt point-distance (vec4 3)))))
 
 (define-function simplex-polkadot ((point :vec2)
-                                       (radius :float)
-                                       (max-dimness :float))
+                                   (radius :float)
+                                   (max-dimness :float))
   (simplex-polkadot point radius max-dimness (lambda ((x :vec2)) (umbra.hash:fast32 x))))
 
 ;;; 3D Simplex Polka-dot noise
 
 (define-function simplex-polkadot ((point :vec3)
-                                       (radius :float)
-                                       (max-dimness :float)
-                                       (hash-fn (function (:vec3 :vec3 :vec3) :vec4)))
+                                   (radius :float)
+                                   (max-dimness :float)
+                                   (hash-fn (function (:vec3 :vec3 :vec3) :vec4)))
   (mvlet* ((cell1 cell2 cell3 corners-x corners-y corners-z (simplex/get-corner-vectors point))
            (hash (funcall hash-fn cell1 cell2 cell3))
            (radius (/ +simplex-3d/inverse-triangle-half-edge-length+ radius))
@@ -246,8 +246,8 @@
     (dot (- 1 (* hash max-dimness)) point-distance)))
 
 (define-function simplex-polkadot ((point :vec3)
-                                       (radius :float)
-                                       (max-dimness :float))
+                                   (radius :float)
+                                   (max-dimness :float))
   (simplex-polkadot point radius max-dimness
                     (lambda ((x :vec3) (y :vec3) (z :vec3))
                       (umbra.hash:fast32 x y z))))
