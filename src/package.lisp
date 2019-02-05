@@ -32,6 +32,8 @@
            #:write-buffer-path
            #:with-shader-program
            #:uniforms
+           #:uniform-bool
+           #:uniform-bool-array
            #:uniform-int
            #:uniform-int-array
            #:uniform-float

@@ -60,6 +60,14 @@
                       ,sequence)))
          (,func ,location ,count (static-vectors:static-vector-pointer ,sv))))))
 
+(defun uniform-bool (program-name uniform value)
+  (let ((location (get-uniform-location program-name uniform)))
+    (%gl:uniform-1i location (if (null value) 0 1))))
+
+(defun uniform-bool-array (program-name uniform value)
+  (let ((location (get-uniform-location program-name uniform)))
+    (%uniform-array location %gl:uniform-1iv 1 (unsigned-byte 32) value)))
+
 (defun uniform-int (program-name uniform value)
   "Specify an integer as the VALUE for the uniform variable, UNIFORM."
   (let ((location (get-uniform-location program-name uniform)))
