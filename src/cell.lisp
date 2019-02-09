@@ -15,7 +15,7 @@
 
 (defun cell-index (stage x y)
   (let ((width (width (options stage))))
-    (+ (* y width) x)))
+    (+ (* (truncate y) width) (truncate x))))
 
 (defun get-cell (stage x y)
   (when (and (not (minusp x))
