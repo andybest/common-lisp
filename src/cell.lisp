@@ -52,7 +52,8 @@
     (add-cell-to-region cell)))
 
 (defun carved-p (cell)
-  (not (feature-present-p cell :wall)))
+  (when cell
+    (not (feature-present-p cell :wall))))
 
 (defun uncarve (cell)
   (au:deletef (au:href (regions *state*) (region cell)) cell)
