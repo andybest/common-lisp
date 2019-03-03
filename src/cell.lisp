@@ -1,61 +1,52 @@
 (in-package :dungen)
 
-(defclass cell ()
-  ((%x :reader x
-       :initarg :x)
-   (%y :reader y
-       :initarg :y)
-   (%features :accessor features
-              :initform (list :wall))
-   (%region :accessor region
-            :initform 0)))
-
-(au:define-printer (cell stream :type t)
-  (format stream "~{~a~^, ~}" (features cell)))
+(defstruct (cell (:constructor %make-cell))
+  x
+  y
+  (features (list :wall))
+  (region 0))
 
 (defun cell-index (stage x y)
-  (let ((width (width (options stage))))
-    (+ (* (truncate y) width) (truncate x))))
+  (let ((width (stage-width stage)))
+    (+ (* y width) x)))
 
 (defun get-cell (stage x y)
   (when (and (not (minusp x))
              (not (minusp y))
-             (< x (width (options stage)))
-             (< y (height (options stage))))
-    (aref (grid stage) (cell-index stage x y))))
+             (< x (stage-width stage))
+             (< y (stage-height stage)))
+    (aref (stage-grid stage) (cell-index stage x y))))
 
 (defun make-cell (stage x y)
   (let ((index (cell-index stage x y)))
-    (setf (aref (grid stage) index)
-          (make-instance 'cell :x x :y y))))
+    (setf (aref (stage-grid stage) index) (%make-cell :x x :y y))))
 
 ;;; Cell features
 
 (defun feature-present-p (cell feature)
-  (member feature (features cell)))
+  (member feature (cell-features cell)))
 
 (defun add-feature (cell feature)
-  (pushnew feature (features cell)))
+  (pushnew feature (cell-features cell)))
 
 (defun remove-feature (cell feature)
-  (au:deletef (features cell) feature))
+  (au:deletef (cell-features cell) feature))
 
 (defun feature-intersect (cell &rest features)
-  (intersection features (features cell)))
-
-;;;
+  (intersection features (cell-features cell)))
 
 (defun carve (cell feature &key (change-region-p t))
   (add-feature cell feature)
   (remove-feature cell :wall)
   (when change-region-p
-    (add-cell-to-region cell)))
+    (add-cell-to-region cell))
+  (values))
 
 (defun carved-p (cell)
   (when cell
     (not (feature-present-p cell :wall))))
 
 (defun uncarve (cell)
-  (au:deletef (au:href (regions *state*) (region cell)) cell)
-  (setf (region cell) 0
-        (features cell) '(:wall)))
+  (remhash cell (au:href (state-regions *state*) (cell-region cell)))
+  (setf (cell-region cell) 0
+        (cell-features cell) '(:wall)))

@@ -4,18 +4,19 @@
   (not (kernel-detect kernel #'carved-p)))
 
 (defun choose-corridor-cell (stage cells)
-  (if (> (random-float (rng *state*)) (wild-factor (options stage)))
-      (random-element (rng *state*) cells)
-      (first cells)))
+  (let ((rng (state-rng *state*)))
+    (if (> (random-float rng) (stage-wild-factor stage))
+        (random-element rng cells)
+        (first cells))))
 
 (defun choose-corridor-direction (kernel)
-  (let ((results))
+  (let (results)
     (dolist (dir '((0 1) (0 -1) (1 0) (-1 0)))
       (au:when-let ((cell1 (apply #'select kernel dir))
                     (cell2 (apply #'select kernel (mapcar #'+ dir dir))))
         (unless (carved-p cell2)
           (push (list cell1 cell2) results))))
-    (random-element (rng *state*) results)))
+    (random-element (state-rng *state*) results)))
 
 (defun carve-direction (kernel cells)
   (let ((origin (select kernel 0 0)))
@@ -24,21 +25,21 @@
             :do (carve cell :corridor)
             :finally (return (push cell cells)))
       (progn
-        (push origin (dead-ends *state*))
+        (push origin (state-dead-ends *state*))
         (delete origin cells :count 1)))))
 
 (defun carve-corridor-cell (kernel)
-  (let ((origin (select kernel 0 0)))
+  (let ((stage (kernel-stage kernel))
+        (origin (select kernel 0 0))
+        (layout (layout :orthogonal :max-x 2 :max-y 2)))
     (make-region)
     (carve origin :corridor)
-    (let ((stage (stage kernel))
-          (layout (layout :orthogonal :max-x 2 :max-y 2)))
-      (labels ((recursor (cells)
-                 (when cells
-                   (let* ((cell (choose-corridor-cell stage cells))
-                          (kernel (cell->kernel stage cell layout)))
-                     (recursor (carve-direction kernel cells))))))
-        (recursor (list origin))))))
+    (labels ((recurse (cells)
+               (when cells
+                 (let* ((cell (choose-corridor-cell stage cells))
+                        (kernel (cell->kernel stage cell layout)))
+                   (recurse (carve-direction kernel cells))))))
+      (recurse (list origin)))))
 
 (defun carve-corridors (stage)
   (convolve stage (layout :rectangle) #'filter-carvable #'carve-corridor-cell))
@@ -55,5 +56,5 @@
 
 (defun erode-dead-ends (stage)
   (process stage nil #'filter-dead-end #'erode-dead-end
-           :items (dead-ends *state*)
+           :items (state-dead-ends *state*)
            :generator (lambda (x) (cell->kernel stage x (layout :orthogonal)))))

@@ -16,13 +16,12 @@
   :serial t
   :components
   ((:file "package")
-   (:file "options")
    (:file "random")
    (:file "state")
-   (:file "kernel")
+   (:file "stage")
    (:file "cell")
+   (:file "kernel")
    (:file "region")
    (:file "room")
    (:file "junction")
-   (:file "corridor")
-   (:file "stage")))
+   (:file "corridor")))

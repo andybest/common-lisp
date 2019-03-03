@@ -7,36 +7,34 @@
 
 (defun make-connector (kernel)
   (let ((cell (select kernel 0 0))
-        (regions (remove 0 (kernel-map kernel #'region))))
+        (regions (remove 0 (kernel-map kernel #'cell-region))))
     (add-feature cell :connector)
-    (push cell (au:href (connections *state*) regions))))
+    (push cell (au:href (state-connections *state*) regions))))
 
 (defun connect-regions (stage)
   (convolve stage (layout :orthogonal) #'filter-connectable #'make-connector))
 
 (defun connectable-edges ()
-  (let ((edges))
-    (au:do-hash-keys (k (connections *state*))
+  (let (edges)
+    (au:do-hash-keys (k (state-connections *state*))
       (push (cons k 1) edges))
     edges))
 
 (defun make-graph ()
   (graph:populate (make-instance 'graph:graph)
-                  :nodes (au:iota (hash-table-count (regions *state*)) :start 1)
+                  :nodes (au:iota (hash-table-count (state-regions *state*))
+                                  :start 1)
                   :edges-w-values (connectable-edges)))
 
 (defun make-tree ()
-  (let* ((graph (make-graph))
-         (node (random-element (rng *state*) (graph:nodes graph))))
-    (graph/graph:minimum-spanning-tree
-     graph
-     (graph:populate (make-instance 'graph:graph) :nodes (list node)))))
+  (let ((graph (make-graph)))
+    (graph/graph:minimum-spanning-tree graph graph)))
 
 (defun adjacent-junction-p (kernel)
   (kernel-detect kernel (lambda (x) (feature-intersect x :junction :door))))
 
 (defun generate-junction-feature (stage)
-  (if (random-boolean (rng *state*) (door-rate (options stage)))
+  (if (random-boolean (state-rng *state*) (stage-door-rate stage))
       :door
       :junction))
 
@@ -54,11 +52,12 @@
              (add-feature cell :door-vertical))))))
 
 (defun get-random-edge-connector (edge)
-  (random-element (rng *state*) (au:href (connections *state*) edge)))
+  (random-element (state-rng *state*)
+                  (au:href (state-connections *state*) edge)))
 
 (defun carve-junctions (stage)
   (loop :with graph = (make-tree)
         :for edge :in (graph:edges graph)
         :do (maybe-make-junction stage (get-random-edge-connector edge))
-        :when (random-boolean (rng *state*) (cycle-factor (options stage)))
+        :when (random-boolean (state-rng *state*) (stage-cycle-factor stage))
           :do (maybe-make-junction stage (get-random-edge-connector edge))))
