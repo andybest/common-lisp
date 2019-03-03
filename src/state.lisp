@@ -2,7 +2,9 @@
 
 (defvar *state*)
 
-(defstruct (state (:constructor %make-state))
+(defstruct (state (:constructor %make-state)
+                  (:copier nil)
+                  (:predicate nil))
   rng
   (current-region 0)
   (regions (au:dict #'eql))

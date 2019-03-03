@@ -1,6 +1,8 @@
 (in-package :dungen)
 
-(defstruct (stage (:constructor %make-stage))
+(defstruct (stage (:constructor %make-stage)
+                  (:copier nil)
+                  (:predicate nil))
   (width 49)
   (height 49)
   (seed (make-seed))
@@ -9,17 +11,12 @@
   (wild-factor 0.25)
   (door-rate 0.5)
   (cycle-factor 0.5)
-  (current-region 0)
-  (regions (au:dict #'eql))
-  (connections (au:dict #'equal))
-  dead-ends
-  rng
   grid)
 
 (defun make-grid (stage)
   (let* ((width (stage-width stage))
          (height (stage-height stage))
-         (grid (make-array (* width height))))
+         (grid (make-array (list width height))))
     (setf (stage-grid stage) grid)
     (dotimes (x width)
       (dotimes (y height)

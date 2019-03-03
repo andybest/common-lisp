@@ -33,7 +33,7 @@
                         stage px py)))
       (unless (kernel-detect k2 #'carved-p)
         (make-region)
-        (kernel-map k1 (lambda (x) (carve x :room)))))))
+        (kernel-map k1 (lambda (x) (carve x +room+)))))))
 
 (defun carve-rooms (stage)
   (loop :with max = (estimate-room-count stage)

@@ -24,4 +24,5 @@
    (:file "region")
    (:file "room")
    (:file "junction")
-   (:file "corridor")))
+   (:file "corridor")
+   (:file "test")))
