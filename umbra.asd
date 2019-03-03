@@ -63,4 +63,5 @@
    (:module "sprite"
     :components
     ((:file "package")
-     (:file "sprite")))))
+     (:file "sprite")
+     (:file "tile-map")))))

@@ -3,4 +3,5 @@
 (defpackage+ #:umbra.sprite
   (:use #:umbra
         #:umbra.swizzle)
-  (:export #:sprite))
+  (:export #:sprite
+           #:tile-map))
