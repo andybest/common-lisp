@@ -4,56 +4,59 @@
   (equalp octet-vector (fast-io:octets-from octet-list)))
 
 (defun read-bits (count &key (processor #'identity))
-  (funcall processor (bitio:read-bits (buffer-bits) count)))
+  (funcall processor (bitio:read-bits (buffer-bits *buffer*) count)))
 
 (defun read-bytes (count &key (bits-per-byte 8) (processor #'identity))
   (let ((octet-vector (fast-io:make-octet-vector count)))
-    (bitio:read-bytes (buffer-bits) octet-vector :bits-per-byte bits-per-byte)
+    (bitio:read-bytes (buffer-bits *buffer*)
+                      octet-vector
+                      :bits-per-byte bits-per-byte)
     (funcall processor octet-vector)))
 
 (defun read-uint-be (byte-count &key (bits-per-byte 8) (processor #'identity))
-  (let ((value (bitio:read-integer
-                (buffer-bits)
-                :byte-endian :be
-                :num-bytes byte-count
-                :bits-per-byte bits-per-byte
-                :unsignedp t)))
+  (let* ((bits (buffer-bits *buffer*))
+         (value (bitio:read-integer bits
+                                    :byte-endian :be
+                                    :num-bytes byte-count
+                                    :bits-per-byte bits-per-byte
+                                    :unsignedp t)))
     (funcall processor value)))
 
 (defun read-uint-le (byte-count &key (bits-per-byte 8) (processor #'identity))
-  (let ((value (bitio:read-integer
-                (buffer-bits)
-                :byte-endian :le
-                :num-bytes byte-count
-                :bits-per-byte bits-per-byte
-                :unsignedp t)))
+  (let* ((bits (buffer-bits *buffer*))
+         (value (bitio:read-integer bits
+                                    :byte-endian :le
+                                    :num-bytes byte-count
+                                    :bits-per-byte bits-per-byte
+                                    :unsignedp t)))
     (funcall processor value)))
 
 (defun read-int-be (byte-count &key (bits-per-byte 8) (processor #'identity))
-  (let ((value (bitio:read-integer
-                (buffer-bits)
-                :byte-endian :be
-                :num-bytes byte-count
-                :bits-per-byte bits-per-byte
-                :unsignedp nil)))
+  (let* ((bits (buffer-bits *buffer*))
+         (value (bitio:read-integer bits
+                                    :byte-endian :be
+                                    :num-bytes byte-count
+                                    :bits-per-byte bits-per-byte
+                                    :unsignedp nil)))
     (funcall processor value)))
 
 (defun read-int-le (byte-count &key (bits-per-byte 8) (processor #'identity))
-  (let ((value (bitio:read-integer
-                (buffer-bits)
-                :byte-endian :le
-                :num-bytes byte-count
-                :bits-per-byte bits-per-byte
-                :unsignedp nil)))
+  (let* ((bits (buffer-bits *buffer*))
+         (value (bitio:read-integer bits
+                                    :byte-endian :le
+                                    :num-bytes byte-count
+                                    :bits-per-byte bits-per-byte
+                                    :unsignedp nil)))
     (funcall processor value)))
 
 (defun read-string (&key bytes (encoding :ascii) (processor #'identity)
                       null-terminated-p)
-  (let ((octet-vector (fast-io:make-octet-vector
-                       (%string-length bytes null-terminated-p))))
-    (fast-io:fast-read-sequence octet-vector (buffer-bytes))
-    (when null-terminated-p
-      (fast-io:fast-read-byte (buffer-bytes)))
-    (babel:octets-to-string
-     (funcall processor octet-vector)
-     :encoding encoding)))
+  (with-slots (%bytes) *buffer*
+    (let ((octet-vector (fast-io:make-octet-vector
+                         (%string-length bytes null-terminated-p))))
+      (fast-io:fast-read-sequence octet-vector %bytes)
+      (when null-terminated-p
+        (fast-io:fast-read-byte %bytes))
+      (babel:octets-to-string
+       (funcall processor octet-vector)
+       :encoding encoding))))

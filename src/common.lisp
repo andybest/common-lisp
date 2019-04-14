@@ -5,16 +5,29 @@
                     :buffer-size (* (length octet-vector) 2)))
 
 (defun %string-length (bytes null-terminated-p)
-  (let* ((sequence (fast-io:input-buffer-vector (buffer-bytes)))
-         (max-length (or bytes (length sequence)))
-         (start (fast-io:buffer-position (buffer-bytes)))
-         (end (min (length sequence) (+ start max-length)))
-         (index (if null-terminated-p
-                    (position 0 sequence :start start :end end)
-                    end)))
-    (- index start)))
+  (with-slots (%sequence) *buffer*
+    (let* ((length (length %sequence))
+           (max-length (or bytes length))
+           (start (buffer-position))
+           (end (min length (+ start max-length)))
+           (index (if null-terminated-p
+                      (position 0 %sequence :start start :end end)
+                      end)))
+      (- index start))))
 
 (defun split-string (string delimiter)
   (let ((pos (position delimiter string)))
     (list (subseq string 0 pos)
           (subseq string (1+ pos)))))
+
+(defun uncompress-bzip2 (octet-vector)
+  (%uncompress-octets octet-vector 'chipz:bzip2))
+
+(defun uncompress-gzip (octet-vector)
+  (%uncompress-octets octet-vector 'chipz:gzip))
+
+(defun uncompress-zlib (octet-vector)
+  (%uncompress-octets octet-vector 'chipz:zlib))
+
+(defun uncompress-deflate (octet-vector)
+  (%uncompress-octets octet-vector 'chipz:deflate))
