@@ -6,6 +6,10 @@
 (defun read-bits (count &key (processor #'identity))
   (funcall processor (bitio:read-bits (buffer-bits *buffer*) count)))
 
+(defun read-boolean ()
+  (when (= (read-bits 1) 1)
+    t))
+
 (defun read-bytes (count &key (bits-per-byte 8) (processor #'identity))
   (let ((octet-vector (fast-io:make-octet-vector count)))
     (bitio:read-bytes (buffer-bits *buffer*)
