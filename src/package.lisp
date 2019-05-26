@@ -10,7 +10,6 @@
    #:buffer-stream
    #:octets=
    #:read-bits
-   #:read-boolean
    #:read-bytes
    #:read-uint-be
    #:read-uint-le
