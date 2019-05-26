@@ -19,4 +19,5 @@
   ((:file "package")
    (:file "buffer")
    (:file "common")
+   (:file "processors")
    (:file "readers")))
