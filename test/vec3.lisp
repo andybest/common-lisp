@@ -1,4 +1,4 @@
-(in-package :box.math.test)
+(in-package #:box.math.test)
 
 (setf *default-test-function* #'equalp)
 
@@ -47,11 +47,11 @@
   (is (v3:zero) v3:+zero+))
 
 (diag "one")
-(let ((v (v3i:make -81 92 46))
-      (r (v3i:make 1 1 1)))
-  (is (v3i:one! v) r)
+(let ((v (v3:make -81 92 46))
+      (r (v3:make 1 1 1)))
+  (is (v3:one! v) r)
   (is v r)
-  (is (v3i:one) r))
+  (is (v3:one) r))
 
 (diag "list conversion")
 (is (v3:to-list (v3:make 1 2 3)) '(1 2 3))
@@ -187,8 +187,8 @@
   (ok (<= (abs (- angle (/ pi 4))) 1e-7)))
 
 (diag "zero vector predicate")
-(ok (v3:zerop v3:+zero+))
-(ok (v3:zerop (v3:make 0 0 0)))
+(ok (v3:zero-p v3:+zero+))
+(ok (v3:zero-p (v3:make 0 0 0)))
 
 (diag "direction equality")
 (ok (v3:direction= (v3:make 0.0073252916 0 0) (v3:make 0.31148136 0 0)))
@@ -196,9 +196,9 @@
 (ok (v3:direction= (v3:make 0 0 0.86798644) (v3:make 0 0 42384863)))
 
 (diag "parallelity")
-(ok (v3:parallelp (v3:make 0.6883507 0 0) (v3:make -0.37808847 0 0)))
-(ok (v3:parallelp (v3:make 0 -0.31525326 0) (v3:make 0 0.20765233 0)))
-(ok (v3:parallelp (v3:make 0 0 0.18911958) (v3:make 0 0 -0.17581582)))
+(ok (v3:parallel-p (v3:make 0.6883507 0 0) (v3:make -0.37808847 0 0)))
+(ok (v3:parallel-p (v3:make 0 -0.31525326 0) (v3:make 0 0.20765233 0)))
+(ok (v3:parallel-p (v3:make 0 0 0.18911958) (v3:make 0 0 -0.17581582)))
 
 (diag "linear interpolation")
 (let ((v1 (v3:make 0.74485755 0.092342734 0.2982279))

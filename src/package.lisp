@@ -1,76 +1,11 @@
-(in-package :defpackage+-user-1)
+(in-package #:cl-user)
 
-(defpackage+ #:box.math.common
+(defpackage #:box.math.common
   (:use #:cl)
   (:export #:int32
            #:+epsilon+))
 
-(defpackage+ #:box.math.vec2i
-  (:nicknames #:v2i)
-  (:use #:cl
-        #:box.math.common)
-  (:shadow #:=
-           #:+
-           #:-
-           #:*
-           #:/
-           #:abs
-           #:zerop
-           #:<
-           #:<=
-           #:>
-           #:>=
-           #:min
-           #:max)
-  (:export #:vec
-           #:x
-           #:y
-           #:with-components
-           #:make
-           #:+zero+
-           #:zero!
-           #:zero
-           #:one!
-           #:one
-           #:zerop
-           #:copy!
-           #:copy
-           #:clamp!
-           #:clamp
-           #:to-list
-           #:from-list
-           #:=
-           #:+!
-           #:+
-           #:-!
-           #:-
-           #:*!
-           #:*
-           #:/!
-           #:/
-           #:scale!
-           #:scale
-           #:dot
-           #:magnitude-squared
-           #:magnitude
-           #:abs!
-           #:abs
-           #:negate!
-           #:negate
-           #:angle
-           #:lerp!
-           #:lerp
-           #:<
-           #:<=
-           #:>
-           #:>=
-           #:min!
-           #:min
-           #:max!
-           #:max))
-
-(defpackage+ #:box.math.vec2f
-  (:nicknames #:v2f #:v2)
+(defpackage #:box.math.vec2
   (:use #:cl
         #:box.math.common)
   (:shadow #:=
@@ -80,7 +15,6 @@
            #:/
            #:round
            #:abs
-           #:zerop
            #:<
            #:<=
            #:>
@@ -97,7 +31,7 @@
            #:zero
            #:one!
            #:one
-           #:zerop
+           #:zero-p
            #:copy!
            #:copy
            #:clamp!
@@ -142,76 +76,7 @@
            #:max!
            #:max))
 
-(defpackage+ #:box.math.vec3i
-  (:nicknames #:v3i)
-  (:use #:cl
-        #:box.math.common)
-  (:shadow #:=
-           #:+
-           #:-
-           #:*
-           #:/
-           #:abs
-           #:zerop
-           #:<
-           #:<=
-           #:>
-           #:>=
-           #:min
-           #:max)
-  (:export #:vec
-           #:x
-           #:y
-           #:z
-           #:with-components
-           #:make
-           #:+zero+
-           #:zero!
-           #:zero
-           #:one!
-           #:one
-           #:zerop
-           #:copy!
-           #:copy
-           #:clamp!
-           #:clamp
-           #:to-list
-           #:from-list
-           #:=
-           #:+!
-           #:+
-           #:-!
-           #:-
-           #:*!
-           #:*
-           #:/!
-           #:/
-           #:scale!
-           #:scale
-           #:dot
-           #:magnitude-squared
-           #:magnitude
-           #:abs!
-           #:abs
-           #:negate!
-           #:negate
-           #:cross!
-           #:cross
-           #:box
-           #:angle
-           #:lerp!
-           #:lerp
-           #:<
-           #:<=
-           #:>
-           #:>=
-           #:min!
-           #:min
-           #:max!
-           #:max))
-
-(defpackage+ #:box.math.vec3f
-  (:nicknames #:v3f #:v3)
+(defpackage #:box.math.vec3
   (:use #:cl
         #:box.math.common)
   (:shadow #:=
@@ -221,7 +86,6 @@
            #:/
            #:round
            #:abs
-           #:zerop
            #:<
            #:<=
            #:>
@@ -239,7 +103,7 @@
            #:zero
            #:one!
            #:one
-           #:zerop
+           #:zero-p
            #:copy!
            #:copy
            #:clamp!
@@ -276,7 +140,7 @@
            #:box
            #:angle
            #:direction=
-           #:parallelp
+           #:parallel-p
            #:lerp!
            #:lerp
            #:<
@@ -288,74 +152,7 @@
            #:max!
            #:max))
 
-(defpackage+ #:box.math.vec4i
-  (:nicknames #:v4i)
-  (:use #:cl
-        #:box.math.common)
-  (:shadow #:=
-           #:+
-           #:-
-           #:*
-           #:/
-           #:abs
-           #:zerop
-           #:<
-           #:<=
-           #:>
-           #:>=
-           #:min
-           #:max)
-  (:export #:vec
-           #:x
-           #:y
-           #:z
-           #:w
-           #:with-components
-           #:make
-           #:+zero+
-           #:zero!
-           #:zero
-           #:one!
-           #:one
-           #:zerop
-           #:copy!
-           #:copy
-           #:clamp!
-           #:clamp
-           #:to-list
-           #:from-list
-           #:=
-           #:+!
-           #:+
-           #:-!
-           #:-
-           #:*!
-           #:*
-           #:/!
-           #:/
-           #:scale!
-           #:scale
-           #:dot
-           #:magnitude-squared
-           #:magnitude
-           #:abs!
-           #:abs
-           #:negate!
-           #:negate
-           #:angle
-           #:lerp!
-           #:lerp
-           #:<
-           #:<=
-           #:>
-           #:>=
-           #:min!
-           #:min
-           #:max!
-           #:max))
-
-(defpackage+ #:box.math.vec4f
-  (:nicknames #:v4f #:v4)
+(defpackage #:box.math.vec4
   (:use #:cl
         #:box.math.common)
   (:shadow #:=
@@ -365,7 +162,6 @@
            #:/
            #:round
            #:abs
-           #:zerop
            #:<
            #:<=
            #:>
@@ -384,7 +180,7 @@
            #:zero
            #:one!
            #:one
-           #:zerop
+           #:zero-p
            #:copy!
            #:copy
            #:clamp!
@@ -428,8 +224,8 @@
            #:max!
            #:max))
 
-(defpackage+ #:box.math.mat2
-  (:nicknames #:m2)
+(defpackage #:box.math.mat2
+  (:local-nicknames (#:v2 #:box.math.vec2))
   (:use #:cl
         #:box.math.common)
   (:shadow #:=
@@ -475,7 +271,7 @@
            #:*v2
            #:transpose!
            #:transpose
-           #:orthogonalp
+           #:orthogonal-p
            #:trace
            #:diagonalp
            #:main-diagonal!
@@ -483,8 +279,9 @@
            #:anti-diagonal!
            #:anti-diagonal))
 
-(defpackage+ #:box.math.mat3
-  (:nicknames  #:m3)
+(defpackage #:box.math.mat3
+  (:local-nicknames (#:v2 #:box.math.vec2)
+                    (#:v3 #:box.math.vec3))
   (:use #:cl
         #:box.math.common)
   (:shadow #:=
@@ -538,7 +335,7 @@
            #:*v3
            #:transpose!
            #:transpose
-           #:orthogonalp
+           #:orthogonal-p
            #:trace
            #:diagonalp
            #:main-diagonal!
@@ -546,8 +343,9 @@
            #:anti-diagonal!
            #:anti-diagonal))
 
-(defpackage+ #:box.math.mat4
-  (:nicknames #:m4)
+(defpackage #:box.math.mat4
+  (:local-nicknames (#:v3 #:box.math.vec3)
+                    (#:v4 #:box.math.vec4))
   (:use #:cl
         #:box.math.common)
   (:shadow #:=
@@ -601,7 +399,7 @@
            #:*v4
            #:transpose!
            #:transpose
-           #:orthogonalp
+           #:orthogonal-p
            #:orthonormalize!
            #:orthonormalize
            #:trace
@@ -622,8 +420,11 @@
            #:perspective-projection!
            #:perspective-projection))
 
-(defpackage+ #:box.math.quat
-  (:nicknames #:quat)
+(defpackage #:box.math.quat
+  (:local-nicknames (#:v3 #:box.math.vec3)
+                    (#:v4 #:box.math.vec4)
+                    (#:m3 #:box.math.mat3)
+                    (#:m4 #:box.math.mat4))
   (:use #:cl
         #:box.math.common)
   (:shadow #:=
@@ -679,77 +480,13 @@
            #:from-vec3
            #:from-vec4!
            #:from-vec4
+           #:to-mat3!
+           #:to-mat3
            #:to-mat4!
            #:to-mat4
+           #:from-mat3!
+           #:from-mat3
            #:from-mat4!
            #:from-mat4
            #:slerp!
            #:slerp))
-
-(defpackage+ #:box.math.dquat
-  (:nicknames #:dquat)
-  (:use #:cl
-        #:box.math.common)
-  (:shadow #:=
-           #:+
-           #:-
-           #:*
-           #:conjugate
-           #:apply)
-  (:export #:dquat
-           #:with-components
-           #:make
-           #:id!
-           #:id
-           #:zero!
-           #:zero
-           #:=
-           #:~
-           #:copy!
-           #:copy
-           #:+!
-           #:+
-           #:-!
-           #:-
-           #:*!
-           #:*
-           #:scale!
-           #:scale
-           #:conjugate!
-           #:conjugate
-           #:conjugate-full!
-           #:conjugate-full
-           #:magnitude-squared
-           #:magnitude
-           #:normalize!
-           #:normalize
-           #:negate!
-           #:negate
-           #:apply!
-           #:apply
-           #:dot
-           #:inverse!
-           #:inverse
-           #:translation-to-vec3!
-           #:translation-to-vec3
-           #:translation-from-vec3!
-           #:translation-from-vec3
-           #:translate!
-           #:translate
-           #:rotation-to-quat!
-           #:rotation-to-quat
-           #:rotation-from-quat!
-           #:rotation-from-quat
-           #:rotate!
-           #:rotate
-           #:to-mat4!
-           #:to-mat4
-           #:from-mat4!
-           #:from-mat4
-           #:to-screw
-           #:from-screw!
-           #:from-screw
-           #:sclerp!
-           #:sclerp
-           #:nlerp!
-           #:nlerp))

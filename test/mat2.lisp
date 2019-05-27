@@ -1,4 +1,4 @@
-(in-package :box.math.test)
+(in-package #:box.math.test)
 
 (setf *default-test-function* #'equalp)
 
@@ -106,9 +106,9 @@
   (is (m2:transpose m2:+id+) m2:+id+))
 
 (diag "orthogonality predicate")
-(ok (m2:orthogonalp (m2:rotate m2:+id+ pi)))
-(ok (m2:orthogonalp (m2:rotate m2:+id+ (/ pi 2))))
-(ok (m2:orthogonalp (m2:rotate m2:+id+ (/ pi 3))))
+(ok (m2:orthogonal-p (m2:rotate m2:+id+ pi)))
+(ok (m2:orthogonal-p (m2:rotate m2:+id+ (/ pi 2))))
+(ok (m2:orthogonal-p (m2:rotate m2:+id+ (/ pi 3))))
 
 (diag "trace")
 (is (m2:trace (m2:zero)) 0)

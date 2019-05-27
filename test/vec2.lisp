@@ -1,4 +1,4 @@
-(in-package :box.math.test)
+(in-package #:box.math.test)
 
 (setf *default-test-function* #'equalp)
 
@@ -44,11 +44,11 @@
   (is (v2:zero) v2:+zero+))
 
 (diag "one")
-(let ((v (v2i:make -81 92))
-      (r (v2i:make 1 1)))
-  (is (v2i:one! v) r)
+(let ((v (v2:make -81 92))
+      (r (v2:make 1 1)))
+  (is (v2:one! v) r)
   (is v r)
-  (is (v2i:one) r))
+  (is (v2:one) r))
 
 (diag "list conversion")
 (is (v2:to-list (v2:make 1 2)) '(1 2))
@@ -167,8 +167,8 @@
   (ok (<= (abs (- angle (/ pi 4))) 1e-7)))
 
 (diag "zero vector predicate")
-(ok (v2:zerop v2:+zero+))
-(ok (v2:zerop (v2:make 0 0)))
+(ok (v2:zero-p v2:+zero+))
+(ok (v2:zero-p (v2:make 0 0)))
 
 (diag "direction equality")
 (ok (v2:direction= (v2:make 0.0073252916 0) (v2:make 0.31148136 0)))

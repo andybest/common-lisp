@@ -1,4 +1,4 @@
-(in-package :box.math.mat2)
+(in-package #:box.math.mat2)
 
 ;;; Structure
 
@@ -9,8 +9,8 @@
                                         m10 m11))
                    (:conc-name nil)
                    (:copier nil))
-  "A 2x2 column-major matrix consisting of column vectors. This represents the rotation sub-matrix
-of a 2-dimensional transformation matrix."
+  "A 2x2 column-major matrix consisting of column vectors. This represents the
+rotation sub-matrix of a 2-dimensional transformation matrix."
   (m00 0.0f0 :type single-float)
   (m10 0.0f0 :type single-float)
   (m01 0.0f0 :type single-float)
@@ -29,18 +29,20 @@ of a 2-dimensional transformation matrix."
           `(progn ,@body))))
 
 (declaim (inline mref))
-(declaim (ftype (function (matrix (integer 0 3) (integer 0 3)) single-float) mref))
+(declaim (ftype (function (matrix (integer 0 3) (integer 0 3)) single-float)
+                mref))
 (defun mref (matrix row column)
-  "A virtualized matrix component reader. Use this instead of AREF to prevent unintended behavior
-should ordering of a matrix ever change."
+  "A virtualized matrix component reader. Use this instead of AREF to prevent
+unintended behavior should ordering of a matrix ever change."
   (aref matrix (cl:+ row (cl:* column 2))))
 
 (declaim (inline (setf mref)))
-(declaim (ftype (function (single-float matrix (integer 0 3) (integer 0 3)) single-float)
+(declaim (ftype (function (single-float matrix (integer 0 3) (integer 0 3))
+                          single-float)
                 (setf mref)))
 (defun (setf mref) (value matrix row column)
-  "A virtualized matrix component writer. Use this instead of (SETF AREF) to prevent unintended
-behavior should ordering of a matrix ever change."
+  "A virtualized matrix component writer. Use this instead of (SETF AREF) to
+prevent unintended behavior should ordering of a matrix ever change."
   (setf (aref matrix (cl:+ row (cl:* column 2))) value))
 
 ;;; Constants
@@ -103,16 +105,19 @@ behavior should ordering of a matrix ever change."
 (declaim (inline =))
 (declaim (ftype (function (matrix matrix) boolean) =))
 (defun = (matrix1 matrix2)
-  "Check if all components of MATRIX1 are numerically equal to the components of MATRIX2."
+  "Check if all components of MATRIX1 are numerically equal to the components of
+MATRIX2."
   (with-components ((a matrix1) (b matrix2))
     (and (cl:= a00 b00) (cl:= a01 b01)
          (cl:= a10 b10) (cl:= a11 b11))))
 
 (declaim (inline ~))
-(declaim (ftype (function (matrix matrix &key (:tolerance single-float)) boolean) ~))
+(declaim (ftype (function (matrix matrix &key (:tolerance single-float))
+                          boolean)
+                ~))
 (defun ~ (matrix1 matrix2 &key (tolerance +epsilon+))
-  "Check if all components of MATRIX1 are approximately equal to the components of MATRIX2,
-according to TOLERANCE."
+  "Check if all components of MATRIX1 are approximately equal to the components
+of MATRIX2, according to TOLERANCE."
   (with-components ((a matrix1) (b matrix2))
     (and (box.math.common::%~ a00 b00 tolerance)
          (box.math.common::%~ a01 b01 tolerance)
@@ -134,11 +139,15 @@ according to TOLERANCE."
   "Copy each component of MATRIX to a freshly allocated matrix."
   (copy! (zero) matrix))
 
-(declaim (ftype (function (matrix matrix &key (:min single-float) (:max single-float)) matrix)
+(declaim (ftype (function (matrix matrix &key (:min single-float)
+                                  (:max single-float))
+                          matrix)
                 clamp!))
-(defun clamp! (out matrix &key (min most-negative-single-float) (max most-positive-single-float))
-  "Clamp each component of MATRIX within the range of [MIN, MAX], storing the result in the existing
-matrix, OUT."
+(defun clamp! (out matrix
+               &key (min most-negative-single-float)
+                 (max most-positive-single-float))
+  "Clamp each component of MATRIX within the range of [MIN, MAX], storing the
+result in the existing matrix, OUT."
   (with-components ((o out) (m matrix))
     (psetf o00 (au:clamp m00 min max)
            o01 (au:clamp m01 min max)
@@ -147,16 +156,21 @@ matrix, OUT."
   out)
 
 (declaim (inline clamp))
-(declaim (ftype (function (matrix &key (:min single-float) (:max single-float)) matrix) clamp))
-(defun clamp (matrix &key (min most-negative-single-float) (max most-positive-single-float))
-  "Clamp each component of MATRIX within the range of [MIN, MAX], storing the result in a freshly
-allocated matrix."
+(declaim (ftype (function (matrix &key (:min single-float) (:max single-float))
+                          matrix)
+                clamp))
+(defun clamp (matrix
+              &key (min most-negative-single-float)
+                (max most-positive-single-float))
+  "Clamp each component of MATRIX within the range of [MIN, MAX], storing the
+result in a freshly allocated matrix."
   (clamp! (zero) matrix :min min :max max))
 
 (declaim (inline +!))
 (declaim (ftype (function (matrix matrix matrix) matrix) +!))
 (defun +! (out matrix1 matrix2)
-  "Calculate the sum of MATRIX1 and MATRIX2, storing the result in the existing matrix, OUT."
+  "Calculate the sum of MATRIX1 and MATRIX2, storing the result in the existing
+matrix, OUT."
   (with-components ((o out) (a matrix1) (b matrix2))
     (psetf o00 (cl:+ a00 b00)
            o10 (cl:+ a10 b10)
@@ -167,13 +181,15 @@ allocated matrix."
 (declaim (inline +))
 (declaim (ftype (function (matrix matrix) matrix) +))
 (defun + (matrix1 matrix2)
-  "Calculate the sum of MATRIX1 and MATRIX2, storing the result in a freshly allocated matrix."
+  "Calculate the sum of MATRIX1 and MATRIX2, storing the result in a freshly
+allocated matrix."
   (+! (zero) matrix1 matrix2))
 
 (declaim (inline -!))
 (declaim (ftype (function (matrix matrix matrix) matrix) -!))
 (defun -! (out matrix1 matrix2)
-  "Calculate the difference of MATRIX2 from MATRIX1, storing the result in the existing matrix, OUT."
+  "Calculate the difference of MATRIX2 from MATRIX1, storing the result in the
+existing matrix, OUT."
   (with-components ((o out) (a matrix1) (b matrix2))
     (psetf o00 (cl:- a00 b00)
            o10 (cl:- a10 b10)
@@ -184,13 +200,15 @@ allocated matrix."
 (declaim (inline -))
 (declaim (ftype (function (matrix matrix) matrix) -))
 (defun - (matrix1 matrix2)
-  "Calculate the difference of MATRIX2 from MATRIX1, storing the result in a freshly allocated matrix."
+  "Calculate the difference of MATRIX2 from MATRIX1, storing the result in a
+freshly allocated matrix."
   (-! (zero) matrix1 matrix2))
 
 (declaim (inline *!))
 (declaim (ftype (function (matrix matrix matrix) matrix) *!))
 (defun *! (out matrix1 matrix2)
-  "Calculate the product of MATRIX1 and MATRIX2, storing the result in the existing matrix, OUT."
+  "Calculate the product of MATRIX1 and MATRIX2, storing the result in the
+existing matrix, OUT."
   (with-components ((o out) (a matrix1) (b matrix2))
     (psetf o00 (cl:+ (cl:* a00 b00) (cl:* a01 b10))
            o10 (cl:+ (cl:* a10 b00) (cl:* a11 b10))
@@ -201,14 +219,16 @@ allocated matrix."
 (declaim (inline *))
 (declaim (ftype (function (matrix matrix) matrix) *))
 (defun * (matrix1 matrix2)
-  "Calculate the product of MATRIX1 and MATRIX2, storing the result in a freshly allocated matrix."
+  "Calculate the product of MATRIX1 and MATRIX2, storing the result in a freshly
+allocated matrix."
   (*! (zero) matrix1 matrix2))
 
 (declaim (inline rotation-axis-to-vec2!))
-(declaim (ftype (function (v2:vec matrix keyword) v2:vec) rotation-axis-to-vec2!))
+(declaim (ftype (function (v2:vec matrix keyword) v2:vec)
+                rotation-axis-to-vec2!))
 (defun rotation-axis-to-vec2! (out matrix axis)
-  "Copy the rotation axis from MATRIX denoted by the keyword symbol AXIS, to the existing vector,
-OUT."
+  "Copy the rotation axis from MATRIX denoted by the keyword symbol AXIS, to the
+existing vector, OUT."
   (v2:with-components ((v out))
     (with-components ((m matrix))
       (ecase axis
@@ -219,15 +239,16 @@ OUT."
 (declaim (inline rotation-axis-to-vec2))
 (declaim (ftype (function (matrix keyword) v2:vec) rotation-axis-to-vec2))
 (defun rotation-axis-to-vec2 (matrix axis)
-  "Copy the rotation axis from MATRIX denoted by the keyword symbol AXIS, to a freshly allocated
-vector."
+  "Copy the rotation axis from MATRIX denoted by the keyword symbol AXIS, to a
+freshly allocated vector."
   (rotation-axis-to-vec2! (v2:zero) matrix axis))
 
 (declaim (inline rotation-axis-from-vec2!))
-(declaim (ftype (function (matrix v2:vec keyword) matrix) rotation-axis-from-vec2!))
+(declaim (ftype (function (matrix v2:vec keyword) matrix)
+                rotation-axis-from-vec2!))
 (defun rotation-axis-from-vec2! (matrix vec axis)
-  "Copy the components of VEC into the rotation axis of MATRIX denoted by the keyword symbol AXIS.
-This destructively modifies MATRIX."
+  "Copy the components of VEC into the rotation axis of MATRIX denoted by the
+keyword symbol AXIS. This destructively modifies MATRIX."
   (with-components ((m matrix))
     (v2:with-components ((v vec))
       (ecase axis
@@ -236,15 +257,18 @@ This destructively modifies MATRIX."
   matrix)
 
 (declaim (inline rotation-axis-from-vec2))
-(declaim (ftype (function (matrix v2:vec keyword) matrix) rotation-axis-from-vec2))
+(declaim (ftype (function (matrix v2:vec keyword) matrix)
+                rotation-axis-from-vec2))
 (defun rotation-axis-from-vec2 (matrix vec axis)
-  "Copy the components of VEC into the rotation axis of MATRIX denoted by the keyword symbol AXIS.
-This allocates a fresh matrix, leaving the original un-modified."
+  "Copy the components of VEC into the rotation axis of MATRIX denoted by the
+keyword symbol AXIS. This allocates a fresh matrix, leaving the original
+un-modified."
   (rotation-axis-from-vec2! (copy matrix) vec axis))
 
 (declaim (ftype (function (matrix matrix float) matrix) rotate!))
 (defun rotate! (out matrix angle)
-  "Rotate MATRIX by the Euler angle, ANGLE, storing the result in the existing matrix, OUT."
+  "Rotate MATRIX by the Euler angle, ANGLE, storing the result in the existing
+matrix, OUT."
   (with-components ((m (id)))
     (copy! out matrix)
     (when (> (abs angle) +epsilon+)
@@ -259,7 +283,8 @@ This allocates a fresh matrix, leaving the original un-modified."
 (declaim (inline rotate))
 (declaim (ftype (function (matrix float) matrix) rotate))
 (defun rotate (matrix angle)
-  "Rotate MATRIX by the Euler angle, ANGLE, storing the result in a freshly allocated matrix."
+  "Rotate MATRIX by the Euler angle, ANGLE, storing the result in a freshly
+allocated matrix."
   (rotate! (id) matrix angle))
 
 (declaim (inline scale-to-vec2!))
@@ -280,8 +305,8 @@ This allocates a fresh matrix, leaving the original un-modified."
 (declaim (inline scale-from-vec2!))
 (declaim (ftype (function (matrix v2:vec) matrix) scale-from-vec2!))
 (defun scale-from-vec2! (matrix vec)
-  "Copy the components of VEC to the scaling components of MATRIX. This destructively modifies
-MATRIX."
+  "Copy the components of VEC to the scaling components of MATRIX. This
+destructively modifies MATRIX."
   (with-components ((m matrix))
     (v2:with-components ((v vec))
       (psetf m00 vx m11 vy)))
@@ -290,26 +315,29 @@ MATRIX."
 (declaim (inline scale-from-vec2))
 (declaim (ftype (function (matrix v2:vec) matrix) scale-from-vec2))
 (defun scale-from-vec2 (matrix vec)
-  "Copy the components of VEC to the scaling components of MATRIX. This allocates a fresh matrix,
-leaving the origin un-modified."
+  "Copy the components of VEC to the scaling components of MATRIX. This
+allocates a fresh matrix, leaving the origin un-modified."
   (scale-from-vec2! (copy matrix) vec))
 
 (declaim (inline scale!))
 (declaim (ftype (function (matrix matrix v2:vec) matrix) scale!))
 (defun scale! (out matrix vec)
-  "Scale MATRIX by each scalar in VEC, storing the result in the existing matrix, OUT."
+  "Scale MATRIX by each scalar in VEC, storing the result in the existing
+matrix, OUT."
   (*! out (scale-from-vec2 (id) vec) matrix))
 
 (declaim (inline scale))
 (declaim (ftype (function (matrix v2:vec) matrix) scale))
 (defun scale (matrix vec)
-  "Scale MATRIX by each scalar in VEC, storing the result in a freshly allocated matrix."
+  "Scale MATRIX by each scalar in VEC, storing the result in a freshly allocated
+matrix."
   (scale! (id) matrix vec))
 
 (declaim (inline *v2!))
 (declaim (ftype (function (v2:vec matrix v2:vec) v2:vec) *v2!))
 (defun *v2! (out matrix vec)
-  "Calculate the product of MATRIX and VEC, storing the result in the existing vector, OUT."
+  "Calculate the product of MATRIX and VEC, storing the result in the existing
+vector, OUT."
   (v2:with-components ((v vec) (o out))
     (with-components ((m matrix))
       (psetf ox (cl:+ (cl:* m00 vx) (cl:* m01 vy))
@@ -319,7 +347,8 @@ leaving the origin un-modified."
 (declaim (inline *v2))
 (declaim (ftype (function (matrix v2:vec) v2:vec) *v2))
 (defun *v2 (matrix vec)
-  "Calculate the product of MATRIX and VEC, storing the result in a freshly allocated vector."
+  "Calculate the product of MATRIX and VEC, storing the result in a freshly
+allocated vector."
   (*v2! (v2:zero) matrix vec))
 
 (declaim (inline transpose!))
@@ -336,10 +365,11 @@ leaving the origin un-modified."
   "Transpose MATRIX, storing the result in a freshly allocated matrix."
   (transpose! (id) matrix))
 
-(declaim (ftype (function (matrix) boolean) orthogonalp))
-(defun orthogonalp (matrix)
-  "Check if MATRIX is orthogonal. An orthogonal matrix is a square matrix with all of its rows (or
-columns) being perpendicular to each other, and of unit length."
+(declaim (ftype (function (matrix) boolean) orthogonal-p))
+(defun orthogonal-p (matrix)
+  "Check if MATRIX is orthogonal. An orthogonal matrix is a square matrix with
+all of its rows (or columns) being perpendicular to each other, and of unit
+length."
   (~ (* matrix (transpose matrix)) +id+))
 
 (declaim (inline trace))
@@ -360,7 +390,8 @@ columns) being perpendicular to each other, and of unit length."
 (declaim (inline main-diagonal!))
 (declaim (ftype (function (v2:vec matrix) v2:vec) main-diagonal!))
 (defun main-diagonal! (out matrix)
-  "Copy the components along the main diagonal of MATRIX to the existing vector, OUT."
+  "Copy the components along the main diagonal of MATRIX to the existing vector,
+OUT."
   (with-components ((m matrix))
     (v2:with-components ((v out))
       (setf vx m00 vy m11)))
@@ -369,13 +400,15 @@ columns) being perpendicular to each other, and of unit length."
 (declaim (inline main-diagonal))
 (declaim (ftype (function (matrix) v2:vec) main-diagonal))
 (defun main-diagonal (matrix)
-  "Copy the components along the main diagonal of MATRIX to a freshly allocated vector."
+  "Copy the components along the main diagonal of MATRIX to a freshly allocated
+vector."
   (main-diagonal! (v2:zero) matrix))
 
 (declaim (inline anti-diagonal!))
 (declaim (ftype (function (v2:vec matrix) v2:vec) anti-diagonal!))
 (defun anti-diagonal! (out matrix)
-  "Copy the components along the anti-diagonal of MATRIX to the existing vector, OUT."
+  "Copy the components along the anti-diagonal of MATRIX to the existing vector,
+OUT."
   (with-components ((m matrix))
     (v2:with-components ((v out))
       (setf vx m01 vy m10)))
@@ -384,5 +417,6 @@ columns) being perpendicular to each other, and of unit length."
 (declaim (inline anti-diagonal))
 (declaim (ftype (function (matrix) v2:vec) anti-diagonal))
 (defun anti-diagonal (matrix)
-  "Copy the components along the anti-diagonal of MATRIX to a freshly allocated vector."
+  "Copy the components along the anti-diagonal of MATRIX to a freshly allocated
+vector."
   (anti-diagonal! (v2:zero) matrix))

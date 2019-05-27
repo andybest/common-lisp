@@ -1,4 +1,4 @@
-(in-package :box.math.common)
+(in-package #:box.math.common)
 
 (deftype int32 () '(signed-byte 32))
 
@@ -10,7 +10,8 @@
 
   (declaim (inline %make-accessor-symbol))
   (defun %make-accessor-symbol (prefix &rest args)
-    (intern (format nil "~@:(~{~a~}~)" (cons prefix args)) (symbol-package prefix)))
+    (intern (format nil "~@:(~{~a~}~)" (cons prefix args))
+            (symbol-package prefix)))
 
   (defun %swizzle/combinations (n items)
     (if (= n 1)
@@ -50,8 +51,10 @@
   (defun %swizzle/generate-docstring (components)
     (let ((size (length components)))
       (if (= size 1)
-          (format nil "Swizzle: Get the scalar component ~a from VEC." components)
-          (format nil "Swizzle: Create a vec~a from the ~{~a~#[~;, and ~:;, ~]~} components of VEC."
+          (format nil "Swizzle: Get the scalar component ~a from VEC."
+                  components)
+          (format nil "Swizzle: Create a vec~a from the ~
+                       ~{~a~#[~;, and ~:;, ~]~} components of VEC."
                   size (coerce components 'list))))))
 
 (declaim (inline %~))
@@ -62,7 +65,8 @@
 (defmacro %generate-swizzle-functions (size)
   `(progn
      ,@(loop :for components :in (%swizzle/component-groups size)
-             :for func-name = (au:format-symbol *package* "~:@(.~a~)" components)
+             :for func-name = (au:format-symbol *package* "~:@(.~a~)"
+                                                components)
              :for component-list = (coerce components 'list)
              :append
              `((declaim (inline ,func-name))

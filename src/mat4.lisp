@@ -1,4 +1,4 @@
-(in-package :box.math.mat4)
+(in-package #:box.math.mat4)
 
 ;;; Structure
 
@@ -11,8 +11,8 @@
                                         m30 m31 m32 m33))
                    (:conc-name nil)
                    (:copier nil))
-  "A 4x4 column-major matrix consisting of column vectors. This represents a complete 3-dimensional
-transformation matrix."
+  "A 4x4 column-major matrix consisting of column vectors. This represents a
+complete 3-dimensional transformation matrix."
   (m00 0.0f0 :type single-float)
   (m10 0.0f0 :type single-float)
   (m20 0.0f0 :type single-float)
@@ -55,17 +55,20 @@ transformation matrix."
           `(progn ,@body))))
 
 (declaim (inline mref))
-(declaim (ftype (function (matrix (integer 0 15) (integer 0 15)) single-float) mref))
+(declaim (ftype (function (matrix (integer 0 15) (integer 0 15))
+                          single-float)
+                mref))
 (defun mref (matrix row column)
-  "A virtualized matrix component reader. Use this instead of AREF to prevent unintended behavior
-should ordering of a matrix ever change."
+  "A virtualized matrix component reader. Use this instead of AREF to prevent
+unintended behavior should ordering of a matrix ever change."
   (aref matrix (cl:+ row (cl:* column 4))))
 
 (declaim (inline mref))
-(declaim (ftype (function (matrix (integer 0 15) (integer 0 15)) single-float) mref))
+(declaim (ftype (function (matrix (integer 0 15) (integer 0 15)) single-float)
+                mref))
 (defun (setf mref) (value matrix row column)
-  "A virtualized matrix component writer. Use this instead of (SETF AREF) to prevent unintended
-behavior should ordering of a matrix ever change."
+  "A virtualized matrix component writer. Use this instead of (SETF AREF) to
+prevent unintended behavior should ordering of a matrix ever change."
   (setf (aref matrix (cl:+ row (cl:* column 4))) value))
 
 ;;; Constants
@@ -92,14 +95,16 @@ behavior should ordering of a matrix ever change."
 
 (declaim (inline make))
 (declaim (ftype (function
-                 (real real real real real real real real real real real real real real real real)
+                 (real real real real real real real real real real real real
+                       real real real real)
                  matrix)
                 make))
 (defun make (m00 m01 m02 m03 m10 m11 m12 m13 m20 m21 m22 m23 m30 m31 m32 m33)
   "Create a new matrix."
-  (%make (float m00 1.0f0) (float m01 1.0f0) (float m02 1.0f0) (float m03 1.0f0) (float m10 1.0f0)
-         (float m11 1.0f0) (float m12 1.0f0) (float m13 1.0f0) (float m20 1.0f0) (float m21 1.0f0)
-         (float m22 1.0f0) (float m23 1.0f0) (float m30 1.0f0) (float m31 1.0f0) (float m32 1.0f0)
+  (%make (float m00 1.0f0) (float m01 1.0f0) (float m02 1.0f0) (float m03 1.0f0)
+         (float m10 1.0f0) (float m11 1.0f0) (float m12 1.0f0) (float m13 1.0f0)
+         (float m20 1.0f0) (float m21 1.0f0) (float m22 1.0f0) (float m23 1.0f0)
+         (float m30 1.0f0) (float m31 1.0f0) (float m32 1.0f0)
          (float m33 1.0f0)))
 
 (declaim (inline zero!))
@@ -145,7 +150,8 @@ behavior should ordering of a matrix ever change."
 (declaim (inline =))
 (declaim (ftype (function (matrix matrix) boolean) =))
 (defun = (matrix1 matrix2)
-  "Check if all components of MATRIX1 are numerically equal to the components of MATRIX2."
+  "Check if all components of MATRIX1 are numerically equal to the components of
+MATRIX2."
   (with-components ((a matrix1) (b matrix2))
     (and (cl:= a00 b00) (cl:= a01 b01) (cl:= a02 b02) (cl:= a03 b03)
          (cl:= a10 b10) (cl:= a11 b11) (cl:= a12 b12) (cl:= a13 b13)
@@ -153,10 +159,12 @@ behavior should ordering of a matrix ever change."
          (cl:= a30 b30) (cl:= a31 b31) (cl:= a32 b32) (cl:= a33 b33))))
 
 (declaim (inline ~))
-(declaim (ftype (function (matrix matrix &key (:tolerance single-float)) boolean) ~))
+(declaim (ftype (function (matrix matrix &key (:tolerance single-float))
+                          boolean)
+                ~))
 (defun ~ (matrix1 matrix2 &key (tolerance +epsilon+))
-  "Check if all components of MATRIX1 are approximately equal to the components of MATRIX2,
-according to TOLERANCE."
+  "Check if all components of MATRIX1 are approximately equal to the components
+of MATRIX2, according to TOLERANCE."
   (with-components ((a matrix1) (b matrix2))
     (and (box.math.common::%~ a00 b00 tolerance)
          (box.math.common::%~ a01 b01 tolerance)
@@ -192,11 +200,15 @@ according to TOLERANCE."
   "Copy each component of MATRIX to a freshly allocated matrix."
   (copy! (zero) matrix))
 
-(declaim (ftype (function (matrix matrix &key (:min single-float) (:max single-float)) matrix)
+(declaim (ftype (function (matrix matrix &key (:min single-float)
+                                  (:max single-float))
+                          matrix)
                 clamp!))
-(defun clamp! (out matrix &key (min most-negative-single-float) (max most-positive-single-float))
-  "Clamp each component of MATRIX within the range of [MIN, MAX], storing the result in the existing
-matrix, OUT."
+(defun clamp! (out matrix
+               &key (min most-negative-single-float)
+                 (max most-positive-single-float))
+  "Clamp each component of MATRIX within the range of [MIN, MAX], storing the
+result in the existing matrix, OUT."
   (with-components ((o out) (m matrix))
     (psetf o00 (au:clamp m00 min max)
            o01 (au:clamp m01 min max)
@@ -217,16 +229,22 @@ matrix, OUT."
   out)
 
 (declaim (inline clamp))
-(declaim (ftype (function (matrix &key (:min single-float) (:max single-float)) matrix) clamp))
-(defun clamp (matrix &key (min most-negative-single-float) (max most-positive-single-float))
-  "Clamp each component of MATRIX within the range of [MIN, MAX], storing the result in a freshly
-allocated matrix."
+(declaim (ftype (function (matrix &key (:min single-float)
+                                  (:max single-float))
+                          matrix)
+                clamp))
+(defun clamp (matrix
+              &key (min most-negative-single-float)
+                (max most-positive-single-float))
+  "Clamp each component of MATRIX within the range of [MIN, MAX], storing the
+result in a freshly allocated matrix."
   (clamp! (zero) matrix :min min :max max))
 
 (declaim (inline +!))
 (declaim (ftype (function (matrix matrix matrix) matrix) +!))
 (defun +! (out matrix1 matrix2)
-  "Calculate the sum of MATRIX1 and MATRIX2, storing the result in the existing matrix, OUT."
+  "Calculate the sum of MATRIX1 and MATRIX2, storing the result in the existing
+matrix, OUT."
   (with-components ((o out) (a matrix1) (b matrix2))
     (psetf o00 (cl:+ a00 b00)
            o10 (cl:+ a10 b10)
@@ -249,13 +267,15 @@ allocated matrix."
 (declaim (inline +))
 (declaim (ftype (function (matrix matrix) matrix) +))
 (defun + (matrix1 matrix2)
-  "Calculate the sum of MATRIX1 and MATRIX2, storing the result in a freshly allocated matrix."
+  "Calculate the sum of MATRIX1 and MATRIX2, storing the result in a freshly
+allocated matrix."
   (+! (zero) matrix1 matrix2))
 
 (declaim (inline -!))
 (declaim (ftype (function (matrix matrix matrix) matrix) -!))
 (defun -! (out matrix1 matrix2)
-  "Calculate the difference of MATRIX2 and MATRIX1, storing the result in the existing matrix, OUT."
+  "Calculate the difference of MATRIX2 and MATRIX1, storing the result in the
+existing matrix, OUT."
   (with-components ((o out) (a matrix1) (b matrix2))
     (psetf o00 (cl:- a00 b00)
            o10 (cl:- a10 b10)
@@ -278,36 +298,55 @@ allocated matrix."
 (declaim (inline -))
 (declaim (ftype (function (matrix matrix) matrix) -))
 (defun - (matrix1 matrix2)
-  "Calculate the difference of MATRIX2 and MATRIX1, storing the result in a freshly allocated matrix."
+  "Calculate the difference of MATRIX2 and MATRIX1, storing the result in a
+freshly allocated matrix."
   (-! (zero) matrix1 matrix2))
 
 (declaim (inline *!))
 (declaim (ftype (function (matrix matrix matrix) matrix) *!))
 (defun *! (out matrix1 matrix2)
-  "Calculate the product of MATRIX1 and MATRIX2, storing the result in the existing matrix, OUT."
+  "Calculate the product of MATRIX1 and MATRIX2, storing the result in the
+existing matrix, OUT."
   (with-components ((o out) (a matrix1) (b matrix2))
-    (psetf o00 (cl:+ (cl:* a00 b00) (cl:* a01 b10) (cl:* a02 b20) (cl:* a03 b30))
-           o10 (cl:+ (cl:* a10 b00) (cl:* a11 b10) (cl:* a12 b20) (cl:* a13 b30))
-           o20 (cl:+ (cl:* a20 b00) (cl:* a21 b10) (cl:* a22 b20) (cl:* a23 b30))
-           o30 (cl:+ (cl:* a30 b00) (cl:* a31 b10) (cl:* a32 b20) (cl:* a33 b30))
-           o01 (cl:+ (cl:* a00 b01) (cl:* a01 b11) (cl:* a02 b21) (cl:* a03 b31))
-           o11 (cl:+ (cl:* a10 b01) (cl:* a11 b11) (cl:* a12 b21) (cl:* a13 b31))
-           o21 (cl:+ (cl:* a20 b01) (cl:* a21 b11) (cl:* a22 b21) (cl:* a23 b31))
-           o31 (cl:+ (cl:* a30 b01) (cl:* a31 b11) (cl:* a32 b21) (cl:* a33 b31))
-           o02 (cl:+ (cl:* a00 b02) (cl:* a01 b12) (cl:* a02 b22) (cl:* a03 b32))
-           o12 (cl:+ (cl:* a10 b02) (cl:* a11 b12) (cl:* a12 b22) (cl:* a13 b32))
-           o22 (cl:+ (cl:* a20 b02) (cl:* a21 b12) (cl:* a22 b22) (cl:* a23 b32))
-           o32 (cl:+ (cl:* a30 b02) (cl:* a31 b12) (cl:* a32 b22) (cl:* a33 b32))
-           o03 (cl:+ (cl:* a00 b03) (cl:* a01 b13) (cl:* a02 b23) (cl:* a03 b33))
-           o13 (cl:+ (cl:* a10 b03) (cl:* a11 b13) (cl:* a12 b23) (cl:* a13 b33))
-           o23 (cl:+ (cl:* a20 b03) (cl:* a21 b13) (cl:* a22 b23) (cl:* a23 b33))
-           o33 (cl:+ (cl:* a30 b03) (cl:* a31 b13) (cl:* a32 b23) (cl:* a33 b33))))
+    (psetf o00 (cl:+ (cl:* a00 b00) (cl:* a01 b10) (cl:* a02 b20)
+                     (cl:* a03 b30))
+           o10 (cl:+ (cl:* a10 b00) (cl:* a11 b10) (cl:* a12 b20)
+                     (cl:* a13 b30))
+           o20 (cl:+ (cl:* a20 b00) (cl:* a21 b10) (cl:* a22 b20)
+                     (cl:* a23 b30))
+           o30 (cl:+ (cl:* a30 b00) (cl:* a31 b10) (cl:* a32 b20)
+                     (cl:* a33 b30))
+           o01 (cl:+ (cl:* a00 b01) (cl:* a01 b11) (cl:* a02 b21)
+                     (cl:* a03 b31))
+           o11 (cl:+ (cl:* a10 b01) (cl:* a11 b11) (cl:* a12 b21)
+                     (cl:* a13 b31))
+           o21 (cl:+ (cl:* a20 b01) (cl:* a21 b11) (cl:* a22 b21)
+                     (cl:* a23 b31))
+           o31 (cl:+ (cl:* a30 b01) (cl:* a31 b11) (cl:* a32 b21)
+                     (cl:* a33 b31))
+           o02 (cl:+ (cl:* a00 b02) (cl:* a01 b12) (cl:* a02 b22)
+                     (cl:* a03 b32))
+           o12 (cl:+ (cl:* a10 b02) (cl:* a11 b12) (cl:* a12 b22)
+                     (cl:* a13 b32))
+           o22 (cl:+ (cl:* a20 b02) (cl:* a21 b12) (cl:* a22 b22)
+                     (cl:* a23 b32))
+           o32 (cl:+ (cl:* a30 b02) (cl:* a31 b12) (cl:* a32 b22)
+                     (cl:* a33 b32))
+           o03 (cl:+ (cl:* a00 b03) (cl:* a01 b13) (cl:* a02 b23)
+                     (cl:* a03 b33))
+           o13 (cl:+ (cl:* a10 b03) (cl:* a11 b13) (cl:* a12 b23)
+                     (cl:* a13 b33))
+           o23 (cl:+ (cl:* a20 b03) (cl:* a21 b13) (cl:* a22 b23)
+                     (cl:* a23 b33))
+           o33 (cl:+ (cl:* a30 b03) (cl:* a31 b13) (cl:* a32 b23)
+                     (cl:* a33 b33))))
   out)
 
 (declaim (inline *))
 (declaim (ftype (function (matrix matrix) matrix) *))
 (defun * (matrix1 matrix2)
-  "Calculate the product of MATRIX1 and MATRIX2, storing the result in a freshly allocated matrix."
+  "Calculate the product of MATRIX1 and MATRIX2, storing the result in a freshly
+allocated matrix."
   (*! (zero) matrix1 matrix2))
 
 (declaim (inline translation-to-vec3!))
@@ -328,8 +367,8 @@ allocated matrix."
 (declaim (inline translation-from-vec3!))
 (declaim (ftype (function (matrix v3:vec) matrix) translation-from-vec3!))
 (defun translation-from-vec3! (matrix vec)
-  "Copy the components of VEC to the translation column of MATRIX. This destructively modifies
-MATRIX."
+  "Copy the components of VEC to the translation column of MATRIX. This
+destructively modifies MATRIX."
   (with-components ((m matrix))
     (v3:with-components ((v vec))
       (psetf m03 vx m13 vy m23 vz)))
@@ -338,8 +377,8 @@ MATRIX."
 (declaim (inline translation-from-vec3))
 (declaim (ftype (function (matrix v3:vec) matrix) translation-from-vec3))
 (defun translation-from-vec3 (matrix vec)
-  "Copy the components of VEC to the translation column of MATRIX. This allocates a fresh matrix,
-leaving the original un-modified."
+  "Copy the components of VEC to the translation column of MATRIX. This
+allocates a fresh matrix, leaving the original un-modified."
   (translation-from-vec3! (copy matrix) vec))
 
 (declaim (inline translate!))
@@ -371,10 +410,11 @@ leaving the original un-modified."
   (copy-rotation! (id) matrix))
 
 (declaim (inline rotation-axis-to-vec3!))
-(declaim (ftype (function (v3:vec matrix keyword) v3:vec) rotation-axis-to-vec3!))
+(declaim (ftype (function (v3:vec matrix keyword) v3:vec)
+                rotation-axis-to-vec3!))
 (defun rotation-axis-to-vec3! (out matrix axis)
-  "Copy the rotation axis from MATRIX denoted by the keyword symbol AXIS, to the existing vector,
-OUT."
+  "Copy the rotation axis from MATRIX denoted by the keyword symbol AXIS, to the
+existing vector, OUT."
   (v3:with-components ((v out))
     (with-components ((m matrix))
       (ecase axis
@@ -386,15 +426,16 @@ OUT."
 (declaim (inline rotation-axis-to-vec3))
 (declaim (ftype (function (matrix keyword) v3:vec) rotation-axis-to-vec3))
 (defun rotation-axis-to-vec3 (matrix axis)
-  "Copy the rotation axis from MATRIX denoted by the keyword symbol AXIS, to a freshly allocated
-vector."
+  "Copy the rotation axis from MATRIX denoted by the keyword symbol AXIS, to a
+freshly allocated vector."
   (rotation-axis-to-vec3! (v3:zero) matrix axis))
 
 (declaim (inline rotation-axis-from-vec3!))
-(declaim (ftype (function (matrix v3:vec keyword) matrix) rotation-axis-from-vec3!))
+(declaim (ftype (function (matrix v3:vec keyword) matrix)
+                rotation-axis-from-vec3!))
 (defun rotation-axis-from-vec3! (matrix vec axis)
-  "Copy the components of VEC into the rotation axis of MATRIX denoted by the keyword symbol AXIS.
-This destructively modifies MATRIX."
+  "Copy the components of VEC into the rotation axis of MATRIX denoted by the
+keyword symbol AXIS. This destructively modifies MATRIX."
   (with-components ((m matrix))
     (v3:with-components ((v vec))
       (ecase axis
@@ -404,16 +445,18 @@ This destructively modifies MATRIX."
   matrix)
 
 (declaim (inline rotation-axis-from-vec3))
-(declaim (ftype (function (matrix v3:vec keyword) matrix) rotation-axis-from-vec3))
+(declaim (ftype (function (matrix v3:vec keyword) matrix)
+                rotation-axis-from-vec3))
 (defun rotation-axis-from-vec3 (matrix vec axis)
-  "Copy the components of VEC into the rotation axis of MATRIX denoted by the keyword symbol AXIS.
-This allocates a fresh matrix, leaving the original un-modified."
+  "Copy the components of VEC into the rotation axis of MATRIX denoted by the
+keyword symbol AXIS. This allocates a fresh matrix, leaving the original
+un-modified."
   (rotation-axis-from-vec3! (copy matrix) vec axis))
 
 (declaim (ftype (function (matrix matrix v3:vec) matrix) rotate!))
 (defun rotate! (out matrix vec)
-  "Rotate MATRIX by the vector of Euler angles, VEC, storing the result in the existing matrix,
-OUT."
+  "Rotate MATRIX by the vector of Euler angles, VEC, storing the result in the
+existing matrix, OUT."
   (macrolet ((rotate-angle (angle s c &body body)
                `(when (> (abs ,angle) +epsilon+)
                   (let ((,s (sin ,angle))
@@ -439,8 +482,8 @@ OUT."
 (declaim (inline rotate))
 (declaim (ftype (function (matrix v3:vec) matrix) rotate))
 (defun rotate (matrix vec)
-  "Rotate MATRIX by the vector of Euler angles, VEC, storing the result in a freshly allocated
-matrix."
+  "Rotate MATRIX by the vector of Euler angles, VEC, storing the result in a
+freshly allocated matrix."
   (rotate! (id) matrix vec))
 
 (declaim (inline scale-to-vec3!))
@@ -461,8 +504,8 @@ matrix."
 (declaim (inline scale-from-vec3!))
 (declaim (ftype (function (matrix v3:vec) matrix) scale-from-vec3!))
 (defun scale-from-vec3! (matrix vec)
-  "Copy the components of VEC to the scaling components of MATRIX. This destructively modifies
-MATRIX."
+  "Copy the components of VEC to the scaling components of MATRIX. This
+destructively modifies MATRIX."
   (with-components ((m matrix))
     (v3:with-components ((v vec))
       (psetf m00 vx m11 vy m22 vz)))
@@ -471,38 +514,46 @@ MATRIX."
 (declaim (inline scale-from-vec3))
 (declaim (ftype (function (matrix v3:vec) matrix) scale-from-vec3))
 (defun scale-from-vec3 (matrix vec)
-  "Copy the components of VEC to the scaling components of MATRIX. This allocates a fresh matrix,
-leaving the origin un-modified."
+  "Copy the components of VEC to the scaling components of MATRIX. This
+allocates a fresh matrix, leaving the origin un-modified."
   (scale-from-vec3! (copy matrix) vec))
 
 (declaim (inline scale!))
 (declaim (ftype (function (matrix matrix v3:vec) matrix) scale!))
 (defun scale! (out matrix vec)
-  "Scale MATRIX by each scalar in VEC, storing the result in the existing matrix, OUT."
+  "Scale MATRIX by each scalar in VEC, storing the result in the existing
+matrix, OUT."
   (*! out (scale-from-vec3 (id) vec) matrix))
 
 (declaim (inline scale))
 (declaim (ftype (function (matrix v3:vec) matrix) scale))
 (defun scale (matrix vec)
-  "Scale MATRIX by each scalar in VEC, storing the result in a freshly allocated matrix."
+  "Scale MATRIX by each scalar in VEC, storing the result in a freshly allocated
+matrix."
   (scale! (id) matrix vec))
 
 (declaim (inline *v4!))
 (declaim (ftype (function (v4:vec matrix v4:vec) v4:vec) *v4!))
 (defun *v4! (out matrix vec)
-  "Calculate the product of MATRIX and VEC, storing the result in the existing vector, OUT."
+  "Calculate the product of MATRIX and VEC, storing the result in the existing
+vector, OUT."
   (v4:with-components ((v vec) (o out))
     (with-components ((m matrix))
-      (psetf ox (cl:+ (cl:* m00 vx) (cl:* m01 vy) (cl:* m02 vz) (cl:* m03 vw))
-             oy (cl:+ (cl:* m10 vx) (cl:* m11 vy) (cl:* m12 vz) (cl:* m13 vw))
-             oz (cl:+ (cl:* m20 vx) (cl:* m21 vy) (cl:* m22 vz) (cl:* m23 vw))
-             ow (cl:+ (cl:* m30 vx) (cl:* m31 vy) (cl:* m32 vz) (cl:* m33 vw)))))
+      (psetf ox (cl:+ (cl:* m00 vx) (cl:* m01 vy) (cl:* m02 vz)
+                      (cl:* m03 vw))
+             oy (cl:+ (cl:* m10 vx) (cl:* m11 vy) (cl:* m12 vz)
+                      (cl:* m13 vw))
+             oz (cl:+ (cl:* m20 vx) (cl:* m21 vy) (cl:* m22 vz)
+                      (cl:* m23 vw))
+             ow (cl:+ (cl:* m30 vx) (cl:* m31 vy) (cl:* m32 vz)
+                      (cl:* m33 vw)))))
   out)
 
 (declaim (inline *v4))
 (declaim (ftype (function (matrix v4:vec) v4:vec) *v4))
 (defun *v4 (matrix vec)
-  "Calculate the product of MATRIX and VEC, storing the result in a freshly allocated vector."
+  "Calculate the product of MATRIX and VEC, storing the result in a freshly
+allocated vector."
   (*v4! (v4:zero) matrix vec))
 
 (declaim (inline transpose!))
@@ -524,16 +575,17 @@ leaving the origin un-modified."
   "Transpose MATRIX, storing the result in a freshly allocated matrix."
   (transpose! (id) matrix))
 
-(declaim (ftype (function (matrix) boolean) orthogonalp))
-(defun orthogonalp (matrix)
-  "Check if MATRIX is orthogonal. An orthogonal matrix is a square matrix with all of its rows (or
-columns) being perpendicular to each other, and of unit length."
+(declaim (ftype (function (matrix) boolean) orthogonal-p))
+(defun orthogonal-p (matrix)
+  "Check if MATRIX is orthogonal. An orthogonal matrix is a square matrix with
+all of its rows (or columns) being perpendicular to each other, and of unit
+length."
   (~ (* matrix (transpose matrix)) +id+))
 
 (declaim (ftype (function (matrix matrix) matrix) orthonormalize!))
 (defun orthonormalize! (out matrix)
-  "Orthogonalize a matrix using the modified Gram-Schmidt process (MGS), storing the result in the
-existing matrix, OUT."
+  "Orthogonalize a matrix using the modified Gram-Schmidt process (MGS), storing
+the result in the existing matrix, OUT."
   (let* ((x (rotation-axis-to-vec3 matrix :x))
          (y (rotation-axis-to-vec3 matrix :y))
          (z (rotation-axis-to-vec3 matrix :z)))
@@ -548,8 +600,8 @@ existing matrix, OUT."
 (declaim (ftype (function (matrix) matrix) orthonormalize))
 (declaim (inline orthonormalize))
 (defun orthonormalize (matrix)
-  "Orthogonalize a matrix using the modified Gram-Schmidt process (MGS), storing the result in a
-freshly allocated matrix."
+  "Orthogonalize a matrix using the modified Gram-Schmidt process (MGS), storing
+the result in a freshly allocated matrix."
   (orthonormalize! (id) matrix))
 
 (declaim (inline trace))
@@ -580,7 +632,8 @@ freshly allocated matrix."
 (declaim (inline main-diagonal!))
 (declaim (ftype (function (v4:vec matrix) v4:vec) main-diagonal!))
 (defun main-diagonal! (out matrix)
-  "Copy the components along the main diagonal of MATRIX to the existing vector, OUT."
+  "Copy the components along the main diagonal of MATRIX to the existing vector,
+OUT."
   (with-components ((m matrix))
     (v4:with-components ((v out))
       (setf vx m00 vy m11 vz m22 vw m33)))
@@ -589,13 +642,15 @@ freshly allocated matrix."
 (declaim (inline main-diagonal))
 (declaim (ftype (function (matrix) v4:vec) main-diagonal))
 (defun main-diagonal (matrix)
-  "Copy the components along the main diagonal of MATRIX to a freshly allocated vector."
+  "Copy the components along the main diagonal of MATRIX to a freshly allocated
+vector."
   (main-diagonal! (v4:zero) matrix))
 
 (declaim (inline anti-diagonal!))
 (declaim (ftype (function (v4:vec matrix) v4:vec) anti-diagonal!))
 (defun anti-diagonal! (out matrix)
-  "Copy the components along the anti-diagonal of MATRIX to the existing vector, OUT."
+  "Copy the components along the anti-diagonal of MATRIX to the existing vector,
+OUT."
   (with-components ((m matrix))
     (v4:with-components ((v out))
       (setf vx m03 vy m12 vz m21 vw m30)))
@@ -604,7 +659,8 @@ freshly allocated matrix."
 (declaim (inline anti-diagonal))
 (declaim (ftype (function (matrix) v4:vec) anti-diagonal))
 (defun anti-diagonal (matrix)
-  "Copy the components along the anti-diagonal of MATRIX to a freshly allocated vector."
+  "Copy the components along the anti-diagonal of MATRIX to a freshly allocated
+vector."
   (anti-diagonal! (v4:zero) matrix))
 
 (declaim (inline determinant))
@@ -612,104 +668,143 @@ freshly allocated matrix."
 (defun determinant (matrix)
   "Calculate the determinant of MATRIX. Returns a scalar."
   (with-components ((m matrix))
-    (cl:- (cl:+ (cl:* m00 m11 m22 m33) (cl:* m00 m12 m23 m31) (cl:* m00 m13 m21 m32)
-                (cl:* m01 m10 m23 m32) (cl:* m01 m12 m20 m33) (cl:* m01 m13 m22 m30)
-                (cl:* m02 m10 m21 m33) (cl:* m02 m11 m23 m30) (cl:* m02 m13 m20 m31)
-                (cl:* m03 m10 m22 m31) (cl:* m03 m11 m20 m32) (cl:* m03 m12 m21 m30))
+    (cl:- (cl:+ (cl:* m00 m11 m22 m33) (cl:* m00 m12 m23 m31)
+                (cl:* m00 m13 m21 m32) (cl:* m01 m10 m23 m32)
+                (cl:* m01 m12 m20 m33) (cl:* m01 m13 m22 m30)
+                (cl:* m02 m10 m21 m33) (cl:* m02 m11 m23 m30)
+                (cl:* m02 m13 m20 m31) (cl:* m03 m10 m22 m31)
+                (cl:* m03 m11 m20 m32) (cl:* m03 m12 m21 m30))
           (cl:* m00 m11 m23 m32) (cl:* m00 m12 m21 m33) (cl:* m00 m13 m22 m31)
           (cl:* m01 m10 m22 m33) (cl:* m01 m12 m23 m30) (cl:* m01 m13 m20 m32)
           (cl:* m02 m10 m23 m31) (cl:* m02 m11 m20 m33) (cl:* m02 m13 m21 m30)
-          (cl:* m03 m10 m21 m32) (cl:* m03 m11 m22 m30) (cl:* m03 m12 m20 m31))))
+          (cl:* m03 m10 m21 m32) (cl:* m03 m11 m22 m30)
+          (cl:* m03 m12 m20 m31))))
 
 (declaim (inline invert-orthogonal!))
 (declaim (ftype (function (matrix matrix) matrix) invert-orthogonal!))
 (defun invert-orthogonal! (out matrix)
-  "Invert MATRIX if its rotation sub-matrix is an orthogonal matrix, storing the result in the
-existing matrix, OUT.
+  "Invert MATRIX if its rotation sub-matrix is an orthogonal matrix, storing the
+result in the existing matrix, OUT.
 
-Note: This will only work with matrices that have an orthogonal rotation sub-matrix.
-See INVERT! for other cases."
+Note: This will only work with matrices that have an orthogonal rotation
+sub-matrix. See INVERT! for other cases."
   (copy! out matrix)
   (with-components ((o out))
     (rotatef o10 o01)
     (rotatef o20 o02)
     (rotatef o21 o12)
-    (psetf o03 (cl:+ (cl:* o00 (cl:- o03)) (cl:* o01 (cl:- o13)) (cl:* o02 (cl:- o23)))
-           o13 (cl:+ (cl:* o10 (cl:- o03)) (cl:* o11 (cl:- o13)) (cl:* o12 (cl:- o23)))
-           o23 (cl:+ (cl:* o20 (cl:- o03)) (cl:* o21 (cl:- o13)) (cl:* o22 (cl:- o23)))))
+    (psetf o03 (cl:+ (cl:* o00 (cl:- o03)) (cl:* o01 (cl:- o13))
+                     (cl:* o02 (cl:- o23)))
+           o13 (cl:+ (cl:* o10 (cl:- o03)) (cl:* o11 (cl:- o13))
+                     (cl:* o12 (cl:- o23)))
+           o23 (cl:+ (cl:* o20 (cl:- o03)) (cl:* o21 (cl:- o13))
+                     (cl:* o22 (cl:- o23)))))
   out)
 
 (declaim (inline invert-orthogonal))
 (declaim (ftype (function (matrix) matrix) invert-orthogonal))
 (defun invert-orthogonal (matrix)
-  "Invert MATRIX if its rotation sub-matrix is an orthogonal matrix, storing the result in a freshly
-allocated matrix.
+  "Invert MATRIX if its rotation sub-matrix is an orthogonal matrix, storing the
+result in a freshly allocated matrix.
 
-Note: This will only work with matrices that have an orthogonal rotation sub-matrix.
-See INVERT for other cases."
+Note: This will only work with matrices that have an orthogonal rotation
+sub-matrix. See INVERT for other cases."
   (invert-orthogonal! (id) matrix))
 
 (declaim (ftype (function (matrix matrix) matrix) invert!))
 (defun invert! (out matrix)
   "Invert MATRIX, storing the result in the existing matrix, OUT.
 
-Note: A matrix with a determinant of zero cannot be inverted, and will raise an error.
+Note: A matrix with a determinant of zero cannot be inverted, and will raise an
+error.
 
-Note: This method is slower than INVERT-ORTHOGONAL!, but not all matrices can be inverted with the
-fast method.
+Note: This method is slower than INVERT-ORTHOGONAL!, but not all matrices can be
+inverted with the fast method.
 
 See INVERT-ORTHOGONAL!"
   (let ((determinant (determinant matrix)))
     (when (< (abs determinant) +epsilon+)
       (error "Cannot invert a matrix with a determinant of zero."))
     (with-components ((o out) (m matrix))
-      (psetf o00 (/ (cl:- (cl:+ (cl:* m11 m22 m33) (cl:* m12 m23 m31) (cl:* m13 m21 m32))
-                          (cl:* m11 m23 m32) (cl:* m12 m21 m33) (cl:* m13 m22 m31))
+      (psetf o00 (/ (cl:- (cl:+ (cl:* m11 m22 m33) (cl:* m12 m23 m31)
+                                (cl:* m13 m21 m32))
+                          (cl:* m11 m23 m32) (cl:* m12 m21 m33)
+                          (cl:* m13 m22 m31))
                     determinant)
-             o01 (/ (cl:- (cl:+ (cl:* m01 m23 m32) (cl:* m02 m21 m33) (cl:* m03 m22 m31))
-                          (cl:* m01 m22 m33) (cl:* m02 m23 m31) (cl:* m03 m21 m32))
+             o01 (/ (cl:- (cl:+ (cl:* m01 m23 m32) (cl:* m02 m21 m33)
+                                (cl:* m03 m22 m31))
+                          (cl:* m01 m22 m33) (cl:* m02 m23 m31)
+                          (cl:* m03 m21 m32))
                     determinant)
-             o02 (/ (cl:- (cl:+ (cl:* m01 m12 m33) (cl:* m02 m13 m31) (cl:* m03 m11 m32))
-                          (cl:* m01 m13 m32) (cl:* m02 m11 m33) (cl:* m03 m12 m31))
+             o02 (/ (cl:- (cl:+ (cl:* m01 m12 m33) (cl:* m02 m13 m31)
+                                (cl:* m03 m11 m32))
+                          (cl:* m01 m13 m32) (cl:* m02 m11 m33)
+                          (cl:* m03 m12 m31))
                     determinant)
-             o03 (/ (cl:- (cl:+ (cl:* m01 m13 m22) (cl:* m02 m11 m23) (cl:* m03 m12 m21))
-                          (cl:* m01 m12 m23) (cl:* m02 m13 m21) (cl:* m03 m11 m22))
+             o03 (/ (cl:- (cl:+ (cl:* m01 m13 m22) (cl:* m02 m11 m23)
+                                (cl:* m03 m12 m21))
+                          (cl:* m01 m12 m23) (cl:* m02 m13 m21)
+                          (cl:* m03 m11 m22))
                     determinant)
-             o10 (/ (cl:- (cl:+ (cl:* m10 m23 m32) (cl:* m12 m20 m33) (cl:* m13 m22 m30))
-                          (cl:* m10 m22 m33) (cl:* m12 m23 m30) (cl:* m13 m20 m32))
+             o10 (/ (cl:- (cl:+ (cl:* m10 m23 m32) (cl:* m12 m20 m33)
+                                (cl:* m13 m22 m30))
+                          (cl:* m10 m22 m33) (cl:* m12 m23 m30)
+                          (cl:* m13 m20 m32))
                     determinant)
-             o11 (/ (cl:- (cl:+ (cl:* m00 m22 m33) (cl:* m02 m23 m30) (cl:* m03 m20 m32))
-                          (cl:* m00 m23 m32) (cl:* m02 m20 m33) (cl:* m03 m22 m30))
+             o11 (/ (cl:- (cl:+ (cl:* m00 m22 m33) (cl:* m02 m23 m30)
+                                (cl:* m03 m20 m32))
+                          (cl:* m00 m23 m32) (cl:* m02 m20 m33)
+                          (cl:* m03 m22 m30))
                     determinant)
-             o12 (/ (cl:- (cl:+ (cl:* m00 m13 m32) (cl:* m02 m10 m33) (cl:* m03 m12 m30))
-                          (cl:* m00 m12 m33) (cl:* m02 m13 m30) (cl:* m03 m10 m32))
+             o12 (/ (cl:- (cl:+ (cl:* m00 m13 m32) (cl:* m02 m10 m33)
+                                (cl:* m03 m12 m30))
+                          (cl:* m00 m12 m33) (cl:* m02 m13 m30)
+                          (cl:* m03 m10 m32))
                     determinant)
-             o13 (/ (cl:- (cl:+ (cl:* m00 m12 m23) (cl:* m02 m13 m20) (cl:* m03 m10 m22))
-                          (cl:* m00 m13 m22) (cl:* m02 m10 m23) (cl:* m03 m12 m20))
+             o13 (/ (cl:- (cl:+ (cl:* m00 m12 m23) (cl:* m02 m13 m20)
+                                (cl:* m03 m10 m22))
+                          (cl:* m00 m13 m22) (cl:* m02 m10 m23)
+                          (cl:* m03 m12 m20))
                     determinant)
-             o20 (/ (cl:- (cl:+ (cl:* m10 m21 m33) (cl:* m11 m23 m30) (cl:* m13 m20 m31))
-                          (cl:* m10 m23 m31) (cl:* m11 m20 m33) (cl:* m13 m21 m30))
+             o20 (/ (cl:- (cl:+ (cl:* m10 m21 m33) (cl:* m11 m23 m30)
+                                (cl:* m13 m20 m31))
+                          (cl:* m10 m23 m31) (cl:* m11 m20 m33)
+                          (cl:* m13 m21 m30))
                     determinant)
-             o21 (/ (cl:- (cl:+ (cl:* m00 m23 m31) (cl:* m01 m20 m33) (cl:* m03 m21 m30))
-                          (cl:* m00 m21 m33) (cl:* m01 m23 m30) (cl:* m03 m20 m31))
+             o21 (/ (cl:- (cl:+ (cl:* m00 m23 m31) (cl:* m01 m20 m33)
+                                (cl:* m03 m21 m30))
+                          (cl:* m00 m21 m33) (cl:* m01 m23 m30)
+                          (cl:* m03 m20 m31))
                     determinant)
-             o22 (/ (cl:- (cl:+ (cl:* m00 m11 m33) (cl:* m01 m13 m30) (cl:* m03 m10 m31))
-                          (cl:* m00 m13 m31) (cl:* m01 m10 m33) (cl:* m03 m11 m30))
+             o22 (/ (cl:- (cl:+ (cl:* m00 m11 m33) (cl:* m01 m13 m30)
+                                (cl:* m03 m10 m31))
+                          (cl:* m00 m13 m31) (cl:* m01 m10 m33)
+                          (cl:* m03 m11 m30))
                     determinant)
-             o23 (/ (cl:- (cl:+ (cl:* m00 m13 m21) (cl:* m01 m10 m23) (cl:* m03 m11 m20))
-                          (cl:* m00 m11 m23) (cl:* m01 m13 m20) (cl:* m03 m10 m21))
+             o23 (/ (cl:- (cl:+ (cl:* m00 m13 m21) (cl:* m01 m10 m23)
+                                (cl:* m03 m11 m20))
+                          (cl:* m00 m11 m23) (cl:* m01 m13 m20)
+                          (cl:* m03 m10 m21))
                     determinant)
-             o30 (/ (cl:- (cl:+ (cl:* m10 m22 m31) (cl:* m11 m20 m32) (cl:* m12 m21 m30))
-                          (cl:* m10 m21 m32) (cl:* m11 m22 m30) (cl:* m12 m20 m31))
+             o30 (/ (cl:- (cl:+ (cl:* m10 m22 m31) (cl:* m11 m20 m32)
+                                (cl:* m12 m21 m30))
+                          (cl:* m10 m21 m32) (cl:* m11 m22 m30)
+                          (cl:* m12 m20 m31))
                     determinant)
-             o31 (/ (cl:- (cl:+ (cl:* m00 m21 m32) (cl:* m01 m22 m30) (cl:* m02 m20 m31))
-                          (cl:* m00 m22 m31) (cl:* m01 m20 m32) (cl:* m02 m21 m30))
+             o31 (/ (cl:- (cl:+ (cl:* m00 m21 m32) (cl:* m01 m22 m30)
+                                (cl:* m02 m20 m31))
+                          (cl:* m00 m22 m31) (cl:* m01 m20 m32)
+                          (cl:* m02 m21 m30))
                     determinant)
-             o32 (/ (cl:- (cl:+ (cl:* m00 m12 m31) (cl:* m01 m10 m32) (cl:* m02 m11 m30))
-                          (cl:* m00 m11 m32) (cl:* m01 m12 m30) (cl:* m02 m10 m31))
+             o32 (/ (cl:- (cl:+ (cl:* m00 m12 m31) (cl:* m01 m10 m32)
+                                (cl:* m02 m11 m30))
+                          (cl:* m00 m11 m32) (cl:* m01 m12 m30)
+                          (cl:* m02 m10 m31))
                     determinant)
-             o33 (/ (cl:- (cl:+ (cl:* m00 m11 m22) (cl:* m01 m12 m20) (cl:* m02 m10 m21))
-                          (cl:* m00 m12 m21) (cl:* m01 m10 m22) (cl:* m02 m11 m20))
+             o33 (/ (cl:- (cl:+ (cl:* m00 m11 m22) (cl:* m01 m12 m20)
+                                (cl:* m02 m10 m21))
+                          (cl:* m00 m12 m21) (cl:* m01 m10 m22)
+                          (cl:* m02 m11 m20))
                     determinant))))
   out)
 
@@ -718,10 +813,11 @@ See INVERT-ORTHOGONAL!"
 (defun invert (matrix)
   "Invert MATRIX, storing the result in a freshly allocated matrix.
 
-Note: A matrix with a determinant of zero cannot be inverted, and will raise an error.
+Note: A matrix with a determinant of zero cannot be inverted, and will raise an
+error.
 
-Note: This method is slower than INVERT-ORTHOGONAL, but not all matrices can be inverted with the
-fast method.
+Note: This method is slower than INVERT-ORTHOGONAL, but not all matrices can be
+inverted with the fast method.
 
 See INVERT-ORTHOGONAL"
   (invert! (id) matrix))
@@ -751,9 +847,11 @@ See INVERT-ORTHOGONAL"
   "Create a view matrix, storing the result in a freshly allocated matrix."
   (view! (id) eye target up))
 
-(declaim (ftype (function (matrix real real real real real real) matrix) orthographic-projection!))
+(declaim (ftype (function (matrix real real real real real real) matrix)
+                orthographic-projection!))
 (defun orthographic-projection! (out left right bottom top near far)
-  "Create an orthographic projection matrix, storing the result in the existing matrix, OUT."
+  "Create an orthographic projection matrix, storing the result in the existing
+matrix, OUT."
   (let ((right-left (float (cl:- right left) 1.0f0))
         (top-bottom (float (cl:- top bottom) 1.0f0))
         (far-near (float (cl:- far near) 1.0f0)))
@@ -767,14 +865,18 @@ See INVERT-ORTHOGONAL"
     out))
 
 (declaim (inline orthographic))
-(declaim (ftype (function (real real real real real real) matrix) orthographic-projection))
+(declaim (ftype (function (real real real real real real) matrix)
+                orthographic-projection))
 (defun orthographic-projection (left right bottom top near far)
-  "Create an orthographic projection matrix, storing the result in a freshly allocated matrix."
+  "Create an orthographic projection matrix, storing the result in a freshly
+allocated matrix."
   (orthographic-projection! (id) left right bottom top near far))
 
-(declaim (ftype (function (matrix real real real real) matrix) perspective-projection!))
+(declaim (ftype (function (matrix real real real real) matrix)
+                perspective-projection!))
 (defun perspective-projection! (out fov aspect near far)
-  "Create a perspective projection matrix, storing the result in the existing matrix, OUT."
+  "Create a perspective projection matrix, storing the result in the existing
+matrix, OUT."
   (let ((f (float (/ (tan (/ fov 2))) 1.0f0))
         (z (float (cl:- near far) 1.0f0)))
     (with-components ((m (zero! out)))
@@ -788,5 +890,6 @@ See INVERT-ORTHOGONAL"
 (declaim (inline perspective-projection))
 (declaim (ftype (function (real real real real) matrix) perspective-projection))
 (defun perspective-projection (fov aspect near far)
-  "Create a perspective projection matrix, storing the result in a freshly allocated matrix."
+  "Create a perspective projection matrix, storing the result in a freshly
+allocated matrix."
   (perspective-projection! (id) fov aspect near far))

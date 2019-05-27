@@ -1,4 +1,4 @@
-(in-package :box.math.quat)
+(in-package #:box.math.quat)
 
 ;;; Structure
 
@@ -29,12 +29,14 @@
 ;;; Constants
 
 (au:define-constant +zero+
-    (make-array 4 :element-type 'single-float :initial-contents '(0.0f0 0.0f0 0.0f0 0.0f0))
+    (make-array 4 :element-type 'single-float
+                  :initial-contents '(0.0f0 0.0f0 0.0f0 0.0f0))
   :test #'equalp
   :documentation "A quaternion with each component as zero.")
 
 (au:define-constant +id+
-    (make-array 4 :element-type 'single-float :initial-contents '(1.0f0 0.0f0 0.0f0 0.0f0))
+    (make-array 4 :element-type 'single-float
+                  :initial-contents '(1.0f0 0.0f0 0.0f0 0.0f0))
   :test #'equalp
   :documentation "An identity quaternion.")
 
@@ -75,7 +77,8 @@
 (declaim (inline =))
 (declaim (ftype (function (quat quat) boolean) =))
 (defun = (quat1 quat2)
-  "Check if all components of QUAT1 are numerically equal to the components of QUAT2."
+  "Check if all components of QUAT1 are numerically equal to the components of
+QUAT2."
   (with-components ((q1 quat1) (q2 quat2))
     (and (cl:= q1w q2w)
          (cl:= q1x q2x)
@@ -83,10 +86,11 @@
          (cl:= q1z q2z))))
 
 (declaim (inline ~))
-(declaim (ftype (function (quat quat &key (:tolerance single-float)) boolean) ~))
+(declaim (ftype (function (quat quat &key (:tolerance single-float))
+                          boolean) ~))
 (defun ~ (quat1 quat2 &key (tolerance +epsilon+))
-  "Check if all components of QUAT1 are approximately equal to the components of QUAT2, according to
-TOLERANCE."
+  "Check if all components of QUAT1 are approximately equal to the components of
+QUAT2, according to TOLERANCE."
   (with-components ((q1 quat1) (q2 quat2))
     (and (box.math.common::%~ q1w q2w tolerance)
          (box.math.common::%~ q1x q2x tolerance)
@@ -110,7 +114,8 @@ TOLERANCE."
 (declaim (inline +!))
 (declaim (ftype (function (quat quat quat) quat) +!))
 (defun +! (out quat1 quat2)
-  "Calculate the sum of QUAT1 and QUAT2, storing the result in the existing quaternion, OUT."
+  "Calculate the sum of QUAT1 and QUAT2, storing the result in the existing
+quaternion, OUT."
   (with-components ((o out) (q1 quat1) (q2 quat2))
     (psetf ow (cl:+ q1w q2w)
            ox (cl:+ q1x q2x)
@@ -121,14 +126,15 @@ TOLERANCE."
 (declaim (inline +))
 (declaim (ftype (function (quat quat) quat) +))
 (defun + (quat1 quat2)
-  "Calculate the sum of QUAT1 and QUAT2, storing the result in a freshly allocated quaternion."
+  "Calculate the sum of QUAT1 and QUAT2, storing the result in a freshly
+allocated quaternion."
   (+! (id) quat1 quat2))
 
 (declaim (inline -!))
 (declaim (ftype (function (quat quat quat) quat) -!))
 (defun -! (out quat1 quat2)
-  "Calculate the difference of QUAT2 from QUAT1, storing the result in the existing quaternion,
-OUT."
+  "Calculate the difference of QUAT2 from QUAT1, storing the result in the
+existing quaternion, OUT."
   (with-components ((o out) (q1 quat1) (q2 quat2))
     (psetf ow (cl:- q1w q2w)
            ox (cl:- q1x q2x)
@@ -139,25 +145,31 @@ OUT."
 (declaim (inline -))
 (declaim (ftype (function (quat quat) quat) -))
 (defun - (quat1 quat2)
-  "Calculate the difference of QUAT2 from QUAT1, storing the result in a freshly allocated
-quaternion."
+  "Calculate the difference of QUAT2 from QUAT1, storing the result in a freshly
+allocated quaternion."
   (-! (id) quat1 quat2))
 
 (declaim (inline *!))
 (declaim (ftype (function (quat quat quat) quat) *!))
 (defun *! (out quat1 quat2)
-  "Calculate the product of QUAT1 and QUAT2, storing the result in the existing quaternion, OUT."
+  "Calculate the product of QUAT1 and QUAT2, storing the result in the existing
+quaternion, OUT."
   (with-components ((o out) (q1 quat1) (q2 quat2))
-    (psetf ow (cl:- (cl:* q1w q2w) (cl:* q1x q2x) (cl:* q1y q2y) (cl:* q1z q2z))
-           ox (cl:- (cl:+ (cl:* q1w q2x) (cl:* q1x q2w) (cl:* q1y q2z)) (cl:* q1z q2y))
-           oy (cl:- (cl:+ (cl:* q1w q2y) (cl:* q1y q2w) (cl:* q1z q2x)) (cl:* q1x q2z))
-           oz (cl:- (cl:+ (cl:* q1w q2z) (cl:* q1z q2w) (cl:* q1x q2y)) (cl:* q1y q2x))))
+    (psetf ow (cl:- (cl:* q1w q2w) (cl:* q1x q2x) (cl:* q1y q2y)
+                    (cl:* q1z q2z))
+           ox (cl:- (cl:+ (cl:* q1w q2x) (cl:* q1x q2w) (cl:* q1y q2z))
+                    (cl:* q1z q2y))
+           oy (cl:- (cl:+ (cl:* q1w q2y) (cl:* q1y q2w) (cl:* q1z q2x))
+                    (cl:* q1x q2z))
+           oz (cl:- (cl:+ (cl:* q1w q2z) (cl:* q1z q2w) (cl:* q1x q2y))
+                    (cl:* q1y q2x))))
   out)
 
 (declaim (inline *))
 (declaim (ftype (function (quat quat) quat) *))
 (defun * (quat1 quat2)
-  "Calculate the product of QUAT1 and QUAT2, storing the result in a freshly allocated quaternion."
+  "Calculate the product of QUAT1 and QUAT2, storing the result in a freshly
+allocated quaternion."
   (*! (id) quat1 quat2))
 
 (declaim (inline scale!))
@@ -180,7 +192,8 @@ quaternion."
 (declaim (inline conjugate!))
 (declaim (ftype (function (quat quat) quat) conjugate!))
 (defun conjugate! (out quat)
-  "Calculate the conjugate of QUAT, storing the result in the existing quaternion, OUT."
+  "Calculate the conjugate of QUAT, storing the result in the existing
+quaternion, OUT."
   (with-components ((o out) (q quat))
     (psetf ow qw
            ox (cl:- qx)
@@ -191,29 +204,31 @@ quaternion."
 (declaim (inline conjugate))
 (declaim (ftype (function (quat) quat) conjugate))
 (defun conjugate (quat)
-  "Calculate the conjugate of QUAT, storing the result in a freshly allocated quaternion."
+  "Calculate the conjugate of QUAT, storing the result in a freshly allocated
+quaternion."
   (conjugate! (id) quat))
 
 (declaim (inline cross!))
 (declaim (ftype (function (quat quat quat) quat) cross!))
 (defun cross! (out quat1 quat2)
-  "Calculate the cross product of QUAT1 and QUAT2, storing the result in the existing quaternion,
-OUT."
+  "Calculate the cross product of QUAT1 and QUAT2, storing the result in the
+existing quaternion, OUT."
   (scale! out (+ (* quat2 (conjugate quat1)) (* quat1 quat2)) 0.5f0))
 
 (declaim (inline cross))
 (declaim (ftype (function (quat quat) quat) cross))
 (defun cross (quat1 quat2)
-  "Calculate the cross product of QUAT1 and QUAT2, storing the result in a freshly allocated
-quaternion."
+  "Calculate the cross product of QUAT1 and QUAT2, storing the result in a
+freshly allocated quaternion."
   (cross! (id) quat1 quat2))
 
 (declaim (inline magnitude-squared))
 (declaim (ftype (function (quat) single-float) magnitude-squared))
 (defun magnitude-squared (quat)
-  "Calculate the magnitude (also known as length or Euclidean norm) of QUAT. This results in a
-squared value, which is cheaper to compute. It is useful when you want to compare relative lengths,
-which does not need the expensive square root function.
+  "Calculate the magnitude (also known as length or Euclidean norm) of QUAT.
+This results in a squared value, which is cheaper to compute. It is useful when
+you want to compare relative lengths, which does not need the expensive square
+root function.
 
 See MAGNITUDE for other cases."
   (with-components ((q quat))
@@ -224,14 +239,15 @@ See MAGNITUDE for other cases."
 (defun magnitude (quat)
   "Compute the magnitude (also known as length or Euclidean norm) of QUAT.
 
-See MAGNITUDE-SQUARED if you only need to compare lengths, as it is cheaper to compute without the
-square root call of this function."
+See MAGNITUDE-SQUARED if you only need to compare lengths, as it is cheaper to
+compute without the square root call of this function."
   (sqrt (magnitude-squared quat)))
 
 (declaim (inline normalize!))
 (declaim (ftype (function (quat quat) quat) normalize!))
 (defun normalize! (out quat)
-  "Convert QUAT to be of unit length, storing the result in the existing quaternion, OUT."
+  "Convert QUAT to be of unit length, storing the result in the existing
+quaternion, OUT."
   (let ((magnitude (magnitude quat)))
     (unless (zerop magnitude)
       (scale! out quat (/ magnitude))))
@@ -240,19 +256,22 @@ square root call of this function."
 (declaim (inline normalize))
 (declaim (ftype (function (quat) quat) normalize))
 (defun normalize (quat)
-  "Convert QUAT to be of unit length, storing the result in a freshly allocated quaternion."
+  "Convert QUAT to be of unit length, storing the result in a freshly allocated
+quaternion."
   (normalize! (id) quat))
 
 (declaim (inline negate!))
 (declaim (ftype (function (quat quat) quat) negate!))
 (defun negate! (out quat)
-  "Negate each component of QUAT, storing the result in the existing quaternion, OUT."
+  "Negate each component of QUAT, storing the result in the existing quaternion,
+OUT."
   (scale! out quat -1.0f0))
 
 (declaim (inline negate))
 (declaim (ftype (function (quat) quat) negate))
 (defun negate (quat)
-  "Negate each component of QUAT, storing the result in a freshly allocated quaternion."
+  "Negate each component of QUAT, storing the result in a freshly allocated
+quaternion."
   (negate! (id) quat))
 
 (declaim (inline dot))
@@ -265,7 +284,8 @@ square root call of this function."
 (declaim (inline inverse!))
 (declaim (ftype (function (quat quat) quat) inverse!))
 (defun inverse! (out quat)
-  "Calculate the inverse of QUAT, storing the result in the existing quaternion, OUT."
+  "Calculate the inverse of QUAT, storing the result in the existing quaternion,
+OUT."
   (conjugate! out quat)
   (scale! out out (/ (magnitude-squared quat)))
   out)
@@ -273,14 +293,15 @@ square root call of this function."
 (declaim (inline inverse))
 (declaim (ftype (function (quat) quat) inverse))
 (defun inverse (quat)
-  "Calculate the inverse of QUAT, storing the result in a freshly allocated quaternion."
+  "Calculate the inverse of QUAT, storing the result in a freshly allocated
+quaternion."
   (inverse! (id) quat))
 
 (declaim (inline rotate!))
 (declaim (ftype (function (quat quat v3:vec) quat) rotate!))
 (defun rotate! (out quat vec)
-  "Rotate QUAT by the vector of Euler angles, VEC, storing the result in the existing quaternion,
-OUT."
+  "Rotate QUAT by the vector of Euler angles, VEC, storing the result in the
+existing quaternion, OUT."
   (with-components ((o out) (q (copy quat)))
     (v3:with-components ((v (v3:scale vec 0.5f0))
                          (c (v3:make (cos vx) (cos vy) (cos vz)))
@@ -294,8 +315,8 @@ OUT."
 
 (declaim (ftype (function (quat v3:vec) quat) rotate))
 (defun rotate (quat vec)
-  "Rotate QUAT by the vector of Euler angles, VEC, storing the result in a freshly allocated
-quaternion."
+  "Rotate QUAT by the vector of Euler angles, VEC, storing the result in a
+freshly allocated quaternion."
   (rotate! (id) quat vec))
 
 (declaim (inline to-vec3!))
@@ -331,7 +352,8 @@ quaternion."
 (declaim (inline from-vec3!))
 (declaim (ftype (function (quat v3:vec) quat) from-vec3!))
 (defun from-vec3! (out vec)
-  "Copy the components of VEC to the imaginary components of the existing quaternion, OUT."
+  "Copy the components of VEC to the imaginary components of the existing
+quaternion, OUT."
   (with-components ((q out))
     (v3:with-components ((v vec))
       (setf qw 0.0f0 qx vx qy vy qz vz)))
@@ -340,7 +362,8 @@ quaternion."
 (declaim (inline from-vec3))
 (declaim (ftype (function (v3:vec) quat) from-vec3))
 (defun from-vec3 (vec)
-  "Copy the components of VEC to the imaginary components of a freshly allocated quaternion."
+  "Copy the components of VEC to the imaginary components of a freshly allocated
+quaternion."
   (from-vec3! (zero) vec))
 
 (declaim (inline from-vec4!))
@@ -360,8 +383,44 @@ quaternion."
 
 (declaim (inline to-mat4!))
 (declaim (ftype (function (m4:matrix quat) m4:matrix) to-mat4!))
+(defun to-mat3! (out quat)
+  "Convert QUAT to a mat3, storing the result in the existing matrix, OUT."
+  (m3:with-components ((o out))
+    (with-components ((q quat))
+      (let* ((s (cl:/ 2 (magnitude-squared quat)))
+             (xs (cl:* qx s))
+             (ys (cl:* qy s))
+             (zs (cl:* qz s))
+             (xx (cl:* qx xs))
+             (xy (cl:* qx ys))
+             (xz (cl:* qx zs))
+             (yy (cl:* qy ys))
+             (yz (cl:* qy zs))
+             (zz (cl:* qz zs))
+             (wx (cl:* qw xs))
+             (wy (cl:* qw ys))
+             (wz (cl:* qw zs)))
+        (psetf o00 (cl:- 1 (cl:+ yy zz))
+               o01 (cl:+ xy wz)
+               o02 (cl:- xz wy)
+               o10 (cl:- xy wz)
+               o11 (cl:- 1 (cl:+ xx zz))
+               o12 (cl:+ yz wx)
+               o20 (cl:+ xz wy)
+               o21 (cl:- yz wx)
+               o22 (cl:- 1 (cl:+ xx yy))))))
+  out)
+
+(declaim (inline to-mat3))
+(declaim (ftype (function (quat) m3:matrix) to-mat3))
+(defun to-mat3 (quat)
+  "Convert QUAT to a mat3, storing the result in a freshly allocated matrix."
+  (to-mat3! (m3:id) quat))
+
+(declaim (inline to-mat4!))
+(declaim (ftype (function (m4:matrix quat) m4:matrix) to-mat4!))
 (defun to-mat4! (out quat)
-  "Convert QUAT to a 3-dimensional rotation matrix, storing the result in the existing matrix, OUT."
+  "Convert QUAT to a mat4, storing the result in the existing matrix, OUT."
   (m4:with-components ((o out))
     (with-components ((q quat))
       (let* ((s (/ 2 (magnitude-squared quat)))
@@ -398,57 +457,87 @@ quaternion."
 (declaim (inline to-mat4))
 (declaim (ftype (function (quat) m4:matrix) to-mat4))
 (defun to-mat4 (quat)
-  "Convert QUAT to a 3-dimensional rotation matrix, storing the result in a freshly allocated
-matrix."
+  "Convert QUAT to a mat4, storing the result in a freshly allocated matrix."
   (to-mat4! (m4:id) quat))
+
+(declaim (ftype (function (quat m3:matrix) quat) from-mat3!))
+(defun from-mat3! (out matrix)
+  "Convert MATRIX to a quaternion, storing the result in the existing
+quaternion, OUT."
+  (with-components ((q out))
+    (m3:with-components ((m matrix))
+      (let ((tr1 (1+ (cl:- m00 m11 m22)))
+            (tr2 (cl:+ (cl:- 1 m00) (cl:- m11 m22)))
+            (tr3 (cl:+ (cl:- 1 m00 m11) m22))
+            (s 0f0))
+        (cond
+          ((and (cl:> tr1 tr2) (cl:> tr1 tr3))
+           (setf s (cl:* (cl:sqrt tr1) 2)
+                 qw (cl:/ (cl:- m21 m12) s)
+                 qx (cl:* 0.25f0 s)
+                 qy (cl:/ (cl:+ m01 m10) s)
+                 qz (cl:/ (cl:+ m02 m20) s)))
+          ((and (cl:> tr2 tr1) (cl:> tr2 tr3))
+           (setf s (cl:* (cl:sqrt tr2) 2)
+                 qw (cl:/ (cl:- m02 m20) s)
+                 qx (cl:/ (cl:+ m01 m10) s)
+                 qy (cl:* 0.25f0 s)
+                 qz (cl:/ (cl:+ m12 m21) s)))
+          (t
+           (setf s (cl:* (cl:sqrt tr3) 2)
+                 qw (cl:/ (cl:- m10 m01) s)
+                 qx (cl:/ (cl:+ m02 m20) s)
+                 qy (cl:/ (cl:+ m12 m21) s)
+                 qz (cl:* 0.25f0 s))))))
+    q))
+
+(declaim (inline from-mat3))
+(declaim (ftype (function (m3:matrix) quat) from-mat3))
+(defun from-mat3 (matrix)
+  "Convert MATRIX to a quaternion, storing the result in a freshly allocated
+quaternion."
+  (from-mat3! (id) matrix))
 
 (declaim (ftype (function (quat m4:matrix) quat) from-mat4!))
 (defun from-mat4! (out matrix)
-  "Convert MATRIX to a quaternion, storing the result in the existing quaternion, OUT."
   (with-components ((q out))
     (m4:with-components ((m matrix))
-      (let ((trace (m4:trace matrix))
-            (col1 (1+ (cl:- m00 m11 m22)))
-            (col2 (1+ (cl:- m11 m00 m22)))
-            (col3 (1+ (cl:- m22 m00 m11)))
-            (s 0.0f0))
+      (let ((tr1 (1+ (cl:- m00 m11 m22)))
+            (tr2 (cl:+ (cl:- 1 m00) (cl:- m11 m22)))
+            (tr3 (cl:+ (cl:- 1 m00 m11) m22))
+            (s 0f0))
         (cond
-          ((plusp trace)
-           (setf s (/ 0.5f0 (sqrt trace))
-                 qw (/ 0.25f0 s)
-                 qx (cl:* (cl:- m21 m12) s)
-                 qy (cl:* (cl:- m02 m20) s)
-                 qz (cl:* (cl:- m10 m01) s)))
-          ((and (>= col1 col2) (>= col1 col3))
-           (setf s (/ 0.5f0 (sqrt col1))
-                 qw (cl:* (cl:- m21 m12) s)
-                 qx (/ 0.25f0 s)
-                 qy (cl:* (cl:+ m10 m01) s)
-                 qz (cl:* (cl:+ m02 m20) s)))
-          ((and (>= col2 col1) (>= col2 col3))
-           (setf s (/ 0.5f0 (sqrt col2))
-                 qw (cl:* (cl:- m02 m20) s)
-                 qx (cl:* (cl:+ m01 m10) s)
-                 qy (/ 0.25f0 s)
-                 qz (cl:* (cl:+ m12 m21) s)))
+          ((and (cl:> tr1 tr2) (cl:> tr1 tr3))
+           (setf s (cl:* (cl:sqrt tr1) 2)
+                 qw (cl:/ (cl:- m21 m12) s)
+                 qx (cl:* 0.25f0 s)
+                 qy (cl:/ (cl:+ m01 m10) s)
+                 qz (cl:/ (cl:+ m02 m20) s)))
+          ((and (cl:> tr2 tr1) (cl:> tr2 tr3))
+           (setf s (cl:* (cl:sqrt tr2) 2)
+                 qw (cl:/ (cl:- m02 m20) s)
+                 qx (cl:/ (cl:+ m01 m10) s)
+                 qy (cl:* 0.25f0 s)
+                 qz (cl:/ (cl:+ m12 m21) s)))
           (t
-           (setf s (/ 0.5f0 (sqrt col3))
-                 qw (cl:* (cl:- m10 m01) s)
-                 qx (cl:* (cl:+ m02 m20) s)
-                 qy (cl:* (cl:+ m12 m21) s)
-                 qz (/ 0.25f0 s)))))))
-  out)
+           (setf s (cl:* (cl:sqrt tr3) 2)
+                 qw (cl:/ (cl:- m10 m01) s)
+                 qx (cl:/ (cl:+ m02 m20) s)
+                 qy (cl:/ (cl:+ m12 m21) s)
+                 qz (cl:* 0.25f0 s))))))
+    q))
 
 (declaim (inline from-mat4))
 (declaim (ftype (function (m4:matrix) quat) from-mat4))
 (defun from-mat4 (matrix)
-  "Convert MATRIX to a quaternion, storing the result in a freshly allocated quaternion."
+  "Convert MATRIX to a quaternion, storing the result in a freshly allocated
+quaternion."
   (from-mat4! (id) matrix))
 
 (declaim (ftype (function (quat quat quat single-float) quat) slerp!))
 (defun slerp! (out quat1 quat2 factor)
-  "Perform a spherical linear interpolation between QUAT1 and QUAT2 by FACTOR, storing the result in
-the existing quaternion, OUT."
+  "Perform a spherical linear interpolation between QUAT1 and QUAT2 by FACTOR,
+storing the result in the existing quaternion, OUT."
   (with-components ((o out) (q1 quat1) (q2 quat2))
     (let ((dot (dot q1 q2))
           (q2 q2))
@@ -473,6 +562,6 @@ the existing quaternion, OUT."
 (declaim (inline slerp))
 (declaim (ftype (function (quat quat single-float) quat) slerp))
 (defun slerp (quat1 quat2 factor)
-  "Perform a spherical linear interpolation between QUAT1 and QUAT2 by FACTOR, storing the result in
-a freshly allocated quaternion."
+  "Perform a spherical linear interpolation between QUAT1 and QUAT2 by FACTOR,
+storing the result in a freshly allocated quaternion."
   (slerp! (id) quat1 quat2 factor))

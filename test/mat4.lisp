@@ -1,4 +1,4 @@
-(in-package :box.math.test)
+(in-package #:box.math.test)
 
 (setf *default-test-function* #'equalp)
 
@@ -186,12 +186,12 @@
   (is (m4:transpose m4:+id+) m4:+id+))
 
 (diag "orthogonality predicate")
-(ok (m4:orthogonalp (m4:rotate m4:+id+ (v3:make pi 0 0))))
-(ok (m4:orthogonalp (m4:rotate m4:+id+ (v3:make (/ pi 2) 0 0))))
-(ok (m4:orthogonalp (m4:rotate m4:+id+ (v3:make (/ pi 3) 0 0))))
-(ok (m4:orthogonalp (m4:rotate m4:+id+ (v3:make (/ pi 4) 0 0))))
-(ok (m4:orthogonalp (m4:rotate m4:+id+ (v3:make (/ pi 5) 0 0))))
-(ok (m4:orthogonalp (m4:rotate m4:+id+ (v3:make (/ pi 6) 0 0))))
+(ok (m4:orthogonal-p (m4:rotate m4:+id+ (v3:make pi 0 0))))
+(ok (m4:orthogonal-p (m4:rotate m4:+id+ (v3:make (/ pi 2) 0 0))))
+(ok (m4:orthogonal-p (m4:rotate m4:+id+ (v3:make (/ pi 3) 0 0))))
+(ok (m4:orthogonal-p (m4:rotate m4:+id+ (v3:make (/ pi 4) 0 0))))
+(ok (m4:orthogonal-p (m4:rotate m4:+id+ (v3:make (/ pi 5) 0 0))))
+(ok (m4:orthogonal-p (m4:rotate m4:+id+ (v3:make (/ pi 6) 0 0))))
 
 (diag "orthogonalization")
 (let ((m (m4:make 0 1 -0.12988785 1.0139829 0 0 0.3997815 -0.027215311 1 0 0.5468181 0.18567966 0 0 0 0))

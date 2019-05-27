@@ -1,4 +1,4 @@
-(in-package :box.math.test)
+(in-package #:box.math.test)
 
 (setf *default-test-function* #'equalp)
 
@@ -50,11 +50,11 @@
   (is (v4:zero) v4:+zero+))
 
 (diag "one")
-(let ((v (v4i:make -81 92 46 11))
-      (r (v4i:make 1 1 1 1)))
-  (is (v4i:one! v) r)
+(let ((v (v4:make -81 92 46 11))
+      (r (v4:make 1 1 1 1)))
+  (is (v4:one! v) r)
   (is v r)
-  (is (v4i:one) r))
+  (is (v4:one) r))
 
 (diag "list conversion")
 (is (v4:to-list (v4:make 1 2 3 4)) '(1 2 3 4))
@@ -169,8 +169,8 @@
   (is (v4:negate v) r))
 
 (diag "zero vector predicate")
-(ok (v4:zerop v4:+zero+))
-(ok (v4:zerop (v4:make 0 0 0 0)))
+(ok (v4:zero-p v4:+zero+))
+(ok (v4:zero-p (v4:make 0 0 0 0)))
 
 (diag "linear interpolation")
 (let ((v1 (v4:make 0.74485755 0.092342734 0.2982279 0.093762994))
