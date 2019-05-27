@@ -14,7 +14,6 @@ game development. Supported are:
 * 3x3 matrices
 * 4x4 matrices
 * Quaternions
-* Dual quaternions
 
 ## Install
 
