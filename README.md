@@ -2,8 +2,6 @@
 
 A high performance math library useful for making games.
 
-NOTE: This is unmaintained. Please use [game-math](https://github.com/mfiano/game-math).
-
 ## Overview
 
 A library written in portable Common Lisp, providing support for common math functions related to
