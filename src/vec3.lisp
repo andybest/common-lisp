@@ -105,10 +105,6 @@
   :test #'equalp
   :documentation "A vector with each component as zero.")
 
-;;; Swizzling
-
-(box.math.common::%generate-swizzle-functions 3)
-
 ;;; Operations
 
 (declaim (inline make))

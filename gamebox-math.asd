@@ -13,6 +13,7 @@
   :serial t
   :components
   ((:file "common")
+   (:file "swizzle")
    (:file "vec2")
    (:file "vec3")
    (:file "vec4")
