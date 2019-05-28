@@ -32,8 +32,8 @@
    #:rotation-axis-to-vec2
    #:rotation-axis-from-vec2!
    #:rotation-axis-from-vec2
-   #:rotate!
-   #:rotate
+   #:rotate-local!
+   #:rotate-local
    #:scale-to-vec2!
    #:scale-to-vec2
    #:scale-from-vec2!
@@ -319,8 +319,8 @@ keyword symbol AXIS. This allocates a fresh matrix, leaving the original
 un-modified."
   (rotation-axis-from-vec2! (copy matrix) vec axis))
 
-(declaim (ftype (function (matrix matrix float) matrix) rotate!))
-(defun rotate! (out matrix angle)
+(declaim (ftype (function (matrix matrix float) matrix) rotate-local!))
+(defun rotate-local! (out matrix angle)
   "Rotate MATRIX by the Euler angle, ANGLE, storing the result in the existing
 matrix, OUT."
   (with-components ((m (id)))

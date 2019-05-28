@@ -41,8 +41,8 @@
    #:rotation-axis-to-vec3
    #:rotation-axis-from-vec3!
    #:rotation-axis-from-vec3
-   #:rotate!
-   #:rotate
+   #:rotate-local!
+   #:rotate-local
    #:scale-to-vec3!
    #:scale-to-vec3
    #:scale-from-vec3!
@@ -529,8 +529,8 @@ keyword symbol AXIS. This allocates a fresh matrix, leaving the original
 un-modified."
   (rotation-axis-from-vec3! (copy matrix) vec axis))
 
-(declaim (ftype (function (matrix matrix v3:vec) matrix) rotate!))
-(defun rotate! (out matrix vec)
+(declaim (ftype (function (matrix matrix v3:vec) matrix) rotate-local!))
+(defun rotate-local! (out matrix vec)
   "Rotate MATRIX by the vector of Euler angles, VEC, storing the result in the
 existing matrix, OUT."
   (macrolet ((rotate-angle (angle s c &body body)
