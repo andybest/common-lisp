@@ -523,8 +523,9 @@ keyword symbol AXIS. This allocates a fresh matrix, leaving the original
 un-modified."
   (rotation-axis-from-vec3! (copy matrix) vec axis))
 
-(declaim (ftype (function (matrix matrix v3:vec) matrix) rotate!))
-(defun rotate! (out matrix vec)
+(declaim (ftype (function (matrix matrix v3:vec &key (:space keyword)) matrix)
+                rotate!))
+(defun rotate! (out matrix vec &key (space :local))
   "Rotate MATRIX by the vector of Euler angles, VEC, storing the result in the
 existing matrix, OUT."
   (macrolet ((rotate-angle (angle s c &body body)
@@ -532,7 +533,9 @@ existing matrix, OUT."
                   (let ((,s (sin ,angle))
                         (,c (cos ,angle)))
                     ,@body
-                    (*! out out m)))))
+                    (ecase space
+                      (:local (*! out out m))
+                      (:world (*! out m out)))))))
     (with-components ((m (id)))
       (v3:with-components ((v vec))
         (copy! out matrix)

@@ -429,8 +429,9 @@ keyword symbol AXIS. This allocates a fresh matrix, leaving the original
 un-modified."
   (rotation-axis-from-vec2! (copy matrix) vec axis))
 
-(declaim (ftype (function (matrix matrix float) matrix) rotate!))
-(defun rotate! (out matrix angle)
+(declaim (ftype (function (matrix matrix float &key (:space keyword)) matrix)
+                rotate!))
+(defun rotate! (out matrix angle &key (space :local))
   "Rotate MATRIX by the Euler angle, ANGLE, storing the result in the existing
 matrix, OUT."
   (with-components ((m (id)))
@@ -441,7 +442,9 @@ matrix, OUT."
              (c (cos angle)))
         (psetf m00 c m01 (cl:- s)
                m10 s m11 c)
-        (*! out out m))))
+        (ecase space
+          (:local (*! out out m))
+          (:world (*! out m out))))))
   out)
 
 (declaim (inline rotate))
