@@ -55,7 +55,7 @@
    #:transpose
    #:orthogonal-p
    #:trace
-   #:diagonalp
+   #:diagonal-p
    #:main-diagonal!
    #:main-diagonal
    #:anti-diagonal!
@@ -554,9 +554,9 @@ length."
   (with-components ((m matrix))
     (cl:+ m00 m11 m22)))
 
-(declaim (inline diagonalp))
-(declaim (ftype (function (matrix) boolean) diagonalp))
-(defun diagonalp (matrix)
+(declaim (inline diagonal-p))
+(declaim (ftype (function (matrix) boolean) diagonal-p))
+(defun diagonal-p (matrix)
   "Check if the components outside of the main diagonal of MATRIX are all zero."
   (with-components ((m matrix))
     (and (zerop m10)
