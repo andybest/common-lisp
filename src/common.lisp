@@ -5,7 +5,6 @@
   (:export
    #:+epsilon+))
 
-(deftype int32 () '(signed-byte 32))
 (in-package #:box.math.common)
 
 (defconstant +epsilon+ 1e-7
