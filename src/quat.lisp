@@ -79,10 +79,10 @@
                  (:conc-name nil)
                  (:copier nil))
   "A 4-dimensional complex number that describes a 3-dimensional rotation."
-  (w 0.0f0 :type single-float)
-  (x 0.0f0 :type single-float)
-  (y 0.0f0 :type single-float)
-  (z 0.0f0 :type single-float))
+  (w 0f0 :type single-float)
+  (x 0f0 :type single-float)
+  (y 0f0 :type single-float)
+  (z 0f0 :type single-float))
 
 (defmacro with-components (((prefix quat) &rest rest) &body body)
   "A convenience macro for concisely accessing the components of quaternions."
@@ -100,13 +100,13 @@
 
 (au:define-constant +zero+
     (make-array 4 :element-type 'single-float
-                  :initial-contents '(0.0f0 0.0f0 0.0f0 0.0f0))
+                  :initial-contents '(0f0 0f0 0f0 0f0))
   :test #'equalp
   :documentation "A quaternion with each component as zero.")
 
 (au:define-constant +id+
     (make-array 4 :element-type 'single-float
-                  :initial-contents '(1.0f0 0.0f0 0.0f0 0.0f0))
+                  :initial-contents '(1f0 0f0 0f0 0f0))
   :test #'equalp
   :documentation "An identity quaternion.")
 
@@ -116,33 +116,33 @@
 (declaim (ftype (function (real real real real) quat) make))
 (defun make (w x y z)
   "Create a new quaternion."
-  (%make (float w 1.0f0) (float x 1.0f0) (float y 1.0f0) (float z 1.0f0)))
+  (%make (float w 1f0) (float x 1f0) (float y 1f0) (float z 1f0)))
 
 (declaim (ftype (function (quat) quat) id!))
 (defun id! (quat)
   "Modify QUAT to be an identity quaternion."
   (with-components ((q quat))
-    (psetf qw 1.0f0 qx 0.0f0 qy 0.0f0 qz 0.0f0))
+    (psetf qw 1f0 qx 0f0 qy 0f0 qz 0f0))
   quat)
 
 (declaim (ftype (function () quat) id))
 (defun id ()
   "Create an identity quaternion."
-  (id! (make 0 0 0 0)))
+  (id! (make 0f0 0f0 0f0 0f0)))
 
 (declaim (inline zero!))
 (declaim (ftype (function (quat) quat) zero!))
 (defun zero! (quat)
   "Set each component of QUAT to zero."
   (with-components ((q quat))
-    (psetf qw 0.0f0 qx 0.0f0 qy 0.0f0 qz 0.0f0))
+    (psetf qw 0f0 qx 0f0 qy 0f0 qz 0f0))
   quat)
 
 (declaim (inline zero))
 (declaim (ftype (function () quat) zero))
 (defun zero ()
   "Create a new quaternion with all components initialized to zero."
-  (make 0 0 0 0))
+  (make 0f0 0f0 0f0 0f0))
 
 (declaim (inline =))
 (declaim (ftype (function (quat quat) boolean) =))
@@ -335,7 +335,7 @@ quaternion."
 (defun negate! (out quat)
   "Negate each component of QUAT, storing the result in the existing quaternion,
 OUT."
-  (scale! out quat -1.0f0))
+  (scale! out quat -1f0))
 
 (declaim (inline negate))
 (declaim (ftype (function (quat) quat) negate))
@@ -429,7 +429,7 @@ freshly allocated quaternion."
 quaternion, OUT."
   (with-components ((q out))
     (v3:with-components ((v vec))
-      (setf qw 0.0f0 qx vx qy vy qz vz)))
+      (setf qw 0f0 qx vx qy vy qz vz)))
   out)
 
 (declaim (inline from-vec3))
@@ -512,19 +512,19 @@ quaternion."
         (psetf o00 (cl:- 1 (cl:+ yy zz))
                o01 (cl:- xy wz)
                o02 (cl:+ xz wy)
-               o03 0.0f0
+               o03 0f0
                o10 (cl:+ xy wz)
                o11 (cl:- 1 (cl:+ xx zz))
                o12 (cl:- yz wx)
-               o13 0.0f0
+               o13 0f0
                o20 (cl:- xz wy)
                o21 (cl:+ yz wx)
                o22 (cl:- 1 (cl:+ xx yy))
-               o23 0.0f0
-               o30 0.0f0
-               o31 0.0f0
-               o32 0.0f0
-               o33 1.0f0))))
+               o23 0f0
+               o30 0f0
+               o31 0f0
+               o32 0f0
+               o33 1f0))))
   out)
 
 (declaim (inline to-mat4))

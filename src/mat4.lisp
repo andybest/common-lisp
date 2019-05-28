@@ -89,22 +89,22 @@
                    (:copier nil))
   "A 4x4 column-major matrix consisting of column vectors. This represents a
 complete 3-dimensional transformation matrix."
-  (m00 0.0f0 :type single-float)
-  (m10 0.0f0 :type single-float)
-  (m20 0.0f0 :type single-float)
-  (m30 0.0f0 :type single-float)
-  (m01 0.0f0 :type single-float)
-  (m11 0.0f0 :type single-float)
-  (m21 0.0f0 :type single-float)
-  (m31 0.0f0 :type single-float)
-  (m02 0.0f0 :type single-float)
-  (m12 0.0f0 :type single-float)
-  (m22 0.0f0 :type single-float)
-  (m32 0.0f0 :type single-float)
-  (m03 0.0f0 :type single-float)
-  (m13 0.0f0 :type single-float)
-  (m23 0.0f0 :type single-float)
-  (m33 0.0f0 :type single-float))
+  (m00 0f0 :type single-float)
+  (m10 0f0 :type single-float)
+  (m20 0f0 :type single-float)
+  (m30 0f0 :type single-float)
+  (m01 0f0 :type single-float)
+  (m11 0f0 :type single-float)
+  (m21 0f0 :type single-float)
+  (m31 0f0 :type single-float)
+  (m02 0f0 :type single-float)
+  (m12 0f0 :type single-float)
+  (m22 0f0 :type single-float)
+  (m32 0f0 :type single-float)
+  (m03 0f0 :type single-float)
+  (m13 0f0 :type single-float)
+  (m23 0f0 :type single-float)
+  (m33 0f0 :type single-float))
 
 (defmacro with-components (((prefix matrix) &rest rest) &body body)
   "A convenience macro for concisely accessing the components of matrices."
@@ -151,19 +151,19 @@ prevent unintended behavior should ordering of a matrix ever change."
 
 (au:define-constant +zero+
     (make-array 16 :element-type 'single-float
-                   :initial-contents '(0.0f0 0.0f0 0.0f0 0.0f0
-                                       0.0f0 0.0f0 0.0f0 0.0f0
-                                       0.0f0 0.0f0 0.0f0 0.0f0
-                                       0.0f0 0.0f0 0.0f0 0.0f0))
+                   :initial-contents '(0f0 0f0 0f0 0f0
+                                       0f0 0f0 0f0 0f0
+                                       0f0 0f0 0f0 0f0
+                                       0f0 0f0 0f0 0f0))
   :test #'equalp
   :documentation "A matrix with each component as zero.")
 
 (au:define-constant +id+
     (make-array 16 :element-type 'single-float
-                   :initial-contents '(1.0f0 0.0f0 0.0f0 0.0f0
-                                       0.0f0 1.0f0 0.0f0 0.0f0
-                                       0.0f0 0.0f0 1.0f0 0.0f0
-                                       0.0f0 0.0f0 0.0f0 1.0f0))
+                   :initial-contents '(1f0 0f0 0f0 0f0
+                                       0f0 1f0 0f0 0f0
+                                       0f0 0f0 1f0 0f0
+                                       0f0 0f0 0f0 1f0))
   :test #'equalp
   :documentation "An identity matrix.")
 
@@ -177,51 +177,45 @@ prevent unintended behavior should ordering of a matrix ever change."
                 make))
 (defun make (m00 m01 m02 m03 m10 m11 m12 m13 m20 m21 m22 m23 m30 m31 m32 m33)
   "Create a new matrix."
-  (%make (float m00 1.0f0) (float m01 1.0f0) (float m02 1.0f0) (float m03 1.0f0)
-         (float m10 1.0f0) (float m11 1.0f0) (float m12 1.0f0) (float m13 1.0f0)
-         (float m20 1.0f0) (float m21 1.0f0) (float m22 1.0f0) (float m23 1.0f0)
-         (float m30 1.0f0) (float m31 1.0f0) (float m32 1.0f0)
-         (float m33 1.0f0)))
+  (%make (float m00 1f0) (float m01 1f0) (float m02 1f0) (float m03 1f0)
+         (float m10 1f0) (float m11 1f0) (float m12 1f0) (float m13 1f0)
+         (float m20 1f0) (float m21 1f0) (float m22 1f0) (float m23 1f0)
+         (float m30 1f0) (float m31 1f0) (float m32 1f0)
+         (float m33 1f0)))
 
 (declaim (inline zero!))
 (declaim (ftype (function (matrix) matrix) zero!))
 (defun zero! (matrix)
   "Set each component of MATRIX to zero."
   (with-components ((m matrix))
-    (psetf m00 0.0f0 m01 0.0f0 m02 0.0f0 m03 0.0f0
-           m10 0.0f0 m11 0.0f0 m12 0.0f0 m13 0.0f0
-           m20 0.0f0 m21 0.0f0 m22 0.0f0 m23 0.0f0
-           m30 0.0f0 m31 0.0f0 m32 0.0f0 m33 0.0f0))
+    (psetf m00 0f0 m01 0f0 m02 0f0 m03 0f0
+           m10 0f0 m11 0f0 m12 0f0 m13 0f0
+           m20 0f0 m21 0f0 m22 0f0 m23 0f0
+           m30 0f0 m31 0f0 m32 0f0 m33 0f0))
   matrix)
 
 (declaim (inline zero))
 (declaim (ftype (function () matrix) zero))
 (defun zero ()
   "Create a new matrix with all components initialized to zero."
-  (%make 0.0f0 0.0f0 0.0f0 0.0f0
-         0.0f0 0.0f0 0.0f0 0.0f0
-         0.0f0 0.0f0 0.0f0 0.0f0
-         0.0f0 0.0f0 0.0f0 0.0f0))
+  (%make 0f0 0f0 0f0 0f0 0f0 0f0 0f0 0f0 0f0 0f0 0f0 0f0 0f0 0f0 0f0 0f0))
 
 (declaim (inline id!))
 (declaim (ftype (function (matrix) matrix) id!))
 (defun id! (matrix)
   "Modify MATRIX to be an identity matrix."
   (with-components ((m matrix))
-    (psetf m00 1.0f0 m01 0.0f0 m02 0.0f0 m03 0.0f0
-           m10 0.0f0 m11 1.0f0 m12 0.0f0 m13 0.0f0
-           m20 0.0f0 m21 0.0f0 m22 1.0f0 m23 0.0f0
-           m30 0.0f0 m31 0.0f0 m32 0.0f0 m33 1.0f0))
+    (psetf m00 1f0 m01 0f0 m02 0f0 m03 0f0
+           m10 0f0 m11 1f0 m12 0f0 m13 0f0
+           m20 0f0 m21 0f0 m22 1f0 m23 0f0
+           m30 0f0 m31 0f0 m32 0f0 m33 1f0))
   matrix)
 
 (declaim (inline id))
 (declaim (ftype (function () matrix) id))
 (defun id ()
   "Create an identity matrix."
-  (%make 1.0f0 0.0f0 0.0f0 0.0f0
-         0.0f0 1.0f0 0.0f0 0.0f0
-         0.0f0 0.0f0 1.0f0 0.0f0
-         0.0f0 0.0f0 0.0f0 1.0f0))
+  (%make 1f0 0f0 0f0 0f0 0f0 1f0 0f0 0f0 0f0 0f0 1f0 0f0 0f0 0f0 0f0 1f0))
 
 (declaim (inline =))
 (declaim (ftype (function (matrix matrix) boolean) =))
@@ -546,13 +540,13 @@ existing matrix, OUT."
                       (psetf m00 c m01 (cl:- s)
                              m10 s m11 c))
         (rotate-angle vx s c
-                      (psetf m00 1.0f0 m01 0.0f0 m02 0.0f0
-                             m10 0.0f0 m11 c m12 (cl:- s)
-                             m20 0.0f0 m21 s m22 c))
+                      (psetf m00 1f0 m01 0f0 m02 0f0
+                             m10 0f0 m11 c m12 (cl:- s)
+                             m20 0f0 m21 s m22 c))
         (rotate-angle vy s c
-                      (psetf m00 c m01 0.0f0 m02 s
-                             m10 0.0f0 m11 1.0f0 m12 0.0f0
-                             m20 (cl:- s) m21 0.0f0 m22 c)))))
+                      (psetf m00 c m01 0f0 m02 s
+                             m10 0f0 m11 1f0 m12 0f0
+                             m20 (cl:- s) m21 0f0 m22 c)))))
   out)
 
 (declaim (inline rotate))
@@ -928,15 +922,15 @@ See INVERT-ORTHOGONAL"
 (defun orthographic-projection! (out left right bottom top near far)
   "Create an orthographic projection matrix, storing the result in the existing
 matrix, OUT."
-  (let ((right-left (float (cl:- right left) 1.0f0))
-        (top-bottom (float (cl:- top bottom) 1.0f0))
-        (far-near (float (cl:- far near) 1.0f0)))
+  (let ((right-left (float (cl:- right left) 1f0))
+        (top-bottom (float (cl:- top bottom) 1f0))
+        (far-near (float (cl:- far near) 1f0)))
     (with-components ((m (id! out)))
-      (psetf m00 (/ 2.0f0 right-left)
+      (psetf m00 (/ 2f0 right-left)
              m03 (cl:- (/ (cl:+ right left) right-left))
-             m11 (/ 2.0f0 top-bottom)
+             m11 (/ 2f0 top-bottom)
              m13 (cl:- (/ (cl:+ top bottom) top-bottom))
-             m22 (/ -2.0f0 far-near)
+             m22 (/ -2f0 far-near)
              m23 (cl:- (/ (cl:+ far near) far-near))))
     out))
 
@@ -953,14 +947,14 @@ allocated matrix."
 (defun perspective-projection! (out fov aspect near far)
   "Create a perspective projection matrix, storing the result in the existing
 matrix, OUT."
-  (let ((f (float (/ (tan (/ fov 2))) 1.0f0))
-        (z (float (cl:- near far) 1.0f0)))
+  (let ((f (float (/ (tan (/ fov 2))) 1f0))
+        (z (float (cl:- near far) 1f0)))
     (with-components ((m (zero! out)))
       (psetf m00 (/ f aspect)
              m11 f
              m22 (/ (cl:+ near far) z)
              m23 (/ (cl:* 2 near far) z)
-             m32 -1.0f0)))
+             m32 -1f0)))
   out)
 
 (declaim (inline perspective-projection))

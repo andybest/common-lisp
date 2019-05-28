@@ -77,15 +77,15 @@
   "A 3x3 column-major matrix consisting of column vectors. This represents
 either the rotation sub-matrix of a 3-dimensional transformation matrix, or a
 complete 2-dimensional transformation matrix."
-  (m00 0.0f0 :type single-float)
-  (m10 0.0f0 :type single-float)
-  (m20 0.0f0 :type single-float)
-  (m01 0.0f0 :type single-float)
-  (m11 0.0f0 :type single-float)
-  (m21 0.0f0 :type single-float)
-  (m02 0.0f0 :type single-float)
-  (m12 0.0f0 :type single-float)
-  (m22 0.0f0 :type single-float))
+  (m00 0f0 :type single-float)
+  (m10 0f0 :type single-float)
+  (m20 0f0 :type single-float)
+  (m01 0f0 :type single-float)
+  (m11 0f0 :type single-float)
+  (m21 0f0 :type single-float)
+  (m02 0f0 :type single-float)
+  (m12 0f0 :type single-float)
+  (m22 0f0 :type single-float))
 
 (defmacro with-components (((prefix matrix) &rest rest) &body body)
   "A convenience macro for concisely accessing the components of matrices."
@@ -125,17 +125,13 @@ prevent unintended behavior should ordering of a matrix ever change."
 
 (au:define-constant +zero+
     (make-array 9 :element-type 'single-float
-                  :initial-contents '(0.0f0 0.0f0 0.0f0
-                                      0.0f0 0.0f0 0.0f0
-                                      0.0f0 0.0f0 0.0f0))
+                  :initial-contents '(0f0 0f0 0f0 0f0 0f0 0f0 0f0 0f0 0f0))
   :test #'equalp
   :documentation "A matrix with each component as zero.")
 
 (au:define-constant +id+
     (make-array 9 :element-type 'single-float
-                  :initial-contents '(1.0f0 0.0f0 0.0f0
-                                      0.0f0 1.0f0 0.0f0
-                                      0.0f0 0.0f0 1.0f0))
+                  :initial-contents '(1f0 0f0 0f0 0f0 1f0 0f0 0f0 0f0 1f0))
   :test #'equalp
   :documentation "An identity matrix.")
 
@@ -147,45 +143,41 @@ prevent unintended behavior should ordering of a matrix ever change."
                 make))
 (defun make (m00 m01 m02 m10 m11 m12 m20 m21 m22)
   "Create a new matrix."
-  (%make (float m00 1.0f0) (float m01 1.0f0) (float m02 1.0f0)
-         (float m10 1.0f0) (float m11 1.0f0) (float m12 1.0f0)
-         (float m20 1.0f0) (float m21 1.0f0) (float m22 1.0f0)))
+  (%make (float m00 1f0) (float m01 1f0) (float m02 1f0)
+         (float m10 1f0) (float m11 1f0) (float m12 1f0)
+         (float m20 1f0) (float m21 1f0) (float m22 1f0)))
 
 (declaim (inline zero!))
 (declaim (ftype (function (matrix) matrix) zero!))
 (defun zero! (matrix)
   "Set each component of MATRIX to zero."
   (with-components ((m matrix))
-    (psetf m00 0.0f0 m01 0.0f0 m02 0.0f0
-           m10 0.0f0 m11 0.0f0 m12 0.0f0
-           m20 0.0f0 m21 0.0f0 m22 0.0f0))
+    (psetf m00 0f0 m01 0f0 m02 0f0
+           m10 0f0 m11 0f0 m12 0f0
+           m20 0f0 m21 0f0 m22 0f0))
   matrix)
 
 (declaim (inline zero))
 (declaim (ftype (function () matrix) zero))
 (defun zero ()
   "Create a new matrix with all components initialized to zero."
-  (%make 0.0f0 0.0f0 0.0f0
-         0.0f0 0.0f0 0.0f0
-         0.0f0 0.0f0 0.0f0))
+  (%make 0f0 0f0 0f0 0f0 0f0 0f0 0f0 0f0 0f0))
 
 (declaim (inline id!))
 (declaim (ftype (function (matrix) matrix) id!))
 (defun id! (matrix)
   "Modify MATRIX to be an identity matrix."
   (with-components ((m matrix))
-    (psetf m00 1.0f0 m01 0.0f0 m02 0.0f0
-           m10 0.0f0 m11 1.0f0 m12 0.0f0
-           m20 0.0f0 m21 0.0f0 m22 1.0f0))
+    (psetf m00 1f0 m01 0f0 m02 0f0
+           m10 0f0 m11 1f0 m12 0f0
+           m20 0f0 m21 0f0 m22 1f0))
   matrix)
 
 (declaim (inline id))
 (declaim (ftype (function () matrix) id))
 (defun id ()
   "Create an identity matrix."
-  (%make 1.0f0 0.0f0 0.0f0
-         0.0f0 1.0f0 0.0f0
-         0.0f0 0.0f0 1.0f0))
+  (%make 1f0 0f0 0f0 0f0 1f0 0f0 0f0 0f0 1f0))
 
 (declaim (inline =))
 (declaim (ftype (function (matrix matrix) boolean) =))
@@ -444,7 +436,7 @@ matrix, OUT."
   (with-components ((m (id)))
     (copy! out matrix)
     (when (cl:> (abs angle) 1e-7)
-      (let* ((angle (float angle 1.0f0))
+      (let* ((angle (float angle 1f0))
              (s (sin angle))
              (c (cos angle)))
         (psetf m00 c m01 (cl:- s)

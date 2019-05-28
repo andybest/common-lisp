@@ -71,10 +71,10 @@
                 (:conc-name nil)
                 (:copier nil))
   "A Euclidean vector of 4 single-float components."
-  (x 0.0f0 :type single-float)
-  (y 0.0f0 :type single-float)
-  (z 0.0f0 :type single-float)
-  (w 0.0f0 :type single-float))
+  (x 0f0 :type single-float)
+  (y 0f0 :type single-float)
+  (z 0f0 :type single-float)
+  (w 0f0 :type single-float))
 
 (defmacro with-components (((prefix vec) &rest rest) &body body)
   "A convenience macro for concisely accessing the components of vectors."
@@ -100,7 +100,7 @@
 
 (au:define-constant +zero+
     (make-array 4 :element-type 'single-float
-                  :initial-contents '(0.0f0 0.0f0 0.0f0 0.0f0))
+                  :initial-contents '(0f0 0f0 0f0 0f0))
   :test #'equalp
   :documentation "A vector with each component as zero.")
 
@@ -110,35 +110,35 @@
 (declaim (ftype (function (real real real real) vec) make))
 (defun make (x y z w)
   "Create a new vector."
-  (%make (float x 1.0f0) (float y 1.0f0) (float z 1.0f0) (float w 1.0f0)))
+  (%make (float x 1f0) (float y 1f0) (float z 1f0) (float w 1f0)))
 
 (declaim (inline zero!))
 (declaim (ftype (function (vec) vec) zero!))
 (defun zero! (vec)
   "Set each component of VEC to zero."
   (with-components ((v vec))
-    (psetf vx 0.0f0 vy 0.0f0 vz 0.0f0 vw 0.0f0))
+    (psetf vx 0f0 vy 0f0 vz 0f0 vw 0f0))
   vec)
 
 (declaim (inline zero))
 (declaim (ftype (function () vec) zero))
 (defun zero ()
   "Create a new vector with all components initialized to zero."
-  (make 0 0 0 0))
+  (make 0f0 0f0 0f0 0f0))
 
 (declaim (inline one!))
 (declaim (ftype (function (vec) vec) one!))
 (defun one! (vec)
   "Set each component of VEC to one."
   (with-components ((v vec))
-    (psetf vx 1.0 vy 1.0 vz 1.0 vw 1.0))
+    (psetf vx 1f0 vy 1f0 vz 1f0 vw 1f0))
   vec)
 
 (declaim (inline one))
 (declaim (ftype (function () vec) one))
 (defun one ()
   "Create a new vector with all components initialized to one."
-  (make 1 1 1 1))
+  (make 1f0 1f0 1f0 1f0))
 
 (declaim (inline zero-p))
 (declaim (ftype (function (vec) boolean) zero-p))
@@ -291,10 +291,10 @@ result in a freshly allocated vector."
   "Calculate the Hadamard (component-wise) quotient of VEC1 by VEC2, storing the
 result in the existing vector, OUT."
   (with-components ((o out) (v1 vec1) (v2 vec2))
-    (psetf ox (if (zerop v2x) 0.0f0 (cl:/ v1x v2x))
-           oy (if (zerop v2y) 0.0f0 (cl:/ v1y v2y))
-           oz (if (zerop v2z) 0.0f0 (cl:/ v1z v2z))
-           ow (if (zerop v2w) 0.0f0 (cl:/ v1w v2w))))
+    (psetf ox (if (zerop v2x) 0f0 (cl:/ v1x v2x))
+           oy (if (zerop v2y) 0f0 (cl:/ v1y v2y))
+           oz (if (zerop v2z) 0f0 (cl:/ v1z v2z))
+           ow (if (zerop v2w) 0f0 (cl:/ v1w v2w))))
   out)
 
 (declaim (inline /))
@@ -408,7 +408,7 @@ freshly allocated vector."
 (defun negate! (out vec)
   "Negate each component of VEC, storing the result in the existing vector,
 OUT."
-  (scale! out vec -1.0f0))
+  (scale! out vec -1f0))
 
 (declaim (inline negate))
 (declaim (ftype (function (vec) vec) negate))
@@ -423,7 +423,7 @@ vector."
   "Calculate the angle in radians between VEC1 and VEC2."
   (let ((dot (dot vec1 vec2))
         (m*m (cl:* (magnitude vec1) (magnitude vec2))))
-    (if (zerop m*m) 0.0f0 (acos (cl:/ dot m*m)))))
+    (if (zerop m*m) 0f0 (acos (cl:/ dot m*m)))))
 
 (declaim (inline lerp!))
 (declaim (ftype (function (vec vec vec single-float) vec) lerp!))
