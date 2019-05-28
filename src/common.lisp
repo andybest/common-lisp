@@ -3,7 +3,9 @@
 (defpackage #:box.math.common
   (:use #:cl)
   (:export
-   #:+epsilon+))
+   #:+epsilon+
+   #:round-up
+   #:round-down))
 
 (in-package #:box.math.common)
 
@@ -22,3 +24,9 @@
 (declaim (ftype (function (single-float single-float single-float) boolean) %~))
 (defun %~ (a b tolerance)
   (< (abs (- a b)) tolerance))
+
+(defun round-up (x)
+  (floor (+ x 1/2)))
+
+(defun round-down (x)
+  (ceiling (- x 1/2)))
