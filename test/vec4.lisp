@@ -36,13 +36,6 @@
   (is (v4:clamp v :min -1.0 :max 1.0) r)
   (is (v4:clamp v) v))
 
-(diag "stabilize")
-(let ((v (v4:make 1e-8 1e-8 1e-8 1e-8))
-      (o (v4:zero)))
-  (is (v4:stabilize! o v) v4:+zero+)
-  (is o v4:+zero+)
-  (is (v4:stabilize v) v4:+zero+))
-
 (diag "zero")
 (let ((v (v4:make -0.72470546 0.57963276 0.8775625 0.44206798)))
   (is (v4:zero! v) v4:+zero+)

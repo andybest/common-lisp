@@ -21,8 +21,6 @@
    #:copy
    #:clamp!
    #:clamp
-   #:stabilize!
-   #:stabilize
    #:to-list
    #:from-list
    #:=
@@ -188,27 +186,6 @@ result in the existing vector, OUT."
   "Clamp each component of VEC within the range of [MIN, MAX], storing the
 result in a freshly allocated vector."
   (clamp! (zero) vec :min min :max max))
-
-(declaim (inline stabilize!))
-(declaim (ftype (function (vec vec &key (:tolerance single-float)) vec)
-                stabilize!))
-(defun stabilize! (out vec &key (tolerance +epsilon+))
-  "Adjust each component of VEC to zero if it's below TOLERANCE, storing the
-result in the existing vector, OUT."
-  (with-components ((o out) (v vec))
-    (macrolet ((stabilize (place)
-                 `(if (cl:< (cl:abs ,place) tolerance) 0.0f0 ,place)))
-      (psetf ox (stabilize vx)
-             oy (stabilize vy)
-             oz (stabilize vz))))
-  out)
-
-(declaim (inline stabilize))
-(declaim (ftype (function (vec &key (:tolerance single-float)) vec) stabilize))
-(defun stabilize (vec &key (tolerance +epsilon+))
-  "Adjust each component of VEC to zero if it's below TOLERANCE, storing the
-result in a freshly allocated vector."
-  (stabilize! (zero) vec :tolerance tolerance))
 
 (declaim (inline to-list))
 (declaim (ftype (function (vec) list) to-list))
