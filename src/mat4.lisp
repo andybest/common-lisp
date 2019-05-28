@@ -534,7 +534,7 @@ un-modified."
   "Rotate MATRIX by the vector of Euler angles, VEC, storing the result in the
 existing matrix, OUT."
   (macrolet ((rotate-angle (angle s c &body body)
-               `(when (> (abs ,angle) +epsilon+)
+               `(when (cl:> (abs ,angle) +epsilon+)
                   (let ((,s (sin ,angle))
                         (,c (cos ,angle)))
                     ,@body
@@ -555,12 +555,12 @@ existing matrix, OUT."
                              m20 (cl:- s) m21 0.0f0 m22 c)))))
   out)
 
-(declaim (inline rotate))
-(declaim (ftype (function (matrix v3:vec) matrix) rotate))
-(defun rotate (matrix vec)
+(declaim (inline rotate-local))
+(declaim (ftype (function (matrix v3:vec) matrix) rotate-local))
+(defun rotate-local (matrix vec)
   "Rotate MATRIX by the vector of Euler angles, VEC, storing the result in a
 freshly allocated matrix."
-  (rotate! (id) matrix vec))
+  (rotate-local! (id) matrix vec))
 
 (declaim (inline scale-to-vec3!))
 (declaim (ftype (function (v3:vec matrix) v3:vec) scale-to-vec3!))

@@ -325,7 +325,7 @@ un-modified."
 matrix, OUT."
   (with-components ((m (id)))
     (copy! out matrix)
-    (when (> (abs angle) +epsilon+)
+    (when (cl:> (abs angle) +epsilon+)
       (let* ((angle (float angle 1.0f0))
              (s (sin angle))
              (c (cos angle)))
@@ -334,12 +334,12 @@ matrix, OUT."
         (*! out out m))))
   out)
 
-(declaim (inline rotate))
-(declaim (ftype (function (matrix float) matrix) rotate))
-(defun rotate (matrix angle)
+(declaim (inline rotate-local))
+(declaim (ftype (function (matrix float) matrix) rotate-local))
+(defun rotate-local (matrix angle)
   "Rotate MATRIX by the Euler angle, ANGLE, storing the result in a freshly
 allocated matrix."
-  (rotate! (id) matrix angle))
+  (rotate-local! (id) matrix angle))
 
 (declaim (inline scale-to-vec2!))
 (declaim (ftype (function (v2:vec matrix) v2:vec) scale-to-vec2!))
