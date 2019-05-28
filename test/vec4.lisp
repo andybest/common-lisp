@@ -121,10 +121,10 @@
 (is (v4:dot (v4:make 1 0 0 0) (v4:make 1 0 0 0)) 1)
 (is (v4:dot (v4:make 1 0 0 0) (v4:make -1 0 0 0)) -1)
 
-(diag "magnitude")
-(is (v4:magnitude v4:+zero+) 0)
-(is (v4:magnitude (v4:make 1 0 0 0)) 1)
-(is (v4:magnitude (v4:make 0.32979298 0.2571392 0.19932675 0.2647184)) 0.5335644)
+(diag "length")
+(is (v4:length v4:+zero+) 0)
+(is (v4:length (v4:make 1 0 0 0)) 1)
+(is (v4:length (v4:make 0.32979298 0.2571392 0.19932675 0.2647184)) 0.5335644)
 
 (diag "normalize")
 (let ((v (v4:make -0.6589291 0.23270178 -0.1047523 0.6163341))

@@ -5,7 +5,12 @@
                     (#:v3 #:box.math.vec3)
                     (#:v4 #:box.math.vec4))
   (:use #:cl)
-  (:shadow #:= #:+ #:- #:* #:trace)
+  (:shadow
+   #:=
+   #:+
+   #:-
+   #:*
+   #:trace)
   (:export
    #:matrix
    #:with-components

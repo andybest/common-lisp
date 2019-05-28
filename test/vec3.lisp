@@ -118,10 +118,10 @@
 (is (v3:dot (v3:make 1 0 0) (v3:make 1 0 0)) 1)
 (is (v3:dot (v3:make 1 0 0) (v3:make -1 0 0)) -1)
 
-(diag "magnitude")
-(is (v3:magnitude v3:+zero+) 0)
-(is (v3:magnitude (v3:make 1 0 0)) 1)
-(is (v3:magnitude (v3:make 0.32979298 0.2571392 0.19932675)) 0.46326572)
+(diag "length")
+(is (v3:length v3:+zero+) 0)
+(is (v3:length (v3:make 1 0 0)) 1)
+(is (v3:length (v3:make 0.32979298 0.2571392 0.19932675)) 0.46326572)
 
 (diag "normalize")
 (let ((v (v3:make -0.6589291 0.23270178 -0.1047523))

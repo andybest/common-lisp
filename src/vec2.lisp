@@ -3,7 +3,21 @@
 (defpackage #:box.math.vec2
   (:local-nicknames (#:% #:box.math.internal))
   (:use #:cl)
-  (:shadow #:= #:+ #:- #:* #:/ #:round #:abs #:< #:<= #:> #:>= #:min #:max)
+  (:shadow
+   #:=
+   #:+
+   #:-
+   #:*
+   #:/
+   #:length
+   #:round
+   #:abs
+   #:<
+   #:<=
+   #:>
+   #:>=
+   #:min
+   #:max)
   (:export
    #:vec
    #:x
@@ -35,8 +49,8 @@
    #:scale!
    #:scale
    #:dot
-   #:magnitude-squared
-   #:magnitude
+   #:length-squared
+   #:length
    #:normalize!
    #:normalize
    #:round!
@@ -297,34 +311,34 @@ result in a freshly allocated vector."
   (with-components ((v1 vec1) (v2 vec2))
     (cl:+ (cl:* v1x v2x) (cl:* v1y v2y))))
 
-(declaim (inline magnitude-squared))
-(declaim (ftype (function (vec) single-float) magnitude-squared))
-(defun magnitude-squared (vec)
+(declaim (inline length-squared))
+(declaim (ftype (function (vec) single-float) length-squared))
+(defun length-squared (vec)
   "Calculate the magnitude (also known as length or Euclidean norm) of VEC. This
 results in a squared value, which is cheaper to compute. It is useful when you
 want to compare relative lengths, which does not need the expensive square root
 function.
 
-See MAGNITUDE for other cases."
+See LENGTH for other cases."
   (dot vec vec))
 
-(declaim (inline magnitude))
-(declaim (ftype (function (vec) single-float) magnitude))
-(defun magnitude (vec)
+(declaim (inline length))
+(declaim (ftype (function (vec) single-float) length))
+(defun length (vec)
   "Compute the magnitude (also known as length or Euclidean norm) of VEC.
 
-See MAGNITUDE-SQUARED if you only need to compare lengths, as it is cheaper to
+See LENGTH-SQUARED if you only need to compare lengths, as it is cheaper to
 compute without the square root call of this function."
-  (sqrt (magnitude-squared vec)))
+  (sqrt (length-squared vec)))
 
 (declaim (inline normalize!))
 (declaim (ftype (function (vec vec) vec) normalize!))
 (defun normalize! (out vec)
   "Convert VEC to be of unit length, storing the result in the existing vector,
 OUT."
-  (let ((magnitude (magnitude vec)))
-    (unless (zerop magnitude)
-      (scale! out vec (cl:/ magnitude))))
+  (let ((length (length vec)))
+    (unless (zerop length)
+      (scale! out vec (cl:/ length))))
   out)
 
 (declaim (inline normalize))
@@ -387,7 +401,7 @@ vector."
 (defun angle (vec1 vec2)
   "Calculate the angle in radians between VEC1 and VEC2."
   (let ((dot (dot vec1 vec2))
-        (m*m (cl:* (magnitude vec1) (magnitude vec2))))
+        (m*m (cl:* (length vec1) (length vec2))))
     (if (zerop m*m) 0f0 (acos (cl:/ dot m*m)))))
 
 (declaim (inline direction=))

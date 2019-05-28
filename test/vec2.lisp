@@ -113,10 +113,10 @@
 (is (v2:dot (v2:make 1 0) (v2:make 1 0)) 1)
 (is (v2:dot (v2:make 1 0) (v2:make -1 0)) -1)
 
-(diag "magnitude")
-(is (v2:magnitude v2:+zero+) 0)
-(is (v2:magnitude (v2:make 1 0)) 1)
-(is (v2:magnitude (v2:make 0.32979298 0.2571392)) 0.4181913)
+(diag "length")
+(is (v2:length v2:+zero+) 0)
+(is (v2:length (v2:make 1 0)) 1)
+(is (v2:length (v2:make 0.32979298 0.2571392)) 0.4181913)
 
 (diag "normalize")
 (let ((v (v2:make -0.6589291 0.23270178))

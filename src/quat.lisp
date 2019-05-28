@@ -7,7 +7,13 @@
                     (#:m3 #:box.math.mat3)
                     (#:m4 #:box.math.mat4))
   (:use #:cl)
-  (:shadow #:= #:+ #:- #:* #:conjugate)
+  (:shadow
+   #:=
+   #:+
+   #:-
+   #:*
+   #:conjugate
+   #:length)
   (:export
    #:quat
    #:with-components
@@ -38,8 +44,8 @@
    #:conjugate
    #:cross!
    #:cross
-   #:magnitude-squared
-   #:magnitude
+   #:length-squared
+   #:length
    #:normalize!
    #:normalize
    #:negate!
@@ -292,35 +298,35 @@ existing quaternion, OUT."
 freshly allocated quaternion."
   (cross! (id) quat1 quat2))
 
-(declaim (inline magnitude-squared))
-(declaim (ftype (function (quat) single-float) magnitude-squared))
-(defun magnitude-squared (quat)
+(declaim (inline length-squared))
+(declaim (ftype (function (quat) single-float) length-squared))
+(defun length-squared (quat)
   "Calculate the magnitude (also known as length or Euclidean norm) of QUAT.
 This results in a squared value, which is cheaper to compute. It is useful when
 you want to compare relative lengths, which does not need the expensive square
 root function.
 
-See MAGNITUDE for other cases."
+See LENGTH for other cases."
   (with-components ((q quat))
     (cl:+ (cl:* qw qw) (cl:* qx qx) (cl:* qy qy) (cl:* qz qz))))
 
-(declaim (inline magnitude))
-(declaim (ftype (function (quat) single-float) magnitude))
-(defun magnitude (quat)
+(declaim (inline length))
+(declaim (ftype (function (quat) single-float) length))
+(defun length (quat)
   "Compute the magnitude (also known as length or Euclidean norm) of QUAT.
 
-See MAGNITUDE-SQUARED if you only need to compare lengths, as it is cheaper to
+See LENGTH-SQUARED if you only need to compare lengths, as it is cheaper to
 compute without the square root call of this function."
-  (sqrt (magnitude-squared quat)))
+  (sqrt (length-squared quat)))
 
 (declaim (inline normalize!))
 (declaim (ftype (function (quat quat) quat) normalize!))
 (defun normalize! (out quat)
   "Convert QUAT to be of unit length, storing the result in the existing
 quaternion, OUT."
-  (let ((magnitude (magnitude quat)))
-    (unless (zerop magnitude)
-      (scale! out quat (/ magnitude))))
+  (let ((length (length quat)))
+    (unless (zerop length)
+      (scale! out quat (/ length))))
   out)
 
 (declaim (inline normalize))
@@ -357,7 +363,7 @@ quaternion."
   "Calculate the inverse of QUAT, storing the result in the existing quaternion,
 OUT."
   (conjugate! out quat)
-  (scale! out out (/ (magnitude-squared quat)))
+  (scale! out out (/ (length-squared quat)))
   out)
 
 (declaim (inline inverse))
@@ -460,7 +466,7 @@ quaternion."
   "Convert QUAT to a mat3, storing the result in the existing matrix, OUT."
   (m3:with-components ((o out))
     (with-components ((q quat))
-      (let* ((s (cl:/ 2 (magnitude-squared quat)))
+      (let* ((s (cl:/ 2 (length-squared quat)))
              (xs (cl:* qx s))
              (ys (cl:* qy s))
              (zs (cl:* qz s))
@@ -496,7 +502,7 @@ quaternion."
   "Convert QUAT to a mat4, storing the result in the existing matrix, OUT."
   (m4:with-components ((o out))
     (with-components ((q quat))
-      (let* ((s (/ 2 (magnitude-squared quat)))
+      (let* ((s (/ 2 (length-squared quat)))
              (xs (cl:* qx s))
              (ys (cl:* qy s))
              (zs (cl:* qz s))

@@ -97,9 +97,9 @@
   (is o r)
   (is (q:conjugate q) r))
 
-(diag "magnitude")
-(is (q:magnitude q:+id+) 1)
-(is (q:magnitude (q:make 0.23266816 -0.6098385 -0.81111765 0.11399269)) 1.0473508)
+(diag "length")
+(is (q:length q:+id+) 1)
+(is (q:length (q:make 0.23266816 -0.6098385 -0.81111765 0.11399269)) 1.0473508)
 
 (diag "normalize")
 (let ((q (q:make -0.24647212 -0.812474 0.9715252 0.8300271))

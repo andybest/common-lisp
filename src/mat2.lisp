@@ -4,7 +4,12 @@
   (:local-nicknames (#:% #:box.math.internal)
                     (#:v2 #:box.math.vec2))
   (:use #:cl)
-  (:shadow #:= #:+ #:- #:* #:trace)
+  (:shadow
+   #:=
+   #:+
+   #:-
+   #:*
+   #:trace)
   (:export
    #:matrix
    #:with-components
