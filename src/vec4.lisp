@@ -1,3 +1,67 @@
+(in-package #:cl-user)
+
+(defpackage #:box.math.vec4
+  (:use #:cl
+        #:box.math.common)
+  (:shadow #:= #:+ #:- #:* #:/ #:round #:abs #:< #:<= #:> #:>= #:min #:max)
+  (:export
+   #:vec
+   #:x
+   #:y
+   #:z
+   #:w
+   #:with-components
+   #:make
+   #:+zero+
+   #:zero!
+   #:zero
+   #:one!
+   #:one
+   #:zero-p
+   #:copy!
+   #:copy
+   #:clamp!
+   #:clamp
+   #:stabilize!
+   #:stabilize
+   #:to-list
+   #:from-list
+   #:=
+   #:~
+   #:+!
+   #:+
+   #:-!
+   #:-
+   #:*!
+   #:*
+   #:/!
+   #:/
+   #:scale!
+   #:scale
+   #:dot
+   #:magnitude-squared
+   #:magnitude
+   #:normalize!
+   #:normalize
+   #:round!
+   #:round
+   #:abs!
+   #:abs
+   #:negate!
+   #:negate
+   #:angle
+   #:lerp!
+   #:lerp
+   #:<
+   #:<=
+   #:>
+   #:>=
+   #:min!
+   #:min
+   #:max!
+   #:max))
+
+
 (in-package #:box.math.vec4)
 
 ;;; Structure

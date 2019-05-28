@@ -1,3 +1,73 @@
+(in-package #:cl-user)
+
+(defpackage #:box.math.quat
+  (:local-nicknames (#:v3 #:box.math.vec3)
+                    (#:v4 #:box.math.vec4)
+                    (#:m3 #:box.math.mat3)
+                    (#:m4 #:box.math.mat4))
+  (:use #:cl
+        #:box.math.common)
+  (:shadow #:= #:+ #:- #:* #:conjugate)
+  (:export
+   #:quat
+   #:with-components
+   #:w
+   #:x
+   #:y
+   #:z
+   #:+zero+
+   #:+id+
+   #:id!
+   #:id
+   #:make
+   #:zero!
+   #:zero
+   #:=
+   #:~
+   #:copy!
+   #:copy
+   #:+!
+   #:+
+   #:-!
+   #:-
+   #:*!
+   #:*
+   #:scale!
+   #:scale
+   #:conjugate!
+   #:conjugate
+   #:cross!
+   #:cross
+   #:magnitude-squared
+   #:magnitude
+   #:normalize!
+   #:normalize
+   #:negate!
+   #:negate
+   #:dot
+   #:inverse!
+   #:inverse
+   #:rotate!
+   #:rotate
+   #:to-vec3!
+   #:to-vec3
+   #:to-vec4!
+   #:to-vec4
+   #:from-vec3!
+   #:from-vec3
+   #:from-vec4!
+   #:from-vec4
+   #:to-mat3!
+   #:to-mat3
+   #:to-mat4!
+   #:to-mat4
+   #:from-mat3!
+   #:from-mat3
+   #:from-mat4!
+   #:from-mat4
+   #:slerp!
+   #:slerp))
+
 (in-package #:box.math.quat)
 
 ;;; Structure

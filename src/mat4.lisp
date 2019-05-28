@@ -1,3 +1,79 @@
+(in-package #:cl-user)
+
+(defpackage #:box.math.mat4
+  (:local-nicknames (#:v3 #:box.math.vec3)
+                    (#:v4 #:box.math.vec4))
+  (:use #:cl
+        #:box.math.common)
+  (:shadow #:= #:+ #:- #:* #:trace)
+  (:export
+   #:matrix
+   #:with-components
+   #:mref
+   #:+zero+
+   #:+id+
+   #:make
+   #:zero!
+   #:zero
+   #:id!
+   #:id
+   #:=
+   #:~
+   #:copy!
+   #:copy
+   #:clamp!
+   #:clamp
+   #:+!
+   #:+
+   #:-!
+   #:-
+   #:*!
+   #:*
+   #:translation-to-vec3!
+   #:translation-to-vec3
+   #:translation-from-vec3!
+   #:translation-from-vec3
+   #:translate!
+   #:translate
+   #:copy-rotation!
+   #:copy-rotation
+   #:rotation-axis-to-vec3!
+   #:rotation-axis-to-vec3
+   #:rotation-axis-from-vec3!
+   #:rotation-axis-from-vec3
+   #:rotate!
+   #:rotate
+   #:scale-to-vec3!
+   #:scale-to-vec3
+   #:scale-from-vec3!
+   #:scale-from-vec3
+   #:scale!
+   #:scale
+   #:*v4!
+   #:*v4
+   #:transpose!
+   #:transpose
+   #:orthogonal-p
+   #:orthonormalize!
+   #:orthonormalize
+   #:trace
+   #:diagonalp
+   #:main-diagonal!
+   #:main-diagonal
+   #:anti-diagonal!
+   #:anti-diagonal
+   #:determinant
+   #:invert-orthogonal!
+   #:invert-orthogonal
+   #:invert!
+   #:invert
+   #:view!
+   #:view
+   #:orthographic-projection!
+   #:orthographic-projection
+   #:perspective-projection!
+   #:perspective-projection))
+
 (in-package #:box.math.mat4)
 
 ;;; Structure

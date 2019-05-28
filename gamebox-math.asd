@@ -12,8 +12,7 @@
   :pathname "src"
   :serial t
   :components
-  ((:file "package")
-   (:file "common")
+  ((:file "common")
    (:file "vec2")
    (:file "vec3")
    (:file "vec4")

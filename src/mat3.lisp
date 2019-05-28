@@ -1,3 +1,67 @@
+(in-package #:cl-user)
+
+(defpackage #:box.math.mat3
+  (:local-nicknames (#:v2 #:box.math.vec2)
+                    (#:v3 #:box.math.vec3))
+  (:use #:cl
+        #:box.math.common)
+  (:shadow #:= #:+ #:- #:* #:trace)
+  (:export
+   #:matrix
+   #:with-components
+   #:mref
+   #:+zero+
+   #:+id+
+   #:make
+   #:zero!
+   #:zero
+   #:id!
+   #:id
+   #:=
+   #:~
+   #:copy!
+   #:copy
+   #:clamp!
+   #:clamp
+   #:+!
+   #:+
+   #:-!
+   #:-
+   #:*!
+   #:*
+   #:translation-to-vec2!
+   #:translation-to-vec2
+   #:translation-from-vec2!
+   #:translation-from-vec2
+   #:translate!
+   #:translate
+   #:copy-rotation!
+   #:copy-rotation
+   #:rotation-axis-to-vec2!
+   #:rotation-axis-to-vec2
+   #:rotation-axis-from-vec2!
+   #:rotation-axis-from-vec2
+   #:rotate!
+   #:rotate
+   #:scale-to-vec2!
+   #:scale-to-vec2
+   #:scale-from-vec2!
+   #:scale-from-vec2
+   #:scale!
+   #:scale
+   #:*v3!
+   #:*v3
+   #:transpose!
+   #:transpose
+   #:orthogonal-p
+   #:trace
+   #:diagonalp
+   #:main-diagonal!
+   #:main-diagonal
+   #:anti-diagonal!
+   #:anti-diagonal))
+
+
 (in-package #:box.math.mat3)
 
 ;;; Structure

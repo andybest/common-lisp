@@ -1,6 +1,12 @@
-(in-package #:box.math.common)
+(in-package #:cl-user)
+
+(defpackage #:box.math.common
+  (:use #:cl)
+  (:export
+   #:+epsilon+))
 
 (deftype int32 () '(signed-byte 32))
+(in-package #:box.math.common)
 
 (defconstant +epsilon+ 1e-7
   "The smallest positive quantity that is possible for a scalar.")
