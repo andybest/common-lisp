@@ -368,8 +368,9 @@ quaternion."
   (inverse! (id) quat))
 
 (declaim (inline rotate!))
-(declaim (ftype (function (quat quat v3:vec) quat) rotate!))
-(defun rotate! (out quat vec)
+(declaim (ftype (function (quat quat v3:vec &key (:method keyword)) quat)
+                rotate!))
+(defun rotate! (out quat vec &key (method :world))
   "Rotate QUAT by the vector of Euler angles, VEC, storing the result in the
 existing quaternion, OUT."
   (with-components ((o out) (q (copy quat)))
@@ -380,14 +381,16 @@ existing quaternion, OUT."
              ox (cl:+ (cl:* sx cy cz) (cl:* cx sy sz))
              oy (cl:- (cl:* cx sy cz) (cl:* sx cy sz))
              oz (cl:+ (cl:* sx sy cz) (cl:* cx cy sz)))
-      (*! out out q)))
+      (ecase method
+        (:world (*! out out q))
+        (:local (*! out q out)))))
   out)
 
-(declaim (ftype (function (quat v3:vec) quat) rotate))
-(defun rotate (quat vec)
+(declaim (ftype (function (quat v3:vec &key (:method keyword)) quat) rotate))
+(defun rotate (quat vec &key (method :world))
   "Rotate QUAT by the vector of Euler angles, VEC, storing the result in a
 freshly allocated quaternion."
-  (rotate! (id) quat vec))
+  (rotate! (id) quat vec :method method))
 
 (declaim (inline to-vec3!))
 (declaim (ftype (function (v3:vec quat) v3:vec) to-vec3!))

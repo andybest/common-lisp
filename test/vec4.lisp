@@ -2,7 +2,7 @@
 
 (setf *default-test-function* #'equalp)
 
-(plan 95)
+(plan 92)
 
 (diag "accessors")
 (let ((v (v4:make 1 2 3 4)))

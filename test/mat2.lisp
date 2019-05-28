@@ -72,9 +72,9 @@
 (diag "rotation")
 (let ((omz (m2:id))
       (rmz (m2:make 0.5 -0.86602545 0.86602545 0.5)))
-  (ok (m2:~ (m2:rotate-local! omz m2:+id+ (/ pi 3)) rmz))
+  (ok (m2:~ (m2:rotate! omz m2:+id+ (/ pi 3)) rmz))
   (ok (m2:~ omz rmz))
-  (ok (m2:~ (m2:rotate-local m2:+id+ (/ pi 3)) rmz)))
+  (ok (m2:~ (m2:rotate m2:+id+ (/ pi 3)) rmz)))
 
 (diag "scaling")
 (let ((m (m2:make 10 0 0 20))
