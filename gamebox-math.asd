@@ -15,6 +15,7 @@
   ((:file "internal")
    (:file "common")
    (:file "swizzle")
+   (:file "shaping")
    (:file "vec2")
    (:file "vec3")
    (:file "vec4")
