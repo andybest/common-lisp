@@ -1,12 +1,12 @@
 (in-package #:cl-user)
 
 (defpackage #:box.math.quat
-  (:local-nicknames (#:v3 #:box.math.vec3)
+  (:local-nicknames (#:% #:box.math.internal)
+                    (#:v3 #:box.math.vec3)
                     (#:v4 #:box.math.vec4)
                     (#:m3 #:box.math.mat3)
                     (#:m4 #:box.math.mat4))
-  (:use #:cl
-        #:box.math.common)
+  (:use #:cl)
   (:shadow #:= #:+ #:- #:* #:conjugate)
   (:export
    #:quat
@@ -87,10 +87,10 @@
 (defmacro with-components (((prefix quat) &rest rest) &body body)
   "A convenience macro for concisely accessing the components of quaternions."
   `(with-accessors ((,prefix identity)
-                    (,(box.math.common::%make-accessor-symbol prefix 'w) w)
-                    (,(box.math.common::%make-accessor-symbol prefix 'x) x)
-                    (,(box.math.common::%make-accessor-symbol prefix 'y) y)
-                    (,(box.math.common::%make-accessor-symbol prefix 'z) z))
+                    (,(%::make-accessor-symbol prefix 'w) w)
+                    (,(%::make-accessor-symbol prefix 'x) x)
+                    (,(%::make-accessor-symbol prefix 'y) y)
+                    (,(%::make-accessor-symbol prefix 'z) z))
        ,quat
      ,(if rest
           `(with-components ,rest ,@body)
@@ -158,14 +158,14 @@ QUAT2."
 (declaim (inline ~))
 (declaim (ftype (function (quat quat &key (:tolerance single-float))
                           boolean) ~))
-(defun ~ (quat1 quat2 &key (tolerance +epsilon+))
+(defun ~ (quat1 quat2 &key (tolerance 1e-7))
   "Check if all components of QUAT1 are approximately equal to the components of
 QUAT2, according to TOLERANCE."
   (with-components ((q1 quat1) (q2 quat2))
-    (and (box.math.common::%~ q1w q2w tolerance)
-         (box.math.common::%~ q1x q2x tolerance)
-         (box.math.common::%~ q1y q2y tolerance)
-         (box.math.common::%~ q1z q2z tolerance))))
+    (and (%::~ q1w q2w tolerance)
+         (%::~ q1x q2x tolerance)
+         (%::~ q1y q2y tolerance)
+         (%::~ q1z q2z tolerance))))
 
 (declaim (inline copy!))
 (declaim (ftype (function (quat quat) quat) copy!))

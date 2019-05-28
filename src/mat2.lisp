@@ -1,9 +1,9 @@
 (in-package #:cl-user)
 
 (defpackage #:box.math.mat2
-  (:local-nicknames (#:v2 #:box.math.vec2))
-  (:use #:cl
-        #:box.math.common)
+  (:local-nicknames (#:% #:box.math.internal)
+                    (#:v2 #:box.math.vec2))
+  (:use #:cl)
   (:shadow #:= #:+ #:- #:* #:trace)
   (:export
    #:matrix
@@ -73,10 +73,10 @@ rotation sub-matrix of a 2-dimensional transformation matrix."
 (defmacro with-components (((prefix matrix) &rest rest) &body body)
   "A convenience macro for concisely accessing the components of matrices."
   `(with-accessors ((,prefix identity)
-                    (,(box.math.common::%make-accessor-symbol prefix "00") m00)
-                    (,(box.math.common::%make-accessor-symbol prefix "01") m01)
-                    (,(box.math.common::%make-accessor-symbol prefix "10") m10)
-                    (,(box.math.common::%make-accessor-symbol prefix "11") m11))
+                    (,(%::make-accessor-symbol prefix "00") m00)
+                    (,(%::make-accessor-symbol prefix "01") m01)
+                    (,(%::make-accessor-symbol prefix "10") m10)
+                    (,(%::make-accessor-symbol prefix "11") m11))
        ,matrix
      ,(if rest
           `(with-components ,rest ,@body)
@@ -169,14 +169,14 @@ MATRIX2."
 (declaim (ftype (function (matrix matrix &key (:tolerance single-float))
                           boolean)
                 ~))
-(defun ~ (matrix1 matrix2 &key (tolerance +epsilon+))
+(defun ~ (matrix1 matrix2 &key (tolerance 1e-7))
   "Check if all components of MATRIX1 are approximately equal to the components
 of MATRIX2, according to TOLERANCE."
   (with-components ((a matrix1) (b matrix2))
-    (and (box.math.common::%~ a00 b00 tolerance)
-         (box.math.common::%~ a01 b01 tolerance)
-         (box.math.common::%~ a10 b10 tolerance)
-         (box.math.common::%~ a11 b11 tolerance))))
+    (and (%::~ a00 b00 tolerance)
+         (%::~ a01 b01 tolerance)
+         (%::~ a10 b10 tolerance)
+         (%::~ a11 b11 tolerance))))
 
 (declaim (inline copy!))
 (declaim (ftype (function (matrix matrix) matrix) copy!))
@@ -325,7 +325,7 @@ un-modified."
 matrix, OUT."
   (with-components ((m (id)))
     (copy! out matrix)
-    (when (cl:> (abs angle) +epsilon+)
+    (when (cl:> (abs angle) 1e-7)
       (let* ((angle (float angle 1.0f0))
              (s (sin angle))
              (c (cos angle)))

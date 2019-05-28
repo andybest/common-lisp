@@ -12,7 +12,8 @@
   :pathname "src"
   :serial t
   :components
-  ((:file "common")
+  ((:file "internal")
+   (:file "common")
    (:file "swizzle")
    (:file "vec2")
    (:file "vec3")

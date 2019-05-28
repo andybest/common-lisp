@@ -1,8 +1,8 @@
 (in-package #:cl-user)
 
 (defpackage #:box.math.vec3
-  (:use #:cl
-        #:box.math.common)
+  (:local-nicknames (#:% #:box.math.internal))
+  (:use #:cl)
   (:shadow #:= #:+ #:- #:* #:/ #:round #:abs #:< #:<= #:> #:>= #:min #:max)
   (:export
    #:vec
@@ -81,15 +81,15 @@
 (defmacro with-components (((prefix vec) &rest rest) &body body)
   "A convenience macro for concisely accessing the components of vectors."
   `(with-accessors ((,prefix identity)
-                    (,(box.math.common::%make-accessor-symbol prefix 'x) x)
-                    (,(box.math.common::%make-accessor-symbol prefix 'y) y)
-                    (,(box.math.common::%make-accessor-symbol prefix 'z) z)
-                    (,(box.math.common::%make-accessor-symbol prefix 'r) x)
-                    (,(box.math.common::%make-accessor-symbol prefix 'g) y)
-                    (,(box.math.common::%make-accessor-symbol prefix 'b) z)
-                    (,(box.math.common::%make-accessor-symbol prefix 's) x)
-                    (,(box.math.common::%make-accessor-symbol prefix 't) y)
-                    (,(box.math.common::%make-accessor-symbol prefix 'p) z))
+                    (,(%::make-accessor-symbol prefix 'x) x)
+                    (,(%::make-accessor-symbol prefix 'y) y)
+                    (,(%::make-accessor-symbol prefix 'z) z)
+                    (,(%::make-accessor-symbol prefix 'r) x)
+                    (,(%::make-accessor-symbol prefix 'g) y)
+                    (,(%::make-accessor-symbol prefix 'b) z)
+                    (,(%::make-accessor-symbol prefix 's) x)
+                    (,(%::make-accessor-symbol prefix 't) y)
+                    (,(%::make-accessor-symbol prefix 'p) z))
        ,vec
      ,(if rest
           `(with-components ,rest ,@body)
@@ -212,13 +212,13 @@ VEC2."
 
 (declaim (inline ~))
 (declaim (ftype (function (vec vec &key (:tolerance single-float)) boolean) ~))
-(defun ~ (vec1 vec2 &key (tolerance +epsilon+))
+(defun ~ (vec1 vec2 &key (tolerance 1e-7))
   "Check if all components of VEC1 are approximately equal to the components of
 VEC2, according to TOLERANCE."
   (with-components ((v1 vec1) (v2 vec2))
-    (and (box.math.common::%~ v1x v2x tolerance)
-         (box.math.common::%~ v1y v2y tolerance)
-         (box.math.common::%~ v1z v2z tolerance))))
+    (and (%::~ v1x v2x tolerance)
+         (%::~ v1y v2y tolerance)
+         (%::~ v1z v2z tolerance))))
 
 (declaim (inline +!))
 (declaim (ftype (function (vec vec vec) vec) +!))
@@ -439,7 +439,7 @@ Returns a scalar."
 (declaim (ftype (function (vec vec) boolean) direction=))
 (defun direction= (vec1 vec2)
   "Check if the directions of VEC1 and VEC2 are approximately equal."
-  (cl:>= (dot (normalize vec1) (normalize vec2)) (cl:- 1 +epsilon+)))
+  (cl:>= (dot (normalize vec1) (normalize vec2)) (cl:- 1 1e-7)))
 
 (declaim (inline parallel-p))
 (declaim (ftype (function (vec vec) boolean) parallel-p))

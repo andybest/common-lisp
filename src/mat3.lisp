@@ -1,10 +1,10 @@
 (in-package #:cl-user)
 
 (defpackage #:box.math.mat3
-  (:local-nicknames (#:v2 #:box.math.vec2)
+  (:local-nicknames (#:% #:box.math.internal)
+                    (#:v2 #:box.math.vec2)
                     (#:v3 #:box.math.vec3))
-  (:use #:cl
-        #:box.math.common)
+  (:use #:cl)
   (:shadow #:= #:+ #:- #:* #:trace)
   (:export
    #:matrix
@@ -90,15 +90,15 @@ complete 2-dimensional transformation matrix."
 (defmacro with-components (((prefix matrix) &rest rest) &body body)
   "A convenience macro for concisely accessing the components of matrices."
   `(with-accessors ((,prefix identity)
-                    (,(box.math.common::%make-accessor-symbol prefix "00") m00)
-                    (,(box.math.common::%make-accessor-symbol prefix "01") m01)
-                    (,(box.math.common::%make-accessor-symbol prefix "02") m02)
-                    (,(box.math.common::%make-accessor-symbol prefix "10") m10)
-                    (,(box.math.common::%make-accessor-symbol prefix "11") m11)
-                    (,(box.math.common::%make-accessor-symbol prefix "12") m12)
-                    (,(box.math.common::%make-accessor-symbol prefix "20") m20)
-                    (,(box.math.common::%make-accessor-symbol prefix "21") m21)
-                    (,(box.math.common::%make-accessor-symbol prefix "22") m22))
+                    (,(%::make-accessor-symbol prefix "00") m00)
+                    (,(%::make-accessor-symbol prefix "01") m01)
+                    (,(%::make-accessor-symbol prefix "02") m02)
+                    (,(%::make-accessor-symbol prefix "10") m10)
+                    (,(%::make-accessor-symbol prefix "11") m11)
+                    (,(%::make-accessor-symbol prefix "12") m12)
+                    (,(%::make-accessor-symbol prefix "20") m20)
+                    (,(%::make-accessor-symbol prefix "21") m21)
+                    (,(%::make-accessor-symbol prefix "22") m22))
        ,matrix
      ,(if rest
           `(with-components ,rest ,@body)
@@ -201,19 +201,19 @@ MATRIX2."
 (declaim (ftype (function (matrix matrix &key (:tolerance single-float))
                           boolean)
                 ~))
-(defun ~ (matrix1 matrix2 &key (tolerance +epsilon+))
+(defun ~ (matrix1 matrix2 &key (tolerance 1e-7))
   "Check if all components of MATRIX1 are approximately equal to the components
 of MATRIX2, according to TOLERANCE."
   (with-components ((a matrix1) (b matrix2))
-    (and (box.math.common::%~ a00 b00 tolerance)
-         (box.math.common::%~ a01 b01 tolerance)
-         (box.math.common::%~ a02 b02 tolerance)
-         (box.math.common::%~ a10 b10 tolerance)
-         (box.math.common::%~ a11 b11 tolerance)
-         (box.math.common::%~ a12 b12 tolerance)
-         (box.math.common::%~ a20 b20 tolerance)
-         (box.math.common::%~ a21 b21 tolerance)
-         (box.math.common::%~ a22 b22 tolerance))))
+    (and (%::~ a00 b00 tolerance)
+         (%::~ a01 b01 tolerance)
+         (%::~ a02 b02 tolerance)
+         (%::~ a10 b10 tolerance)
+         (%::~ a11 b11 tolerance)
+         (%::~ a12 b12 tolerance)
+         (%::~ a20 b20 tolerance)
+         (%::~ a21 b21 tolerance)
+         (%::~ a22 b22 tolerance))))
 
 (declaim (inline copy!))
 (declaim (ftype (function (matrix matrix) matrix) copy!))
@@ -443,7 +443,7 @@ un-modified."
 matrix, OUT."
   (with-components ((m (id)))
     (copy! out matrix)
-    (when (cl:> (abs angle) +epsilon+)
+    (when (cl:> (abs angle) 1e-7)
       (let* ((angle (float angle 1.0f0))
              (s (sin angle))
              (c (cos angle)))
