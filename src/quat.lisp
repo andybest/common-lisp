@@ -562,7 +562,7 @@ quaternion."
               (s 0f0))
           (cond
             ((plusp trace)
-             (setf s (/ 0.5f0 (cl:sqrt trace))
+             (setf s (/ 0.5f0 (sqrt trace))
                    ow (/ 0.25f0 s)
                    ox (cl:* (cl:- nm21 nm12) s)
                    oy (cl:* (cl:- nm02 nm20) s)
