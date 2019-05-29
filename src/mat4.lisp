@@ -34,10 +34,10 @@
    #:-
    #:*!
    #:*
-   #:translation-to-vec3!
-   #:translation-to-vec3
-   #:translation-from-vec3!
-   #:translation-from-vec3
+   #:get-translation!
+   #:get-translation
+   #:set-translation!
+   #:set-translation
    #:translate!
    #:translate
    #:copy-rotation!
@@ -48,10 +48,10 @@
    #:rotation-axis-from-vec3
    #:rotate!
    #:rotate
-   #:scale-to-vec3!
-   #:scale-to-vec3
-   #:scale-from-vec3!
-   #:scale-from-vec3
+   #:get-scale!
+   #:get-scale
+   #:set-scale!
+   #:set-scale
    #:scale!
    #:scale
    #:*v4!
@@ -72,12 +72,12 @@
    #:invert-orthogonal
    #:invert!
    #:invert
-   #:view!
-   #:view
-   #:orthographic-projection!
-   #:orthographic-projection
-   #:perspective-projection!
-   #:perspective-projection))
+   #:set-view!
+   #:set-view
+   #:set-projection/orthographic!
+   #:set-projection/orthographic
+   #:set-projection/perspective!
+   #:set-projection/perspective))
 
 (in-package #:box.math.mat4)
 
@@ -424,43 +424,44 @@ existing matrix, OUT."
 allocated matrix."
   (*! (zero) matrix1 matrix2))
 
-(declaim (inline translation-to-vec3!))
-(declaim (ftype (function (v3:vec matrix) v3:vec) translation-to-vec3!))
-(defun translation-to-vec3! (out matrix)
+(declaim (inline get-translation!))
+(declaim (ftype (function (v3:vec matrix) v3:vec) get-translation!))
+(defun get-translation! (out matrix)
   "Copy the translation column of MATRIX to the existing vector, OUT."
-  (v3:with-components ((o out))
-    (with-components ((m matrix))
+  (with-components ((m matrix))
+    (v3:with-components ((o out))
       (psetf ox m03 oy m13 oz m23)))
   out)
 
-(declaim (inline translation-to-vec3))
-(declaim (ftype (function (matrix) v3:vec) translation-to-vec3))
-(defun translation-to-vec3 (matrix)
+(declaim (inline get-translation))
+(declaim (ftype (function (matrix) v3:vec) get-translation))
+(defun get-translation (matrix)
   "Copy the translation column of MATRIX to a freshly allocated vector."
-  (translation-to-vec3! (v3:zero) matrix))
+  (get-translation! (v3:zero) matrix))
 
-(declaim (inline translation-from-vec3!))
-(declaim (ftype (function (matrix v3:vec) matrix) translation-from-vec3!))
-(defun translation-from-vec3! (matrix vec)
+(declaim (inline set-translation!))
+(declaim (ftype (function (matrix matrix v3:vec) matrix) set-translation!))
+(defun set-translation! (out matrix vec)
   "Copy the components of VEC to the translation column of MATRIX. This
 destructively modifies MATRIX."
-  (with-components ((m matrix))
+  (with-components ((o out))
     (v3:with-components ((v vec))
-      (psetf m03 vx m13 vy m23 vz)))
-  matrix)
+      (copy! out matrix)
+      (psetf o03 vx o13 vy o23 vz)))
+  out)
 
-(declaim (inline translation-from-vec3))
-(declaim (ftype (function (matrix v3:vec) matrix) translation-from-vec3))
-(defun translation-from-vec3 (matrix vec)
+(declaim (inline set-translation))
+(declaim (ftype (function (matrix v3:vec) matrix) set-translation))
+(defun set-translation (matrix vec)
   "Copy the components of VEC to the translation column of MATRIX. This
 allocates a fresh matrix, leaving the original un-modified."
-  (translation-from-vec3! (copy matrix) vec))
+  (set-translation! (copy matrix) matrix vec))
 
 (declaim (inline translate!))
 (declaim (ftype (function (matrix matrix v3:vec) matrix) translate!))
 (defun translate! (out matrix vec)
   "Translate MATRIX by VEC, storing the result in the existing matrix, OUT."
-  (*! out (translation-from-vec3 (id) vec) matrix))
+  (*! out (set-translation (id) vec) matrix))
 
 (declaim (inline translate))
 (declaim (ftype (function (matrix v3:vec) matrix) translate))
@@ -564,44 +565,45 @@ existing matrix, OUT."
 freshly allocated matrix."
   (rotate! (id) matrix vec))
 
-(declaim (inline scale-to-vec3!))
-(declaim (ftype (function (v3:vec matrix) v3:vec) scale-to-vec3!))
-(defun scale-to-vec3! (out matrix)
+(declaim (inline get-scale!))
+(declaim (ftype (function (v3:vec matrix) v3:vec) get-scale!))
+(defun get-scale! (out matrix)
   "Copy the scaling transform of MATRIX to the existing vector, OUT."
-  (v3:with-components ((o out))
-    (with-components ((m matrix))
+  (with-components ((m matrix))
+    (v3:with-components ((o out))
       (psetf ox m00 oy m11 oz m22)))
   out)
 
-(declaim (inline scale-to-vec3))
-(declaim (ftype (function (matrix) v3:vec) scale-to-vec3))
-(defun scale-to-vec3 (matrix)
+(declaim (inline get-scale))
+(declaim (ftype (function (matrix) v3:vec) get-scale))
+(defun get-scale (matrix)
   "Copy the scaling transform of MATRIX to a freshly allocated vector."
-  (scale-to-vec3! (v3:zero) matrix))
+  (get-scale! (v3:zero) matrix))
 
-(declaim (inline scale-from-vec3!))
-(declaim (ftype (function (matrix v3:vec) matrix) scale-from-vec3!))
-(defun scale-from-vec3! (matrix vec)
+(declaim (inline set-scale!))
+(declaim (ftype (function (matrix matrix v3:vec) matrix) set-scale!))
+(defun set-scale! (out matrix vec)
   "Copy the components of VEC to the scaling components of MATRIX. This
 destructively modifies MATRIX."
-  (with-components ((m matrix))
+  (with-components ((o out))
     (v3:with-components ((v vec))
-      (psetf m00 vx m11 vy m22 vz)))
-  matrix)
+      (copy! out matrix)
+      (psetf o00 vx o11 vy o22 vz)))
+  out)
 
-(declaim (inline scale-from-vec3))
-(declaim (ftype (function (matrix v3:vec) matrix) scale-from-vec3))
-(defun scale-from-vec3 (matrix vec)
+(declaim (inline set-scale))
+(declaim (ftype (function (matrix v3:vec) matrix) set-scale))
+(defun set-scale (matrix vec)
   "Copy the components of VEC to the scaling components of MATRIX. This
 allocates a fresh matrix, leaving the origin un-modified."
-  (scale-from-vec3! (copy matrix) vec))
+  (set-scale! (copy matrix) matrix vec))
 
 (declaim (inline scale!))
 (declaim (ftype (function (matrix matrix v3:vec) matrix) scale!))
 (defun scale! (out matrix vec)
   "Scale MATRIX by each scalar in VEC, storing the result in the existing
 matrix, OUT."
-  (*! out (scale-from-vec3 (id) vec) matrix))
+  (*! out (set-scale (id) vec) matrix))
 
 (declaim (inline scale))
 (declaim (ftype (function (matrix v3:vec) matrix) scale))
@@ -900,34 +902,57 @@ inverted with the fast method.
 See INVERT-ORTHOGONAL"
   (invert! (id) matrix))
 
-(declaim (ftype (function (matrix v3:vec v3:vec v3:vec) matrix) view!))
-(defun view! (out eye target up)
-  "Create a view matrix, storing the result in the existing matrix, OUT."
-  (let ((f (v3:zero))
-        (s (v3:zero))
-        (u (v3:zero))
-        (inv-eye (v3:zero))
-        (translation (id)))
-    (with-components ((o (id! out)))
-      (v3:with-components ((f (v3:normalize! f (v3:-! f target eye)))
-                           (s (v3:normalize! s (v3:cross! s f up)))
-                           (u (v3:cross! u s f)))
-        (psetf o00 sx o10 ux o20 (cl:- fx)
-               o01 sy o11 uy o21 (cl:- fy)
-               o02 sz o12 uz o22 (cl:- fz))
-        (translation-from-vec3! translation (v3:negate! inv-eye eye))
-        (*! out out translation))))
+(declaim (ftype (function (matrix v3:vec v3:vec v3:vec) matrix) set-view!))
+(defun set-view! (out eye target up)
+  (with-components ((o (id! out)))
+    (v3:with-components ((e eye) (s target) (u up))
+      (macrolet ((%normalize (place-x x place-y y place-z z)
+                   (au:once-only (x y z)
+                     `(let ((denom (sqrt
+                                    (cl:+
+                                     (cl:* ,x ,x) (cl:* ,y ,y) (cl:* ,z ,z)))))
+                        (psetf ,place-x (cl:/ ,x denom)
+                               ,place-y (cl:/ ,y denom)
+                               ,place-z (cl:/ ,z denom))))))
+        (%normalize o20 (cl:- sx ex)
+                    o21 (cl:- sy ey)
+                    o22 (cl:- sz ez))
+        (%normalize o00 (cl:- (cl:* o21 uz) (cl:* o22 uy))
+                    o01 (cl:- (cl:* o22 ux) (cl:* o20 uz))
+                    o02 (cl:- (cl:* o20 uy) (cl:* o21 ux)))
+        (psetf o10 (cl:- (cl:* o01 o22) (cl:* o02 o21))
+               o11 (cl:- (cl:* o02 o20) (cl:* o00 o22))
+               o12 (cl:- (cl:* o00 o21) (cl:* o01 o20)))
+        (psetf o20 (cl:- o20)
+               o21 (cl:- o21)
+               o22 (cl:- o22))
+        (psetf o03 (cl:+ (cl:* o00 (cl:- ex))
+                         (cl:* o01 (cl:- ey))
+                         (cl:* o02 (cl:- ez))
+                         o03)
+               o13 (cl:+ (cl:* o10 (cl:- ex))
+                         (cl:* o11 (cl:- ey))
+                         (cl:* o12 (cl:- ez))
+                         o13)
+               o23 (cl:+ (cl:* o20 (cl:- ex))
+                         (cl:* o21 (cl:- ey))
+                         (cl:* o22 (cl:- ez))
+                         o23)
+               o33 (cl:+ (cl:* o30 (cl:- ex))
+                         (cl:* o31 (cl:- ey))
+                         (cl:* o32 (cl:- ez))
+                         o33)))))
   out)
 
-(declaim (inline view))
-(declaim (ftype (function (v3:vec v3:vec v3:vec) matrix) view))
-(defun view (eye target up)
+(declaim (inline set-view))
+(declaim (ftype (function (v3:vec v3:vec v3:vec) matrix) set-view))
+(defun set-view (eye target up)
   "Create a view matrix, storing the result in a freshly allocated matrix."
-  (view! (id) eye target up))
+  (set-view! (id) eye target up))
 
 (declaim (ftype (function (matrix real real real real real real) matrix)
-                orthographic-projection!))
-(defun orthographic-projection! (out left right bottom top near far)
+                set-projection/orthographic!))
+(defun set-projection/orthographic! (out left right bottom top near far)
   "Create an orthographic projection matrix, storing the result in the existing
 matrix, OUT."
   (let ((right-left (float (cl:- right left) 1f0))
@@ -942,17 +967,17 @@ matrix, OUT."
              m23 (cl:- (/ (cl:+ far near) far-near))))
     out))
 
-(declaim (inline orthographic))
+(declaim (inline set-projection/orthographic))
 (declaim (ftype (function (real real real real real real) matrix)
-                orthographic-projection))
-(defun orthographic-projection (left right bottom top near far)
+                set-projection/orthographic))
+(defun set-projection/orthographic (left right bottom top near far)
   "Create an orthographic projection matrix, storing the result in a freshly
 allocated matrix."
-  (orthographic-projection! (id) left right bottom top near far))
+  (set-projection/orthographic! (id) left right bottom top near far))
 
 (declaim (ftype (function (matrix real real real real) matrix)
-                perspective-projection!))
-(defun perspective-projection! (out fov aspect near far)
+                set-projection/perspective!))
+(defun set-projection/perspective! (out fov aspect near far)
   "Create a perspective projection matrix, storing the result in the existing
 matrix, OUT."
   (let ((f (float (/ (tan (/ fov 2))) 1f0))
@@ -965,9 +990,10 @@ matrix, OUT."
              m32 -1f0)))
   out)
 
-(declaim (inline perspective-projection))
-(declaim (ftype (function (real real real real) matrix) perspective-projection))
-(defun perspective-projection (fov aspect near far)
+(declaim (inline set-projection/perspective))
+(declaim (ftype (function (real real real real) matrix)
+                set-projection/perspective))
+(defun set-projection/perspective (fov aspect near far)
   "Create a perspective projection matrix, storing the result in a freshly
 allocated matrix."
-  (perspective-projection! (id) fov aspect near far))
+  (set-projection/perspective! (id) fov aspect near far))

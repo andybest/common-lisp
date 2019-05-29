@@ -51,6 +51,8 @@
    #:dot
    #:length-squared
    #:length
+   #:distance-squared
+   #:distance
    #:normalize!
    #:normalize
    #:round!
@@ -330,6 +332,16 @@ See LENGTH for other cases."
 See LENGTH-SQUARED if you only need to compare lengths, as it is cheaper to
 compute without the square root call of this function."
   (sqrt (length-squared vec)))
+
+(declaim (inline distance-squared))
+(declaim (ftype (function (vec vec) single-float) distance-squared))
+(defun distance-squared (vec1 vec2)
+  (length-squared (- vec2 vec1)))
+
+(declaim (inline distance))
+(declaim (ftype (function (vec vec) single-float) distance))
+(defun distance (vec1 vec2)
+  (sqrt (distance-squared vec1 vec2)))
 
 (declaim (inline normalize!))
 (declaim (ftype (function (vec vec) vec) normalize!))

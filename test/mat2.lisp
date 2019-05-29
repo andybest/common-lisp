@@ -83,7 +83,7 @@
       (v (v2:make 1 2)))
   (ok (m2:= (m2:scale! o m v) s))
   (ok (m2:= o s))
-  (is (m2:scale-to-vec2 (m2:scale m2:+id+ v)) v))
+  (is (m2:get-scale (m2:scale m2:+id+ v)) v))
 
 (diag "matrix * vec2 multiplication")
 (let ((m (m2:rotate m2:+id+ (/ pi 3)))

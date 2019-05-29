@@ -34,10 +34,10 @@
    #:-
    #:*!
    #:*
-   #:translation-to-vec2!
-   #:translation-to-vec2
-   #:translation-from-vec2!
-   #:translation-from-vec2
+   #:get-translation!
+   #:get-translation
+   #:set-translation!
+   #:set-translation
    #:translate!
    #:translate
    #:copy-rotation!
@@ -48,10 +48,10 @@
    #:rotation-axis-from-vec2
    #:rotate!
    #:rotate
-   #:scale-to-vec2!
-   #:scale-to-vec2
-   #:scale-from-vec2!
-   #:scale-from-vec2
+   #:get-scale!
+   #:get-scale
+   #:set-scale!
+   #:set-scale
    #:scale!
    #:scale
    #:*v3!
@@ -333,43 +333,44 @@ existing matrix, OUT."
 allocated matrix."
   (*! (zero) matrix1 matrix2))
 
-(declaim (inline translation-to-vec2!))
-(declaim (ftype (function (v2:vec matrix) v2:vec) translation-to-vec2!))
-(defun translation-to-vec2! (out matrix)
+(declaim (inline get-translation!))
+(declaim (ftype (function (v2:vec matrix) v2:vec) get-translation!))
+(defun get-translation! (out matrix)
   "Copy the translation column of MATRIX to the existing vector, OUT."
-  (v2:with-components ((o out))
-    (with-components ((m matrix))
+  (with-components ((m matrix))
+    (v2:with-components ((o out))
       (psetf ox m02 oy m12)))
   out)
 
-(declaim (inline translation-to-vec2))
-(declaim (ftype (function (matrix) v2:vec) translation-to-vec2))
-(defun translation-to-vec2 (matrix)
+(declaim (inline get-translation))
+(declaim (ftype (function (matrix) v2:vec) get-translation))
+(defun get-translation (matrix)
   "Copy the translation column of MATRIX to a freshly allocated vector."
-  (translation-to-vec2! (v2:zero) matrix))
+  (get-translation! (v2:zero) matrix))
 
-(declaim (inline translation-from-vec2!))
-(declaim (ftype (function (matrix v2:vec) matrix) translation-from-vec2!))
-(defun translation-from-vec2! (matrix vec)
+(declaim (inline set-translation!))
+(declaim (ftype (function (matrix matrix v2:vec) matrix) set-translation!))
+(defun set-translation! (out matrix vec)
   "Copy the components of VEC to the translation column of MATRIX. This
 destructively modifies MATRIX."
-  (with-components ((m matrix))
+  (with-components ((o out))
     (v2:with-components ((v vec))
-      (psetf m02 vx m12 vy)))
-  matrix)
+      (copy! out matrix)
+      (psetf o02 vx o12 vy)))
+  out)
 
-(declaim (inline translation-from-vec2))
-(declaim (ftype (function (matrix v2:vec) matrix) translation-from-vec2))
-(defun translation-from-vec2 (matrix vec)
+(declaim (inline set-translation))
+(declaim (ftype (function (matrix v2:vec) matrix) set-translation))
+(defun set-translation (matrix vec)
   "Copy the components of VEC to the translation column of MATRIX. This
 allocates a fresh matrix, leaving the original un-modified."
-  (translation-from-vec2! (copy matrix) vec))
+  (set-translation! (copy matrix) matrix vec))
 
 (declaim (inline translate!))
 (declaim (ftype (function (matrix matrix v2:vec) matrix) translate!))
 (defun translate! (out matrix vec)
   "Translate MATRIX by VEC, storing the result in the existing matrix, OUT."
-  (*! out (translation-from-vec2 (id) vec) matrix))
+  (*! out (set-translation (id) vec) matrix))
 
 (declaim (inline translate))
 (declaim (ftype (function (matrix v2:vec) matrix) translate))
@@ -459,44 +460,45 @@ matrix, OUT."
 allocated matrix."
   (rotate! (id) matrix angle))
 
-(declaim (inline scale-to-vec2!))
-(declaim (ftype (function (v2:vec matrix) v2:vec) scale-to-vec2!))
-(defun scale-to-vec2! (out matrix)
+(declaim (inline get-scale!))
+(declaim (ftype (function (v2:vec matrix) v2:vec) get-scale!))
+(defun get-scale! (out matrix)
   "Copy the scaling transform of MATRIX to the existing vector, OUT."
-  (v2:with-components ((o out))
-    (with-components ((m matrix))
+  (with-components ((m matrix))
+    (v2:with-components ((o out))
       (psetf ox m00 oy m11)))
   out)
 
-(declaim (inline scale-to-vec2))
-(declaim (ftype (function (matrix) v2:vec) scale-to-vec2))
-(defun scale-to-vec2 (matrix)
+(declaim (inline get-scale))
+(declaim (ftype (function (matrix) v2:vec) get-scale))
+(defun get-scale (matrix)
   "Copy the scaling transform of MATRIX to a freshly allocated vector."
-  (scale-to-vec2! (v2:zero) matrix))
+  (get-scale! (v2:zero) matrix))
 
-(declaim (inline scale-from-vec2!))
-(declaim (ftype (function (matrix v2:vec) matrix) scale-from-vec2!))
-(defun scale-from-vec2! (matrix vec)
+(declaim (inline set-scale!))
+(declaim (ftype (function (matrix matrix v2:vec) matrix) set-scale!))
+(defun set-scale! (out matrix vec)
   "Copy the components of VEC to the scaling components of MATRIX. This
 destructively modifies MATRIX."
-  (with-components ((m matrix))
+  (with-components ((o out))
     (v2:with-components ((v vec))
-      (psetf m00 vx m11 vy)))
-  matrix)
+      (copy! out matrix)
+      (psetf o00 vx o11 vy)))
+  out)
 
-(declaim (inline scale-from-vec2))
-(declaim (ftype (function (matrix v2:vec) matrix) scale-from-vec2))
-(defun scale-from-vec2 (matrix vec)
+(declaim (inline set-scale))
+(declaim (ftype (function (matrix v2:vec) matrix) set-scale))
+(defun set-scale (matrix vec)
   "Copy the components of VEC to the scaling components of MATRIX. This
 allocates a fresh matrix, leaving the origin un-modified."
-  (scale-from-vec2! (copy matrix) vec))
+  (set-scale! (copy matrix) matrix vec))
 
 (declaim (inline scale!))
 (declaim (ftype (function (matrix matrix v2:vec) matrix) scale!))
 (defun scale! (out matrix vec)
   "Scale MATRIX by each scalar in VEC, storing the result in the existing
 matrix, OUT."
-  (*! out (scale-from-vec2 (id) vec) matrix))
+  (*! out (set-scale (id) vec) matrix))
 
 (declaim (inline scale))
 (declaim (ftype (function (matrix v2:vec) matrix) scale))
