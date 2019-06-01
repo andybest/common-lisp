@@ -248,7 +248,6 @@ existing matrix, OUT."
 freshly allocated matrix."
   (-! (zero) matrix1 matrix2))
 
-(declaim (inline *!))
 (declaim (ftype (function (matrix matrix matrix) matrix) *!))
 (defun *! (out matrix1 matrix2)
   "Calculate the product of MATRIX1 and MATRIX2, storing the result in the
