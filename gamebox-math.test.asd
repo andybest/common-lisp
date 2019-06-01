@@ -3,17 +3,18 @@
   :author "Michael Fiano <mail@michaelfiano.com>"
   :maintainer "Michael Fiano <mail@michaelfiano.com>"
   :license "MIT"
-  :defsystem-depends-on (:prove-asdf)
   :depends-on (#:gamebox-math
-               #:prove)
+               #:parachute)
   :pathname "test"
   :serial t
+  :perform (asdf:test-op (o c) (uiop:symbol-call
+                                '#:parachute '#:test '#:box.math.test))
   :components
   ((:file "package")
-   (:test-file "vec2")
-   (:test-file "vec3")
-   (:test-file "vec4")
-   (:test-file "mat2")
-   (:test-file "mat3")
-   (:test-file "mat4")
-   (:test-file "quat")))
+   (:file "vec2")
+   (:file "vec3")
+   (:file "vec4")
+   (:file "mat2")
+   (:file "mat3")
+   (:file "mat4")
+   (:file "quat")))

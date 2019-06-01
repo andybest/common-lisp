@@ -6,7 +6,7 @@
 (in-package #:box.math.internal)
 
 (au:eval-always
-  #+sbcl(setf sb-ext:*inline-expansion-limit* 1024)
+  #+sbcl(setf sb-ext:*inline-expansion-limit* 4096)
 
   (declaim (inline make-accessor-symbol))
   (defun make-accessor-symbol (prefix &rest args)

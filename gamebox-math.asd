@@ -11,6 +11,7 @@
   :depends-on (#:golden-utils)
   :pathname "src"
   :serial t
+  :in-order-to ((asdf:test-op (asdf:test-op #:gamebox-math.test)))
   :components
   ((:file "internal")
    (:file "common")

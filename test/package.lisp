@@ -9,4 +9,4 @@
                     (#:m4 #:box.math.mat4)
                     (#:q #:box.math.quat))
   (:use #:cl
-        #:prove))
+        #:parachute))
