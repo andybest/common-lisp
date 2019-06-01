@@ -36,6 +36,10 @@
    #:random
    #:copy!
    #:copy
+   #:sign!
+   #:sign
+   #:fract!
+   #:fract
    #:clamp!
    #:clamp
    #:to-list
@@ -194,6 +198,36 @@
 (defun copy (vec)
   "Copy each component of VEC to a freshly allocated vector."
   (copy! (zero) vec))
+
+(declaim (inline sign!))
+(declaim (ftype (function (vec vec) vec) sign!))
+(defun sign! (out vec)
+  (with-vectors ((o out)
+                 (v vec))
+    (psetf ox (signum vx)
+           oy (signum vy)
+           oz (signum vz)))
+  out)
+
+(declaim (inline sign))
+(declaim (ftype (function (vec) vec) sign))
+(defun sign (vec)
+  (sign! (zero) vec))
+
+(declaim (inline fract!))
+(declaim (ftype (function (vec vec) vec) fract!))
+(defun fract! (out vec)
+  (with-vectors ((o out)
+                 (v vec))
+    (psetf ox (cl:- vx (cl:floor vx))
+           oy (cl:- vy (cl:floor vy))
+           oz (cl:- vz (cl:floor vz))))
+  out)
+
+(declaim (inline fract))
+(declaim (ftype (function (vec) vec) fract))
+(defun fract (vec)
+  (fract! (zero) vec))
 
 (declaim (inline clamp!))
 (declaim (ftype (function (vec vec &key (:min single-float) (:max single-float))

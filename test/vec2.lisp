@@ -17,6 +17,29 @@
     (is v2:= (v2:copy v) v)
     (isnt eq v (v2:copy v))))
 
+(define-test v2/sign
+  (let ((o (v2:zero)))
+    (is v2:= (v2:sign (v2:zero)) (v2:zero))
+    (is v2:= (v2:sign (v2:make 10 10)) (v2:make 1 1))
+    (is v2:= (v2:sign (v2:make -10 -10)) (v2:make -1 -1))
+    (v2:sign! o (v2:zero))
+    (is v2:= o (v2:zero))
+    (v2:sign! o (v2:make 10 10))
+    (is v2:= o (v2:make 1 1))
+    (v2:sign! o (v2:make -10 -10))
+    (is v2:= o (v2:make -1 -1))))
+
+(define-test v2/fract
+  (let ((o (v2:zero))
+        (v (v2:make 10.42 -10.42))
+        (r (v2:make 0.42 0.58)))
+    (is v2:= (v2:fract (v2:zero)) (v2:zero))
+    (is v2:~ (v2:fract v) r)
+    (v2:fract! o (v2:zero))
+    (is v2:= o (v2:zero))
+    (v2:fract! o v)
+    (is v2:~ o r)))
+
 (define-test v2/clamp
   (let ((v (v2:make -1.5185602 0.3374052))
         (r (v2:make -1 0.3374052))

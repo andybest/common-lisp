@@ -12,6 +12,29 @@
     (is = (v3:y v) 20)
     (is = (v3:z v) 30)))
 
+(define-test v3/sign
+  (let ((o (v3:zero)))
+    (is v3:= (v3:sign (v3:zero)) (v3:zero))
+    (is v3:= (v3:sign (v3:make 10 10 10)) (v3:make 1 1 1))
+    (is v3:= (v3:sign (v3:make -10 -10 -10)) (v3:make -1 -1 -1))
+    (v3:sign! o (v3:zero))
+    (is v3:= o (v3:zero))
+    (v3:sign! o (v3:make 10 10 10))
+    (is v3:= o (v3:make 1 1 1))
+    (v3:sign! o (v3:make -10 -10 -10))
+    (is v3:= o (v3:make -1 -1 -1))))
+
+(define-test v3/fract
+  (let ((o (v3:zero))
+        (v (v3:make 10.42 -10.42 0))
+        (r (v3:make 0.42 0.58 0)))
+    (is v3:= (v3:fract (v3:zero)) (v3:zero))
+    (is v3:~ (v3:fract v) r)
+    (v3:fract! o (v3:zero))
+    (is v3:= o (v3:zero))
+    (v3:fract! o v)
+    (is v3:~ o r)))
+
 (define-test v3/copy
   (let ((v (v3:make 1 2 3))
         (o (v3:zero)))

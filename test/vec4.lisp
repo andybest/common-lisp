@@ -23,6 +23,29 @@
     (is v4:= (v4:copy v) v)
     (isnt eq v (v4:copy v))))
 
+(define-test v4/sign
+  (let ((o (v4:zero)))
+    (is v4:= (v4:sign (v4:zero)) (v4:zero))
+    (is v4:= (v4:sign (v4:make 10 10 10 10)) (v4:make 1 1 1 1))
+    (is v4:= (v4:sign (v4:make -10 -10 -10 -10)) (v4:make -1 -1 -1 -1))
+    (v4:sign! o (v4:zero))
+    (is v4:= o (v4:zero))
+    (v4:sign! o (v4:make 10 10 10 10))
+    (is v4:= o (v4:make 1 1 1 1))
+    (v4:sign! o (v4:make -10 -10 -10 -10))
+    (is v4:= o (v4:make -1 -1 -1 -1))))
+
+(define-test v4/fract
+  (let ((o (v4:zero))
+        (v (v4:make 10.42 -10.42 0 0))
+        (r (v4:make 0.42 0.58 0 0)))
+    (is v4:= (v4:fract (v4:zero)) (v4:zero))
+    (is v4:~ (v4:fract v) r)
+    (v4:fract! o (v4:zero))
+    (is v4:= o (v4:zero))
+    (v4:fract! o v)
+    (is v4:~ o r)))
+
 (define-test v4/clamp
   (let ((v (v4:make -1.5185602 0.3374052 1.5218115 1.8188539))
         (r (v4:make -1 0.3374052 1 1))
