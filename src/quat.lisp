@@ -13,7 +13,8 @@
    #:-
    #:*
    #:conjugate
-   #:length)
+   #:length
+   #:random)
   (:export
    #:quat
    #:with-quaternions
@@ -30,6 +31,8 @@
    #:zero
    #:=
    #:~
+   #:random!
+   #:random
    #:copy!
    #:copy
    #:+!
@@ -174,6 +177,22 @@ QUAT2, according to TOLERANCE."
          (%::~ q1x q2x tolerance)
          (%::~ q1y q2y tolerance)
          (%::~ q1z q2z tolerance))))
+
+(declaim (inline random!))
+(declaim (ftype (function (quat &key (:min real) (:max real)) quat)
+                random!))
+(defun random! (out &key (min 0.0) (max 1.0))
+  (with-quaternions ((o out))
+    (psetf ow (cl:+ min (cl:random (cl:- max min)))
+           ox (cl:+ min (cl:random (cl:- max min)))
+           oy (cl:+ min (cl:random (cl:- max min)))
+           oz (cl:+ min (cl:random (cl:- max min)))))
+  out)
+
+(declaim (inline random))
+(declaim (ftype (function (&key (:min real) (:max real)) quat) random))
+(defun random (&key (min 0.0) (max 1.0))
+  (random! (zero) :min min :max max))
 
 (declaim (inline copy!))
 (declaim (ftype (function (quat quat) quat) copy!))

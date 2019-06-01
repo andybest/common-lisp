@@ -9,6 +9,7 @@
    #:-
    #:*
    #:/
+   #:random
    #:length
    #:round
    #:abs
@@ -30,6 +31,8 @@
    #:one!
    #:one
    #:zero-p
+   #:random!
+   #:random
    #:copy!
    #:copy
    #:clamp!
@@ -152,6 +155,19 @@
   (with-vectors ((v vec))
     (and (zerop vx)
          (zerop vy))))
+
+(declaim (inline random!))
+(declaim (ftype (function (vec &key (:min real) (:max real)) vec) random!))
+(defun random! (out &key (min 0.0) (max 1.0))
+  (with-vectors ((o out))
+    (psetf ox (cl:+ min (cl:random (cl:- max min)))
+           oy (cl:+ min (cl:random (cl:- max min)))))
+  out)
+
+(declaim (inline random))
+(declaim (ftype (function (&key (:min real) (:max real)) vec) random))
+(defun random (&key (min 0.0) (max 1.0))
+  (random! (zero) :min min :max max))
 
 (declaim (inline copy!))
 (declaim (ftype (function (vec vec) vec) copy!))

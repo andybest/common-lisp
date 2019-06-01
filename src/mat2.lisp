@@ -9,6 +9,7 @@
    #:+
    #:-
    #:*
+   #:random
    #:trace)
   (:export
    #:matrix
@@ -18,6 +19,7 @@
    #:make
    #:zero!
    #:zero
+   #:random
    #:id!
    #:id
    #:=
@@ -161,6 +163,22 @@ of MATRIX2, according to TOLERANCE."
          (%::~ a01 b01 tolerance)
          (%::~ a10 b10 tolerance)
          (%::~ a11 b11 tolerance))))
+
+(declaim (inline random!))
+(declaim (ftype (function (matrix &key (:min real) (:max real)) matrix)
+                random!))
+(defun random! (out &key (min 0.0) (max 1.0))
+  (with-matrices ((o out))
+    (psetf o00 (cl:+ min (cl:random (cl:- max min)))
+           o01 (cl:+ min (cl:random (cl:- max min)))
+           o10 (cl:+ min (cl:random (cl:- max min)))
+           o11 (cl:+ min (cl:random (cl:- max min)))))
+  out)
+
+(declaim (inline random))
+(declaim (ftype (function (&key (:min real) (:max real)) matrix) random))
+(defun random (&key (min 0.0) (max 1.0))
+  (random! (zero) :min min :max max))
 
 (declaim (inline copy!))
 (declaim (ftype (function (matrix matrix) matrix) copy!))
