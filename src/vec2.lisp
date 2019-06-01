@@ -22,7 +22,7 @@
    #:vec
    #:x
    #:y
-   #:with-components
+   #:with-vectors
    #:make
    #:+zero+
    #:zero!
@@ -88,7 +88,7 @@
   (x 0f0 :type single-float)
   (y 0f0 :type single-float))
 
-(defmacro with-components (((prefix vec) &rest rest) &body body)
+(defmacro with-vectors (((prefix vec) &rest rest) &body body)
   "A convenience macro for concisely accessing the components of vectors."
   `(with-accessors ((,prefix identity)
                     (,(%::make-accessor-symbol prefix 'x) x)
@@ -99,7 +99,7 @@
                     (,(%::make-accessor-symbol prefix 't) y))
        ,vec
      ,(if rest
-          `(with-components ,rest ,@body)
+          `(with-vectors ,rest ,@body)
           `(progn ,@body))))
 
 ;;; Constants
@@ -121,7 +121,7 @@
 (declaim (ftype (function (vec) vec) zero!))
 (defun zero! (vec)
   "Set each component of VEC to zero."
-  (with-components ((v vec))
+  (with-vectors ((v vec))
     (psetf vx 0f0 vy 0f0))
   vec)
 
@@ -135,7 +135,7 @@
 (declaim (ftype (function (vec) vec) one!))
 (defun one! (vec)
   "Set each component of VEC to one."
-  (with-components ((v vec))
+  (with-vectors ((v vec))
     (psetf vx 1f0 vy 1f0))
   vec)
 
@@ -149,7 +149,7 @@
 (declaim (ftype (function (vec) boolean) zero-p))
 (defun zero-p (vec)
   "Check if each component of VEC is zero."
-  (with-components ((v vec))
+  (with-vectors ((v vec))
     (and (zerop vx)
          (zerop vy))))
 
@@ -157,7 +157,7 @@
 (declaim (ftype (function (vec vec) vec) copy!))
 (defun copy! (out vec)
   "Copy each component of VEC to the existing vector, OUT."
-  (with-components ((o out) (v vec))
+  (with-vectors ((o out) (v vec))
     (psetf ox vx oy vy))
   out)
 
@@ -176,7 +176,7 @@
                  (max most-positive-single-float))
   "Clamp each component of VEC within the range of [MIN, MAX], storing the
 result in the existing vector, OUT."
-  (with-components ((o out) (v vec))
+  (with-vectors ((o out) (v vec))
     (psetf ox (au:clamp vx min max)
            oy (au:clamp vy min max)))
   out)
@@ -196,7 +196,7 @@ result in a freshly allocated vector."
 (declaim (ftype (function (vec) list) to-list))
 (defun to-list (vec)
   "Convert VEC to a list of its components."
-  (with-components ((v vec))
+  (with-vectors ((v vec))
     (list vx vy)))
 
 (declaim (inline from-list))
@@ -210,7 +210,7 @@ result in a freshly allocated vector."
 (defun = (vec1 vec2)
   "Check if all components of VEC1 are numerically equal to the components of
 VEC2."
-  (with-components ((v1 vec1) (v2 vec2))
+  (with-vectors ((v1 vec1) (v2 vec2))
     (and (cl:= v1x v2x)
          (cl:= v1y v2y))))
 
@@ -219,7 +219,7 @@ VEC2."
 (defun ~ (vec1 vec2 &key (tolerance 1e-7))
   "Check if all components of VEC1 are approximately equal to the components of
 VEC2, according to TOLERANCE."
-  (with-components ((v1 vec1) (v2 vec2))
+  (with-vectors ((v1 vec1) (v2 vec2))
     (and (%::~ v1x v2x tolerance)
          (%::~ v1y v2y tolerance))))
 
@@ -228,7 +228,7 @@ VEC2, according to TOLERANCE."
 (defun +! (out vec1 vec2)
   "Calculate the sum of VEC1 and VEC2, storing the result in the existing
 vector, OUT."
-  (with-components ((o out) (v1 vec1) (v2 vec2))
+  (with-vectors ((o out) (v1 vec1) (v2 vec2))
     (psetf ox (cl:+ v1x v2x)
            oy (cl:+ v1y v2y)))
   out)
@@ -245,7 +245,7 @@ vector."
 (defun -! (out vec1 vec2)
   "Calculate the difference of VEC2 from VEC1, storing the result in the
 existing vector, OUT."
-  (with-components ((o out) (v1 vec1) (v2 vec2))
+  (with-vectors ((o out) (v1 vec1) (v2 vec2))
     (psetf ox (cl:- v1x v2x)
            oy (cl:- v1y v2y)))
   out)
@@ -262,7 +262,7 @@ allocated vector."
 (defun *! (out vec1 vec2)
   "Calculate the Hadamard (component-wise) product of VEC1 and VEC2, storing the
 result in the existing vector, OUT."
-  (with-components ((o out) (v1 vec1) (v2 vec2))
+  (with-vectors ((o out) (v1 vec1) (v2 vec2))
     (psetf ox (cl:* v1x v2x)
            oy (cl:* v1y v2y)))
   out)
@@ -279,7 +279,7 @@ result in a freshly allocated vector."
 (defun /! (out vec1 vec2)
   "Calculate the Hadamard (component-wise) quotient of VEC1 by VEC2, storing the
 result in the existing vector, OUT."
-  (with-components ((o out) (v1 vec1) (v2 vec2))
+  (with-vectors ((o out) (v1 vec1) (v2 vec2))
     (psetf ox (if (zerop v2x) 0f0 (cl:/ v1x v2x))
            oy (if (zerop v2y) 0f0 (cl:/ v1y v2y))))
   out)
@@ -295,7 +295,7 @@ result in a freshly allocated vector."
 (declaim (ftype (function (vec vec single-float) vec) scale!))
 (defun scale! (out vec scalar)
   "Scale VEC by SCALAR, storing the result in the existing vector, OUT."
-  (with-components ((o out) (v vec))
+  (with-vectors ((o out) (v vec))
     (psetf ox (cl:* vx scalar)
            oy (cl:* vy scalar)))
   out)
@@ -310,7 +310,7 @@ result in a freshly allocated vector."
 (declaim (ftype (function (vec vec) single-float) dot))
 (defun dot (vec1 vec2)
   "Calculate the dot product of VEC1 and VEC2. Returns a scalar."
-  (with-components ((v1 vec1) (v2 vec2))
+  (with-vectors ((v1 vec1) (v2 vec2))
     (cl:+ (cl:* v1x v2x) (cl:* v1y v2y))))
 
 (declaim (inline length-squared))
@@ -365,7 +365,7 @@ vector."
 (defun round! (out vec)
   "Round each component of VEC to the nearest integer, storing the result in the
 existing vector, OUT."
-  (with-components ((o out) (v vec))
+  (with-vectors ((o out) (v vec))
     (psetf ox (fround vx)
            oy (fround vy)))
   out)
@@ -382,7 +382,7 @@ freshly allocated vector."
 (defun abs! (out vec)
   "Convert each component of VEC to its absolute value, storing the result in
 the existing vector, OUT."
-  (with-components ((o out) (v vec))
+  (with-vectors ((o out) (v vec))
     (psetf ox (cl:abs vx)
            oy (cl:abs vy)))
   out)
@@ -427,7 +427,7 @@ vector."
 (defun lerp! (out vec1 vec2 factor)
   "Linearly interpolate between VEC1 and VEC2 by FACTOR, storing the result in
 the existing vector, OUT."
-  (with-components ((o out) (v1 vec1) (v2 vec2))
+  (with-vectors ((o out) (v1 vec1) (v2 vec2))
     (psetf ox (au:lerp factor v1x v2x)
            oy (au:lerp factor v1y v2y)))
   out)
@@ -443,7 +443,7 @@ freshly allocated vector."
 (declaim (ftype (function (vec vec) boolean) <))
 (defun < (vec1 vec2)
   "Check if each component of VEC1 is less than the same component of VEC2."
-  (with-components ((v1 vec1) (v2 vec2))
+  (with-vectors ((v1 vec1) (v2 vec2))
     (and (cl:< v1x v2x)
          (cl:< v1y v2y))))
 
@@ -452,7 +452,7 @@ freshly allocated vector."
 (defun <= (vec1 vec2)
   "Check if each component of VEC1 is less than or equal to the same component
 of VEC2."
-  (with-components ((v1 vec1) (v2 vec2))
+  (with-vectors ((v1 vec1) (v2 vec2))
     (and (cl:<= v1x v2x)
          (cl:<= v1y v2y))))
 
@@ -460,7 +460,7 @@ of VEC2."
 (declaim (ftype (function (vec vec) boolean) >))
 (defun > (vec1 vec2)
   "Check if each component of VEC1 is greater than the same component of VEC2."
-  (with-components ((v1 vec1) (v2 vec2))
+  (with-vectors ((v1 vec1) (v2 vec2))
     (and (cl:> v1x v2x)
          (cl:> v1y v2y))))
 
@@ -469,7 +469,7 @@ of VEC2."
 (defun >= (vec1 vec2)
   "Check if each component of VEC1 is greater than or equal to the same
 component of VEC2."
-  (with-components ((v1 vec1) (v2 vec2))
+  (with-vectors ((v1 vec1) (v2 vec2))
     (and (cl:>= v1x v2x)
          (cl:>= v1y v2y))))
 
@@ -478,7 +478,7 @@ component of VEC2."
 (defun min! (out vec1 vec2)
   "Return the minimum of each component in VEC1 and VEC2, into the existing
 vector, OUT."
-  (with-components ((o out) (v1 vec1) (v2 vec2))
+  (with-vectors ((o out) (v1 vec1) (v2 vec2))
     (psetf ox (cl:min v1x v2x)
            oy (cl:min v1y v2y)))
   out)
@@ -495,7 +495,7 @@ allocated vector."
 (defun max! (out vec1 vec2)
   "Return the maximum of each component in VEC1 and VEC2, into the existing
 vector, OUT."
-  (with-components ((o out) (v1 vec1) (v2 vec2))
+  (with-vectors ((o out) (v1 vec1) (v2 vec2))
     (psetf ox (cl:max v1x v2x)
            oy (cl:max v1y v2y)))
   out)

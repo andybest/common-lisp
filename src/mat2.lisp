@@ -12,7 +12,7 @@
    #:trace)
   (:export
    #:matrix
-   #:with-components
+   #:with-matrices
    #:mref
    #:+zero+
    #:+id+
@@ -75,7 +75,7 @@ rotation sub-matrix of a 2-dimensional transformation matrix."
   (m01 0f0 :type single-float)
   (m11 0f0 :type single-float))
 
-(defmacro with-components (((prefix matrix) &rest rest) &body body)
+(defmacro with-matrices (((prefix matrix) &rest rest) &body body)
   "A convenience macro for concisely accessing the components of matrices."
   `(with-accessors ((,prefix identity)
                     (,(%::make-accessor-symbol prefix "00") m00)
@@ -84,7 +84,7 @@ rotation sub-matrix of a 2-dimensional transformation matrix."
                     (,(%::make-accessor-symbol prefix "11") m11))
        ,matrix
      ,(if rest
-          `(with-components ,rest ,@body)
+          `(with-matrices ,rest ,@body)
           `(progn ,@body))))
 
 (declaim (inline mref))
@@ -132,7 +132,7 @@ prevent unintended behavior should ordering of a matrix ever change."
 (declaim (ftype (function (matrix) matrix) zero!))
 (defun zero! (matrix)
   "Set each component of MATRIX to zero."
-  (with-components ((m matrix))
+  (with-matrices ((m matrix))
     (psetf m00 0f0 m01 0f0 m10 0f0 m11 0f0))
   matrix)
 
@@ -146,7 +146,7 @@ prevent unintended behavior should ordering of a matrix ever change."
 (declaim (ftype (function (matrix) matrix) id!))
 (defun id! (matrix)
   "Modify MATRIX to be an identity matrix."
-  (with-components ((m matrix))
+  (with-matrices ((m matrix))
     (psetf m00 1f0 m01 0f0 m10 0f0 m11 1f0))
   matrix)
 
@@ -161,7 +161,7 @@ prevent unintended behavior should ordering of a matrix ever change."
 (defun = (matrix1 matrix2)
   "Check if all components of MATRIX1 are numerically equal to the components of
 MATRIX2."
-  (with-components ((a matrix1) (b matrix2))
+  (with-matrices ((a matrix1) (b matrix2))
     (and (cl:= a00 b00) (cl:= a01 b01)
          (cl:= a10 b10) (cl:= a11 b11))))
 
@@ -172,7 +172,7 @@ MATRIX2."
 (defun ~ (matrix1 matrix2 &key (tolerance 1e-7))
   "Check if all components of MATRIX1 are approximately equal to the components
 of MATRIX2, according to TOLERANCE."
-  (with-components ((a matrix1) (b matrix2))
+  (with-matrices ((a matrix1) (b matrix2))
     (and (%::~ a00 b00 tolerance)
          (%::~ a01 b01 tolerance)
          (%::~ a10 b10 tolerance)
@@ -182,7 +182,7 @@ of MATRIX2, according to TOLERANCE."
 (declaim (ftype (function (matrix matrix) matrix) copy!))
 (defun copy! (out matrix)
   "Copy each component of MATRIX to the existing matrix, OUT."
-  (with-components ((o out) (m matrix))
+  (with-matrices ((o out) (m matrix))
     (psetf o00 m00 o01 m01
            o10 m10 o11 m11))
   out)
@@ -202,7 +202,7 @@ of MATRIX2, according to TOLERANCE."
                  (max most-positive-single-float))
   "Clamp each component of MATRIX within the range of [MIN, MAX], storing the
 result in the existing matrix, OUT."
-  (with-components ((o out) (m matrix))
+  (with-matrices ((o out) (m matrix))
     (psetf o00 (au:clamp m00 min max)
            o01 (au:clamp m01 min max)
            o10 (au:clamp m10 min max)
@@ -225,7 +225,7 @@ result in a freshly allocated matrix."
 (defun +! (out matrix1 matrix2)
   "Calculate the sum of MATRIX1 and MATRIX2, storing the result in the existing
 matrix, OUT."
-  (with-components ((o out) (a matrix1) (b matrix2))
+  (with-matrices ((o out) (a matrix1) (b matrix2))
     (psetf o00 (cl:+ a00 b00)
            o10 (cl:+ a10 b10)
            o01 (cl:+ a01 b01)
@@ -244,7 +244,7 @@ allocated matrix."
 (defun -! (out matrix1 matrix2)
   "Calculate the difference of MATRIX2 from MATRIX1, storing the result in the
 existing matrix, OUT."
-  (with-components ((o out) (a matrix1) (b matrix2))
+  (with-matrices ((o out) (a matrix1) (b matrix2))
     (psetf o00 (cl:- a00 b00)
            o10 (cl:- a10 b10)
            o01 (cl:- a01 b01)
@@ -263,7 +263,7 @@ freshly allocated matrix."
 (defun *! (out matrix1 matrix2)
   "Calculate the product of MATRIX1 and MATRIX2, storing the result in the
 existing matrix, OUT."
-  (with-components ((o out) (a matrix1) (b matrix2))
+  (with-matrices ((o out) (a matrix1) (b matrix2))
     (psetf o00 (cl:+ (cl:* a00 b00) (cl:* a01 b10))
            o10 (cl:+ (cl:* a10 b00) (cl:* a11 b10))
            o01 (cl:+ (cl:* a00 b01) (cl:* a01 b11))
@@ -283,8 +283,8 @@ allocated matrix."
 (defun rotation-axis-to-vec2! (out matrix axis)
   "Copy the rotation axis from MATRIX denoted by the keyword symbol AXIS, to the
 existing vector, OUT."
-  (v2:with-components ((v out))
-    (with-components ((m matrix))
+  (v2:with-vectors ((v out))
+    (with-matrices ((m matrix))
       (ecase axis
         (:x (psetf vx m00 vy m10))
         (:y (psetf vx m01 vy m11)))))
@@ -303,8 +303,8 @@ freshly allocated vector."
 (defun rotation-axis-from-vec2! (matrix vec axis)
   "Copy the components of VEC into the rotation axis of MATRIX denoted by the
 keyword symbol AXIS. This destructively modifies MATRIX."
-  (with-components ((m matrix))
-    (v2:with-components ((v vec))
+  (with-matrices ((m matrix))
+    (v2:with-vectors ((v vec))
       (ecase axis
         (:x (psetf m00 vx m10 vy))
         (:y (psetf m01 vx m11 vy)))))
@@ -324,7 +324,7 @@ un-modified."
 (defun rotate! (out matrix angle &key (space :local))
   "Rotate MATRIX by the Euler angle, ANGLE, storing the result in the existing
 matrix, OUT."
-  (with-components ((m (id)))
+  (with-matrices ((m (id)))
     (copy! out matrix)
     (when (cl:> (abs angle) 1e-7)
       (let* ((angle (float angle 1f0))
@@ -348,8 +348,8 @@ allocated matrix."
 (declaim (ftype (function (v2:vec matrix) v2:vec) get-scale!))
 (defun get-scale! (out matrix)
   "Copy the scaling transform of MATRIX to the existing vector, OUT."
-  (with-components ((m matrix))
-    (v2:with-components ((o out))
+  (with-matrices ((m matrix))
+    (v2:with-vectors ((o out))
       (psetf ox m00 oy m11)))
   out)
 
@@ -364,8 +364,8 @@ allocated matrix."
 (defun set-scale! (out matrix vec)
   "Copy the components of VEC to the scaling components of MATRIX. This
 destructively modifies MATRIX."
-  (with-components ((o out))
-    (v2:with-components ((v vec))
+  (with-matrices ((o out))
+    (v2:with-vectors ((v vec))
       (copy! out matrix)
       (psetf o00 vx o11 vy)))
   out)
@@ -396,8 +396,8 @@ matrix."
 (defun *v2! (out matrix vec)
   "Calculate the product of MATRIX and VEC, storing the result in the existing
 vector, OUT."
-  (v2:with-components ((v vec) (o out))
-    (with-components ((m matrix))
+  (v2:with-vectors ((v vec) (o out))
+    (with-matrices ((m matrix))
       (psetf ox (cl:+ (cl:* m00 vx) (cl:* m01 vy))
              oy (cl:+ (cl:* m10 vx) (cl:* m11 vy)))))
   out)
@@ -413,7 +413,7 @@ allocated vector."
 (declaim (ftype (function (matrix matrix) matrix) transpose!))
 (defun transpose! (out matrix)
   "Transpose MATRIX, storing the result in the existing matrix, OUT."
-  (with-components ((o (copy! out matrix)))
+  (with-matrices ((o (copy! out matrix)))
     (rotatef o01 o10))
   out)
 
@@ -434,14 +434,14 @@ length."
 (declaim (ftype (function (matrix) single-float) trace))
 (defun trace (matrix)
   "Calculates the sum of the components along the main diagonal of MATRIX."
-  (with-components ((m matrix))
+  (with-matrices ((m matrix))
     (cl:+ m00 m11)))
 
 (declaim (inline diagonal-p))
 (declaim (ftype (function (matrix) boolean) diagonal-p))
 (defun diagonal-p (matrix)
   "Check if the components outside of the main diagonal of MATRIX are all zero."
-  (with-components ((m matrix))
+  (with-matrices ((m matrix))
     (and (zerop m10)
          (zerop m01))))
 
@@ -450,8 +450,8 @@ length."
 (defun main-diagonal! (out matrix)
   "Copy the components along the main diagonal of MATRIX to the existing vector,
 OUT."
-  (with-components ((m matrix))
-    (v2:with-components ((v out))
+  (with-matrices ((m matrix))
+    (v2:with-vectors ((v out))
       (setf vx m00 vy m11)))
   out)
 
@@ -467,8 +467,8 @@ vector."
 (defun anti-diagonal! (out matrix)
   "Copy the components along the anti-diagonal of MATRIX to the existing vector,
 OUT."
-  (with-components ((m matrix))
-    (v2:with-components ((v out))
+  (with-matrices ((m matrix))
+    (v2:with-vectors ((v out))
       (setf vx m01 vy m10)))
   out)
 
