@@ -14,7 +14,6 @@
   (:export
    #:matrix
    #:with-matrices
-   #:mref
    #:+zero+
    #:+id+
    #:make
@@ -134,23 +133,6 @@ complete 3-dimensional transformation matrix."
      ,(if rest
           `(with-matrices ,rest ,@body)
           `(progn ,@body))))
-
-(declaim (inline mref))
-(declaim (ftype (function (matrix (integer 0 15) (integer 0 15))
-                          single-float)
-                mref))
-(defun mref (matrix row column)
-  "A virtualized matrix component reader. Use this instead of AREF to prevent
-unintended behavior should ordering of a matrix ever change."
-  (aref matrix (cl:+ row (cl:* column 4))))
-
-(declaim (inline mref))
-(declaim (ftype (function (matrix (integer 0 15) (integer 0 15)) single-float)
-                mref))
-(defun (setf mref) (value matrix row column)
-  "A virtualized matrix component writer. Use this instead of (SETF AREF) to
-prevent unintended behavior should ordering of a matrix ever change."
-  (setf (aref matrix (cl:+ row (cl:* column 4))) value))
 
 ;;; Constants
 
