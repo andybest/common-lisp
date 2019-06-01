@@ -80,7 +80,11 @@
    #:min!
    #:min
    #:max!
-   #:max))
+   #:max
+   #:radians!
+   #:radians
+   #:degrees!
+   #:degrees))
 
 
 (in-package #:box.math.vec4)
@@ -629,3 +633,37 @@ vector, OUT."
   "Return the maximum of each component in VEC1 and VEC2, into a freshly
 allocated vector."
   (max! (zero) vec1 vec2))
+
+(declaim (inline radians!))
+(declaim (ftype (function (vec vec) vec) radians!))
+(defun radians! (out vec)
+  (with-vectors ((o out)
+                 (v vec))
+    (let ((x (float (cl:/ pi 180) 1f0)))
+      (psetf ox (cl:* vx x)
+             oy (cl:* vy x)
+             oz (cl:* vz x)
+             ow (cl:* vw x)))
+    out))
+
+(declaim (inline radians))
+(declaim (ftype (function (vec) vec) radians))
+(defun radians (vec)
+  (radians! (zero) vec))
+
+(declaim (inline degrees!))
+(declaim (ftype (function (vec vec) vec) degrees!))
+(defun degrees! (out vec)
+  (with-vectors ((o out)
+                 (v vec))
+    (let ((x (float (cl:/ 180 pi) 1f0)))
+      (psetf ox (cl:* vx x)
+             oy (cl:* vy x)
+             oz (cl:* vz x)
+             ow (cl:* vw x))))
+  out)
+
+(declaim (inline degrees))
+(declaim (ftype (function (vec) vec) degrees))
+(defun degrees (vec)
+  (degrees! (zero) vec))
