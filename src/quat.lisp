@@ -155,7 +155,8 @@
 (defun = (quat1 quat2)
   "Check if all components of QUAT1 are numerically equal to the components of
 QUAT2."
-  (with-quaternions ((q1 quat1) (q2 quat2))
+  (with-quaternions ((q1 quat1)
+                     (q2 quat2))
     (and (cl:= q1w q2w)
          (cl:= q1x q2x)
          (cl:= q1y q2y)
@@ -167,7 +168,8 @@ QUAT2."
 (defun ~ (quat1 quat2 &key (tolerance 1e-7))
   "Check if all components of QUAT1 are approximately equal to the components of
 QUAT2, according to TOLERANCE."
-  (with-quaternions ((q1 quat1) (q2 quat2))
+  (with-quaternions ((q1 quat1)
+                     (q2 quat2))
     (and (%::~ q1w q2w tolerance)
          (%::~ q1x q2x tolerance)
          (%::~ q1y q2y tolerance)
@@ -177,7 +179,8 @@ QUAT2, according to TOLERANCE."
 (declaim (ftype (function (quat quat) quat) copy!))
 (defun copy! (out quat)
   "Copy each component of QUAT to the existing quaternion, OUT."
-  (with-quaternions ((o out) (q quat))
+  (with-quaternions ((o out)
+                     (q quat))
     (psetf ow qw ox qx oy qy oz qz))
   out)
 
@@ -192,7 +195,9 @@ QUAT2, according to TOLERANCE."
 (defun +! (out quat1 quat2)
   "Calculate the sum of QUAT1 and QUAT2, storing the result in the existing
 quaternion, OUT."
-  (with-quaternions ((o out) (q1 quat1) (q2 quat2))
+  (with-quaternions ((o out)
+                     (q1 quat1)
+                     (q2 quat2))
     (psetf ow (cl:+ q1w q2w)
            ox (cl:+ q1x q2x)
            oy (cl:+ q1y q2y)
@@ -211,7 +216,9 @@ allocated quaternion."
 (defun -! (out quat1 quat2)
   "Calculate the difference of QUAT2 from QUAT1, storing the result in the
 existing quaternion, OUT."
-  (with-quaternions ((o out) (q1 quat1) (q2 quat2))
+  (with-quaternions ((o out)
+                     (q1 quat1)
+                     (q2 quat2))
     (psetf ow (cl:- q1w q2w)
            ox (cl:- q1x q2x)
            oy (cl:- q1y q2y)
@@ -230,7 +237,9 @@ allocated quaternion."
 (defun *! (out quat1 quat2)
   "Calculate the product of QUAT1 and QUAT2, storing the result in the existing
 quaternion, OUT."
-  (with-quaternions ((o out) (q1 quat1) (q2 quat2))
+  (with-quaternions ((o out)
+                     (q1 quat1)
+                     (q2 quat2))
     (psetf ow (cl:- (cl:* q1w q2w) (cl:* q1x q2x) (cl:* q1y q2y)
                     (cl:* q1z q2z))
            ox (cl:- (cl:+ (cl:* q1w q2x) (cl:* q1x q2w) (cl:* q1y q2z))
@@ -252,7 +261,8 @@ allocated quaternion."
 (declaim (ftype (function (quat quat single-float) quat) scale!))
 (defun scale! (out quat scalar)
   "Scale QUAT by SCALAR, storing the result in the existing quaternion, OUT."
-  (with-quaternions ((o out) (q quat))
+  (with-quaternions ((o out)
+                     (q quat))
     (psetf ow (cl:* qw scalar)
            ox (cl:* qx scalar)
            oy (cl:* qy scalar)
@@ -270,7 +280,8 @@ allocated quaternion."
 (defun conjugate! (out quat)
   "Calculate the conjugate of QUAT, storing the result in the existing
 quaternion, OUT."
-  (with-quaternions ((o out) (q quat))
+  (with-quaternions ((o out)
+                     (q quat))
     (psetf ow qw
            ox (cl:- qx)
            oy (cl:- qy)
@@ -354,7 +365,8 @@ quaternion."
 (declaim (ftype (function (quat quat) single-float) dot))
 (defun dot (quat1 quat2)
   "Calculate the dot product of QUAT1 and QUAT2. Returns a scalar."
-  (with-quaternions ((q1 quat1) (q2 quat2))
+  (with-quaternions ((q1 quat1)
+                     (q2 quat2))
     (cl:+ (cl:* q1w q2w) (cl:* q1x q2x) (cl:* q1y q2y) (cl:* q1z q2z))))
 
 (declaim (inline inverse!))
@@ -379,7 +391,8 @@ quaternion."
 (defun rotate! (out quat vec &key (space :local))
   "Rotate QUAT by the vector of Euler angles, VEC, storing the result in the
 existing quaternion, OUT."
-  (with-quaternions ((o out) (q (copy quat)))
+  (with-quaternions ((o out)
+                     (q (copy quat)))
     (v3:with-vectors ((v (v3:scale vec 0.5f0))
                       (c (v3:make (cos vx) (cos vy) (cos vz)))
                       (s (v3:make (sin vx) (sin vy) (sin vz))))
@@ -665,7 +678,9 @@ quaternion."
 (defun slerp! (out quat1 quat2 factor)
   "Perform a spherical linear interpolation between QUAT1 and QUAT2 by FACTOR,
 storing the result in the existing quaternion, OUT."
-  (with-quaternions ((o out) (q1 quat1) (q2 quat2))
+  (with-quaternions ((o out)
+                     (q1 quat1)
+                     (q2 quat2))
     (let ((dot (dot q1 q2))
           (q2 q2))
       (when (minusp dot)

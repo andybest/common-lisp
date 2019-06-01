@@ -189,7 +189,8 @@ prevent unintended behavior should ordering of a matrix ever change."
 (defun = (matrix1 matrix2)
   "Check if all components of MATRIX1 are numerically equal to the components of
 MATRIX2."
-  (with-matrices ((a matrix1) (b matrix2))
+  (with-matrices ((a matrix1)
+                  (b matrix2))
     (and (cl:= a00 b00) (cl:= a01 b01) (cl:= a02 b02)
          (cl:= a10 b10) (cl:= a11 b11) (cl:= a12 b12)
          (cl:= a20 b20) (cl:= a21 b21) (cl:= a22 b22))))
@@ -201,7 +202,8 @@ MATRIX2."
 (defun ~ (matrix1 matrix2 &key (tolerance 1e-7))
   "Check if all components of MATRIX1 are approximately equal to the components
 of MATRIX2, according to TOLERANCE."
-  (with-matrices ((a matrix1) (b matrix2))
+  (with-matrices ((a matrix1)
+                  (b matrix2))
     (and (%::~ a00 b00 tolerance)
          (%::~ a01 b01 tolerance)
          (%::~ a02 b02 tolerance)
@@ -216,7 +218,8 @@ of MATRIX2, according to TOLERANCE."
 (declaim (ftype (function (matrix matrix) matrix) copy!))
 (defun copy! (out matrix)
   "Copy each component of MATRIX to the existing matrix, OUT."
-  (with-matrices ((o out) (m matrix))
+  (with-matrices ((o out)
+                  (m matrix))
     (psetf o00 m00 o01 m01 o02 m02
            o10 m10 o11 m11 o12 m12
            o20 m20 o21 m21 o22 m22))
@@ -237,7 +240,8 @@ of MATRIX2, according to TOLERANCE."
                  (max most-positive-single-float))
   "Clamp each component of MATRIX within the range of [MIN, MAX], storing the
 result in the existing matrix, OUT."
-  (with-matrices ((o out) (m matrix))
+  (with-matrices ((o out)
+                  (m matrix))
     (psetf o00 (au:clamp m00 min max)
            o01 (au:clamp m01 min max)
            o02 (au:clamp m02 min max)
@@ -266,7 +270,9 @@ result in a freshly allocated matrix."
 (defun +! (out matrix1 matrix2)
   "Calculate the sum of MATRIX1 and MATRIX2, storing the result in the existing
 matrix, OUT."
-  (with-matrices ((o out) (a matrix1) (b matrix2))
+  (with-matrices ((o out)
+                  (a matrix1)
+                  (b matrix2))
     (psetf o00 (cl:+ a00 b00)
            o10 (cl:+ a10 b10)
            o20 (cl:+ a20 b20)
@@ -290,7 +296,9 @@ allocated matrix."
 (defun -! (out matrix1 matrix2)
   "Calculate the difference of MATRIX2 and MATRIX1, storing the result in the
 existing matrix, OUT."
-  (with-matrices ((o out) (a matrix1) (b matrix2))
+  (with-matrices ((o out)
+                  (a matrix1)
+                  (b matrix2))
     (psetf o00 (cl:- a00 b00)
            o10 (cl:- a10 b10)
            o20 (cl:- a20 b20)
@@ -314,7 +322,9 @@ freshly allocated matrix."
 (defun *! (out matrix1 matrix2)
   "Calculate the product of MATRIX1 and MATRIX2, storing the result in the
 existing matrix, OUT."
-  (with-matrices ((o out) (a matrix1) (b matrix2))
+  (with-matrices ((o out)
+                  (a matrix1)
+                  (b matrix2))
     (psetf o00 (cl:+ (cl:* a00 b00) (cl:* a01 b10) (cl:* a02 b20))
            o10 (cl:+ (cl:* a10 b00) (cl:* a11 b10) (cl:* a12 b20))
            o20 (cl:+ (cl:* a20 b00) (cl:* a21 b10) (cl:* a22 b20))
@@ -382,7 +392,8 @@ allocates a fresh matrix, leaving the original un-modified."
 (declaim (ftype (function (matrix matrix) matrix) copy-rotation!))
 (defun copy-rotation! (out matrix)
   "Copy the rotation components of MATRIX to the existing matrix, OUT."
-  (with-matrices ((o out) (m matrix))
+  (with-matrices ((o out)
+                  (m matrix))
     (psetf o00 m00 o01 m01
            o10 m10 o11 m11))
   out)
@@ -512,7 +523,8 @@ matrix."
 (defun *v3! (out matrix vec)
   "Calculate the product of MATRIX and VEC, storing the result in the existing
 vector, OUT."
-  (v3:with-vectors ((v vec) (o out))
+  (v3:with-vectors ((v vec)
+                    (o out))
     (with-matrices ((m matrix))
       (psetf ox (cl:+ (cl:* m00 vx) (cl:* m01 vy) (cl:* m02 vz))
              oy (cl:+ (cl:* m10 vx) (cl:* m11 vy) (cl:* m12 vz))
