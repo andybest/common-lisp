@@ -4,7 +4,8 @@
   (let ((m (m3:id))
         (r (m3:make 1 0 0 0 1 0 0 0 1)))
     (is m3:= m r)
-    (is m3:= m3:+id+ r)))
+    (is m3:= m3:+id+ r)
+    (true (m3:id-p (m3:id)))))
 
 (define-test m3/copy
   (let ((m m3:+id+)

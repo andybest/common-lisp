@@ -22,6 +22,7 @@
    #:zero
    #:id!
    #:id
+   #:id-p
    #:=
    #:~
    #:random!
@@ -206,6 +207,13 @@ complete 3-dimensional transformation matrix."
 (defun id ()
   "Create an identity matrix."
   (%make 1f0 0f0 0f0 0f0 0f0 1f0 0f0 0f0 0f0 0f0 1f0 0f0 0f0 0f0 0f0 1f0))
+
+(declaim (inline id-p))
+(declaim (ftype (function (matrix) boolean) id-p))
+(defun id-p (matrix)
+  (with-matrices ((m matrix))
+    (and (cl:= 0f0 m01 m02 m03 m10 m12 m13 m20 m21 m23 m30 m31 m32)
+         (cl:= 1f0 m00 m11 m22 m33))))
 
 (declaim (inline =))
 (declaim (ftype (function (matrix matrix) boolean) =))
