@@ -165,7 +165,7 @@
 (declaim (ftype (function () vec) one))
 (defun one ()
   "Create a new vector with all vectors initialized to one."
-  (make 1f0 1f0 1f0 1f0))
+  (one! (zero)))
 
 (declaim (inline zero-p))
 (declaim (ftype (function (vec) boolean) zero-p))
