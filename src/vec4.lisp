@@ -18,7 +18,18 @@
    #:>
    #:>=
    #:min
-   #:max)
+   #:max
+   #:expt
+   #:sqrt
+   #:floor
+   #:ceiling
+   #:mod
+   #:sin
+   #:cos
+   #:tan
+   #:asin
+   #:acos
+   #:atan)
   (:export
    #:vec
    #:x
@@ -84,8 +95,29 @@
    #:radians!
    #:radians
    #:degrees!
-   #:degrees))
-
+   #:degrees
+   #:expt!
+   #:expt
+   #:sqrt!
+   #:sqrt
+   #:floor!
+   #:floor
+   #:ceiling!
+   #:ceiling
+   #:mod!
+   #:mod
+   #:sin!
+   #:sin
+   #:cos!
+   #:cos
+   #:tan!
+   #:tan
+   #:asin!
+   #:asin
+   #:acos!
+   #:acos
+   #:atan!
+   #:atan))
 
 (in-package #:origin.vec4)
 
@@ -228,10 +260,10 @@
 (defun fract! (out vec)
   (with-vectors ((o out)
                  (v vec))
-    (psetf ox (cl:- vx (cl:floor vx))
-           oy (cl:- vy (cl:floor vy))
-           oz (cl:- vz (cl:floor vz))
-           ow (cl:- vw (cl:floor vw))))
+    (psetf ox (cl:- vx (float (cl:floor vx) 1f0))
+           oy (cl:- vy (float (cl:floor vy) 1f0))
+           oz (cl:- vz (float (cl:floor vz) 1f0))
+           ow (cl:- vw (float (cl:floor vw) 1f0))))
   out)
 
 (declaim (inline fract))
@@ -434,7 +466,7 @@ See LENGTH for other cases."
 
 See LENGTH-SQUARED if you only need to compare lengths, as it is cheaper to
 compute without the square root call of this function."
-  (sqrt (length-squared vec)))
+  (cl:sqrt (length-squared vec)))
 
 (declaim (inline distance-squared))
 (declaim (ftype (function (vec vec) single-float) distance-squared))
@@ -444,7 +476,7 @@ compute without the square root call of this function."
 (declaim (inline distance))
 (declaim (ftype (function (vec vec) single-float) distance))
 (defun distance (vec1 vec2)
-  (sqrt (distance-squared vec1 vec2)))
+  (cl:sqrt (distance-squared vec1 vec2)))
 
 (declaim (inline normalize!))
 (declaim (ftype (function (vec vec) vec) normalize!))
@@ -523,7 +555,7 @@ vector."
   "Calculate the angle in radians between VEC1 and VEC2."
   (let ((dot (dot vec1 vec2))
         (m*m (cl:* (length vec1) (length vec2))))
-    (if (zerop m*m) 0f0 (acos (cl:/ dot m*m)))))
+    (if (zerop m*m) 0f0 (cl:acos (cl:/ dot m*m)))))
 
 (declaim (inline lerp!))
 (declaim (ftype (function (vec vec vec single-float) vec) lerp!))
@@ -667,3 +699,179 @@ allocated vector."
 (declaim (ftype (function (vec) vec) degrees))
 (defun degrees (vec)
   (degrees! (zero) vec))
+
+(declaim (inline expt!))
+(declaim (ftype (function (vec vec real) vec) expt!))
+(defun expt! (out vec power)
+  (with-vectors ((o out)
+                 (v vec))
+    (psetf ox (cl:expt vx power)
+           oy (cl:expt vy power)
+           oz (cl:expt vz power)
+           ow (cl:expt vw power)))
+  out)
+
+(declaim (inline expt))
+(declaim (ftype (function (vec real) vec) expt))
+(defun expt (vec power)
+  (expt! (zero) vec power))
+
+(declaim (inline sqrt!))
+(declaim (ftype (function (vec vec) vec) sqrt!))
+(defun sqrt! (out vec)
+  (with-vectors ((o out)
+                 (v vec))
+    (psetf ox (cl:sqrt vx)
+           oy (cl:sqrt vy)
+           oz (cl:sqrt vz)
+           ow (cl:sqrt vw)))
+  out)
+
+(declaim (inline sqrt))
+(declaim (ftype (function (vec) vec) sqrt))
+(defun sqrt (vec)
+  (sqrt! (zero) vec))
+
+(declaim (inline floor!))
+(declaim (ftype (function (vec vec) vec) floor!))
+(defun floor! (out vec)
+  (with-vectors ((o out)
+                 (v vec))
+    (psetf ox (float (cl:floor vx) 1f0)
+           oy (float (cl:floor vy) 1f0)
+           oz (float (cl:floor vz) 1f0)
+           ow (float (cl:floor vw) 1f0)))
+  out)
+
+(declaim (inline floor))
+(declaim (ftype (function (vec) vec) floor))
+(defun floor (vec)
+  (floor! (zero) vec))
+
+(declaim (inline ceiling!))
+(declaim (ftype (function (vec vec) vec) ceiling!))
+(defun ceiling! (out vec)
+  (with-vectors ((o out)
+                 (v vec))
+    (psetf ox (float (cl:ceiling vx) 1f0)
+           oy (float (cl:ceiling vy) 1f0)
+           oz (float (cl:ceiling vz) 1f0)
+           ow (float (cl:ceiling vw) 1f0)))
+  out)
+
+(declaim (inline ceiling))
+(declaim (ftype (function (vec) vec) ceiling))
+(defun ceiling (vec)
+  (ceiling! (zero) vec))
+
+(declaim (inline mod!))
+(declaim (ftype (function (vec vec real) vec) mod!))
+(defun mod! (out vec divisor)
+  (with-vectors ((o out)
+                 (v vec))
+    (psetf ox (cl:mod vx divisor)
+           oy (cl:mod vy divisor)
+           oz (cl:mod vz divisor)
+           ow (cl:mod vw divisor)))
+  out)
+
+(declaim (inline mod))
+(declaim (ftype (function (vec real) vec) mod))
+(defun mod (vec divisor)
+  (mod! (zero) vec divisor))
+
+(declaim (inline sin!))
+(declaim (ftype (function (vec vec) vec) sin!))
+(defun sin! (out vec)
+  (with-vectors ((o out)
+                 (v vec))
+    (psetf ox (cl:sin vx)
+           oy (cl:sin vy)
+           oz (cl:sin vz)
+           ow (cl:sin vw)))
+  out)
+
+(declaim (inline sin))
+(declaim (ftype (function (vec) vec) sin))
+(defun sin (vec)
+  (sin! (zero) vec))
+
+(declaim (inline cos!))
+(declaim (ftype (function (vec vec) vec) cos!))
+(defun cos! (out vec)
+  (with-vectors ((o out)
+                 (v vec))
+    (psetf ox (cl:cos vx)
+           oy (cl:cos vy)
+           oz (cl:cos vz)
+           ow (cl:cos vw)))
+  out)
+
+(declaim (inline cos))
+(declaim (ftype (function (vec) vec) cos))
+(defun cos (vec)
+  (cos! (zero) vec))
+
+(declaim (inline tan!))
+(declaim (ftype (function (vec vec) vec) tan!))
+(defun tan! (out vec)
+  (with-vectors ((o out)
+                 (v vec))
+    (psetf ox (cl:tan vx)
+           oy (cl:tan vy)
+           oz (cl:tan vz)
+           ow (cl:tan vw)))
+  out)
+
+(declaim (inline tan))
+(declaim (ftype (function (vec) vec) tan))
+(defun tan (vec)
+  (tan! (zero) vec))
+
+(declaim (inline asin!))
+(declaim (ftype (function (vec vec) vec) asin!))
+(defun asin! (out vec)
+  (with-vectors ((o out)
+                 (v vec))
+    (psetf ox (cl:asin vx)
+           oy (cl:asin vy)
+           oz (cl:asin vz)
+           ow (cl:asin vw)))
+  out)
+
+(declaim (inline asin))
+(declaim (ftype (function (vec) vec) asin))
+(defun asin (vec)
+  (asin! (zero) vec))
+
+(declaim (inline acos!))
+(declaim (ftype (function (vec vec) vec) acos!))
+(defun acos! (out vec)
+  (with-vectors ((o out)
+                 (v vec))
+    (psetf ox (cl:acos vx)
+           oy (cl:acos vy)
+           oz (cl:acos vz)
+           ow (cl:acos vw)))
+  out)
+
+(declaim (inline acos))
+(declaim (ftype (function (vec) vec) acos))
+(defun acos (vec)
+  (acos! (zero) vec))
+
+(declaim (inline atan!))
+(declaim (ftype (function (vec vec) vec) atan!))
+(defun atan! (out vec)
+  (with-vectors ((o out)
+                 (v vec))
+    (psetf ox (cl:atan vx)
+           oy (cl:atan vy)
+           oz (cl:atan vz)
+           ow (cl:atan vw)))
+  out)
+
+(declaim (inline atan))
+(declaim (ftype (function (vec) vec) atan))
+(defun atan (vec)
+  (atan! (zero) vec))
