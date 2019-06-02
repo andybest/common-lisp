@@ -1,14 +1,14 @@
-(asdf:defsystem #:gamebox-math.test
-  :description "Tests for gamebox-math."
+(asdf:defsystem #:origin.test
+  :description "Tests for origin."
   :author "Michael Fiano <mail@michaelfiano.com>"
   :maintainer "Michael Fiano <mail@michaelfiano.com>"
   :license "MIT"
-  :depends-on (#:gamebox-math
+  :depends-on (#:origin
                #:parachute)
   :pathname "test"
   :serial t
   :perform (asdf:test-op (o c) (uiop:symbol-call
-                                '#:parachute '#:test '#:box.math.test))
+                                '#:parachute '#:test '#:origin.test))
   :components
   ((:file "package")
    (:file "vec2")

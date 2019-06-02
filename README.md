@@ -1,4 +1,4 @@
-# gamebox-math
+# Origin
 
 A high performance math library useful for making games.
 
@@ -23,7 +23,7 @@ of writing, this currently includes: ABCL, SBCL, CCL, ECL, and Clasp.
 ## Install
 
 ``` lisp
-(ql:quickload :gamebox-math)
+(ql:quickload :origin)
 ```
 
 ## License

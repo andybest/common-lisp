@@ -1,4 +1,4 @@
-(in-package #:box.math.test)
+(in-package #:origin.test)
 
 (define-test m2/identity
   (let ((m (m2:id))

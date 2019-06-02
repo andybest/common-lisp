@@ -1,9 +1,9 @@
 (in-package #:cl-user)
 
-(defpackage #:box.math.internal
+(defpackage #:origin.internal
   (:use #:cl))
 
-(in-package #:box.math.internal)
+(in-package #:origin.internal)
 
 (au:eval-always
   #+sbcl(setf sb-ext:*inline-expansion-limit*

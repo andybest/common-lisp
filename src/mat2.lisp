@@ -1,8 +1,8 @@
 (in-package #:cl-user)
 
-(defpackage #:box.math.mat2
-  (:local-nicknames (#:% #:box.math.internal)
-                    (#:v2 #:box.math.vec2))
+(defpackage #:origin.mat2
+  (:local-nicknames (#:% #:origin.internal)
+                    (#:v2 #:origin.vec2))
   (:use #:cl)
   (:shadow
    #:=
@@ -59,7 +59,7 @@
    #:anti-diagonal!
    #:anti-diagonal))
 
-(in-package #:box.math.mat2)
+(in-package #:origin.mat2)
 
 ;;; Structure
 

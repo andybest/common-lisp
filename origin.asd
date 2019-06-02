@@ -1,17 +1,17 @@
-(asdf:defsystem #:gamebox-math
-  :description "A high performance math library useful for making games."
+(asdf:defsystem #:origin
+  :description ""
   :author "Michael Fiano <mail@michaelfiano.com>"
   :maintainer "Michael Fiano <mail@michaelfiano.com>"
   :license "MIT"
-  :homepage "https://github.com/mfiano/gamebox-math"
-  :source-control (:git "git@github.com:mfiano/gamebox-math.git")
-  :bug-tracker "https://github.com/mfiano/gamebox-math/issues"
-  :version "7.0.0"
+  :homepage "https://github.com/mfiano/origin"
+  :source-control (:git "git@github.com:mfiano/origin.git")
+  :bug-tracker "https://github.com/mfiano/origin/issues"
+  :version "1.0.0"
   :encoding :utf-8
   :depends-on (#:golden-utils)
   :pathname "src"
   :serial t
-  :in-order-to ((asdf:test-op (asdf:test-op #:gamebox-math.test)))
+  :in-order-to ((asdf:test-op (asdf:test-op #:origin.test)))
   :components
   ((:file "internal")
    (:file "common")

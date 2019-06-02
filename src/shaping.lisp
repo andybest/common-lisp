@@ -1,6 +1,6 @@
 (in-package #:cl-user)
 
-(defpackage #:box.math.shaping
+(defpackage #:origin.shaping
   (:use #:cl)
   (:export
    #:linear
@@ -37,7 +37,7 @@
    #:hermite-curve
    #:quintic-curve))
 
-(in-package #:box.math.shaping)
+(in-package #:origin.shaping)
 
 (defun linear (x)
   x)

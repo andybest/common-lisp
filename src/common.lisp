@@ -1,12 +1,12 @@
 (in-package #:cl-user)
 
-(defpackage #:box.math.common
+(defpackage #:origin.common
   (:use #:cl)
   (:export
    #:round-up
    #:round-down))
 
-(in-package #:box.math.common)
+(in-package #:origin.common)
 
 (defun round-up (x)
   (floor (+ x 1/2)))

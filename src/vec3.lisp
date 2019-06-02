@@ -1,7 +1,7 @@
 (in-package #:cl-user)
 
-(defpackage #:box.math.vec3
-  (:local-nicknames (#:% #:box.math.internal))
+(defpackage #:origin.vec3
+  (:local-nicknames (#:% #:origin.internal))
   (:use #:cl)
   (:shadow
    #:=
@@ -90,7 +90,7 @@
    #:degrees!
    #:degrees))
 
-(in-package #:box.math.vec3)
+(in-package #:origin.vec3)
 
 ;;; Structure
 

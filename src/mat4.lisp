@@ -1,9 +1,9 @@
 (in-package #:cl-user)
 
-(defpackage #:box.math.mat4
-  (:local-nicknames (#:% #:box.math.internal)
-                    (#:v3 #:box.math.vec3)
-                    (#:v4 #:box.math.vec4))
+(defpackage #:origin.mat4
+  (:local-nicknames (#:% #:origin.internal)
+                    (#:v3 #:origin.vec3)
+                    (#:v4 #:origin.vec4))
   (:use #:cl)
   (:shadow
    #:=
@@ -82,7 +82,7 @@
    #:set-projection/perspective!
    #:set-projection/perspective))
 
-(in-package #:box.math.mat4)
+(in-package #:origin.mat4)
 
 ;;; Structure
 

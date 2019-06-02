@@ -1,4 +1,4 @@
-(in-package #:box.math.test)
+(in-package #:origin.test)
 
 (define-test v2/accessors
   (let ((v (v2:make 1 2)))

@@ -1,9 +1,9 @@
 (in-package #:cl-user)
 
-(defpackage #:box.math.swizzle
+(defpackage #:origin.swizzle
   (:use #:cl))
 
-(in-package #:box.math.swizzle)
+(in-package #:origin.swizzle)
 
 (au:eval-always
   (defun %swizzle/combinations (n items)

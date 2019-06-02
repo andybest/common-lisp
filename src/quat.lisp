@@ -1,11 +1,11 @@
 (in-package #:cl-user)
 
-(defpackage #:box.math.quat
-  (:local-nicknames (#:% #:box.math.internal)
-                    (#:v3 #:box.math.vec3)
-                    (#:v4 #:box.math.vec4)
-                    (#:m3 #:box.math.mat3)
-                    (#:m4 #:box.math.mat4))
+(defpackage #:origin.quat
+  (:local-nicknames (#:% #:origin.internal)
+                    (#:v3 #:origin.vec3)
+                    (#:v4 #:origin.vec4)
+                    (#:m3 #:origin.mat3)
+                    (#:m4 #:origin.mat4))
   (:use #:cl)
   (:shadow
    #:=
@@ -77,7 +77,7 @@
    #:slerp!
    #:slerp))
 
-(in-package #:box.math.quat)
+(in-package #:origin.quat)
 
 ;;; Structure
 
