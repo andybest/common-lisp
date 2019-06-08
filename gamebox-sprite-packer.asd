@@ -10,7 +10,8 @@
   :encoding :utf-8
   :long-description #.(uiop:read-file-string (uiop/pathname:subpathname *load-pathname* "README.md"))
   :depends-on (#:pngload
-               #:opticl)
+               #:opticl
+               #:binpack)
   :pathname "src"
   :serial t
   :components ((:file "package")
