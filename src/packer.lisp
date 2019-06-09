@@ -107,7 +107,7 @@ PADDING: The padding in pixels to use around each sprite in the spritesheet.
 OPTIMIZE-PACK: Calculate size automatically, and try multiple sizes to find a better size. (ignores WIDTH, HEIGHT if set)
 
 AUTO-SIZE-GRANULARITY-X,
-AUTO-SIZE-GRANULARITY-Y: Automaticallyy generated sizes will be multiples of these.
+AUTO-SIZE-GRANULARITY-Y: Automatically generated sizes will be multiples of these.
 
 See MAKE-ATLAS-FROM-DIRECTORY if you want to automatically generate FILE-SPEC from the files under a
 given filesystem path.
@@ -154,7 +154,7 @@ PADDING: The padding in pixels to use around each sprite in the spritesheet.
 OPTIMIZE-PACK: Calculate size automatically, and try multiple sizes to find a better size. (ignores WIDTH, HEIGHT if set)
 
 AUTO-SIZE-GRANULARITY-X,
-AUTO-SIZE-GRANULARITY-Y: Automaticallyy generated sizes will be multiples of these.
+AUTO-SIZE-GRANULARITY-Y: Automatically generated sizes will be multiples of these.
 
 See MAKE-ATLAS if you want to manually specify a file-spec, in case you want to be in control of the
 names chosen to identify the sprites written to the metadata file.
