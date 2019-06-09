@@ -86,7 +86,9 @@
                          :if-does-not-exist :create)
       (write data :stream out))))
 
-(defun make-atlas (file-spec &key out-file width height normalize flip-y
+(defun make-atlas (file-spec &key out-file
+                               (width :auto) (height :auto)
+                               normalize flip-y
                                (padding 0) (optimize-pack nil)
                                (auto-size-granularity-x 1)
                                (auto-size-granularity-y 1))
@@ -130,7 +132,9 @@ given filesystem path.
                    (values (write-metadata data out-file)
                            (opticl:write-image-file out-file atlas)))))
 
-(defun make-atlas-from-directory (path &key recursive out-file width height normalize flip-y
+(defun make-atlas-from-directory (path &key recursive out-file
+                                         (width :auto) (height :auto)
+                                         normalize flip-y
                                          (padding 0)
                                          (auto-size-granularity-x 1)
                                          (auto-size-granularity-y 1)
