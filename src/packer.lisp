@@ -114,18 +114,22 @@ AUTO-SIZE-GRANULARITY-Y: Automatically generated sizes will be multiples of thes
 See MAKE-ATLAS-FROM-DIRECTORY if you want to automatically generate FILE-SPEC from the files under a
 given filesystem path.
 "
-  (loop :with atlas = (opticl:make-8-bit-rgba-image width height)
-        :with rects = (add-padding (make-rects file-spec) padding)
-        :for rect :in (remove-padding
-                       (binpack:auto-pack
-                        rects
-                        :width width :height height
-                        :auto-size-granularity-x auto-size-granularity-x
-                        :auto-size-granularity-y auto-size-granularity-y
-                        :optimize-pack optimize-pack)
-                       padding)
+  (loop :with rects = (add-padding (make-rects file-spec) padding)
+        :with (packed packed-width packed-height)
+          := (multiple-value-list
+              (binpack:auto-pack
+               rects
+               :width width :height height
+               :auto-size-granularity-x auto-size-granularity-x
+               :auto-size-granularity-y auto-size-granularity-y
+               :optimize-pack optimize-pack))
+        :with atlas = (opticl:make-8-bit-rgba-image
+                       (if (numberp width) width packed-width)
+                       (if (numberp height) height packed-height))
+        :for rect :in (remove-padding packed padding)
         :for sprite = (opticl:read-png-file (file rect))
-        :for coords = (make-coords rect width height normalize flip-y)
+        :for coords = (make-coords rect packed-width packed-height
+                                   normalize flip-y)
         :do (write-atlas atlas sprite rect)
         :collect `(:id ,(id rect) ,@coords) :into data
         :finally (return
