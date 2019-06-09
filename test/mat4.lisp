@@ -155,9 +155,9 @@
     (true (m4:~ (m4:rotate m4:+id+ vz) rmz))))
 
 (define-test m4/scale
-  (let ((m (m4:make 10 0 0 0 0 20 0 0 0 0 30 0 0 0 0 1))
+  (let ((m (m4:make 10 0 0 0 0 20 0 0 0 0 30 0 0 0 0 2))
         (o (m4:id))
-        (s (m4:make 10 0 0 0 0 40 0 0 0 0 90 0 0 0 0 1))
+        (s (m4:make 10 0 0 0 0 40 0 0 0 0 90 0 0 0 0 2))
         (v (v3:make 1 2 3)))
     (true (m4:= (m4:scale! o m v) s))
     (true (m4:= o s))

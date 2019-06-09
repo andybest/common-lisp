@@ -109,9 +109,9 @@
     (true (m3:~ (m3:rotate m3:+id+ (/ pi 3)) rmz))))
 
 (define-test m3/scale
-  (let ((m (m3:make 10 0 0 0 20 0 0 0 30))
+  (let ((m (m3:make 10 0 0 0 20 0 0 0 2))
         (o (m3:id))
-        (s (m3:make 10 0 0 0 40 0 0 0 30))
+        (s (m3:make 10 0 0 0 40 0 0 0 2))
         (v (v2:make 1 2)))
     (true (m3:= (m3:scale! o m v) s))
     (true (m3:= o s))

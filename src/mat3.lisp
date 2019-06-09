@@ -530,7 +530,17 @@ allocates a fresh matrix, leaving the origin un-modified."
 (defun scale! (out matrix vec)
   "Scale MATRIX by each scalar in VEC, storing the result in the existing
 matrix, OUT."
-  (*! out (set-scale (id) vec) matrix))
+  (with-matrices ((o out)
+                  (m matrix))
+    (v2:with-vectors ((v vec))
+      (psetf o00 (cl:* m00 vx)
+             o10 (cl:* m10 vy)
+             o01 (cl:* m01 vx)
+             o11 (cl:* m11 vy)
+             o02 (cl:* m02 vx)
+             o12 (cl:* m12 vy)
+             o22 m22)))
+  out)
 
 (declaim (inline scale))
 (declaim (ftype (function (matrix v2:vec) matrix) scale))
