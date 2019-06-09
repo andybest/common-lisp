@@ -394,7 +394,14 @@ allocates a fresh matrix, leaving the original un-modified."
 (declaim (ftype (function (matrix matrix v2:vec) matrix) translate!))
 (defun translate! (out matrix vec)
   "Translate MATRIX by VEC, storing the result in the existing matrix, OUT."
-  (*! out (set-translation (id) vec) matrix))
+  (with-matrices ((o out)
+                  (m matrix))
+    (v3:with-vectors ((v vec))
+      (copy-rotation! out matrix)
+      (psetf o02 (cl:+ o02 vx)
+             o12 (cl:+ o12 vy)
+             o22 m22)))
+  out)
 
 (declaim (inline translate))
 (declaim (ftype (function (matrix v2:vec) matrix) translate))
