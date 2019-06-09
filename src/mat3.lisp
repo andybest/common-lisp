@@ -376,10 +376,11 @@ allocated matrix."
 (defun set-translation! (out matrix vec)
   "Copy the components of VEC to the translation column of MATRIX. This
 destructively modifies MATRIX."
-  (with-matrices ((o out))
+  (with-matrices ((o out)
+                  (m matrix))
     (v2:with-vectors ((v vec))
-      (copy! out matrix)
-      (psetf o02 vx o12 vy)))
+      (copy-rotation! out matrix)
+      (psetf o02 vx o12 vy o22 m22)))
   out)
 
 (declaim (inline set-translation))
