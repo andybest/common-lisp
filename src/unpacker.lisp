@@ -54,7 +54,7 @@ DENORMALIZE: Boolean specifying whether to convert metadata normalized in the [0
 into pixel coordinates.
 
 FLIP-Y: Boolean specifying whether to flip the Y axis when reading the metadata."
-  (loop :with atlas = (opticl:read-png-file atlas-file)
+  (loop :with atlas = (opticl:read-image-file atlas-file)
         :with spec-file = (make-pathname :defaults atlas-file :type "spec")
         :for data :in (uiop/stream:safe-read-file-form spec-file)
         :do (unpack-sprite atlas data denormalize flip-y out-path)))
