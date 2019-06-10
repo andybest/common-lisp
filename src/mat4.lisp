@@ -395,11 +395,23 @@
 
 (define-op translate! ((out mat) (in mat) (vec v3:vec)) (:out mat)
   (with-matrices ((o out) (m in))
-    (v4:with-vectors ((v vec))
-      (copy-rotation! out in)
-      (psetf o03 (cl:+ m03 vx)
-             o13 (cl:+ m13 vy)
-             o23 (cl:+ m23 vz)
+    (v3:with-vectors ((v vec))
+      (copy! out in)
+      (psetf o00 (cl:+ m00 (cl:* m30 vx))
+             o01 (cl:+ m01 (cl:* m31 vx))
+             o02 (cl:+ m02 (cl:* m32 vx))
+             o03 (cl:+ m03 (cl:* m33 vx))
+             o10 (cl:+ m10 (cl:* m30 vy))
+             o11 (cl:+ m11 (cl:* m31 vy))
+             o12 (cl:+ m12 (cl:* m32 vy))
+             o13 (cl:+ m13 (cl:* m33 vy))
+             o20 (cl:+ m20 (cl:* m30 vz))
+             o21 (cl:+ m21 (cl:* m31 vz))
+             o22 (cl:+ m22 (cl:* m32 vz))
+             o23 (cl:+ m23 (cl:* m33 vz))
+             o30 m30
+             o31 m31
+             o32 m32
              o33 m33)))
   out)
 
