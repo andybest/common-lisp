@@ -31,7 +31,9 @@
 
 (defun write-sprite (atlas rect out-file)
   (binpack:with-rect (nil x y w h) rect
-    (let ((sprite (make-array (list h w (array-dimension atlas 2))
+    (let ((sprite (make-array (list* h w
+                                     (when (> (array-rank atlas) 2)
+                                       (list (array-dimension atlas 2))))
                               :element-type (array-element-type atlas))))
       (opticl:do-pixels (i j) sprite
         (setf (opticl:pixel sprite i j)
