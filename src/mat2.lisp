@@ -1,9 +1,8 @@
 (in-package #:cl-user)
 
 (defpackage #:origin.mat2
-  (:local-nicknames (#:% #:origin.internal)
-                    (#:v2 #:origin.vec2))
-  (:use #:cl)
+  (:local-nicknames (#:v2 #:origin.vec2))
+  (:use #:cl #:origin.internal)
   (:shadow
    #:=
    #:+
@@ -12,7 +11,7 @@
    #:random
    #:trace)
   (:export
-   #:matrix
+   #:mat
    #:with-matrices
    #:+zero+
    #:+id+
@@ -61,121 +60,78 @@
 
 (in-package #:origin.mat2)
 
-;;; Structure
-
-(deftype matrix () '(simple-array single-float (4)))
+(deftype mat () '(simple-array single-float (4)))
 
 (defstruct (matrix (:type (vector single-float))
-                   (:constructor %make (m00 m01
-                                        m10 m11))
+                   (:constructor %make (m00 m01 m10 m11))
                    (:conc-name nil)
+                   (:predicate nil)
                    (:copier nil))
-  "A 2x2 column-major matrix consisting of column vectors. This represents the
-rotation sub-matrix of a 2-dimensional transformation matrix."
   (m00 0f0 :type single-float)
   (m10 0f0 :type single-float)
   (m01 0f0 :type single-float)
   (m11 0f0 :type single-float))
 
 (defmacro with-matrices (((prefix matrix) &rest rest) &body body)
-  "A convenience macro for concisely accessing the components of matrices."
   `(with-accessors ((,prefix identity)
-                    (,(%::make-accessor-symbol prefix "00") m00)
-                    (,(%::make-accessor-symbol prefix "01") m01)
-                    (,(%::make-accessor-symbol prefix "10") m10)
-                    (,(%::make-accessor-symbol prefix "11") m11))
+                    (,(make-accessor-symbol prefix "00") m00)
+                    (,(make-accessor-symbol prefix "01") m01)
+                    (,(make-accessor-symbol prefix "10") m10)
+                    (,(make-accessor-symbol prefix "11") m11))
        ,matrix
      ,(if rest
           `(with-matrices ,rest ,@body)
           `(progn ,@body))))
 
-;;; Constants
-
 (au:define-constant +zero+
     (make-array 4 :element-type 'single-float
-                  :initial-contents '(0f0 0f0
-                                      0f0 0f0))
-  :test #'equalp
-  :documentation "A matrix with each component as zero.")
+                  :initial-contents '(0f0 0f0 0f0 0f0))
+  :test #'equalp)
 
 (au:define-constant +id+
     (make-array 4 :element-type 'single-float
-                  :initial-contents '(1f0 0f0
-                                      0f0 1f0))
-  :test #'equalp
-  :documentation "An identity matrix.")
+                  :initial-contents '(1f0 0f0 0f0 1f0))
+  :test #'equalp)
 
-;;; Operations
-
-(declaim (inline make))
-(declaim (ftype (function (real real real real) matrix) make))
-(defun make (m00 m01 m10 m11)
-  "Create a new matrix."
+(define-op make ((m00 real) (m01 real) (m10 real) (m11 real)) (:out mat)
   (%make (float m00 1f0) (float m01 1f0) (float m10 1f0) (float m11 1f0)))
 
-(declaim (inline zero!))
-(declaim (ftype (function (matrix) matrix) zero!))
-(defun zero! (matrix)
-  "Set each component of MATRIX to zero."
-  (with-matrices ((m matrix))
+(define-op zero! ((in mat)) (:out mat)
+  (with-matrices ((m in))
     (psetf m00 0f0 m01 0f0 m10 0f0 m11 0f0))
-  matrix)
+  in)
 
-(declaim (inline zero))
-(declaim (ftype (function () matrix) zero))
-(defun zero ()
-  "Create a new matrix with all components initialized to zero."
+(define-op zero () (:out mat)
   (%make 0f0 0f0 0f0 0f0))
 
-(declaim (inline id!))
-(declaim (ftype (function (matrix) matrix) id!))
-(defun id! (matrix)
-  "Modify MATRIX to be an identity matrix."
-  (with-matrices ((m matrix))
+(define-op id! ((in mat)) (:out mat)
+  (with-matrices ((m in))
     (psetf m00 1f0 m01 0f0 m10 0f0 m11 1f0))
-  matrix)
+  in)
 
-(declaim (inline id))
-(declaim (ftype (function () matrix) id))
-(defun id ()
-  "Create an identity matrix."
+(define-op id () (:out mat)
   (%make 1f0 0f0 0f0 1f0))
 
-(declaim (inline id-p))
-(declaim (ftype (function (matrix) boolean) id-p))
-(defun id-p (matrix)
-  (with-matrices ((m matrix))
+(define-op id-p ((in mat)) (:out boolean)
+  (with-matrices ((m in))
     (and (cl:= 0f0 m10 m01)
          (cl:= 1f0 m00 m11))))
 
-(declaim (inline =))
-(declaim (ftype (function (matrix matrix) boolean) =))
-(defun = (matrix1 matrix2)
-  "Check if all components of MATRIX1 are numerically equal to the components of
-MATRIX2."
-  (with-matrices ((a matrix1)
-                  (b matrix2))
+(define-op = ((in1 mat) (in2 mat)) (:out boolean)
+  (with-matrices ((a in1) (b in2))
     (and (cl:= a00 b00) (cl:= a01 b01)
          (cl:= a10 b10) (cl:= a11 b11))))
 
-(declaim (inline ~))
-(declaim (ftype (function (matrix matrix &key (:tolerance single-float))
-                          boolean)
-                ~))
-(defun ~ (matrix1 matrix2 &key (tolerance 1e-7))
-  "Check if all components of MATRIX1 are approximately equal to the components
-of MATRIX2, according to TOLERANCE."
-  (with-matrices ((a matrix1)
-                  (b matrix2))
-    (and (%::~ a00 b00 tolerance)
-         (%::~ a01 b01 tolerance)
-         (%::~ a10 b10 tolerance)
-         (%::~ a11 b11 tolerance))))
+(define-op ~ ((in1 mat) (in2 mat) &key (tolerance single-float 1e-7))
+    (:out boolean)
+  (with-matrices ((a in1) (b in2))
+    (and
+     (cl:< (cl:abs (cl:- a00 b00)) tolerance)
+     (cl:< (cl:abs (cl:- a01 b01)) tolerance)
+     (cl:< (cl:abs (cl:- a10 b10)) tolerance)
+     (cl:< (cl:abs (cl:- a11 b11)) tolerance))))
 
-(declaim (inline random!))
-(declaim (ftype (function (matrix &key (:min real) (:max real)) matrix)
-                random!))
-(defun random! (out &key (min 0.0) (max 1.0))
+(define-op random! ((out mat) &key (min real 0.0) (max real 1.0)) (:out mat)
   (with-matrices ((o out))
     (psetf o00 (cl:+ min (cl:random (cl:- max min)))
            o01 (cl:+ min (cl:random (cl:- max min)))
@@ -183,166 +139,98 @@ of MATRIX2, according to TOLERANCE."
            o11 (cl:+ min (cl:random (cl:- max min)))))
   out)
 
-(declaim (inline random))
-(declaim (ftype (function (&key (:min real) (:max real)) matrix) random))
-(defun random (&key (min 0.0) (max 1.0))
+(define-op random (&key (min real 0.0) (max real 1.0)) (:out mat)
   (random! (zero) :min min :max max))
 
-(declaim (inline copy!))
-(declaim (ftype (function (matrix matrix) matrix) copy!))
-(defun copy! (out matrix)
-  "Copy each component of MATRIX to the existing matrix, OUT."
-  (with-matrices ((o out)
-                  (m matrix))
-    (psetf o00 m00 o01 m01
-           o10 m10 o11 m11))
+(define-op copy! ((out mat) (in mat)) (:out mat)
+  (with-matrices ((o out) (m in))
+    (psetf o00 m00 o01 m01 o10 m10 o11 m11))
   out)
 
-(declaim (inline copy))
-(declaim (ftype (function (matrix) matrix) copy))
-(defun copy (matrix)
-  "Copy each component of MATRIX to a freshly allocated matrix."
-  (copy! (zero) matrix))
+(define-op copy ((in mat)) (:out mat)
+  (copy! (zero) in))
 
-(declaim (ftype (function (matrix matrix &key (:min single-float)
-                                  (:max single-float))
-                          matrix)
-                clamp!))
-(defun clamp! (out matrix
-               &key (min most-negative-single-float)
-                 (max most-positive-single-float))
-  "Clamp each component of MATRIX within the range of [MIN, MAX], storing the
-result in the existing matrix, OUT."
-  (with-matrices ((o out)
-                  (m matrix))
+(define-op clamp! ((out mat) (in mat)
+                   &key
+                   (min single-float most-negative-single-float)
+                   (max single-float most-positive-single-float))
+    (:out mat)
+  (with-matrices ((o out) (m in))
     (psetf o00 (au:clamp m00 min max)
            o01 (au:clamp m01 min max)
            o10 (au:clamp m10 min max)
            o11 (au:clamp m11 min max)))
   out)
 
-(declaim (inline clamp))
-(declaim (ftype (function (matrix &key (:min single-float) (:max single-float))
-                          matrix)
-                clamp))
-(defun clamp (matrix
-              &key (min most-negative-single-float)
-                (max most-positive-single-float))
-  "Clamp each component of MATRIX within the range of [MIN, MAX], storing the
-result in a freshly allocated matrix."
-  (clamp! (zero) matrix :min min :max max))
+(define-op clamp ((in mat)
+                  &key
+                  (min single-float most-negative-single-float)
+                  (max single-float most-positive-single-float))
+    (:out mat)
+  (clamp! (zero) in :min min :max max))
 
-(declaim (inline +!))
-(declaim (ftype (function (matrix matrix matrix) matrix) +!))
-(defun +! (out matrix1 matrix2)
-  "Calculate the sum of MATRIX1 and MATRIX2, storing the result in the existing
-matrix, OUT."
-  (with-matrices ((o out)
-                  (a matrix1)
-                  (b matrix2))
+(define-op +! ((out mat) (in1 mat) (in2 mat)) (:out mat)
+  (with-matrices ((o out) (a in1) (b in2))
     (psetf o00 (cl:+ a00 b00)
            o10 (cl:+ a10 b10)
            o01 (cl:+ a01 b01)
            o11 (cl:+ a11 b11)))
   out)
 
-(declaim (inline +))
-(declaim (ftype (function (matrix matrix) matrix) +))
-(defun + (matrix1 matrix2)
-  "Calculate the sum of MATRIX1 and MATRIX2, storing the result in a freshly
-allocated matrix."
-  (+! (zero) matrix1 matrix2))
+(define-op + ((in1 mat) (in2 mat)) (:out mat)
+  (+! (zero) in1 in2))
 
-(declaim (inline -!))
-(declaim (ftype (function (matrix matrix matrix) matrix) -!))
-(defun -! (out matrix1 matrix2)
-  "Calculate the difference of MATRIX2 from MATRIX1, storing the result in the
-existing matrix, OUT."
-  (with-matrices ((o out)
-                  (a matrix1)
-                  (b matrix2))
+(define-op -! ((out mat) (in1 mat) (in2 mat)) (:out mat)
+  (with-matrices ((o out) (a in1) (b in2))
     (psetf o00 (cl:- a00 b00)
            o10 (cl:- a10 b10)
            o01 (cl:- a01 b01)
            o11 (cl:- a11 b11)))
   out)
 
-(declaim (inline -))
-(declaim (ftype (function (matrix matrix) matrix) -))
-(defun - (matrix1 matrix2)
-  "Calculate the difference of MATRIX2 from MATRIX1, storing the result in a
-freshly allocated matrix."
-  (-! (zero) matrix1 matrix2))
+(define-op - ((in1 mat) (in2 mat)) (:out mat)
+  (-! (zero) in1 in2))
 
-(declaim (ftype (function (matrix matrix matrix) matrix) *!))
-(defun *! (out matrix1 matrix2)
-  "Calculate the product of MATRIX1 and MATRIX2, storing the result in the
-existing matrix, OUT."
-  (with-matrices ((o out)
-                  (a matrix1)
-                  (b matrix2))
+(define-op *! ((out mat) (in1 mat) (in2 mat)) (:out mat :inline nil)
+  (with-matrices ((o out) (a in1) (b in2))
     (psetf o00 (cl:+ (cl:* a00 b00) (cl:* a01 b10))
            o10 (cl:+ (cl:* a10 b00) (cl:* a11 b10))
            o01 (cl:+ (cl:* a00 b01) (cl:* a01 b11))
            o11 (cl:+ (cl:* a10 b01) (cl:* a11 b11))))
   out)
 
-(declaim (inline *))
-(declaim (ftype (function (matrix matrix) matrix) *))
-(defun * (matrix1 matrix2)
-  "Calculate the product of MATRIX1 and MATRIX2, storing the result in a freshly
-allocated matrix."
-  (*! (zero) matrix1 matrix2))
+(define-op * ((in1 mat) (in2 mat)) (:out mat)
+  (*! (zero) in1 in2))
 
-(declaim (inline rotation-axis-to-vec2!))
-(declaim (ftype (function (v2:vec matrix keyword) v2:vec)
-                rotation-axis-to-vec2!))
-(defun rotation-axis-to-vec2! (out matrix axis)
-  "Copy the rotation axis from MATRIX denoted by the keyword symbol AXIS, to the
-existing vector, OUT."
+(define-op rotation-axis-to-vec2! ((out v2:vec) (in mat) (axis keyword))
+    (:out v2:vec)
   (v2:with-vectors ((v out))
-    (with-matrices ((m matrix))
+    (with-matrices ((m in))
       (ecase axis
         (:x (psetf vx m00 vy m10))
         (:y (psetf vx m01 vy m11)))))
   out)
 
-(declaim (inline rotation-axis-to-vec2))
-(declaim (ftype (function (matrix keyword) v2:vec) rotation-axis-to-vec2))
-(defun rotation-axis-to-vec2 (matrix axis)
-  "Copy the rotation axis from MATRIX denoted by the keyword symbol AXIS, to a
-freshly allocated vector."
-  (rotation-axis-to-vec2! (v2:zero) matrix axis))
+(define-op rotation-axis-to-vec2 ((in mat) (axis keyword)) (:out v2:vec)
+  (rotation-axis-to-vec2! (v2:zero) in axis))
 
-(declaim (inline rotation-axis-from-vec2!))
-(declaim (ftype (function (matrix v2:vec keyword) matrix)
-                rotation-axis-from-vec2!))
-(defun rotation-axis-from-vec2! (matrix vec axis)
-  "Copy the components of VEC into the rotation axis of MATRIX denoted by the
-keyword symbol AXIS. This destructively modifies MATRIX."
-  (with-matrices ((m matrix))
+(define-op rotation-axis-from-vec2! ((in mat) (vec v2:vec) (axis keyword))
+    (:out mat)
+  (with-matrices ((m in))
     (v2:with-vectors ((v vec))
       (ecase axis
         (:x (psetf m00 vx m10 vy))
         (:y (psetf m01 vx m11 vy)))))
-  matrix)
+  in)
 
-(declaim (inline rotation-axis-from-vec2))
-(declaim (ftype (function (matrix v2:vec keyword) matrix)
-                rotation-axis-from-vec2))
-(defun rotation-axis-from-vec2 (matrix vec axis)
-  "Copy the components of VEC into the rotation axis of MATRIX denoted by the
-keyword symbol AXIS. This allocates a fresh matrix, leaving the original
-un-modified."
-  (rotation-axis-from-vec2! (copy matrix) vec axis))
+(define-op rotation-axis-from-vec2 ((in mat) (vec v2:vec) (axis keyword))
+    (:out mat)
+  (rotation-axis-from-vec2! (copy in) vec axis))
 
-(declaim (ftype (function (matrix matrix float &key (:space keyword)) matrix)
-                rotate!))
-(defun rotate! (out matrix angle &key (space :local))
-  "Rotate MATRIX by the Euler angle, ANGLE, storing the result in the existing
-matrix, OUT."
+(define-op rotate! ((out mat) (in mat) (angle float) &key (space keyword :local))
+    (:out mat :inline nil)
   (with-matrices ((m (id)))
-    (copy! out matrix)
+    (copy! out in)
     (when (cl:> (abs angle) 1e-7)
       (let* ((angle (float angle 1f0))
              (s (sin angle))
@@ -354,145 +242,78 @@ matrix, OUT."
           (:world (*! out m out))))))
   out)
 
-(declaim (inline rotate))
-(declaim (ftype (function (matrix float) matrix) rotate))
-(defun rotate (matrix angle)
-  "Rotate MATRIX by the Euler angle, ANGLE, storing the result in a freshly
-allocated matrix."
-  (rotate! (id) matrix angle))
+(define-op rotate ((in mat) (angle float)) (:out mat)
+  (rotate! (id) in angle))
 
-(declaim (inline get-scale!))
-(declaim (ftype (function (v2:vec matrix) v2:vec) get-scale!))
-(defun get-scale! (out matrix)
-  "Copy the scaling transform of MATRIX to the existing vector, OUT."
-  (with-matrices ((m matrix))
+(define-op get-scale! ((out v2:vec) (in mat)) (:out v2:vec)
+  (with-matrices ((m in))
     (v2:with-vectors ((o out))
       (psetf ox m00 oy m11)))
   out)
 
-(declaim (inline get-scale))
-(declaim (ftype (function (matrix) v2:vec) get-scale))
-(defun get-scale (matrix)
-  "Copy the scaling transform of MATRIX to a freshly allocated vector."
-  (get-scale! (v2:zero) matrix))
+(define-op get-scale ((in mat)) (:out v2:vec)
+  (get-scale! (v2:zero) in))
 
-(declaim (inline set-scale!))
-(declaim (ftype (function (matrix matrix v2:vec) matrix) set-scale!))
-(defun set-scale! (out matrix vec)
-  "Copy the components of VEC to the scaling components of MATRIX. This
-destructively modifies MATRIX."
+(define-op set-scale! ((out mat) (in mat) (vec v2:vec)) (:out mat)
   (with-matrices ((o out))
     (v2:with-vectors ((v vec))
-      (copy! out matrix)
+      (copy! out in)
       (psetf o00 vx o11 vy)))
   out)
 
-(declaim (inline set-scale))
-(declaim (ftype (function (matrix v2:vec) matrix) set-scale))
-(defun set-scale (matrix vec)
-  "Copy the components of VEC to the scaling components of MATRIX. This
-allocates a fresh matrix, leaving the origin un-modified."
-  (set-scale! (copy matrix) matrix vec))
+(define-op set-scale ((in mat) (vec v2:vec)) (:out mat)
+  (set-scale! (copy in) in vec))
 
-(declaim (inline scale!))
-(declaim (ftype (function (matrix matrix v2:vec) matrix) scale!))
-(defun scale! (out matrix vec)
-  "Scale MATRIX by each scalar in VEC, storing the result in the existing
-matrix, OUT."
-  (*! out (set-scale (id) vec) matrix))
+(define-op scale! ((out mat) (in mat) (vec v2:vec)) (:out mat)
+  (*! out (set-scale (id) vec) in))
 
-(declaim (inline scale))
-(declaim (ftype (function (matrix v2:vec) matrix) scale))
-(defun scale (matrix vec)
-  "Scale MATRIX by each scalar in VEC, storing the result in a freshly allocated
-matrix."
-  (scale! (id) matrix vec))
+(define-op scale ((in mat) (vec v2:vec)) (:out mat)
+  (scale! (id) in vec))
 
-(declaim (inline *v2!))
-(declaim (ftype (function (v2:vec matrix v2:vec) v2:vec) *v2!))
-(defun *v2! (out matrix vec)
-  "Calculate the product of MATRIX and VEC, storing the result in the existing
-vector, OUT."
-  (v2:with-vectors ((v vec)
-                    (o out))
-    (with-matrices ((m matrix))
+(define-op *v2! ((out v2:vec) (in mat) (vec v2:vec)) (:out v2:vec)
+  (v2:with-vectors ((v vec) (o out))
+    (with-matrices ((m in))
       (psetf ox (cl:+ (cl:* m00 vx) (cl:* m01 vy))
              oy (cl:+ (cl:* m10 vx) (cl:* m11 vy)))))
   out)
 
-(declaim (inline *v2))
-(declaim (ftype (function (matrix v2:vec) v2:vec) *v2))
-(defun *v2 (matrix vec)
-  "Calculate the product of MATRIX and VEC, storing the result in a freshly
-allocated vector."
-  (*v2! (v2:zero) matrix vec))
+(define-op *v2 ((in mat) (vec v2:vec)) (:out v2:vec)
+  (*v2! (v2:zero) in vec))
 
-(declaim (inline transpose!))
-(declaim (ftype (function (matrix matrix) matrix) transpose!))
-(defun transpose! (out matrix)
-  "Transpose MATRIX, storing the result in the existing matrix, OUT."
-  (with-matrices ((o (copy! out matrix)))
+(define-op transpose! ((out mat) (in mat)) (:out mat)
+  (with-matrices ((o (copy! out in)))
     (rotatef o01 o10))
   out)
 
-(declaim (inline transpose))
-(declaim (ftype (function (matrix) matrix) transpose))
-(defun transpose (matrix)
-  "Transpose MATRIX, storing the result in a freshly allocated matrix."
-  (transpose! (id) matrix))
+(define-op transpose ((in mat)) (:out mat)
+  (transpose! (id) in))
 
-(declaim (ftype (function (matrix) boolean) orthogonal-p))
-(defun orthogonal-p (matrix)
-  "Check if MATRIX is orthogonal. An orthogonal matrix is a square matrix with
-all of its rows (or columns) being perpendicular to each other, and of unit
-length."
-  (~ (* matrix (transpose matrix)) +id+))
+(define-op orthogonal-p ((in mat)) (:out boolean :inline nil)
+  (~ (* in (transpose in)) +id+))
 
-(declaim (inline trace))
-(declaim (ftype (function (matrix) single-float) trace))
-(defun trace (matrix)
-  "Calculates the sum of the components along the main diagonal of MATRIX."
-  (with-matrices ((m matrix))
+(define-op trace ((in mat)) (:out single-float)
+  (with-matrices ((m in))
     (cl:+ m00 m11)))
 
-(declaim (inline diagonal-p))
-(declaim (ftype (function (matrix) boolean) diagonal-p))
-(defun diagonal-p (matrix)
-  "Check if the components outside of the main diagonal of MATRIX are all zero."
-  (with-matrices ((m matrix))
+(define-op diagonal-p ((in mat)) (:out boolean)
+  (with-matrices ((m in))
     (and (zerop m10)
          (zerop m01))))
 
-(declaim (inline main-diagonal!))
-(declaim (ftype (function (v2:vec matrix) v2:vec) main-diagonal!))
-(defun main-diagonal! (out matrix)
-  "Copy the components along the main diagonal of MATRIX to the existing vector,
-OUT."
-  (with-matrices ((m matrix))
+(define-op main-diagonal! ((out v2:vec) (in mat)) (:out v2:vec)
+  (with-matrices ((m in))
     (v2:with-vectors ((v out))
       (setf vx m00 vy m11)))
   out)
 
-(declaim (inline main-diagonal))
-(declaim (ftype (function (matrix) v2:vec) main-diagonal))
-(defun main-diagonal (matrix)
-  "Copy the components along the main diagonal of MATRIX to a freshly allocated
-vector."
-  (main-diagonal! (v2:zero) matrix))
+(define-op main-diagonal ((in mat)) (:out v2:vec)
+  (main-diagonal! (v2:zero) in))
 
-(declaim (inline anti-diagonal!))
-(declaim (ftype (function (v2:vec matrix) v2:vec) anti-diagonal!))
-(defun anti-diagonal! (out matrix)
-  "Copy the components along the anti-diagonal of MATRIX to the existing vector,
-OUT."
-  (with-matrices ((m matrix))
+(define-op anti-diagonal! ((out v2:vec) (in mat)) (:out v2:vec)
+  (with-matrices ((m in))
     (v2:with-vectors ((v out))
       (setf vx m01 vy m10)))
   out)
 
-(declaim (inline anti-diagonal))
-(declaim (ftype (function (matrix) v2:vec) anti-diagonal))
-(defun anti-diagonal (matrix)
-  "Copy the components along the anti-diagonal of MATRIX to a freshly allocated
-vector."
-  (anti-diagonal! (v2:zero) matrix))
+(define-op anti-diagonal ((in mat)) (:out v2:vec)
+  (anti-diagonal! (v2:zero) in))

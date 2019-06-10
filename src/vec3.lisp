@@ -1,8 +1,7 @@
 (in-package #:cl-user)
 
 (defpackage #:origin.vec3
-  (:local-nicknames (#:% #:origin.internal))
-  (:use #:cl)
+  (:use #:cl #:origin.internal)
   (:shadow
    #:=
    #:+
@@ -53,8 +52,6 @@
    #:fract
    #:clamp!
    #:clamp
-   #:to-list
-   #:from-list
    #:=
    #:~
    #:+!
@@ -125,754 +122,437 @@
 
 (in-package #:origin.vec3)
 
-;;; Structure
-
 (deftype vec () '(simple-array single-float (3)))
 
 (defstruct (vec (:type (vector single-float))
                 (:constructor %make (x y z))
                 (:conc-name nil)
+                (:predicate nil)
                 (:copier nil))
-  "A Euclidean vector of 3 single-float components."
   (x 0f0 :type single-float)
   (y 0f0 :type single-float)
   (z 0f0 :type single-float))
 
 (defmacro with-vectors (((prefix vec) &rest rest) &body body)
-  "A convenience macro for concisely accessing the components of vectors."
   `(with-accessors ((,prefix identity)
-                    (,(%::make-accessor-symbol prefix 'x) x)
-                    (,(%::make-accessor-symbol prefix 'y) y)
-                    (,(%::make-accessor-symbol prefix 'z) z)
-                    (,(%::make-accessor-symbol prefix 'r) x)
-                    (,(%::make-accessor-symbol prefix 'g) y)
-                    (,(%::make-accessor-symbol prefix 'b) z)
-                    (,(%::make-accessor-symbol prefix 's) x)
-                    (,(%::make-accessor-symbol prefix 't) y)
-                    (,(%::make-accessor-symbol prefix 'p) z))
+                    (,(make-accessor-symbol prefix 'x) x)
+                    (,(make-accessor-symbol prefix 'y) y)
+                    (,(make-accessor-symbol prefix 'z) z)
+                    (,(make-accessor-symbol prefix 'r) x)
+                    (,(make-accessor-symbol prefix 'g) y)
+                    (,(make-accessor-symbol prefix 'b) z)
+                    (,(make-accessor-symbol prefix 's) x)
+                    (,(make-accessor-symbol prefix 't) y)
+                    (,(make-accessor-symbol prefix 'p) z))
        ,vec
      ,(if rest
           `(with-vectors ,rest ,@body)
           `(progn ,@body))))
 
-;;; Constants
-
 (au:define-constant +zero+
     (make-array 3 :element-type 'single-float :initial-contents '(0f0 0f0 0f0))
-  :test #'equalp
-  :documentation "A vector with each component as zero.")
+  :test #'equalp)
 
-;;; Operations
-
-(declaim (inline make))
-(declaim (ftype (function (real real real) vec) make))
-(defun make (x y z)
-  "Create a new vector."
+(define-op make ((x real) (y real) (z real)) (:out vec)
   (%make (float x 1f0) (float y 1f0) (float z 1f0)))
 
-(declaim (inline zero!))
-(declaim (ftype (function (vec) vec) zero!))
-(defun zero! (vec)
-  "Set each component of VEC to zero."
-  (with-vectors ((v vec))
+(define-op zero! ((in vec)) (:out vec)
+  (with-vectors ((v in))
     (psetf vx 0f0 vy 0f0 vz 0f0))
-  vec)
+  in)
 
-(declaim (inline zero))
-(declaim (ftype (function () vec) zero))
-(defun zero ()
-  "Create a new vector with all components initialized to zero."
+(define-op zero () (:out vec)
   (make 0f0 0f0 0f0))
 
-(declaim (inline one!))
-(declaim (ftype (function (vec) vec) one!))
-(defun one! (vec)
-  "Set each component of VEC to one."
-  (with-vectors ((v vec))
+(define-op one! ((in vec)) (:out vec)
+  (with-vectors ((v in))
     (psetf vx 1f0 vy 1f0 vz 1f0))
-  vec)
+  in)
 
-(declaim (inline one))
-(declaim (ftype (function () vec) one))
-(defun one ()
-  "Create a new vector with all components initialized to one."
+(define-op one () (:out vec)
   (one! (zero)))
 
-(declaim (inline zero-p))
-(declaim (ftype (function (vec) boolean) zero-p))
-(defun zero-p (vec)
-  "Check if each component of VEC is zero."
-  (with-vectors ((v vec))
+(define-op zero-p ((in vec)) (:out boolean)
+  (with-vectors ((v in))
     (and (zerop vx)
          (zerop vy)
          (zerop vz))))
 
-(declaim (inline random!))
-(declaim (ftype (function (vec &key (:min real) (:max real)) vec) random!))
-(defun random! (out &key (min 0.0) (max 1.0))
+(define-op random! ((out vec) &key (min real 0.0) (max real 1.0)) (:out vec)
   (with-vectors ((o out))
     (psetf ox (cl:+ min (cl:random (cl:- max min)))
            oy (cl:+ min (cl:random (cl:- max min)))
            oz (cl:+ min (cl:random (cl:- max min)))))
   out)
 
-(declaim (inline random))
-(declaim (ftype (function (&key (:min real) (:max real)) vec) random))
-(defun random (&key (min 0.0) (max 1.0))
+(define-op random (&key (min real 0.0) (max real 1.0)) (:out vec)
   (random! (zero) :min min :max max))
 
-(declaim (inline copy!))
-(declaim (ftype (function (vec vec) vec) copy!))
-(defun copy! (out vec)
-  "Copy each component of VEC to the existing vector, OUT."
-  (with-vectors ((o out)
-                 (v vec))
+(define-op copy! ((out vec) (in vec)) (:out vec)
+  (with-vectors ((o out) (v in))
     (psetf ox vx oy vy oz vz))
   out)
 
-(declaim (inline copy))
-(declaim (ftype (function (vec) vec) copy))
-(defun copy (vec)
-  "Copy each component of VEC to a freshly allocated vector."
-  (copy! (zero) vec))
+(define-op copy ((in vec)) (:out vec)
+  (copy! (zero) in))
 
-(declaim (inline sign!))
-(declaim (ftype (function (vec vec) vec) sign!))
-(defun sign! (out vec)
-  (with-vectors ((o out)
-                 (v vec))
+(define-op sign! ((out vec) (in vec)) (:out vec)
+  (with-vectors ((o out) (v in))
     (psetf ox (signum vx)
            oy (signum vy)
            oz (signum vz)))
   out)
 
-(declaim (inline sign))
-(declaim (ftype (function (vec) vec) sign))
-(defun sign (vec)
-  (sign! (zero) vec))
+(define-op sign ((in vec)) (:out vec)
+  (sign! (zero) in))
 
-(declaim (inline fract!))
-(declaim (ftype (function (vec vec) vec) fract!))
-(defun fract! (out vec)
-  (with-vectors ((o out)
-                 (v vec))
+(define-op fract! ((out vec) (in vec)) (:out vec)
+  (with-vectors ((o out) (v in))
     (psetf ox (cl:- vx (cl:floor vx))
            oy (cl:- vy (cl:floor vy))
            oz (cl:- vz (cl:floor vz))))
   out)
 
-(declaim (inline fract))
-(declaim (ftype (function (vec) vec) fract))
-(defun fract (vec)
-  (fract! (zero) vec))
+(define-op fract ((in vec)) (:out vec)
+  (fract! (zero) in))
 
-(declaim (inline clamp!))
-(declaim (ftype (function (vec vec &key (:min single-float) (:max single-float))
-                          vec)
-                clamp!))
-(defun clamp! (out vec
-               &key (min most-negative-single-float)
-                 (max most-positive-single-float))
-  "Clamp each component of VEC within the range of [MIN, MAX], storing the
-result in the existing vector, OUT."
-  (with-vectors ((o out)
-                 (v vec))
+(define-op clamp! ((out vec) (in vec)
+                   &key
+                   (min single-float most-negative-single-float)
+                   (max single-float most-positive-single-float))
+    (:out vec)
+  (with-vectors ((o out) (v in))
     (psetf ox (au:clamp vx min max)
            oy (au:clamp vy min max)
            oz (au:clamp vz min max)))
   out)
 
-(declaim (inline clamp))
-(declaim (ftype (function (vec &key (:min single-float) (:max single-float))
-                          vec)
-                clamp))
-(defun clamp (vec &key (min most-negative-single-float)
-                    (max most-positive-single-float))
-  "Clamp each component of VEC within the range of [MIN, MAX], storing the
-result in a freshly allocated vector."
-  (clamp! (zero) vec :min min :max max))
+(define-op clamp ((in vec)
+                  &key
+                  (min single-float most-negative-single-float)
+                  (max single-float most-positive-single-float))
+    (:out vec)
+  (clamp! (zero) in :min min :max max))
 
-(declaim (inline to-list))
-(declaim (ftype (function (vec) list) to-list))
-(defun to-list (vec)
-  "Convert VEC to a list of its components."
-  (with-vectors ((v vec))
-    (list vx vy vz)))
-
-(declaim (inline from-list))
-(declaim (ftype (function (list) vec) from-list))
-(defun from-list (list)
-  "Create a vector from a list of components."
-  (apply #'make list))
-
-(declaim (inline =))
-(declaim (ftype (function (vec vec) boolean) =))
-(defun = (vec1 vec2)
-  "Check if all components of VEC1 are numerically equal to the components of
-VEC2."
-  (with-vectors ((v1 vec1)
-                 (v2 vec2))
+(define-op = ((in1 vec) (in2 vec)) (:out boolean)
+  (with-vectors ((v1 in1) (v2 in2))
     (and (cl:= v1x v2x)
          (cl:= v1y v2y)
          (cl:= v1z v2z))))
 
-(declaim (inline ~))
-(declaim (ftype (function (vec vec &key (:tolerance single-float)) boolean) ~))
-(defun ~ (vec1 vec2 &key (tolerance 1e-7))
-  "Check if all components of VEC1 are approximately equal to the components of
-VEC2, according to TOLERANCE."
-  (with-vectors ((v1 vec1)
-                 (v2 vec2))
-    (and (%::~ v1x v2x tolerance)
-         (%::~ v1y v2y tolerance)
-         (%::~ v1z v2z tolerance))))
+(define-op ~ ((in1 vec) (in2 vec) &key (tolerance single-float 1e-7)) (:out boolean)
+  (with-vectors ((v1 in1) (v2 in2))
+    (and (cl:< (cl:abs (cl:- v1x v2x)) tolerance)
+         (cl:< (cl:abs (cl:- v1y v2y)) tolerance)
+         (cl:< (cl:abs (cl:- v1z v2z)) tolerance))))
 
-(declaim (inline +!))
-(declaim (ftype (function (vec vec vec) vec) +!))
-(defun +! (out vec1 vec2)
-  "Calculate the sum of VEC1 and VEC2, storing the result in the existing
-vector, OUT."
-  (with-vectors ((o out)
-                 (v1 vec1)
-                 (v2 vec2))
+(define-op +! ((out vec) (in1 vec) (in2 vec)) (:out vec)
+  (with-vectors ((o out) (v1 in1) (v2 in2))
     (psetf ox (cl:+ v1x v2x)
            oy (cl:+ v1y v2y)
            oz (cl:+ v1z v2z)))
   out)
 
-(declaim (inline +))
-(declaim (ftype (function (vec vec) vec) +))
-(defun + (vec1 vec2)
-  "Calculate the sum of VEC1 and VEC2, storing the result in a freshly allocated
-vector."
-  (+! (zero) vec1 vec2))
+(define-op + ((in1 vec) (in2 vec)) (:out vec)
+  (+! (zero) in1 in2))
 
-(declaim (inline -!))
-(declaim (ftype (function (vec vec vec) vec) -!))
-(defun -! (out vec1 vec2)
-  "Calculate the difference of VEC2 from VEC1, storing the result in the
-existing vector, OUT."
-  (with-vectors ((o out)
-                 (v1 vec1)
-                 (v2 vec2))
+(define-op -! ((out vec) (in1 vec) (in2 vec)) (:out vec)
+  (with-vectors ((o out) (v1 in1) (v2 in2))
     (psetf ox (cl:- v1x v2x)
            oy (cl:- v1y v2y)
            oz (cl:- v1z v2z)))
   out)
 
-(declaim (inline -))
-(declaim (ftype (function (vec vec) vec) -))
-(defun - (vec1 vec2)
-  "Calculate the difference of VEC2 from VEC1, storing the result in a freshly
-allocated vector."
-  (-! (zero) vec1 vec2))
+(define-op - ((in1 vec) (in2 vec)) (:out vec)
+  (-! (zero) in1 in2))
 
-(declaim (inline *!))
-(declaim (ftype (function (vec vec vec) vec) *!))
-(defun *! (out vec1 vec2)
-  "Calculate the Hadamard (component-wise) product of VEC1 and VEC2, storing the
-result in the existing vector, OUT."
-  (with-vectors ((o out)
-                 (v1 vec1)
-                 (v2 vec2))
+(define-op *! ((out vec) (in1 vec) (in2 vec)) (:out vec)
+  (with-vectors ((o out) (v1 in1) (v2 in2))
     (psetf ox (cl:* v1x v2x)
            oy (cl:* v1y v2y)
            oz (cl:* v1z v2z)))
   out)
 
-(declaim (inline *))
-(declaim (ftype (function (vec vec) vec) *))
-(defun * (vec1 vec2)
-  "Calculate the Hadamard (component-wise) product of VEC1 and VEC2, storing the
-result in a freshly allocated vector."
-  (*! (zero) vec1 vec2))
+(define-op * ((in1 vec) (in2 vec)) (:out vec)
+  (*! (zero) in1 in2))
 
-(declaim (inline /!))
-(declaim (ftype (function (vec vec vec) vec) /!))
-(defun /! (out vec1 vec2)
-  "Calculate the Hadamard (component-wise) quotient of VEC1 by VEC2, storing the
-result in the existing vector, OUT."
-  (with-vectors ((o out)
-                 (v1 vec1)
-                 (v2 vec2))
+(define-op /! ((out vec) (in1 vec) (in2 vec)) (:out vec)
+  (with-vectors ((o out) (v1 in1) (v2 in2))
     (psetf ox (if (zerop v2x) 0f0 (cl:/ v1x v2x))
            oy (if (zerop v2y) 0f0 (cl:/ v1y v2y))
            oz (if (zerop v2z) 0f0 (cl:/ v1z v2z))))
   out)
 
-(declaim (inline /))
-(declaim (ftype (function (vec vec) vec) /))
-(defun / (vec1 vec2)
-  "Calculate the Hadamard (component-wise) quotient of VEC1 by VEC2, storing the
-result in a freshly allocated vector."
-  (/! (zero) vec1 vec2))
+(define-op / ((in1 vec) (in2 vec)) (:out vec)
+  (/! (zero) in1 in2))
 
-(declaim (inline scale!))
-(declaim (ftype (function (vec vec single-float) vec) scale!))
-(defun scale! (out vec scalar)
-  "Scale VEC by SCALAR, storing the result in the existing vector, OUT."
-  (with-vectors ((o out)
-                 (v vec))
+(define-op scale! ((out vec) (in vec) (scalar single-float)) (:out vec)
+  (with-vectors ((o out) (v in))
     (psetf ox (cl:* vx scalar)
            oy (cl:* vy scalar)
            oz (cl:* vz scalar)))
   out)
 
-(declaim (inline scale))
-(declaim (ftype (function (vec single-float) vec) scale))
-(defun scale (vec scalar)
-  "Scale VEC by SCALAR, storing the result in a freshly allocated vector."
-  (scale! (zero) vec scalar))
+(define-op scale ((in vec) (scalar single-float)) (:out vec)
+  (scale! (zero) in scalar))
 
-(declaim (inline dot))
-(declaim (ftype (function (vec vec) single-float) dot))
-(defun dot (vec1 vec2)
-  "Calculate the dot product of VEC1 and VEC2. Returns a scalar."
-  (with-vectors ((v1 vec1)
-                 (v2 vec2))
+(define-op dot ((in1 vec) (in2 vec)) (:out single-float)
+  (with-vectors ((v1 in1) (v2 in2))
     (cl:+ (cl:* v1x v2x) (cl:* v1y v2y) (cl:* v1z v2z))))
 
-(declaim (inline length-squared))
-(declaim (ftype (function (vec) single-float) length-squared))
-(defun length-squared (vec)
-  "Calculate the magnitude (also known as length or Euclidean norm) of VEC. This
-results in a squared value, which is cheaper to compute. It is useful when you
-want to compare relative lengths, which does not need the expensive square root
-function.
+(define-op length-squared ((in vec)) (:out single-float)
+  (dot in in))
 
-See LENGTH for other cases."
-  (dot vec vec))
+(define-op length ((in vec)) (:out single-float)
+  (cl:sqrt (length-squared in)))
 
-(declaim (inline length))
-(declaim (ftype (function (vec) single-float) length))
-(defun length (vec)
-  "Compute the magnitude (also known as length or Euclidean norm) of VEC.
+(define-op distance-squared ((in1 vec) (in2 vec)) (:out single-float)
+  (length-squared (- in2 in1)))
 
-See LENGTH-SQUARED if you only need to compare lengths, as it is cheaper to
-compute without the square root call of this function."
-  (cl:sqrt (length-squared vec)))
+(define-op distance ((in1 vec) (in2 vec)) (:out single-float)
+  (cl:sqrt (distance-squared in1 in2)))
 
-(declaim (inline distance-squared))
-(declaim (ftype (function (vec vec) single-float) distance-squared))
-(defun distance-squared (vec1 vec2)
-  (length-squared (- vec2 vec1)))
-
-(declaim (inline distance))
-(declaim (ftype (function (vec vec) single-float) distance))
-(defun distance (vec1 vec2)
-  (cl:sqrt (distance-squared vec1 vec2)))
-
-(declaim (inline normalize!))
-(declaim (ftype (function (vec vec) vec) normalize!))
-(defun normalize! (out vec)
-  "Convert VEC to be of unit length, storing the result in the existing vector,
-OUT."
-  (let ((length (length vec)))
+(define-op normalize! ((out vec) (in vec)) (:out vec)
+  (let ((length (length in)))
     (unless (zerop length)
-      (scale! out vec (cl:/ length))))
+      (scale! out in (cl:/ length))))
   out)
 
-(declaim (inline normalize))
-(declaim (ftype (function (vec) vec) normalize))
-(defun normalize (vec)
-  "Convert VEC to be of unit length, storing the result in a freshly allocated
-vector."
-  (normalize! (zero) vec))
+(define-op normalize ((in vec)) (:out vec)
+  (normalize! (zero) in))
 
-(declaim (inline round!))
-(declaim (ftype (function (vec vec) vec) round!))
-(defun round! (out vec)
-  "Round each component of VEC to the nearest integer, storing the result in the
-existing vector, OUT."
-  (with-vectors ((o out)
-                 (v vec))
+(define-op round! ((out vec) (in vec)) (:out vec)
+  (with-vectors ((o out) (v in))
     (psetf ox (fround vx)
            oy (fround vy)
            oz (fround vz)))
   out)
 
-(declaim (inline round))
-(declaim (ftype (function (vec) vec) round))
-(defun round (vec)
-  "Round each component of VEC to the nearest integer, storing the result in a
-freshly allocated vector."
-  (round! (zero) vec))
+(define-op round ((in vec)) (:out vec)
+  (round! (zero) in))
 
-(declaim (inline abs!))
-(declaim (ftype (function (vec vec) vec) abs!))
-(defun abs! (out vec)
-  "Convert each component of VEC to its absolute value, storing the result in
-the existing vector, OUT."
-  (with-vectors ((o out)
-                 (v vec))
+(define-op abs! ((out vec) (in vec)) (:out vec)
+  (with-vectors ((o out) (v in))
     (psetf ox (cl:abs vx)
            oy (cl:abs vy)
            oz (cl:abs vz)))
   out)
 
-(declaim (inline abs))
-(declaim (ftype (function (vec) vec) abs))
-(defun abs (vec)
-  "Convert each component of VEC to its absolute value, storing the result in a
-freshly allocated vector."
-  (abs! (zero) vec))
+(define-op abs ((in vec)) (:out vec)
+  (abs! (zero) in))
 
-(declaim (inline negate!))
-(declaim (ftype (function (vec vec) vec) negate!))
-(defun negate! (out vec)
-  "Negate each component of VEC, storing the result in the existing vector,
-OUT."
-  (scale! out vec -1f0))
+(define-op negate! ((out vec) (in vec)) (:out vec)
+  (scale! out in -1f0))
 
-(declaim (inline negate))
-(declaim (ftype (function (vec) vec) negate))
-(defun negate (vec)
-  "Negate each component of VEC, storing the result in a freshly allocated
-vector."
-  (negate! (zero) vec))
+(define-op negate ((in vec)) (:out vec)
+  (negate! (zero) in))
 
-(declaim (inline cross!))
-(declaim (ftype (function (vec vec vec) vec) cross!))
-(defun cross! (out vec1 vec2)
-  "Calculate the cross product of VEC1 and VEC2, storing the result in the
-existing vector, OUT."
-  (with-vectors ((o out)
-                 (v1 vec1)
-                 (v2 vec2))
+(define-op cross! ((out vec) (in1 vec) (in2 vec)) (:out vec)
+  (with-vectors ((o out) (v1 in1) (v2 in2))
     (psetf ox (cl:- (cl:* v1y v2z) (cl:* v1z v2y))
            oy (cl:- (cl:* v1z v2x) (cl:* v1x v2z))
            oz (cl:- (cl:* v1x v2y) (cl:* v1y v2x))))
   out)
 
-(declaim (inline cross))
-(declaim (ftype (function (vec vec) vec) cross))
-(defun cross (vec1 vec2)
-  "Calculate the cross product of VEC1 and VEC2, storing the result in a freshly
-allocated vector."
-  (cross! (zero) vec1 vec2))
+(define-op cross ((in1 vec) (in2 vec)) (:out vec)
+  (cross! (zero) in1 in2))
 
-(declaim (inline box))
-(declaim (ftype (function (vec vec vec) single-float) box))
-(defun box (vec1 vec2 vec3)
-  "Calculate the box product (scalar triple product) of VEC1, VEC2, and VEC3.
-Returns a scalar."
-  (dot (cross vec1 vec2) vec3))
+(define-op box ((in1 vec) (in2 vec) (in3 vec)) (:out single-float)
+  (dot (cross in1 in2) in3))
 
-(declaim (inline angle))
-(declaim (ftype (function (vec vec) single-float) angle))
-(defun angle (vec1 vec2)
-  "Calculate the angle in radians between VEC1 and VEC2."
-  (let ((dot (dot vec1 vec2))
-        (m*m (cl:* (length vec1) (length vec2))))
+(define-op angle ((in1 vec) (in2 vec)) (:out single-float)
+  (let ((dot (dot in1 in2))
+        (m*m (cl:* (length in1) (length in2))))
     (if (zerop m*m) 0f0 (cl:acos (cl:/ dot m*m)))))
 
-(declaim (inline direction=))
-(declaim (ftype (function (vec vec) boolean) direction=))
-(defun direction= (vec1 vec2)
-  "Check if the directions of VEC1 and VEC2 are approximately equal."
-  (cl:>= (dot (normalize vec1) (normalize vec2)) (cl:- 1 1e-7)))
+(define-op direction= ((in1 vec) (in2 vec)) (:out boolean)
+  (cl:>= (dot (normalize in1) (normalize in2)) (cl:- 1 1e-7)))
 
-(declaim (inline parallel-p))
-(declaim (ftype (function (vec vec) boolean) parallel-p))
-(defun parallel-p (vec1 vec2)
-  "Check if VEC1 and VEC2 are approximately parallel to each other."
-  (~ (cross vec1 vec2) +zero+))
+(define-op parallel-p ((in1 vec) (in2 vec)) (:out boolean)
+  (~ (cross in1 in2) +zero+))
 
-(declaim (inline lerp!))
-(declaim (ftype (function (vec vec vec single-float) vec) lerp!))
-(defun lerp! (out vec1 vec2 factor)
-  "Linearly interpolate between VEC1 and VEC2 by FACTOR, storing the result in
-the existing vector, OUT."
-  (with-vectors ((o out)
-                 (v1 vec1)
-                 (v2 vec2))
+(define-op lerp! ((out vec) (in1 vec) (in2 vec) (factor single-float)) (:out vec)
+  (with-vectors ((o out) (v1 in1) (v2 in2))
     (psetf ox (au:lerp factor v1x v2x)
            oy (au:lerp factor v1y v2y)
            oz (au:lerp factor v1z v2z)))
   out)
 
-(declaim (inline lerp))
-(declaim (ftype (function (vec vec single-float) vec) lerp))
-(defun lerp (vec1 vec2 factor)
-  "Linearly interpolate between VEC1 and VEC2 by FACTOR, storing the result in a
-freshly allocated vector."
-  (lerp! (zero) vec1 vec2 factor))
+(define-op lerp ((in1 vec) (in2 vec) (factor single-float)) (:out vec)
+  (lerp! (zero) in1 in2 factor))
 
-(declaim (inline <))
-(declaim (ftype (function (vec vec) boolean) <))
-(defun < (vec1 vec2)
-  "Check if each component of VEC1 is less than the same component of VEC2."
-  (with-vectors ((v1 vec1)
-                 (v2 vec2))
+(define-op < ((in1 vec) (in2 vec)) (:out boolean)
+  (with-vectors ((v1 in1) (v2 in2))
     (and (cl:< v1x v2x)
          (cl:< v1y v2y)
          (cl:< v1z v2z))))
 
-(declaim (inline <=))
-(declaim (ftype (function (vec vec) boolean) <=))
-(defun <= (vec1 vec2)
-  "Check if each component of VEC1 is less than or equal to the same component
-of VEC2."
-  (with-vectors ((v1 vec1)
-                 (v2 vec2))
+(define-op <= ((in1 vec) (in2 vec)) (:out boolean)
+  (with-vectors ((v1 in1) (v2 in2))
     (and (cl:<= v1x v2x)
          (cl:<= v1y v2y)
          (cl:<= v1z v2z))))
 
-(declaim (inline >))
-(declaim (ftype (function (vec vec) boolean) >))
-(defun > (vec1 vec2)
-  "Check if each component of VEC1 is greater than the same component of VEC2."
-  (with-vectors ((v1 vec1)
-                 (v2 vec2))
+(define-op > ((in1 vec) (in2 vec)) (:out boolean)
+  (with-vectors ((v1 in1) (v2 in2))
     (and (cl:> v1x v2x)
          (cl:> v1y v2y)
          (cl:> v1z v2z))))
 
-(declaim (inline >=))
-(declaim (ftype (function (vec vec) boolean) >=))
-(defun >= (vec1 vec2)
-  "Check if each component of VEC1 is greater than or equal to the same
-component of VEC2."
-  (with-vectors ((v1 vec1)
-                 (v2 vec2))
+(define-op >= ((in1 vec) (in2 vec)) (:out boolean)
+  (with-vectors ((v1 in1) (v2 in2))
     (and (cl:>= v1x v2x)
          (cl:>= v1y v2y)
          (cl:>= v1z v2z))))
 
-(declaim (inline min!))
-(declaim (ftype (function (vec vec vec) vec) min!))
-(defun min! (out vec1 vec2)
-  "Return the minimum of each component in VEC1 and VEC2, into the existing
-vector, OUT."
-  (with-vectors ((o out)
-                 (v1 vec1)
-                 (v2 vec2))
+(define-op min! ((out vec) (in1 vec) (in2 vec)) (:out vec)
+  (with-vectors ((o out) (v1 in1) (v2 in2))
     (psetf ox (cl:min v1x v2x)
            oy (cl:min v1y v2y)
            oz (cl:min v1z v2z)))
   out)
 
-(declaim (inline min))
-(declaim (ftype (function (vec vec) vec) min))
-(defun min (vec1 vec2)
-  "Return the minimum of each component in VEC1 and VEC2, into a freshly
-allocated vector."
-  (min! (zero) vec1 vec2))
+(define-op min ((in1 vec) (in2 vec)) (:out vec)
+  (min! (zero) in1 in2))
 
-(declaim (inline max!))
-(declaim (ftype (function (vec vec vec) vec) max!))
-(defun max! (out vec1 vec2)
-  "Return the maximum of each component in VEC1 and VEC2, into the existing
-vector, OUT."
-  (with-vectors ((o out)
-                 (v1 vec1)
-                 (v2 vec2))
+(define-op max! ((out vec) (in1 vec) (in2 vec)) (:out vec)
+  (with-vectors ((o out) (v1 in1) (v2 in2))
     (psetf ox (cl:max v1x v2x)
            oy (cl:max v1y v2y)
            oz (cl:max v1z v2z)))
   out)
 
-(declaim (inline max))
-(declaim (ftype (function (vec vec) vec) max))
-(defun max (vec1 vec2)
-  "Return the maximum of each component in VEC1 and VEC2, into a freshly
-allocated vector."
-  (max! (zero) vec1 vec2))
+(define-op max ((in1 vec) (in2 vec)) (:out vec)
+  (max! (zero) in1 in2))
 
-(declaim (inline radians!))
-(declaim (ftype (function (vec vec) vec) radians!))
-(defun radians! (out vec)
-  (with-vectors ((o out)
-                 (v vec))
+(define-op radians! ((out vec) (in vec)) (:out vec)
+  (with-vectors ((o out) (v in))
     (let ((x (float (cl:/ pi 180) 1f0)))
       (psetf ox (cl:* vx x)
              oy (cl:* vy x)
              oz (cl:* vz x)))
     out))
 
-(declaim (inline radians))
-(declaim (ftype (function (vec) vec) radians))
-(defun radians (vec)
-  (radians! (zero) vec))
+(define-op radians ((in vec)) (:out vec)
+  (radians! (zero) in))
 
-(declaim (inline degrees!))
-(declaim (ftype (function (vec vec) vec) degrees!))
-(defun degrees! (out vec)
-  (with-vectors ((o out)
-                 (v vec))
+(define-op degrees! ((out vec) (in vec)) (:out vec)
+  (with-vectors ((o out) (v in))
     (let ((x (float (cl:/ 180 pi) 1f0)))
       (psetf ox (cl:* vx x)
              oy (cl:* vy x)
              oz (cl:* vz x))))
   out)
 
-(declaim (inline degrees))
-(declaim (ftype (function (vec) vec) degrees))
-(defun degrees (vec)
-  (degrees! (zero) vec))
+(define-op degrees ((in vec)) (:out vec)
+  (degrees! (zero) in))
 
-(declaim (inline expt!))
-(declaim (ftype (function (vec vec real) vec) expt!))
-(defun expt! (out vec power)
-  (with-vectors ((o out)
-                 (v vec))
+(define-op expt! ((out vec) (in vec) (power real)) (:out vec)
+  (with-vectors ((o out) (v in))
     (psetf ox (cl:expt vx power)
            oy (cl:expt vy power)
            oz (cl:expt vz power)))
   out)
 
-(declaim (inline expt))
-(declaim (ftype (function (vec real) vec) expt))
-(defun expt (vec power)
-  (expt! (zero) vec power))
+(define-op expt ((in vec) (power real)) (:out vec)
+  (expt! (zero) in power))
 
-(declaim (inline sqrt!))
-(declaim (ftype (function (vec vec) vec) sqrt!))
-(defun sqrt! (out vec)
-  (with-vectors ((o out)
-                 (v vec))
+(define-op sqrt! ((out vec) (in vec)) (:out vec)
+  (with-vectors ((o out) (v in))
     (psetf ox (cl:sqrt vx)
            oy (cl:sqrt vy)
            oz (cl:sqrt vz)))
   out)
 
-(declaim (inline sqrt))
-(declaim (ftype (function (vec) vec) sqrt))
-(defun sqrt (vec)
-  (sqrt! (zero) vec))
+(define-op sqrt ((in vec)) (:out vec)
+  (sqrt! (zero) in))
 
-(declaim (inline floor!))
-(declaim (ftype (function (vec vec) vec) floor!))
-(defun floor! (out vec)
-  (with-vectors ((o out)
-                 (v vec))
+(define-op floor! ((out vec) (in vec)) (:out vec)
+  (with-vectors ((o out) (v in))
     (psetf ox (float (cl:floor vx) 1f0)
            oy (float (cl:floor vy) 1f0)
            oz (float (cl:floor vz) 1f0)))
   out)
 
-(declaim (inline floor))
-(declaim (ftype (function (vec) vec) floor))
-(defun floor (vec)
-  (floor! (zero) vec))
+(define-op floor ((in vec)) (:out vec)
+  (floor! (zero) in))
 
-(declaim (inline ceiling!))
-(declaim (ftype (function (vec vec) vec) ceiling!))
-(defun ceiling! (out vec)
-  (with-vectors ((o out)
-                 (v vec))
+(define-op ceiling! ((out vec) (in vec)) (:out vec)
+  (with-vectors ((o out) (v in))
     (psetf ox (float (cl:ceiling vx) 1f0)
            oy (float (cl:ceiling vy) 1f0)
            oz (float (cl:ceiling vz) 1f0)))
   out)
 
-(declaim (inline ceiling))
-(declaim (ftype (function (vec) vec) ceiling))
-(defun ceiling (vec)
-  (ceiling! (zero) vec))
+(define-op ceiling ((in vec)) (:out vec)
+  (ceiling! (zero) in))
 
-(declaim (inline mod!))
-(declaim (ftype (function (vec vec real) vec) mod!))
-(defun mod! (out vec divisor)
-  (with-vectors ((o out)
-                 (v vec))
+(define-op mod! ((out vec) (in vec) (divisor real)) (:out vec)
+  (with-vectors ((o out) (v in))
     (psetf ox (cl:mod vx divisor)
            oy (cl:mod vy divisor)
            oz (cl:mod vz divisor)))
   out)
 
-(declaim (inline mod))
-(declaim (ftype (function (vec real) vec) mod))
-(defun mod (vec divisor)
-  (mod! (zero) vec divisor))
+(define-op mod ((in vec) (divisor real)) (:out vec)
+  (mod! (zero) in divisor))
 
-(declaim (inline sin!))
-(declaim (ftype (function (vec vec) vec) sin!))
-(defun sin! (out vec)
-  (with-vectors ((o out)
-                 (v vec))
+(define-op sin! ((out vec) (in vec)) (:out vec)
+  (with-vectors ((o out) (v in))
     (psetf ox (cl:sin vx)
            oy (cl:sin vy)
            oz (cl:sin vz)))
   out)
 
-(declaim (inline sin))
-(declaim (ftype (function (vec) vec) sin))
-(defun sin (vec)
-  (sin! (zero) vec))
+(define-op sin ((in vec)) (:out vec)
+  (sin! (zero) in))
 
-(declaim (inline cos!))
-(declaim (ftype (function (vec vec) vec) cos!))
-(defun cos! (out vec)
-  (with-vectors ((o out)
-                 (v vec))
+(define-op cos! ((out vec) (in vec)) (:out vec)
+  (with-vectors ((o out) (v in))
     (psetf ox (cl:cos vx)
            oy (cl:cos vy)
            oz (cl:cos vz)))
   out)
 
-(declaim (inline cos))
-(declaim (ftype (function (vec) vec) cos))
-(defun cos (vec)
-  (cos! (zero) vec))
+(define-op cos ((in vec)) (:out vec)
+  (cos! (zero) in))
 
-(declaim (inline tan!))
-(declaim (ftype (function (vec vec) vec) tan!))
-(defun tan! (out vec)
-  (with-vectors ((o out)
-                 (v vec))
+(define-op tan! ((out vec) (in vec)) (:out vec)
+  (with-vectors ((o out) (v in))
     (psetf ox (cl:tan vx)
            oy (cl:tan vy)
            oz (cl:tan vz)))
   out)
 
-(declaim (inline tan))
-(declaim (ftype (function (vec) vec) tan))
-(defun tan (vec)
-  (tan! (zero) vec))
+(define-op tan ((in vec)) (:out vec)
+  (tan! (zero) in))
 
-(declaim (inline asin!))
-(declaim (ftype (function (vec vec) vec) asin!))
-(defun asin! (out vec)
-  (with-vectors ((o out)
-                 (v vec))
+(define-op asin! ((out vec) (in vec)) (:out vec)
+  (with-vectors ((o out) (v in))
     (psetf ox (cl:asin vx)
            oy (cl:asin vy)
            oz (cl:asin vz)))
   out)
 
-(declaim (inline asin))
-(declaim (ftype (function (vec) vec) asin))
-(defun asin (vec)
-  (asin! (zero) vec))
+(define-op asin ((in vec)) (:out vec)
+  (asin! (zero) in))
 
-(declaim (inline acos!))
-(declaim (ftype (function (vec vec) vec) acos!))
-(defun acos! (out vec)
-  (with-vectors ((o out)
-                 (v vec))
+(define-op acos! ((out vec) (in vec)) (:out vec)
+  (with-vectors ((o out) (v in))
     (psetf ox (cl:acos vx)
            oy (cl:acos vy)
            oz (cl:acos vz)))
   out)
 
-(declaim (inline acos))
-(declaim (ftype (function (vec) vec) acos))
-(defun acos (vec)
-  (acos! (zero) vec))
+(define-op acos ((in vec)) (:out vec)
+  (acos! (zero) in))
 
-(declaim (inline atan!))
-(declaim (ftype (function (vec vec) vec) atan!))
-(defun atan! (out vec)
-  (with-vectors ((o out)
-                 (v vec))
+(define-op atan! ((out vec) (in vec)) (:out vec)
+  (with-vectors ((o out) (v in))
     (psetf ox (cl:atan vx)
            oy (cl:atan vy)
            oz (cl:atan vz)))
   out)
 
-(declaim (inline atan))
-(declaim (ftype (function (vec) vec) atan))
-(defun atan (vec)
-  (atan! (zero) vec))
+(define-op atan ((in vec)) (:out vec)
+  (atan! (zero) in))

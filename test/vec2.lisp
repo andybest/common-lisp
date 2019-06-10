@@ -62,10 +62,6 @@
     (is v2:= v r)
     (is v2:= (v2:one) r)))
 
-(define-test v2/list-convert
-  (is equalp (v2:to-list (v2:make 1 2)) '(1 2))
-  (is v2:= (v2:from-list '(1 2)) (v2:make 1 2)))
-
 (define-test v2/equality
   (let ((v1 (v2:make 0.8598654 -0.4803753))
         (v2 (v2:make 1e-8 1e-8)))
