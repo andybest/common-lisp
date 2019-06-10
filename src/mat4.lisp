@@ -497,17 +497,20 @@
   (with-matrices ((o out) (m in))
     (v3:with-vectors ((v vec))
       (psetf o00 (cl:* m00 vx)
-             o10 (cl:* m10 vy)
-             o20 (cl:* m20 vz)
              o01 (cl:* m01 vx)
-             o11 (cl:* m11 vy)
-             o21 (cl:* m21 vz)
              o02 (cl:* m02 vx)
-             o12 (cl:* m12 vy)
-             o22 (cl:* m22 vz)
              o03 (cl:* m03 vx)
+             o10 (cl:* m10 vy)
+             o11 (cl:* m11 vy)
+             o12 (cl:* m12 vy)
              o13 (cl:* m13 vy)
+             o20 (cl:* m20 vz)
+             o21 (cl:* m21 vz)
+             o22 (cl:* m22 vz)
              o23 (cl:* m23 vz)
+             o30 m30
+             o31 m31
+             o32 m32
              o33 m33)))
   out)
 

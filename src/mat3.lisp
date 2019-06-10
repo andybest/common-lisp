@@ -375,11 +375,13 @@
   (with-matrices ((o out) (m in))
     (v2:with-vectors ((v vec))
       (psetf o00 (cl:* m00 vx)
-             o10 (cl:* m10 vy)
              o01 (cl:* m01 vx)
-             o11 (cl:* m11 vy)
              o02 (cl:* m02 vx)
+             o10 (cl:* m10 vy)
+             o11 (cl:* m11 vy)
              o12 (cl:* m12 vy)
+             o20 m20
+             o21 m21
              o22 m22)))
   out)
 
