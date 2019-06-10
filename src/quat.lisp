@@ -390,14 +390,11 @@
   (with-quaternions ((o out))
     (m3:with-matrices ((m in))
       (let* ((x-rot-denom (sqrt
-                           (cl:+
-                            (cl:* m00 m00) (cl:* m10 m10) (cl:* m20 m20))))
+                           (cl:+ (cl:* m00 m00) (cl:* m10 m10) (cl:* m20 m20))))
              (y-rot-denom (sqrt
-                           (cl:+
-                            (cl:* m01 m01) (cl:* m11 m11) (cl:* m21 m21))))
+                           (cl:+ (cl:* m01 m01) (cl:* m11 m11) (cl:* m21 m21))))
              (z-rot-denom (sqrt
-                           (cl:+
-                            (cl:* m02 m02) (cl:* m12 m12) (cl:* m22 m22))))
+                           (cl:+ (cl:* m02 m02) (cl:* m12 m12) (cl:* m22 m22))))
              (nm00 (/ m00 x-rot-denom))
              (nm10 (/ m10 x-rot-denom))
              (nm20 (/ m20 x-rot-denom))
@@ -436,8 +433,8 @@
                    ow (cl:* (cl:- nm10 nm01) s)
                    ox (cl:* (cl:+ nm02 nm20) s)
                    oy (cl:* (cl:+ nm12 nm21) s)
-                   oz (/ 0.25f0 s)))))))
-    o))
+                   oz (/ 0.25f0 s))))))))
+  out)
 
 (define-op from-mat3 ((in m3:mat)) (:out quat)
   (from-mat3! (id) in))
@@ -446,14 +443,11 @@
   (with-quaternions ((o out))
     (m4:with-matrices ((m in))
       (let* ((x-rot-denom (sqrt
-                           (cl:+
-                            (cl:* m00 m00) (cl:* m10 m10) (cl:* m20 m20))))
+                           (cl:+ (cl:* m00 m00) (cl:* m10 m10) (cl:* m20 m20))))
              (y-rot-denom (sqrt
-                           (cl:+
-                            (cl:* m01 m01) (cl:* m11 m11) (cl:* m21 m21))))
+                           (cl:+ (cl:* m01 m01) (cl:* m11 m11) (cl:* m21 m21))))
              (z-rot-denom (sqrt
-                           (cl:+
-                            (cl:* m02 m02) (cl:* m12 m12) (cl:* m22 m22))))
+                           (cl:+ (cl:* m02 m02) (cl:* m12 m12) (cl:* m22 m22))))
              (nm00 (/ m00 x-rot-denom))
              (nm10 (/ m10 x-rot-denom))
              (nm20 (/ m20 x-rot-denom))
