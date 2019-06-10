@@ -191,7 +191,7 @@
 (define-op - ((in1 mat) (in2 mat)) (:out mat)
   (-! (zero) in1 in2))
 
-(define-op *! ((out mat) (in1 mat) (in2 mat)) (:out mat :inline nil)
+(define-op *! ((out mat) (in1 mat) (in2 mat)) (:out mat)
   (with-matrices ((o out) (a in1) (b in2))
     (psetf o00 (cl:+ (cl:* a00 b00) (cl:* a01 b10))
            o10 (cl:+ (cl:* a10 b00) (cl:* a11 b10))

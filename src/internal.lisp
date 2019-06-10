@@ -9,7 +9,7 @@
 (in-package #:origin.internal)
 
 (setf sb-ext:*inline-expansion-limit*
-      (max sb-ext:*inline-expansion-limit* 1024))
+      (max sb-ext:*inline-expansion-limit* 2048))
 
 (declaim (inline make-accessor-symbol))
 (defun make-accessor-symbol (prefix &rest args)
