@@ -13,7 +13,7 @@
    #:trace)
   (:export
    #:mat
-   #:with-matrices
+   #:with-components
    #:+zero+
    #:+id+
    #:make
@@ -87,7 +87,7 @@
   (m12 0f0 :type single-float)
   (m22 0f0 :type single-float))
 
-(defmacro with-matrices (((prefix matrix) &rest rest) &body body)
+(defmacro with-components (((prefix matrix) &rest rest) &body body)
   `(with-accessors ((,prefix identity)
                     (,(make-accessor-symbol prefix "00") m00)
                     (,(make-accessor-symbol prefix "01") m01)
@@ -100,7 +100,7 @@
                     (,(make-accessor-symbol prefix "22") m22))
        ,matrix
      ,(if rest
-          `(with-matrices ,rest ,@body)
+          `(with-components ,rest ,@body)
           `(progn ,@body))))
 
 (au:define-constant +zero+
@@ -121,7 +121,7 @@
          (float m20 1f0) (float m21 1f0) (float m22 1f0)))
 
 (define-op zero! ((in mat)) (:out mat)
-  (with-matrices ((m in))
+  (with-components ((m in))
     (psetf m00 0f0 m01 0f0 m02 0f0
            m10 0f0 m11 0f0 m12 0f0
            m20 0f0 m21 0f0 m22 0f0))
@@ -131,7 +131,7 @@
   (%make 0f0 0f0 0f0 0f0 0f0 0f0 0f0 0f0 0f0))
 
 (define-op id! ((in mat)) (:out mat)
-  (with-matrices ((m in))
+  (with-components ((m in))
     (psetf m00 1f0 m01 0f0 m02 0f0
            m10 0f0 m11 1f0 m12 0f0
            m20 0f0 m21 0f0 m22 1f0))
@@ -141,19 +141,19 @@
   (%make 1f0 0f0 0f0 0f0 1f0 0f0 0f0 0f0 1f0))
 
 (define-op id-p ((in mat)) (:out boolean)
-  (with-matrices ((m in))
+  (with-components ((m in))
     (and (cl:= 0f0 m01 m02 m10 m12 m20 m21)
          (cl:= 1f0 m00 m11 m22))))
 
 (define-op = ((in1 mat) (in2 mat)) (:out boolean)
-  (with-matrices ((a in1) (b in2))
+  (with-components ((a in1) (b in2))
     (and (cl:= a00 b00) (cl:= a01 b01) (cl:= a02 b02)
          (cl:= a10 b10) (cl:= a11 b11) (cl:= a12 b12)
          (cl:= a20 b20) (cl:= a21 b21) (cl:= a22 b22))))
 
 (define-op ~ ((in1 mat) (in2 mat) &key (tolerance single-float 1e-7))
     (:out boolean)
-  (with-matrices ((a in1) (b in2))
+  (with-components ((a in1) (b in2))
     (and (cl:< (cl:abs (cl:- a00 b00)) tolerance)
          (cl:< (cl:abs (cl:- a01 b01)) tolerance)
          (cl:< (cl:abs (cl:- a02 b02)) tolerance)
@@ -165,7 +165,7 @@
          (cl:< (cl:abs (cl:- a22 b22)) tolerance))))
 
 (define-op random! ((out mat) &key (min real 0.0) (max real 1.0)) (:out mat)
-  (with-matrices ((o out))
+  (with-components ((o out))
     (psetf o00 (cl:+ min (cl:random (cl:- max min)))
            o01 (cl:+ min (cl:random (cl:- max min)))
            o02 (cl:+ min (cl:random (cl:- max min)))
@@ -181,7 +181,7 @@
   (random! (zero) :min min :max max))
 
 (define-op copy! ((out mat) (in mat)) (:out mat)
-  (with-matrices ((o out) (m in))
+  (with-components ((o out) (m in))
     (psetf o00 m00 o01 m01 o02 m02
            o10 m10 o11 m11 o12 m12
            o20 m20 o21 m21 o22 m22))
@@ -195,7 +195,7 @@
                    (min single-float most-negative-single-float)
                    (max single-float most-positive-single-float))
     (:out mat :inline nil)
-  (with-matrices ((o out) (m in))
+  (with-components ((o out) (m in))
     (psetf o00 (au:clamp m00 min max)
            o01 (au:clamp m01 min max)
            o02 (au:clamp m02 min max)
@@ -215,7 +215,7 @@
   (clamp! (zero) in :min min :max max))
 
 (define-op +! ((out mat) (in1 mat) (in2 mat)) (:out mat)
-  (with-matrices ((o out) (a in1) (b in2))
+  (with-components ((o out) (a in1) (b in2))
     (psetf o00 (cl:+ a00 b00)
            o10 (cl:+ a10 b10)
            o20 (cl:+ a20 b20)
@@ -231,7 +231,7 @@
   (+! (zero) in1 in2))
 
 (define-op -! ((out mat) (in1 mat) (in2 mat)) (:out mat)
-  (with-matrices ((o out) (a in1) (b in2))
+  (with-components ((o out) (a in1) (b in2))
     (psetf o00 (cl:- a00 b00)
            o10 (cl:- a10 b10)
            o20 (cl:- a20 b20)
@@ -247,7 +247,7 @@
   (-! (zero) in1 in2))
 
 (define-op *! ((out mat) (in1 mat) (in2 mat)) (:out mat)
-  (with-matrices ((o out) (a in1) (b in2))
+  (with-components ((o out) (a in1) (b in2))
     (psetf o00 (cl:+ (cl:* a00 b00) (cl:* a01 b10) (cl:* a02 b20))
            o10 (cl:+ (cl:* a10 b00) (cl:* a11 b10) (cl:* a12 b20))
            o20 (cl:+ (cl:* a20 b00) (cl:* a21 b10) (cl:* a22 b20))
@@ -263,7 +263,7 @@
   (*! (zero) in1 in2))
 
 (define-op copy-rotation! ((out mat) (in mat)) (:out mat)
-  (with-matrices ((o out) (m in))
+  (with-components ((o out) (m in))
     (psetf o00 m00 o01 m01
            o10 m10 o11 m11))
   out)
@@ -272,8 +272,8 @@
   (copy-rotation! (id) in))
 
 (define-op get-translation! ((out v2:vec) (in mat)) (:out v2:vec)
-  (with-matrices ((m in))
-    (v2:with-vectors ((o out))
+  (with-components ((m in))
+    (v2:with-components ((o out))
       (psetf ox m02 oy m12)))
   out)
 
@@ -281,8 +281,8 @@
   (get-translation! (v2:zero) in))
 
 (define-op set-translation! ((out mat) (in mat) (vec v2:vec)) (:out mat)
-  (with-matrices ((o out) (m in))
-    (v2:with-vectors ((v vec))
+  (with-components ((o out) (m in))
+    (v2:with-components ((v vec))
       (copy-rotation! out in)
       (psetf o02 vx o12 vy o22 m22)))
   out)
@@ -291,8 +291,8 @@
   (set-translation! (copy in) in vec))
 
 (define-op translate! ((out mat) (in mat) (vec v2:vec)) (:out mat)
-  (with-matrices ((o out) (m in))
-    (v2:with-vectors ((v vec))
+  (with-components ((o out) (m in))
+    (v2:with-components ((v vec))
       (copy! out in)
       (psetf o00 (cl:+ m00 (cl:* m20 vx))
              o01 (cl:+ m01 (cl:* m21 vx))
@@ -310,8 +310,8 @@
 
 (define-op rotation-axis-to-vec2! ((out v2:vec) (in mat) (axis keyword))
     (:out v2:vec)
-  (v2:with-vectors ((v out))
-    (with-matrices ((m in))
+  (v2:with-components ((v out))
+    (with-components ((m in))
       (ecase axis
         (:x (psetf vx m00 vy m10))
         (:y (psetf vx m01 vy m11)))))
@@ -322,8 +322,8 @@
 
 (define-op rotation-axis-from-vec2! ((in mat) (vec v2:vec) (axis keyword))
     (:out mat)
-  (with-matrices ((m in))
-    (v2:with-vectors ((v vec))
+  (with-components ((m in))
+    (v2:with-components ((v vec))
       (ecase axis
         (:x (psetf m00 vx m10 vy))
         (:y (psetf m01 vx m11 vy)))))
@@ -336,7 +336,7 @@
 (define-op rotate! ((out mat) (in mat) (angle float)
                     &key (space keyword :local))
     (:out mat)
-  (with-matrices ((m (id)))
+  (with-components ((m (id)))
     (copy! out in)
     (when (cl:> (abs angle) 1e-7)
       (let* ((angle (float angle 1f0))
@@ -353,8 +353,8 @@
   (rotate! (id) in angle))
 
 (define-op get-scale! ((out v2:vec) (in mat)) (:out v2:vec)
-  (with-matrices ((m in))
-    (v2:with-vectors ((o out))
+  (with-components ((m in))
+    (v2:with-components ((o out))
       (psetf ox m00 oy m11)))
   out)
 
@@ -362,8 +362,8 @@
   (get-scale! (v2:zero) in))
 
 (define-op set-scale! ((out mat) (in mat) (vec v2:vec)) (:out mat)
-  (with-matrices ((o out))
-    (v2:with-vectors ((v vec))
+  (with-components ((o out))
+    (v2:with-components ((v vec))
       (copy! out in)
       (psetf o00 vx o11 vy)))
   out)
@@ -372,8 +372,8 @@
   (set-scale! (copy in) in vec))
 
 (define-op scale! ((out mat) (in mat) (vec v2:vec)) (:out mat)
-  (with-matrices ((o out) (m in))
-    (v2:with-vectors ((v vec))
+  (with-components ((o out) (m in))
+    (v2:with-components ((v vec))
       (psetf o00 (cl:* m00 vx)
              o01 (cl:* m01 vx)
              o02 (cl:* m02 vx)
@@ -389,8 +389,8 @@
   (scale! (id) in vec))
 
 (define-op *v3! ((out v3:vec) (in mat) (vec v3:vec)) (:out v3:vec)
-  (v3:with-vectors ((v vec) (o out))
-    (with-matrices ((m in))
+  (v3:with-components ((v vec) (o out))
+    (with-components ((m in))
       (psetf ox (cl:+ (cl:* m00 vx) (cl:* m01 vy) (cl:* m02 vz))
              oy (cl:+ (cl:* m10 vx) (cl:* m11 vy) (cl:* m12 vz))
              oz (cl:+ (cl:* m20 vx) (cl:* m21 vy) (cl:* m22 vz)))))
@@ -400,7 +400,7 @@
   (*v3! (v3:zero) in vec))
 
 (define-op transpose! ((out mat) (in mat)) (:out mat)
-  (with-matrices ((o (copy! out in)))
+  (with-components ((o (copy! out in)))
     (rotatef o01 o10)
     (rotatef o02 o20)
     (rotatef o12 o21))
@@ -413,11 +413,11 @@
   (~ (* in (transpose in)) +id+))
 
 (define-op trace ((in mat)) (:out single-float)
-  (with-matrices ((m in))
+  (with-components ((m in))
     (cl:+ m00 m11 m22)))
 
 (define-op diagonal-p ((in mat)) (:out boolean)
-  (with-matrices ((m in))
+  (with-components ((m in))
     (and (zerop m10)
          (zerop m20)
          (zerop m01)

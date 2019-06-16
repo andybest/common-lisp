@@ -16,7 +16,7 @@
    #:random)
   (:export
    #:quat
-   #:with-quaternions
+   #:with-components
    #:w
    #:x
    #:y
@@ -90,7 +90,7 @@
   (y 0f0 :type single-float)
   (z 0f0 :type single-float))
 
-(defmacro with-quaternions (((prefix quat) &rest rest) &body body)
+(defmacro with-components (((prefix quat) &rest rest) &body body)
   `(with-accessors ((,prefix identity)
                     (,(make-accessor-symbol prefix 'w) w)
                     (,(make-accessor-symbol prefix 'x) x)
@@ -98,7 +98,7 @@
                     (,(make-accessor-symbol prefix 'z) z))
        ,quat
      ,(if rest
-          `(with-quaternions ,rest ,@body)
+          `(with-components ,rest ,@body)
           `(progn ,@body))))
 
 (au:define-constant +zero+
@@ -115,7 +115,7 @@
   (%make (float w 1f0) (float x 1f0) (float y 1f0) (float z 1f0)))
 
 (define-op id! ((in quat)) (:out quat)
-  (with-quaternions ((q in))
+  (with-components ((q in))
     (psetf qw 1f0 qx 0f0 qy 0f0 qz 0f0))
   in)
 
@@ -123,7 +123,7 @@
   (id! (make 0f0 0f0 0f0 0f0)))
 
 (define-op zero! ((in quat)) (:out quat)
-  (with-quaternions ((q in))
+  (with-components ((q in))
     (psetf qw 0f0 qx 0f0 qy 0f0 qz 0f0))
   in)
 
@@ -131,7 +131,7 @@
   (make 0f0 0f0 0f0 0f0))
 
 (define-op = ((in1 quat) (in2 quat)) (:out boolean)
-  (with-quaternions ((q1 in1) (q2 in2))
+  (with-components ((q1 in1) (q2 in2))
     (and (cl:= q1w q2w)
          (cl:= q1x q2x)
          (cl:= q1y q2y)
@@ -139,14 +139,14 @@
 
 (define-op ~ ((in1 quat) (in2 quat) &key (tolerance single-float 1e-7))
     (:out boolean)
-  (with-quaternions ((q1 in1) (q2 in2))
+  (with-components ((q1 in1) (q2 in2))
     (and (cl:< (cl:abs (cl:- q1w q2w)) tolerance)
          (cl:< (cl:abs (cl:- q1x q2x)) tolerance)
          (cl:< (cl:abs (cl:- q1y q2y)) tolerance)
          (cl:< (cl:abs (cl:- q1z q2z)) tolerance))))
 
 (define-op random! ((out quat) &key (min real 0.0) (max real 1.0)) (:out quat)
-  (with-quaternions ((o out))
+  (with-components ((o out))
     (psetf ow (cl:+ min (cl:random (cl:- max min)))
            ox (cl:+ min (cl:random (cl:- max min)))
            oy (cl:+ min (cl:random (cl:- max min)))
@@ -157,7 +157,7 @@
   (random! (zero) :min min :max max))
 
 (define-op copy! ((out quat) (in quat)) (:out quat)
-  (with-quaternions ((o out) (q in))
+  (with-components ((o out) (q in))
     (psetf ow qw ox qx oy qy oz qz))
   out)
 
@@ -165,7 +165,7 @@
   (copy! (id) in))
 
 (define-op +! ((out quat) (in1 quat) (in2 quat)) (:out quat)
-  (with-quaternions ((o out) (q1 in1) (q2 in2))
+  (with-components ((o out) (q1 in1) (q2 in2))
     (psetf ow (cl:+ q1w q2w)
            ox (cl:+ q1x q2x)
            oy (cl:+ q1y q2y)
@@ -176,7 +176,7 @@
   (+! (id) in1 in2))
 
 (define-op -! ((out quat) (in1 quat) (in2 quat)) (:out quat)
-  (with-quaternions ((o out) (q1 in1) (q2 in2))
+  (with-components ((o out) (q1 in1) (q2 in2))
     (psetf ow (cl:- q1w q2w)
            ox (cl:- q1x q2x)
            oy (cl:- q1y q2y)
@@ -187,7 +187,7 @@
   (-! (id) in1 in2))
 
 (define-op *! ((out quat) (in1 quat) (in2 quat)) (:out quat)
-  (with-quaternions ((o out) (q1 in1) (q2 in2))
+  (with-components ((o out) (q1 in1) (q2 in2))
     (psetf ow (cl:- (cl:* q1w q2w) (cl:* q1x q2x) (cl:* q1y q2y)
                     (cl:* q1z q2z))
            ox (cl:- (cl:+ (cl:* q1w q2x) (cl:* q1x q2w) (cl:* q1y q2z))
@@ -202,7 +202,7 @@
   (*! (id) in1 in2))
 
 (define-op scale! ((out quat) (in quat) (scalar single-float)) (:out quat)
-  (with-quaternions ((o out) (q in))
+  (with-components ((o out) (q in))
     (psetf ow (cl:* qw scalar)
            ox (cl:* qx scalar)
            oy (cl:* qy scalar)
@@ -213,7 +213,7 @@
   (scale! (id) quat scalar))
 
 (define-op conjugate! ((out quat) (in quat)) (:out quat)
-  (with-quaternions ((o out) (q in))
+  (with-components ((o out) (q in))
     (psetf ow qw
            ox (cl:- qx)
            oy (cl:- qy)
@@ -230,7 +230,7 @@
   (cross! (id) in1 in2))
 
 (define-op length-squared ((in quat)) (:out single-float)
-  (with-quaternions ((q in))
+  (with-components ((q in))
     (cl:+ (cl:* qw qw) (cl:* qx qx) (cl:* qy qy) (cl:* qz qz))))
 
 (define-op length ((in quat)) (:out single-float)
@@ -252,7 +252,7 @@
   (negate! (id) in))
 
 (define-op dot ((in1 quat) (in2 quat)) (:out single-float)
-  (with-quaternions ((q1 in1) (q2 in2))
+  (with-components ((q1 in1) (q2 in2))
     (cl:+ (cl:* q1w q2w) (cl:* q1x q2x) (cl:* q1y q2y) (cl:* q1z q2z))))
 
 (define-op inverse! ((out quat) (in quat)) (:out quat)
@@ -266,8 +266,8 @@
 (define-op rotate! ((out quat) (in quat) (vec v3:vec)
                     &key (space keyword :local))
     (:out quat :inline nil)
-  (with-quaternions ((o out) (q in))
-    (v3:with-vectors ((v vec))
+  (with-components ((o out) (q in))
+    (v3:with-components ((v vec))
       (let* ((vx (cl:* vx 0.5f0))
              (vy (cl:* vy 0.5f0))
              (vz (cl:* vz 0.5f0))
@@ -360,8 +360,8 @@
   (from-vec4! (zero) in))
 
 (define-op to-mat3! ((out m3:mat) (in quat)) (:out m3:mat)
-  (m3:with-matrices ((o out))
-    (with-quaternions ((q in))
+  (m3:with-components ((o out))
+    (with-components ((q in))
       (let* ((s (cl:/ 2 (length-squared in)))
              (xs (cl:* qx s))
              (ys (cl:* qy s))
@@ -390,8 +390,8 @@
   (to-mat3! (m3:id) in))
 
 (define-op to-mat4! ((out m4:mat) (in quat)) (:out m4:mat)
-  (m4:with-matrices ((o out))
-    (with-quaternions ((q in))
+  (m4:with-components ((o out))
+    (with-components ((q in))
       (let* ((s (/ 2 (length-squared in)))
              (xs (cl:* qx s))
              (ys (cl:* qy s))
@@ -427,8 +427,8 @@
   (to-mat4! (m4:id) in))
 
 (define-op from-mat3! ((out quat) (in m3:mat)) (:out quat :inline nil)
-  (with-quaternions ((o out))
-    (m3:with-matrices ((m in))
+  (with-components ((o out))
+    (m3:with-components ((m in))
       (let* ((x-rot-denom (sqrt
                            (cl:+ (cl:* m00 m00) (cl:* m10 m10) (cl:* m20 m20))))
              (y-rot-denom (sqrt
@@ -480,8 +480,8 @@
   (from-mat3! (id) in))
 
 (define-op from-mat4! ((out quat) (in m4:mat)) (:out quat)
-  (with-quaternions ((o out))
-    (m4:with-matrices ((m in))
+  (with-components ((o out))
+    (m4:with-components ((m in))
       (let* ((x-rot-denom (sqrt
                            (cl:+ (cl:* m00 m00) (cl:* m10 m10) (cl:* m20 m20))))
              (y-rot-denom (sqrt
@@ -534,7 +534,7 @@
 
 (define-op slerp! ((out quat) (in1 quat) (in2 quat) (factor single-float))
     (:out quat :inline nil)
-  (with-quaternions ((o out) (q1 in1) (q2 in2))
+  (with-components ((o out) (q1 in1) (q2 in2))
     (let ((dot (dot q1 q2))
           (q2 q2))
       (when (minusp dot)
