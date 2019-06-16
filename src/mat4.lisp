@@ -617,18 +617,18 @@
          (zerop m23))))
 
 (define-op main-diagonal! ((out v4:vec) (in mat)) (:out v4:vec)
-  (with-matrices ((m in))
-    (v4:with-vectors ((v out))
-      (setf vx m00 vy m11 vz m22 vw m33)))
+  (with-components ((m in))
+    (v4:with-components ((v out))
+      (psetf vx m00 vy m11 vz m22 vw m33)))
   out)
 
 (define-op main-diagonal ((in mat)) (:out v4:vec)
   (main-diagonal! (v4:zero) in))
 
 (define-op anti-diagonal! ((out v4:vec) (in mat)) (:out v4:vec)
-  (with-matrices ((m in))
-    (v4:with-vectors ((v out))
-      (setf vx m03 vy m12 vz m21 vw m30)))
+  (with-components ((m in))
+    (v4:with-components ((v out))
+      (psetf vx m03 vy m12 vz m21 vw m30)))
   out)
 
 (define-op anti-diagonal ((in mat)) (:out v4:vec)
