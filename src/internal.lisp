@@ -17,14 +17,20 @@
                     (cons prefix args)))
 
 (defun split-arg-spec (arg-spec)
-  (let ((key (position '&key arg-spec)))
+  (let ((rest (position '&rest arg-spec))
+        (key (position '&key arg-spec)))
     (values
-     (subseq arg-spec 0 key)
+     (subseq arg-spec 0 (or rest key))
+     (when rest
+       (subseq arg-spec (1+ rest) key))
      (when key
        (subseq arg-spec (1+ key))))))
 
-(defun generate-function-args (required keywords)
+(defun generate-function-args (required rest keywords)
   `(,@(mapcar #'first required)
+    ,@(when rest
+        `(&rest))
+    ,@(mapcar #'first rest)
     ,@(when keywords
         `(&key))
     ,@(mapcar
@@ -36,8 +42,11 @@
                arg)))
        keywords)))
 
-(defun generate-type-signature (required keywords)
+(defun generate-type-signature (required rest keywords)
   `(,@(mapcar #'second required)
+    ,@(when rest
+        `(&rest))
+    ,@(mapcar #'second rest)
     ,@(when keywords
         `(&key))
     ,@(mapcar
@@ -48,9 +57,9 @@
        keywords)))
 
 (defmacro define-op (op arg-spec (&key out (inline t)) &body body)
-  (au:mvlet* ((required keywords (split-arg-spec arg-spec))
-              (args (generate-function-args required keywords))
-              (types (generate-type-signature required keywords))
+  (au:mvlet* ((required rest keywords (split-arg-spec arg-spec))
+              (args (generate-function-args required rest keywords))
+              (types (generate-type-signature required rest keywords))
               (body decls doc (au:parse-body body :documentation t)))
     (declare (ignore decls))
     `(progn
