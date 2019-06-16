@@ -303,9 +303,12 @@
 (define-op scale ((in vec) (scalar single-float)) (:out vec)
   (scale! (zero) in scalar))
 
+(defmacro %dot (v1x v1y v1z v1w v2x v2y v2z v2w)
+  `(cl:+ (cl:* ,v1x ,v2x) (cl:* ,v1y ,v2y) (cl:* ,v1z ,v2z) (cl:* ,v1w ,v2w)))
+
 (define-op dot ((in1 vec) (in2 vec)) (:out single-float)
   (with-components ((v1 in1) (v2 in2))
-    (cl:+ (cl:* v1x v2x) (cl:* v1y v2y) (cl:* v1z v2z) (cl:* v1w v2w))))
+    (%dot v1x v1y v1z v1w v2x v2y v2z v2w)))
 
 (define-op length-squared ((in vec)) (:out single-float)
   (dot in in))
