@@ -137,13 +137,7 @@
   `(with-accessors ((,prefix identity)
                     (,(make-accessor-symbol prefix 'x) x)
                     (,(make-accessor-symbol prefix 'y) y)
-                    (,(make-accessor-symbol prefix 'z) z)
-                    (,(make-accessor-symbol prefix 'r) x)
-                    (,(make-accessor-symbol prefix 'g) y)
-                    (,(make-accessor-symbol prefix 'b) z)
-                    (,(make-accessor-symbol prefix 's) x)
-                    (,(make-accessor-symbol prefix 't) y)
-                    (,(make-accessor-symbol prefix 'p) z))
+                    (,(make-accessor-symbol prefix 'z) z))
        ,vec
      ,(if rest
           `(with-components ,rest ,@body)
