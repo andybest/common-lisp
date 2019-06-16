@@ -34,6 +34,10 @@
    #:-
    #:*!
    #:*
+   #:get-column!
+   #:get-column
+   #:set-column!
+   #:set-column
    #:rotation-axis-to-vec2!
    #:rotation-axis-to-vec2
    #:rotation-axis-from-vec2!
@@ -201,6 +205,31 @@
 
 (define-op * ((in1 mat) (in2 mat)) (:out mat)
   (*! (zero) in1 in2))
+
+(define-op get-column! ((out v2:vec) (in mat) (index (integer 0 1)))
+    (:out v2:vec)
+  (with-components ((m in))
+    (v2:with-components ((o out))
+      (ecase index
+        (0 (psetf ox m00 oy m10))
+        (1 (psetf ox m01 oy m11)))))
+  out)
+
+(define-op get-column ((in mat) (index (integer 0 1))) (:out v2:vec)
+  (get-column! (v2:zero) in index))
+
+(define-op set-column! ((out mat) (in mat) (vec v2:vec) (index (integer 0 1)))
+    (:out mat)
+  (with-components ((o out))
+    (v2:with-components ((v vec))
+      (copy! out in)
+      (ecase index
+        (0 (psetf o00 vx o10 vy))
+        (1 (psetf o01 vx o11 vy)))))
+  out)
+
+(define-op set-column ((in mat) (vec v2:vec) (index (integer 0 1))) (:out mat)
+  (set-column! (id) in vec index))
 
 (define-op rotation-axis-to-vec2! ((out v2:vec) (in mat) (axis keyword))
     (:out v2:vec)

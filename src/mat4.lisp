@@ -36,6 +36,10 @@
    #:-
    #:*!
    #:*
+   #:get-column!
+   #:get-column
+   #:set-column!
+   #:set-column
    #:get-translation!
    #:get-translation
    #:set-translation!
@@ -373,6 +377,35 @@
 
 (define-op copy-rotation ((in mat)) (:out mat)
   (copy-rotation! (id) in))
+
+(define-op get-column! ((out v4:vec) (in mat) (index (integer 0 3)))
+    (:out v4:vec)
+  (with-components ((m in))
+    (v4:with-components ((o out))
+      (ecase index
+        (0 (psetf ox m00 oy m10 oz m20 ow m30))
+        (1 (psetf ox m01 oy m11 oz m21 ow m31))
+        (2 (psetf ox m02 oy m12 oz m22 ow m32))
+        (3 (psetf ox m03 oy m13 oz m23 ow m33)))))
+  out)
+
+(define-op get-column ((in mat) (index (integer 0 3))) (:out v4:vec)
+  (get-column! (v4:zero) in index))
+
+(define-op set-column! ((out mat) (in mat) (vec v4:vec) (index (integer 0 3)))
+    (:out mat)
+  (with-components ((o out))
+    (v4:with-components ((v vec))
+      (copy! out in)
+      (ecase index
+        (0 (psetf o00 vx o10 vy o20 vz o30 vw))
+        (1 (psetf o01 vx o11 vy o21 vz o31 vw))
+        (2 (psetf o02 vx o12 vy o22 vz o32 vw))
+        (3 (psetf o03 vx o13 vy o23 vz o33 vw)))))
+  out)
+
+(define-op set-column ((in mat) (vec v4:vec) (index (integer 0 3))) (:out mat)
+  (set-column! (id) in vec index))
 
 (define-op get-translation! ((out v3:vec) (in mat)) (:out v3:vec)
   (with-components ((m in))
