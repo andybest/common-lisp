@@ -74,7 +74,11 @@
    #:from-mat4!
    #:from-mat4
    #:slerp!
-   #:slerp))
+   #:slerp
+   #:from-axis-angle!
+   #:from-axis-angle
+   #:orient!
+   #:orient))
 
 (in-package #:origin.quat)
 
@@ -560,3 +564,48 @@
 
 (define-op slerp ((in1 quat) (in2 quat) (factor single-float)) (:out quat)
   (slerp! (id) in1 in2 factor))
+
+(defmacro %from-axis-angle (qw qx qy qz vx vy vz angle)
+  (au:with-unique-names (half-angle c s)
+    `(let* ((,half-angle (/ ,angle 2f0))
+            (,c (float (cos ,half-angle) 1f0))
+            (,s (float (sin ,half-angle) 1f0)))
+       (psetf ,qw ,c
+              ,qx (cl:* ,vx ,s)
+              ,qy (cl:* ,vy ,s)
+              ,qz (cl:* ,vz ,s)))))
+
+(define-op from-axis-angle! ((out quat) (axis v3:vec) (angle real)) (:out quat)
+  (with-components ((o out))
+    (v3:with-components ((v axis))
+      (%from-axis-angle ow ox oy oz vx vy vz angle)))
+  out)
+
+(define-op from-axis-angle ((axis v3:vec) (angle real)) (:out quat)
+  (from-axis-angle! (id) axis angle))
+
+(define-op orient! ((out quat) (space keyword)
+                    &rest (axes/angles (or keyword v3:vec)))
+    (:out quat)
+  (with-components ((o out))
+    (let ((vx 0f0) (vy 0f0) (vz 0f0) (cw 1f0) (cx 0f0) (cy 0f0) (cz 0f0))
+      (id! out)
+      (loop :for (axis angle) :on axes/angles :by #'cddr
+            :do (case axis
+                  (:x (psetf vx 1f0 vy 0f0 vz 0f0))
+                  (:y (psetf vx 0f0 vy 1f0 vz 0f0))
+                  (:z (psetf vx 0f0 vy 0f0 vz 1f0))
+                  (t
+                   (v3:with-components ((a axis))
+                     (psetf vx ax vy ay vz az))
+                   (v3:normalize! axis axis)))
+                (%from-axis-angle cw cx cy cz vx vy vz angle)
+                (ecase space
+                  (:local (%* ow ox oy oz cw cx cy cz ow ox oy oz))
+                  (:world (%* ow ox oy oz ow ox oy oz cw cx cy cz)))
+                (normalize! out out))))
+  out)
+
+(define-op orient ((space keyword) &rest (axes/angles (or keyword v3:vec)))
+    (:out quat)
+  (apply #'orient! (id) space axes/angles))
