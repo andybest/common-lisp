@@ -143,13 +143,15 @@
           `(progn ,@body))))
 
 (defmacro with-elements (((prefix x y z w) &rest rest) &body body)
-  `(let ((,(make-accessor-symbol prefix 'x) ,x)
-         (,(make-accessor-symbol prefix 'y) ,y)
-         (,(make-accessor-symbol prefix 'y) ,z)
-         (,(make-accessor-symbol prefix 'y) ,w))
-     ,(if rest
-          `(with-elements ,rest ,@body)
-          `(progn ,@body))))
+  (let ((%x (make-accessor-symbol prefix 'x))
+        (%y (make-accessor-symbol prefix 'y))
+        (%z (make-accessor-symbol prefix 'z))
+        (%w (make-accessor-symbol prefix 'w)))
+    `(let ((,%x ,x) (,%y ,y) (,%z ,z) (,%w ,w))
+       (declare (ignorable ,%x ,%y ,%z ,%w))
+       ,(if rest
+            `(with-elements ,rest ,@body)
+            `(progn ,@body)))))
 
 (au:define-constant +zero+
     (make-array 4 :element-type 'single-float
