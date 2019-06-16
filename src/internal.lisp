@@ -61,12 +61,12 @@
               (args (generate-function-args required rest keywords))
               (types (generate-type-signature required rest keywords))
               (body decls doc (au:parse-body body :documentation t)))
-    (declare (ignore decls))
     `(progn
        ,@(when inline
            `((declaim (inline ,op))))
        (declaim (ftype (function ,types ,out) ,op))
        (defun ,op ,args
+         ,@decls
          ,@(when doc
              `(,doc))
          ,@body))))
