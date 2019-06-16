@@ -36,6 +36,7 @@
    #:z
    #:w
    #:with-components
+   #:with-elements
    #:make
    #:+zero+
    #:zero!
@@ -139,6 +140,15 @@
        ,vec
      ,(if rest
           `(with-components ,rest ,@body)
+          `(progn ,@body))))
+
+(defmacro with-elements (((prefix x y z w) &rest rest) &body body)
+  `(let ((,(make-accessor-symbol prefix 'x) ,x)
+         (,(make-accessor-symbol prefix 'y) ,y)
+         (,(make-accessor-symbol prefix 'y) ,z)
+         (,(make-accessor-symbol prefix 'y) ,w))
+     ,(if rest
+          `(with-elements ,rest ,@body)
           `(progn ,@body))))
 
 (au:define-constant +zero+

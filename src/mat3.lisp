@@ -14,6 +14,7 @@
   (:export
    #:mat
    #:with-components
+   #:with-elements
    #:+zero+
    #:+id+
    #:make
@@ -105,6 +106,22 @@
        ,matrix
      ,(if rest
           `(with-components ,rest ,@body)
+          `(progn ,@body))))
+
+(defmacro with-elements (((prefix m00 m01 m02 m10 m11 m12 m20 m21 m22)
+                          &rest rest)
+                         &body body)
+  `(let ((,(make-accessor-symbol prefix "00") ,m00)
+         (,(make-accessor-symbol prefix "01") ,m01)
+         (,(make-accessor-symbol prefix "02") ,m02)
+         (,(make-accessor-symbol prefix "10") ,m10)
+         (,(make-accessor-symbol prefix "11") ,m11)
+         (,(make-accessor-symbol prefix "12") ,m12)
+         (,(make-accessor-symbol prefix "20") ,m20)
+         (,(make-accessor-symbol prefix "21") ,m21)
+         (,(make-accessor-symbol prefix "22") ,m22))
+     ,(if rest
+          `(with-elements ,rest ,@body)
           `(progn ,@body))))
 
 (au:define-constant +zero+

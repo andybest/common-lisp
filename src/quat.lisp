@@ -17,6 +17,7 @@
   (:export
    #:quat
    #:with-components
+   #:with-elements
    #:w
    #:x
    #:y
@@ -103,6 +104,15 @@
        ,quat
      ,(if rest
           `(with-components ,rest ,@body)
+          `(progn ,@body))))
+
+(defmacro with-elements (((prefix w x y z) &rest rest) &body body)
+  `(let ((,(make-accessor-symbol prefix 'w) ,w)
+         (,(make-accessor-symbol prefix 'x) ,x)
+         (,(make-accessor-symbol prefix 'y) ,y)
+         (,(make-accessor-symbol prefix 'z) ,z))
+     ,(if rest
+          `(with-elements ,rest ,@body)
           `(progn ,@body))))
 
 (au:define-constant +zero+
