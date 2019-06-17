@@ -1,5 +1,5 @@
 (asdf:defsystem #:origin
-  :description ""
+  :description "A native Lisp graphics math library with an emphasis on performance and correctness."
   :author "Michael Fiano <mail@michaelfiano.com>"
   :maintainer "Michael Fiano <mail@michaelfiano.com>"
   :license "MIT"

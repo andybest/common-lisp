@@ -26,6 +26,11 @@ of writing, this currently includes: ABCL, SBCL, CCL, ECL, and Clasp.
 (ql:quickload :origin)
 ```
 
+## Contributors
+
+* [Peter Keller](https://github.com/psilord) - Special thanks for contributions
+  and correctness checking.
+
 ## License
 
 Copyright © 2014-2018 [Michael Fiano](mailto:mail@michaelfiano.com).
