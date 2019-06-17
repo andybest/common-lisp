@@ -549,7 +549,7 @@
                       (:z (psetf vx 0f0 vy 0f0 vz 1f0))
                       (t
                        (psetf vx ax vy ay vz az)
-                       (v3:normalize! axis axis))))
+                       (v3::%normalize vx vy vz vx vy vz))))
                   (%from-axis-angle qw qx qy qz vx vy vz angle)
                   (ecase space
                     (:local (%* ow ox oy oz qw qx qy qz ow ox oy oz))
