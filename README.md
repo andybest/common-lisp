@@ -1,6 +1,6 @@
 # Origin
 
-A high performance math library useful for making games.
+A native Lisp graphics math library with an emphasis on performance and correctness
 
 ## Overview
 
@@ -25,6 +25,11 @@ of writing, this currently includes: ABCL, SBCL, CCL, ECL, and Clasp.
 ``` lisp
 (ql:quickload :origin)
 ```
+
+## Contributors
+
+* [Peter Keller](https://github.com/psilord) - Special thanks for contributions
+  and correctness checking.
 
 ## License
 
