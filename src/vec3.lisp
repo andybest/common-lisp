@@ -291,11 +291,14 @@
 (define-op / ((in1 vec) (in2 vec)) (:out vec)
   (/! (zero) in1 in2))
 
+(defmacro %scale (ox oy oz x y z scalar)
+  `(psetf ,ox (cl:* ,x ,scalar)
+          ,oy (cl:* ,y ,scalar)
+          ,oz (cl:* ,z ,scalar)))
+
 (define-op scale! ((out vec) (in vec) (scalar single-float)) (:out vec)
   (with-components ((o out) (v in))
-    (psetf ox (cl:* vx scalar)
-           oy (cl:* vy scalar)
-           oz (cl:* vz scalar)))
+    (%scale ox oy oz vx vy vz scalar))
   out)
 
 (define-op scale ((in vec) (scalar single-float)) (:out vec)
@@ -308,8 +311,14 @@
   (with-components ((v1 in1) (v2 in2))
     (%dot v1x v1y v1z v2x v2y v2z)))
 
+(defmacro %length-squared (x y z)
+  `(%dot ,x ,y ,z ,x ,y ,z))
+
 (define-op length-squared ((in vec)) (:out single-float)
   (dot in in))
+
+(defmacro %length (x y z)
+  `(cl:sqrt (%length-squared ,x ,y ,z)))
 
 (define-op length ((in vec)) (:out single-float)
   (cl:sqrt (length-squared in)))
@@ -320,10 +329,15 @@
 (define-op distance ((in1 vec) (in2 vec)) (:out single-float)
   (cl:sqrt (distance-squared in1 in2)))
 
+(defmacro %normalize (ox oy oz x y z)
+  (au:with-unique-names (length)
+    `(let ((,length (%length ,x ,y ,z)))
+       (unless (zerop ,length)
+         (%scale ,ox ,oy ,oz ,x ,y ,z (cl:/ ,length))))))
+
 (define-op normalize! ((out vec) (in vec)) (:out vec)
-  (let ((length (length in)))
-    (unless (zerop length)
-      (scale! out in (cl:/ length))))
+  (with-components ((o out) (v in))
+    (%normalize ox oy oz vx vy vz))
   out)
 
 (define-op normalize ((in vec)) (:out vec)
