@@ -2,7 +2,8 @@
 
 (defpackage #:origin.mat4
   (:local-nicknames (#:v3 #:origin.vec3)
-                    (#:v4 #:origin.vec4))
+                    (#:v4 #:origin.vec4)
+                    (#:m3 #:origin.mat3))
   (:use #:cl #:origin.internal)
   (:shadow
    #:=
@@ -519,27 +520,30 @@
 (define-op rotate! ((out mat) (in mat) (vec v3:vec) &key (space keyword :local))
     (:out mat :inline nil)
   (macrolet ((rotate-angle (angle s c &body body)
-               `(when (cl:> (abs ,angle) 1e-7)
-                  (let ((,s (sin ,angle))
-                        (,c (cos ,angle)))
-                    ,@body
-                    (ecase space
-                      (:local (*! out out m))
-                      (:world (*! out m out)))))))
-    (with-components ((m (id)))
-      (v3:with-components ((v vec))
-        (copy! out in)
-        (rotate-angle vz s c
-                      (psetf m00 c m01 (cl:- s)
-                             m10 s m11 c))
-        (rotate-angle vx s c
-                      (psetf m00 1f0 m01 0f0 m02 0f0
-                             m10 0f0 m11 c m12 (cl:- s)
-                             m20 0f0 m21 s m22 c))
-        (rotate-angle vy s c
-                      (psetf m00 c m01 0f0 m02 s
-                             m10 0f0 m11 1f0 m12 0f0
-                             m20 (cl:- s) m21 0f0 m22 c)))))
+               `(let ((,s (sin ,angle))
+                      (,c (cos ,angle)))
+                  ,@body
+                  (ecase space
+                    (:local (m3::%* o00 o01 o02 o10 o11 o12 o20 o21 o22
+                                    o00 o01 o02 o10 o11 o12 o20 o21 o22
+                                    m00 m01 m02 m10 m11 m12 m20 m21 m22))
+                    (:world (m3::%* o00 o01 o02 o10 o11 o12 o20 o21 o22
+                                    m00 m01 m02 m10 m11 m12 m20 m21 m22
+                                    o00 o01 o02 o10 o11 o12 o20 o21 o22))))))
+    (m3:with-elements ((m 1f0 0f0 0f0 0f0 1f0 0f0 0f0 0f0 1f0))
+      (with-components ((o out))
+        (v3:with-components ((v vec))
+          (copy! out in)
+          (rotate-angle vz s c
+                        (psetf m00 c m01 (cl:- s) m10 s m11 c))
+          (rotate-angle vx s c
+                        (psetf m00 1f0 m01 0f0 m02 0f0
+                               m10 0f0 m11 c m12 (cl:- s)
+                               m20 0f0 m21 s m22 c))
+          (rotate-angle vy s c
+                        (psetf m00 c m01 0f0 m02 s
+                               m10 0f0 m11 1f0 m12 0f0
+                               m20 (cl:- s) m21 0f0 m22 c))))))
   out)
 
 (define-op rotate ((in mat) (vec v3:vec)) (:out mat)
@@ -635,9 +639,12 @@
 (define-op orthonormalize ((in mat)) (:out mat)
   (orthonormalize! (id) in))
 
+(defmacro %trace (m00 m11 m22 m33)
+  `(cl:+ ,m00 ,m11 ,m22 ,m33))
+
 (define-op trace ((in mat)) (:out single-float)
   (with-components ((m in))
-    (cl:+ m00 m11 m22 m33)))
+    (%trace m00 m11 m22 m33)))
 
 (define-op diagonal-p ((in mat)) (:out boolean)
   (with-components ((m in))
@@ -797,24 +804,18 @@
     (:out mat :inline nil)
   (with-components ((o (id! out)))
     (v3:with-components ((e eye) (s target) (u up))
-      (macrolet ((%normalize (place-x x place-y y place-z z)
-                   (au:once-only (x y z)
-                     `(let ((denom (sqrt
-                                    (cl:+
-                                     (cl:* ,x ,x) (cl:* ,y ,y) (cl:* ,z ,z)))))
-                        (psetf ,place-x (cl:/ ,x denom)
-                               ,place-y (cl:/ ,y denom)
-                               ,place-z (cl:/ ,z denom))))))
-        (%normalize o20 (cl:- sx ex)
-                    o21 (cl:- sy ey)
-                    o22 (cl:- sz ez))
-        (%normalize o00 (cl:- (cl:* o21 uz) (cl:* o22 uy))
-                    o01 (cl:- (cl:* o22 ux) (cl:* o20 uz))
-                    o02 (cl:- (cl:* o20 uy) (cl:* o21 ux)))
+      (v3:with-elements ((a (cl:- sx ex) (cl:- sy ey) (cl:- sz ez)))
+        (v3::%normalize ax ay az ax ay az)
+        (psetf o20 ax o21 ay o22 az)
+        (v3:with-elements ((b (cl:- (cl:* o21 uz) (cl:* o22 uy))
+                              (cl:- (cl:* o22 ux) (cl:* o20 uz))
+                              (cl:- (cl:* o20 uy) (cl:* o21 uz))))
+          (v3::%normalize bx by bz bx by bz)
+          (psetf o00 bx o01 by o02 bz))
         (psetf o10 (cl:- (cl:* o01 o22) (cl:* o02 o21))
                o11 (cl:- (cl:* o02 o20) (cl:* o00 o22))
-               o12 (cl:- (cl:* o00 o21) (cl:* o01 o20)))
-        (psetf o20 (cl:- o20)
+               o12 (cl:- (cl:* o00 o21) (cl:* o01 o20))
+               o20 (cl:- o20)
                o21 (cl:- o21)
                o22 (cl:- o22))
         (psetf o03 (cl:+ (cl:* o00 (cl:- ex))

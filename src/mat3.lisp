@@ -2,7 +2,8 @@
 
 (defpackage #:origin.mat3
   (:local-nicknames (#:v2 #:origin.vec2)
-                    (#:v3 #:origin.vec3))
+                    (#:v3 #:origin.vec3)
+                    (#:m2 #:origin.mat2))
   (:use #:cl #:origin.internal)
   (:shadow
    #:=
@@ -396,17 +397,16 @@
 (define-op rotate! ((out mat) (in mat) (angle float)
                     &key (space keyword :local))
     (:out mat)
-  (with-components ((m (id)))
-    (copy! out in)
-    (when (cl:> (abs angle) 1e-7)
+  (m2:with-elements ((m 1f0 0f0 0f0 1f0))
+    (with-components ((o out))
       (let* ((angle (float angle 1f0))
              (s (sin angle))
              (c (cos angle)))
-        (psetf m00 c m01 (cl:- s)
-               m10 s m11 c)
+        (copy! out in)
+        (psetf m00 c m01 (cl:- s) m10 s m11 c)
         (ecase space
-          (:local (*! out out m))
-          (:world (*! out m out))))))
+          (:local (m2::%* o00 o01 o10 o11 o00 o01 o10 o11 m00 m01 m10 m11))
+          (:world (m2::%* o00 o01 o10 o11 m00 m01 m10 m11 o00 o01 010 011))))))
   out)
 
 (define-op rotate ((in mat) (angle float)) (:out mat)
@@ -472,9 +472,12 @@
 (define-op orthogonal-p ((in mat)) (:out boolean :inline nil)
   (~ (* in (transpose in)) +id+))
 
+(defmacro %trace (m00 m11 m22)
+  `(cl:+ ,m00 ,m11 ,m22))
+
 (define-op trace ((in mat)) (:out single-float)
   (with-components ((m in))
-    (cl:+ m00 m11 m22)))
+    (%trace m00 m11 m22)))
 
 (define-op diagonal-p ((in mat)) (:out boolean)
   (with-components ((m in))
