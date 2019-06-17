@@ -93,7 +93,7 @@
     (is v3:= (m4:get-translation (m4:translate m4:+id+ v)) v)
     (is v3:= (m4:get-translation (m4:translate m v)) v)))
 
-(define-test m4/rotationc-copy
+(define-test m4/rotation-copy
   (let ((m (m4:make 1 5 9 13 2 6 10 14 3 7 11 15 4 8 12 16))
         (r (m4:make 1 5 9 0 2 6 10 0 3 7 11 0 0 0 0 1))
         (o (m4:id)))
