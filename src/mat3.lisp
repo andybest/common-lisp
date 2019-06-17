@@ -272,17 +272,24 @@
 (define-op - ((in1 mat) (in2 mat)) (:out mat)
   (-! (zero) in1 in2))
 
+(defmacro %* (o00 o01 o02 o10 o11 o12 o20 o21 o22
+              a00 a01 a02 a10 a11 a12 a20 a21 a22
+              b00 b01 b02 b10 b11 b12 b20 b21 b22)
+  `(psetf ,o00 (cl:+ (cl:* ,a00 ,b00) (cl:* ,a01 ,b10) (cl:* ,a02 ,b20))
+          ,o10 (cl:+ (cl:* ,a10 ,b00) (cl:* ,a11 ,b10) (cl:* ,a12 ,b20))
+          ,o20 (cl:+ (cl:* ,a20 ,b00) (cl:* ,a21 ,b10) (cl:* ,a22 ,b20))
+          ,o01 (cl:+ (cl:* ,a00 ,b01) (cl:* ,a01 ,b11) (cl:* ,a02 ,b21))
+          ,o11 (cl:+ (cl:* ,a10 ,b01) (cl:* ,a11 ,b11) (cl:* ,a12 ,b21))
+          ,o21 (cl:+ (cl:* ,a20 ,b01) (cl:* ,a21 ,b11) (cl:* ,a22 ,b21))
+          ,o02 (cl:+ (cl:* ,a00 ,b02) (cl:* ,a01 ,b12) (cl:* ,a02 ,b22))
+          ,o12 (cl:+ (cl:* ,a10 ,b02) (cl:* ,a11 ,b12) (cl:* ,a12 ,b22))
+          ,o22 (cl:+ (cl:* ,a20 ,b02) (cl:* ,a21 ,b12) (cl:* ,a22 ,b22))))
+
 (define-op *! ((out mat) (in1 mat) (in2 mat)) (:out mat)
   (with-components ((o out) (a in1) (b in2))
-    (psetf o00 (cl:+ (cl:* a00 b00) (cl:* a01 b10) (cl:* a02 b20))
-           o10 (cl:+ (cl:* a10 b00) (cl:* a11 b10) (cl:* a12 b20))
-           o20 (cl:+ (cl:* a20 b00) (cl:* a21 b10) (cl:* a22 b20))
-           o01 (cl:+ (cl:* a00 b01) (cl:* a01 b11) (cl:* a02 b21))
-           o11 (cl:+ (cl:* a10 b01) (cl:* a11 b11) (cl:* a12 b21))
-           o21 (cl:+ (cl:* a20 b01) (cl:* a21 b11) (cl:* a22 b21))
-           o02 (cl:+ (cl:* a00 b02) (cl:* a01 b12) (cl:* a02 b22))
-           o12 (cl:+ (cl:* a10 b02) (cl:* a11 b12) (cl:* a12 b22))
-           o22 (cl:+ (cl:* a20 b02) (cl:* a21 b12) (cl:* a22 b22))))
+    (%* o00 o01 o02 o10 o11 o12 o20 o21 o22
+        a00 a01 a02 a10 a11 a12 a20 a21 a22
+        b00 b01 b02 b10 b11 b12 b20 b21 b22))
   out)
 
 (define-op * ((in1 mat) (in2 mat)) (:out mat)

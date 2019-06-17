@@ -207,12 +207,15 @@
 (define-op - ((in1 mat) (in2 mat)) (:out mat)
   (-! (zero) in1 in2))
 
+(defmacro %* (o00 o01 o10 o11 a00 a01 a10 a11 b00 b01 b10 b11)
+  `(psetf ,o00 (cl:+ (cl:* ,a00 ,b00) (cl:* ,a01 ,b10))
+          ,o10 (cl:+ (cl:* ,a10 ,b00) (cl:* ,a11 ,b10))
+          ,o01 (cl:+ (cl:* ,a00 ,b01) (cl:* ,a01 ,b11))
+          ,o11 (cl:+ (cl:* ,a10 ,b01) (cl:* ,a11 ,b11))))
+
 (define-op *! ((out mat) (in1 mat) (in2 mat)) (:out mat)
   (with-components ((o out) (a in1) (b in2))
-    (psetf o00 (cl:+ (cl:* a00 b00) (cl:* a01 b10))
-           o10 (cl:+ (cl:* a10 b00) (cl:* a11 b10))
-           o01 (cl:+ (cl:* a00 b01) (cl:* a01 b11))
-           o11 (cl:+ (cl:* a10 b01) (cl:* a11 b11))))
+    (%* o00 o01 o10 o11 a00 a01 a10 a11 b00 b01 b10 b11))
   out)
 
 (define-op * ((in1 mat) (in2 mat)) (:out mat)
