@@ -1,8 +1,9 @@
-(in-package :cl-user)
+(in-package #:cl-user)
 
-(defpackage #:box.sprite-packer
+(defpackage #:patchwork
   (:use #:cl)
   (:import-from #:binpack #:id #:x #:y #:w #:h)
-  (:export #:make-atlas
-           #:make-atlas-from-directory
-           #:unpack-atlas))
+  (:export
+   #:make-atlas
+   #:make-atlas-from-directory
+   #:unpack-atlas))

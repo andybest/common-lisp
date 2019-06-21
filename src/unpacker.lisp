@@ -1,4 +1,4 @@
-(in-package :box.sprite-packer)
+(in-package #:patchwork)
 
 (defun make-sprite-path (directory id)
   (uiop/pathname:merge-pathnames*

@@ -1,4 +1,4 @@
-(in-package :box.sprite-packer)
+(in-package #:patchwork)
 
 (defclass rect (binpack:rect)
   ((file :reader file

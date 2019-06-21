@@ -1,4 +1,4 @@
-# gamebox-sprite-packer
+# patchwork
 
 A spritesheet packer for games.
 
@@ -10,7 +10,7 @@ uses the 'maxrects' algorithm as described [here](http://clb.demon.fi/files/Rect
 ## Install
 
 ``` lisp
-(ql:quickload :gamebox-sprite-packer)
+(ql:quickload :patchwork)
 ```
 
 ## Usage
