@@ -809,7 +809,7 @@
         (psetf o20 ax o21 ay o22 az)
         (v3:with-elements ((b (cl:- (cl:* o21 uz) (cl:* o22 uy))
                               (cl:- (cl:* o22 ux) (cl:* o20 uz))
-                              (cl:- (cl:* o20 uy) (cl:* o21 uz))))
+                              (cl:- (cl:* o20 uy) (cl:* o21 ux))))
           (v3::%normalize bx by bz bx by bz)
           (psetf o00 bx o01 by o02 bz))
         (psetf o10 (cl:- (cl:* o01 o22) (cl:* o02 o21))
