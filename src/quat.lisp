@@ -535,7 +535,7 @@
   (from-axis-angle! (id) axis angle))
 
 (define-op orient! ((out quat) (space keyword)
-                    &rest (axes/angles (or keyword v3:vec)))
+                    &rest (axes/angles (or keyword v3:vec real)))
     (:out quat)
   (with-components ((o out))
     (with-elements ((q 1f0 0f0 0f0 0f0))
@@ -557,6 +557,6 @@
                   (normalize! out out)))))
   out)
 
-(define-op orient ((space keyword) &rest (axes/angles (or keyword v3:vec)))
+(define-op orient ((space keyword) &rest (axes/angles (or keyword v3:vec real)))
     (:out quat)
   (apply #'orient! (id) space axes/angles))
