@@ -1,4 +1,4 @@
-(in-package :umbra)
+(in-package #:umbra)
 
 (define-struct mesh-attrs
   (mesh/pos :vec3)

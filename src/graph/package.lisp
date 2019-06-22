@@ -1,6 +1,6 @@
-(in-package :defpackage+-user-1)
+(in-package #:cl-user)
 
-(defpackage+ #:umbra.graph
+(defpackage #:umbra.graph
   (:use #:umbra
         #:umbra.swizzle)
   (:export #:graph))

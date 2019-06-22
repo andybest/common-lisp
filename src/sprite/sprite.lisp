@@ -1,4 +1,4 @@
-(in-package :umbra.sprite)
+(in-package #:umbra.sprite)
 
 (define-struct sprite-data
   (sampler :sampler-2d :accessor sampler)

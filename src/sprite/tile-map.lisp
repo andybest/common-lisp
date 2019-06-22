@@ -1,4 +1,4 @@
-(in-package :umbra.sprite)
+(in-package #:umbra.sprite)
 
 (define-function tile-map/v ((pos :vec3)
                              (uv :vec2)

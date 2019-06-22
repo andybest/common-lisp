@@ -1,4 +1,4 @@
-(in-package :umbra.noise)
+(in-package #:umbra.noise)
 
 ;;;; Polka-dot noise
 ;;; Brian Sharpe https://github.com/BrianSharpe/GPU-Noise-Lib

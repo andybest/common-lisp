@@ -1,6 +1,6 @@
-(in-package :defpackage+-user-1)
+(in-package #:cl-user)
 
-(defpackage+ #:umbra.noise
+(defpackage #:umbra.noise
   (:use #:umbra
         #:umbra.swizzle)
   (:export #:perlin

@@ -1,4 +1,4 @@
-(in-package :umbra.color)
+(in-package #:umbra.color)
 
 ;;; Exposure
 

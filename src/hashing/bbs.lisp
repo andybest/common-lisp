@@ -1,4 +1,4 @@
-(in-package :umbra.hash)
+(in-package #:umbra.hash)
 
 ;;;; Hashing functions
 ;;;; Blum Blum Shub

@@ -1,6 +1,6 @@
-(in-package :defpackage+-user-1)
+(in-package #:cl-user)
 
-(defpackage+ #:umbra.shaping
+(defpackage #:umbra.shaping
   (:use #:umbra
         #:umbra.swizzle)
   ;; penner

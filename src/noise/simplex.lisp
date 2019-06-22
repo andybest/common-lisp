@@ -1,4 +1,4 @@
-(in-package :umbra.noise)
+(in-package #:umbra.noise)
 
 ;;;; Simplex noise
 

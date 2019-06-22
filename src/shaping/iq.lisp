@@ -1,4 +1,4 @@
-(in-package :umbra.shaping)
+(in-package #:umbra.shaping)
 
 ;;;; Shaping Functions
 ;;;; Various functions to modify a signal or interpolate a value non-linearly.

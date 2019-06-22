@@ -1,6 +1,6 @@
-(in-package :defpackage+-user-1)
+(in-package #:cl-user)
 
-(defpackage+ #:umbra.sdf
+(defpackage #:umbra.sdf
   (:use #:umbra
         #:umbra.swizzle)
   (:export #:dist/box

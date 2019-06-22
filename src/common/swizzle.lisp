@@ -1,4 +1,4 @@
-(in-package :umbra.swizzle)
+(in-package #:umbra.swizzle)
 
 (au:eval-always
   (defun %swizzle/combinations (n items)

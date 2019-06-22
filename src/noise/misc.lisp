@@ -1,4 +1,4 @@
-(in-package :umbra.noise)
+(in-package #:umbra.noise)
 
 ;;;; Miscellaneous noise functions
 ;;; Brian Sharpe https://github.com/BrianSharpe/GPU-Noise-Lib

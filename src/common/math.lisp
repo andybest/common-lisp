@@ -1,4 +1,4 @@
-(in-package :umbra)
+(in-package #:umbra)
 
 ;;; Constants
 

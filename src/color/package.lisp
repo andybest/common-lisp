@@ -1,6 +1,6 @@
-(in-package :defpackage+-user-1)
+(in-package #:cl-user)
 
-(defpackage+ #:umbra.color
+(defpackage #:umbra.color
   (:use #:umbra
         #:umbra.swizzle)
   ;; color space conversion
