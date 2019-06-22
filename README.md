@@ -151,12 +151,12 @@ Alternatively, you can compile and link all GLSL translated programs in one shot
 `BUILD-SHADER-DICTIONARY` function, which takes no arguments and returns a hash table of all program
 objects keyed by name.
 
-The only thing left to do, is make use of the shader program to do your rendering. This is done by
-issuing calls to the various `UNIFORM-*` functions within the body of the `WITH-SHADER-PROGRAM`
-macro:
+The only thing left to do, is make use of the shader program to do your
+rendering. This is done by issuing calls to the various `UNIFORM-*` functions
+within the body of the `WITH-SHADER` macro:
 
 ```lisp
-(with-shader-program :example-program
+(with-shader :example-program
   (uniform-mat4 :mvp *matrix*))
 ```
 

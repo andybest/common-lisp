@@ -1,4 +1,11 @@
-(in-package :shadow)
+(in-package #:shadow)
+
+(defmacro without-float-traps (&body body)
+  #+sbcl
+  `(sb-int:with-float-traps-masked (:invalid :divide-by-zero)
+     ,@body)
+  #-sbcl
+  `(progn ,@body))
 
 (defun ensure-keyword (x)
   (etypecase x

@@ -1,4 +1,4 @@
-(in-package :shadow)
+(in-package #:shadow)
 
 (defun find-gpu-function (func-spec)
   (destructuring-bind (name . types) func-spec
@@ -7,7 +7,8 @@
           :test #'equal)))
 
 (defun get-function-spec (function)
-  (cons (varjo:name function) (mapcar #'second (varjo.internals:in-args function))))
+  (cons (varjo:name function)
+        (mapcar #'second (varjo.internals:in-args function))))
 
 (defun ensure-function-dependency-tables (spec fn-deps dep-fns)
   (unless (au:href dep-fns spec)
@@ -50,13 +51,17 @@
       (destructuring-bind (in-args uniforms context) split-args
         `(varjo:with-constant-inject-hook #'lisp-constant->glsl-constant
            (varjo:with-stemcell-infer-hook #'lisp-symbol->glsl-type
-             (let* ((,fn (varjo:add-external-function ',name ',in-args ',uniforms ',body))
+             (let* ((,fn (varjo:add-external-function
+                          ',name ',in-args ',uniforms ',body))
                     (,spec (get-function-spec ,fn)))
                (when (track-dependencies-p *state*)
-                 (let* ((,split-details (varjo:test-translate-function-split-details
-                                         ',name ',in-args ',uniforms ',context ',body))
-                        (,deps (varjo:used-external-functions (first ,split-details))))
+                 (let* ((,split-details
+                          (varjo:test-translate-function-split-details
+                           ',name ',in-args ',uniforms ',context ',body))
+                        (,deps (varjo:used-external-functions
+                                (first ,split-details))))
                    (store-function-dependencies ,spec ,deps)
-                   (funcall (modify-hook *state*) (compute-outdated-programs ,spec))))
+                   (funcall (modify-hook *state*)
+                            (compute-outdated-programs ,spec))))
                ,fn))
            (export ',name))))))

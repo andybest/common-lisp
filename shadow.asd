@@ -8,14 +8,12 @@
   :bug-tracker "https://github.com/mfiano/shadow/issues"
   :version "1.0.0"
   :encoding :utf-8
-  :long-description #.(uiop:read-file-string (uiop/pathname:subpathname *load-pathname* "README.md"))
   :depends-on (#:static-vectors
-               #:defpackage-plus
                #:glsl-packing
                #:varjo
                #:cl-opengl
                #:golden-utils
-               #:game-math)
+               #:origin)
   :pathname "src"
   :serial t
   :components
@@ -30,5 +28,4 @@
    (:file "uniforms")
    (:file "layout")
    (:file "blocks")
-   (:file "buffers")
-   (:file "vari")))
+   (:file "buffers")))

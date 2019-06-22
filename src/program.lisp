@@ -1,4 +1,4 @@
-(in-package :shadow)
+(in-package #:shadow)
 
 (defclass program ()
   ((%id :reader id
@@ -39,7 +39,8 @@
          (gl:compile-shader shader)
          (push shader shaders)
          (unless (gl:get-shader shader :compile-status)
-           (error "Failed to compile ~a shader stage:~%~a~%" type (gl:get-shader-info-log shader)))))
+           (error "Failed to compile ~a shader stage:~%~a~%"
+                  type (gl:get-shader-info-log shader)))))
      (source program))
     shaders))
 
@@ -53,17 +54,19 @@
         (progn
           (dolist (shader shaders)
             (gl:attach-shader program shader))
-          (gl:link-program program)
+          (without-float-traps
+            (gl:link-program program))
           (unless (gl:get-program program :link-status)
-            (error "Failed to link shader program: ~a" (gl:get-program-info-log program)))
+            (error "Failed to link shader program: ~a"
+                   (gl:get-program-info-log program)))
           (dolist (shader shaders)
             (gl:detach-shader program shader)
             (gl:delete-shader shader))))
     program))
 
 (defun build-shader-program (name)
-  "Compile the shader stages of NAME, linking them into a program. NAME refers to a previously
-defined shader program using MAKE-SHADER-PROGRAM.
+  "Compile the shader stages of NAME, linking them into a program. NAME refers
+to a previously defined shader program using MAKE-SHADER-PROGRAM.
 
 See MAKE-SHADER-PROGRAM"
   (let* ((program (find-program name))
@@ -81,20 +84,13 @@ See MAKE-SHADER-PROGRAM"
   (au:maphash-keys #'build-shader-program (programs *state*))
   (programs *state*))
 
-(defun update-dependencies (program-name spec)
-  (symbol-macrolet ((programs (au:href (dependencies *state*) :fn->programs spec))
-                    (deps (au:href (dependencies *state*) :program->fns program-name)))
-    (unless programs
-      (setf programs (au:dict #'equal)))
-    (setf (au:href programs program-name) program-name
-          (au:href deps spec) spec)))
-
 (defun store-stage-program-dependencies (program)
   (dolist (stage-spec (stage-specs program))
     (destructuring-bind (stage-type func-spec) stage-spec
       (declare (ignore stage-type))
       (pushnew (name program)
-               (au:href (dependencies *state*) :stage-fn->programs func-spec)))))
+               (au:href (dependencies *state*)
+                        :stage-fn->programs func-spec)))))
 
 (defun translate-program (program)
   (with-slots (%name %version %primitive %stage-specs) program
@@ -117,21 +113,24 @@ See MAKE-SHADER-PROGRAM"
     (store-stage-program-dependencies program)
     program))
 
-(defmacro define-shader (name (&key (version :430) (primitive :triangles)) &body body)
+(defmacro define-shader (name (&key (version :430) (primitive :triangles))
+                         &body body)
   "Create a new shader program using the stage-specs defined in BODY.
 
-VERSION: The default version shader stages use, and can be overridden on a per-function basis.
+VERSION: The default version shader stages use, and can be overridden on a
+per-function basis.
 
 PRIMITIVE: The drawing primitive to use for the vertex stage."
   `(progn
-     (%make-shader-program ',name ,version ,primitive ',body)
+     (setf (au:href (shader-definitions *state*) ',name)
+           (lambda ()
+             (%make-shader-program ',name ,version ,primitive ',body)))
      (export ',name)))
 
 (defun translate-shader-programs (program-list)
   "Re-translate a collection of shader programs."
   (dolist (program-name program-list)
-    (let ((program (find-program program-name)))
-      (translate-program program))))
+    (translate-program (find-program program-name))))
 
 (defun build-shader-programs (program-list)
   "Recompile a collection of shader programs."
@@ -142,16 +141,11 @@ PRIMITIVE: The drawing primitive to use for the vertex stage."
   "Specify a function to be called when shader programs need to be updated."
   (setf (modify-hook *state*) function))
 
-(defmacro with-shader-program (name &body body)
-  "Run a body of code which uses (as in glUseProgram) the program identified by NAME."
+(defmacro with-shader (name &body body)
+  "Run a body of code which uses (as in glUseProgram) the program identified by
+NAME."
   `(unwind-protect
         (progn
           (gl:use-program (id (find-program ,name)))
           ,@body)
      (gl:use-program 0)))
-
-(defun reset-program-state ()
-  (clrhash (au:href (blocks *state*) :bindings :uniform))
-  (clrhash (au:href (blocks *state*) :bindings :buffer))
-  (clrhash (au:href (blocks *state*) :aliases))
-  (clrhash (au:href (buffers *state*))))

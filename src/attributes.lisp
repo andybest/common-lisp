@@ -1,4 +1,4 @@
-(in-package :shadow)
+(in-package #:shadow)
 
 (defun store-attributes (program)
   (dolist (stage (translated-stages program))
@@ -15,5 +15,6 @@
   (let ((id (id program)))
     (gl:use-program id)
     (au:do-hash-values (v (attributes program))
-      (setf (au:href v :location) (gl:get-attrib-location id (au:href v :name))))
+      (setf (au:href v :location) (gl:get-attrib-location
+                                   id (au:href v :name))))
     (gl:use-program 0)))

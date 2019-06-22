@@ -1,27 +1,21 @@
-(in-package :defpackage+-user-1)
+(in-package #:cl-user)
 
-(defpackage+ #:shadow
-  (:local-nicknames (#:m #:game-math))
+(defpackage #:shadow
   (:use #:cl)
   (:export #:define-function
            #:define-struct
            #:define-macro
-           #:enable-dependency-tracking
-           #:disable-dependency-tracking
-           #:reset-program-state
            #:define-shader
-           #:find-program
+           #:load-shaders
+           #:unload-shaders
+           #:recompile-shaders
+           #:with-shader
            #:view-source
-           #:build-shader-program
-           #:build-shader-programs
-           #:build-shader-dictionary
-           #:translate-shader-programs
-           #:set-modify-hook
+           #:find-program
            #:create-block-alias
            #:find-block
            #:bind-block
            #:unbind-block
-           #:rebind-blocks
            #:buffer-name
            #:find-buffer
            #:create-buffer
@@ -30,7 +24,6 @@
            #:delete-buffer
            #:read-buffer-path
            #:write-buffer-path
-           #:with-shader-program
            #:uniforms
            #:uniform-bool
            #:uniform-bool-array
@@ -50,14 +43,3 @@
            #:uniform-mat3-array
            #:uniform-mat4
            #:uniform-mat4-array))
-
-(defpackage+ #:shadow.vari
-  (:inherit #:cl
-            #:vari)
-  (:import-from #:varjo
-                #:v-def-glsl-template-fun
-                #:v-float
-                #:v-vec2
-                #:v-vec3
-                #:v-vec4
-                #:v-mat4))
