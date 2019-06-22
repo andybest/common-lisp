@@ -10,7 +10,8 @@
   (let ((datastream (make-instance 'datastream)))
     (with-slots (%marker %stream-info %metadata-blocks %frames) datastream
       (setf %marker (parse-marker))
-      (destructuring-bind (stream-info . metadata-blocks) (parse-metadata-blocks)
+      (destructuring-bind (stream-info . metadata-blocks)
+          (parse-metadata-blocks)
         (setf %stream-info stream-info
               %metadata-blocks metadata-blocks
               %frames (parse-frames))))

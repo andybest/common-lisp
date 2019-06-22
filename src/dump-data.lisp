@@ -18,8 +18,8 @@
       (call-next-method)))
 
 (defun dump-file (file &rest spec)
-  "Print out the FLAC metadata of FILE. SPEC may be one or more of the following to control which
-types of metadata are dumped, or NIL for all types:
+  "Print out the FLAC metadata of FILE. SPEC may be one or more of the following
+to control which types of metadata are dumped, or NIL for all types:
 
 :STREAMINFO, :APPLICATION, :SEEKTABLE, :VORBIS-COMMENT, :CUESHEET, :PICTURE."
   (let ((*dump-spec* (or spec *dump-spec*)))

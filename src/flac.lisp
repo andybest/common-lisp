@@ -16,7 +16,7 @@
       *flac*)))
 
 (defun load-file (path)
-  "Load the FLAC file located at the given filesystem PATH. Returns an object with the concrete
-syntax tree of the FLAC specification."
+  "Load the FLAC file located at the given filesystem PATH. Returns an object
+with the concrete syntax tree of the FLAC specification."
   (with-open-file (in path :element-type 'ub8)
     (%load-stream in path)))
