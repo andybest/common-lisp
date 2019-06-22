@@ -255,7 +255,6 @@
                              (v3:make 0 0 1)
                              (v3:make 0 1 0))
                 r))
-
     (true (m4:~ (m4:set-view! o2
                               (v3:make 5 10 15)
                               (v3:make 0 0 0)
@@ -266,7 +265,6 @@
                              (v3:make 0 0 0)
                              (v3:make 0 1 -1))
                 r2))))
-
 
 (define-test m4/set-projection/orthographic
   (let ((r (m4:make 0.05 0 0 0 0 0.1 0 0 0 0 -0.002 -1 0 0 0 1))
