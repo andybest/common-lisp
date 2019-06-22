@@ -8,9 +8,9 @@
   :bug-tracker "https://github.com/mfiano/dungen/issues"
   :version "0.1.0"
   :encoding :utf-8
-  :long-description #.(uiop:read-file-string (uiop/pathname:subpathname *load-pathname* "README.md"))
   :depends-on (#:golden-utils
                #:cl-pcg
+               #:lparallel
                #:graph)
   :pathname "src"
   :serial t
