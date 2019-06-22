@@ -56,6 +56,8 @@
    #:dot
    #:inverse!
    #:inverse
+   #:rotate-euler!
+   #:rotate-euler
    #:rotate!
    #:rotate
    #:to-vec3!
@@ -282,8 +284,8 @@
 (define-op inverse ((in quat)) (:out quat)
   (inverse! (id) in))
 
-(define-op rotate! ((out quat) (in quat) (vec v3:vec)
-                    &key (space keyword :local))
+(define-op rotate-euler! ((out quat) (in quat) (vec v3:vec)
+                          &key (space keyword :local))
     (:out quat :inline nil)
   (with-components ((o out) (q in))
     (v3:with-components ((v vec))
@@ -310,9 +312,23 @@
           (%* ow ox oy oz q1w q1x q1y q1z q2w q2x q2y q2z)))))
   out)
 
-(define-op rotate ((in quat) (vec v3:vec) &key (space keyword :local))
+(define-op rotate-euler ((in quat) (vec v3:vec) &key (space keyword :local))
     (:out quat)
-  (rotate! (id) in vec :space space))
+  (rotate-euler! (id) in vec :space space))
+
+(define-op rotate! ((out quat) (in quat) (rot quat)
+                    &key (space keyword :local))
+    (:out quat :inline nil)
+  (ecase space
+    (:local
+      (*! out in rot))
+    (:world
+     (*! out rot in)))
+  (normalize! out out))
+
+(define-op rotate ((in quat) (rot quat) &key (space keyword :local))
+    (:out quat)
+  (rotate! (id) in rot :space space))
 
 (define-op to-vec3! ((out v3:vec) (in quat)) (:out v3:vec)
   (v3:with-components ((v out))
