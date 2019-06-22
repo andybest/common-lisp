@@ -502,7 +502,7 @@
                  ox (au:lerp factor q1x q2x)
                  oy (au:lerp factor q1y q2y)
                  oz (au:lerp factor q1z q2z))
-          (let* ((angle (acos (au:clamp dot 0 1)))
+          (let* ((angle (acos dot))
                  (sin-angle (sin angle))
                  (scale1 (/ (sin (cl:* angle (cl:- 1 factor))) sin-angle))
                  (scale2 (/ (sin (cl:* factor angle)) sin-angle)))
