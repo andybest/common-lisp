@@ -316,19 +316,19 @@
     (:out quat)
   (rotate-euler! (id) in vec :space space))
 
-(define-op rotate! ((out quat) (in quat) (rot quat)
+(define-op rotate! ((out quat) (in1 quat) (in2 quat)
                     &key (space keyword :local))
     (:out quat :inline nil)
   (ecase space
     (:local
-      (*! out in rot))
+      (*! out in1 in2))
     (:world
-     (*! out rot in)))
+     (*! out in2 in1)))
   (normalize! out out))
 
-(define-op rotate ((in quat) (rot quat) &key (space keyword :local))
+(define-op rotate ((in1 quat) (in2 quat) &key (space keyword :local))
     (:out quat)
-  (rotate! (id) in rot :space space))
+  (rotate! (id) in1 in2 :space space))
 
 (define-op to-vec3! ((out v3:vec) (in quat)) (:out v3:vec)
   (v3:with-components ((v out))
