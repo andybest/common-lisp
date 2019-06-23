@@ -56,9 +56,9 @@
         (q2 (q:make 10 20 30 40))
         (q3 q:+id+)
         (r (q:make -280 40 60 80))
-        (rot-x (q:rotate q:+id+ (v3:make (/ pi 3) 0 0)))
-        (rot-y (q:rotate q:+id+ (v3:make 0 (/ pi 4) 0)))
-        (rot-xy (q:rotate q:+id+ (v3:make (/ pi 3) (/ pi 4) 0)))
+        (rot-x (q:rotate-euler q:+id+ (v3:make (/ pi 3) 0 0)))
+        (rot-y (q:rotate-euler q:+id+ (v3:make 0 (/ pi 4) 0)))
+        (rot-xy (q:rotate-euler q:+id+ (v3:make (/ pi 3) (/ pi 4) 0)))
         (o (q:zero)))
     (is q:= (q:*! o q1 q2) r)
     (is q:= o r)
@@ -128,7 +128,7 @@
   (is q:= o r)
   (is q:= (q:inverse q) r))
 
-(define-test q/rotate
+(define-test q/rotate-euler
   (let ((oqx (q:id))
         (oqy (q:id))
         (oqz (q:id))
@@ -138,15 +138,15 @@
         (vx (v3:make (/ pi 3) 0 0))
         (vy (v3:make 0 (/ pi 3) 0))
         (vz (v3:make 0 0 (/ pi 3))))
-    (true (q:~ (q:rotate! oqx q:+id+ vx) rqx))
-    (true (q:~ (q:rotate! oqy q:+id+ vy) rqy))
-    (true (q:~ (q:rotate! oqz q:+id+ vz) rqz))
+    (true (q:~ (q:rotate-euler! oqx q:+id+ vx) rqx))
+    (true (q:~ (q:rotate-euler! oqy q:+id+ vy) rqy))
+    (true (q:~ (q:rotate-euler! oqz q:+id+ vz) rqz))
     (true (q:~ oqx rqx))
     (true (q:~ oqy rqy))
     (true (q:~ oqz rqz))
-    (true (q:~ (q:rotate q:+id+ vx) rqx))
-    (true (q:~ (q:rotate q:+id+ vy) rqy))
-    (true (q:~ (q:rotate q:+id+ vz) rqz))))
+    (true (q:~ (q:rotate-euler q:+id+ vx) rqx))
+    (true (q:~ (q:rotate-euler q:+id+ vy) rqy))
+    (true (q:~ (q:rotate-euler q:+id+ vz) rqz))))
 
 (define-test q/vec3-convert
   (let* ((q (q:make 0.3628688 0.9540863 0.017128706 0.32979298))
@@ -177,7 +177,7 @@
     (is q:= (q:from-vec4 v) r)))
 
 (define-test q/mat4-convert
-  (let ((q (q:rotate q:+id+ (v3:make (/ pi 3) 0 0)))
+  (let ((q (q:rotate-euler q:+id+ (v3:make (/ pi 3) 0 0)))
         (qo (q:zero))
         (r (m4:make 1 0 0 0 0 0.5 -0.86602545 0 0 0.86602545 0.5 0 0 0 0 1))
         (mo (m4:id)))
