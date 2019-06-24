@@ -6,9 +6,9 @@
   :homepage "https://github.com/mfiano/origin"
   :source-control (:git "git@github.com:mfiano/origin.git")
   :bug-tracker "https://github.com/mfiano/origin/issues"
-  :version "1.0.0"
   :encoding :utf-8
-  :depends-on (#:golden-utils)
+  :depends-on (#:golden-utils
+               #:alexandria)
   :pathname "src"
   :serial t
   :in-order-to ((asdf:test-op (asdf:test-op #:origin.test)))
