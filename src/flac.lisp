@@ -1,4 +1,4 @@
-(in-package :flac-metadata)
+(in-package #:flac-metadata)
 
 (defvar *flac*)
 

@@ -1,4 +1,4 @@
-(in-package :flac-metadata)
+(in-package #:flac-metadata)
 
 (defclass datastream ()
   ((%marker :reader marker)

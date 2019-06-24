@@ -4,11 +4,9 @@
   :maintainer "Michael Fiano <mail@michaelfiano.com>"
   :license "MIT"
   :homepage "https://www.michaelfiano.com/projects/flac-metadata"
-  :source-control (:git "git@github.com:mfiano/flac-metadata.git")
   :bug-tracker "https://github.com/mfiano/flac-metadata/issues"
-  :version "0.1.0"
+  :source-control (:git "https://github.com/mfiano/flac-metadata.git")
   :encoding :utf-8
-  :long-description #.(uiop:read-file-string (uiop/pathname:subpathname *load-pathname* "README.md"))
   :depends-on (#:alexandria
                #:parsley)
   :pathname "src"
