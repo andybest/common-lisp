@@ -6,7 +6,6 @@
   :homepage "https://www.michaelfiano.com/projects/umbra"
   :source-control (:git "https://github.com/mfiano/umbra.git")
   :bug-tracker "https://github.com/mfiano/umbra/issues"
-  :version "0.1.0"
   :encoding :utf-8
   :depends-on (#:golden-utils
                #:alexandria
