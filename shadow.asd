@@ -6,7 +6,6 @@
   :homepage "https://www.michaelfiano.com/projects/shadow"
   :source-control (:git "git@github.com:mfiano/shadow.git")
   :bug-tracker "https://github.com/mfiano/shadow/issues"
-  :version "1.0.0"
   :encoding :utf-8
   :depends-on (#:static-vectors
                #:glsl-packing
