@@ -1,4 +1,4 @@
-(in-package :parsley)
+(in-package #:parsley)
 
 (defun %uncompress-octets (octet-vector compression-scheme)
   (chipz:decompress nil compression-scheme octet-vector

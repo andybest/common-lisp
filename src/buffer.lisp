@@ -1,4 +1,4 @@
-(in-package :parsley)
+(in-package #:parsley)
 
 (defvar *buffer*)
 

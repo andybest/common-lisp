@@ -1,4 +1,4 @@
-(in-package :parsley)
+(in-package #:parsley)
 
 (defun uncompress-bzip2 (octet-vector)
   (%uncompress-octets octet-vector 'chipz:bzip2))
