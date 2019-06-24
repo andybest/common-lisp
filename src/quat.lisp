@@ -1,7 +1,8 @@
 (in-package #:cl-user)
 
 (defpackage #:origin.quat
-  (:local-nicknames (#:v3 #:origin.vec3)
+  (:local-nicknames (#:a #:alexandria)
+                    (#:v3 #:origin.vec3)
                     (#:v4 #:origin.vec4)
                     (#:m3 #:origin.mat3)
                     (#:m4 #:origin.mat4))
@@ -117,12 +118,12 @@
             `(with-elements ,rest ,@body)
             `(progn ,@body)))))
 
-(au:define-constant +zero+
+(a:define-constant +zero+
     (make-array 4 :element-type 'single-float
                   :initial-contents '(0f0 0f0 0f0 0f0))
   :test #'equalp)
 
-(au:define-constant +id+
+(a:define-constant +id+
     (make-array 4 :element-type 'single-float
                   :initial-contents '(1f0 0f0 0f0 0f0))
   :test #'equalp)
@@ -498,10 +499,10 @@
         (negate! q2 q2)
         (setf dot (cl:- dot)))
       (if (> (abs dot) 0.9995f0)
-          (psetf ow (au:lerp factor q1w q2w)
-                 ox (au:lerp factor q1x q2x)
-                 oy (au:lerp factor q1y q2y)
-                 oz (au:lerp factor q1z q2z))
+          (psetf ow (a:lerp factor q1w q2w)
+                 ox (a:lerp factor q1x q2x)
+                 oy (a:lerp factor q1y q2y)
+                 oz (a:lerp factor q1z q2z))
           (let* ((angle (acos dot))
                  (sin-angle (sin angle))
                  (scale1 (/ (sin (cl:* angle (cl:- 1 factor))) sin-angle))
@@ -516,7 +517,7 @@
   (slerp! (id) in1 in2 factor))
 
 (defmacro %from-axis-angle (qw qx qy qz vx vy vz angle)
-  (au:with-unique-names (half-angle c s)
+  (a:with-gensyms (half-angle c s)
     `(let* ((,half-angle (/ ,angle 2f0))
             (,c (float (cos ,half-angle) 1f0))
             (,s (float (sin ,half-angle) 1f0)))

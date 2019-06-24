@@ -1,7 +1,8 @@
 (in-package #:cl-user)
 
 (defpackage #:origin.mat4
-  (:local-nicknames (#:v3 #:origin.vec3)
+  (:local-nicknames (#:a #:alexandria)
+                    (#:v3 #:origin.vec3)
                     (#:v4 #:origin.vec4)
                     (#:m3 #:origin.mat3))
   (:use #:cl #:origin.internal)
@@ -169,7 +170,7 @@
             `(with-elements ,rest ,@body)
             `(progn ,@body)))))
 
-(au:define-constant +zero+
+(a:define-constant +zero+
     (make-array 16 :element-type 'single-float
                    :initial-contents '(0f0 0f0 0f0 0f0
                                        0f0 0f0 0f0 0f0
@@ -177,7 +178,7 @@
                                        0f0 0f0 0f0 0f0))
   :test #'equalp)
 
-(au:define-constant +id+
+(a:define-constant +id+
     (make-array 16 :element-type 'single-float
                    :initial-contents '(1f0 0f0 0f0 0f0
                                        0f0 1f0 0f0 0f0
@@ -290,22 +291,22 @@
                    (max single-float most-positive-single-float))
     (:out mat :inline t)
   (with-components ((o out) (m in))
-    (psetf o00 (au:clamp m00 min max)
-           o01 (au:clamp m01 min max)
-           o02 (au:clamp m02 min max)
-           o03 (au:clamp m03 min max)
-           o10 (au:clamp m10 min max)
-           o11 (au:clamp m11 min max)
-           o12 (au:clamp m12 min max)
-           o13 (au:clamp m13 min max)
-           o20 (au:clamp m20 min max)
-           o21 (au:clamp m21 min max)
-           o22 (au:clamp m22 min max)
-           o23 (au:clamp m23 min max)
-           o30 (au:clamp m30 min max)
-           o31 (au:clamp m31 min max)
-           o32 (au:clamp m32 min max)
-           o33 (au:clamp m33 min max)))
+    (psetf o00 (a:clamp m00 min max)
+           o01 (a:clamp m01 min max)
+           o02 (a:clamp m02 min max)
+           o03 (a:clamp m03 min max)
+           o10 (a:clamp m10 min max)
+           o11 (a:clamp m11 min max)
+           o12 (a:clamp m12 min max)
+           o13 (a:clamp m13 min max)
+           o20 (a:clamp m20 min max)
+           o21 (a:clamp m21 min max)
+           o22 (a:clamp m22 min max)
+           o23 (a:clamp m23 min max)
+           o30 (a:clamp m30 min max)
+           o31 (a:clamp m31 min max)
+           o32 (a:clamp m32 min max)
+           o33 (a:clamp m33 min max)))
   out)
 
 (define-op clamp ((in mat)

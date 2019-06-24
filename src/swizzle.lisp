@@ -1,11 +1,13 @@
 (in-package #:cl-user)
 
 (defpackage #:origin.swizzle
+  (:local-nicknames (#:a #:alexandria)
+                    (#:u #:golden-utils))
   (:use #:cl))
 
 (in-package #:origin.swizzle)
 
-(au:eval-always
+(u:eval-always
   (defun %swizzle/combinations (n items)
     (if (= n 1)
         (mapcar #'list items)
@@ -53,8 +55,9 @@
 (macrolet ((%generate-swizzle-functions ()
              `(progn
                 ,@(loop :for components :in (%swizzle/component-groups)
-                        :for func-name = (au:format-symbol *package* "~:@(.~a~)"
-                                                           components)
+                        :for func-name = (a:format-symbol
+                                          *package* "~:@(.~a~)"
+                                          components)
                         :for component-list = (coerce components 'list)
                         :append
                         `((declaim (inline ,func-name))

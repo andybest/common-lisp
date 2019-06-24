@@ -1,6 +1,7 @@
 (in-package #:cl-user)
 
 (defpackage #:origin.vec4
+  (:local-nicknames (#:a #:alexandria))
   (:use #:cl #:origin.internal)
   (:shadow
    #:=
@@ -153,7 +154,7 @@
             `(with-elements ,rest ,@body)
             `(progn ,@body)))))
 
-(au:define-constant +zero+
+(a:define-constant +zero+
     (make-array 4 :element-type 'single-float
                   :initial-contents '(0f0 0f0 0f0 0f0))
   :test #'equalp)
@@ -231,10 +232,10 @@
                    (max single-float most-positive-single-float))
     (:out vec)
   (with-components ((o out) (v in))
-    (psetf ox (au:clamp vx min max)
-           oy (au:clamp vy min max)
-           oz (au:clamp vz min max)
-           ow (au:clamp vw min max)))
+    (psetf ox (a:clamp vx min max)
+           oy (a:clamp vy min max)
+           oz (a:clamp vz min max)
+           ow (a:clamp vw min max)))
   out)
 
 (define-op clamp ((in vec)
@@ -378,10 +379,10 @@
 
 (define-op lerp! ((out vec) (in1 vec) (in2 vec) (factor single-float)) (:out vec)
   (with-components ((o out) (v1 in1) (v2 in2))
-    (psetf ox (au:lerp factor v1x v2x)
-           oy (au:lerp factor v1y v2y)
-           oz (au:lerp factor v1z v2z)
-           ow (au:lerp factor v1w v2w)))
+    (psetf ox (a:lerp factor v1x v2x)
+           oy (a:lerp factor v1y v2y)
+           oz (a:lerp factor v1z v2z)
+           ow (a:lerp factor v1w v2w)))
   out)
 
 (define-op lerp ((in1 vec) (in2 vec) (factor single-float)) (:out vec)

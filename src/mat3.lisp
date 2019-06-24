@@ -1,7 +1,8 @@
 (in-package #:cl-user)
 
 (defpackage #:origin.mat3
-  (:local-nicknames (#:v2 #:origin.vec2)
+  (:local-nicknames (#:a #:alexandria)
+                    (#:v2 #:origin.vec2)
                     (#:v3 #:origin.vec3)
                     (#:m2 #:origin.mat2))
   (:use #:cl #:origin.internal)
@@ -130,12 +131,12 @@
             `(with-elements ,rest ,@body)
             `(progn ,@body)))))
 
-(au:define-constant +zero+
+(a:define-constant +zero+
     (make-array 9 :element-type 'single-float
                   :initial-contents '(0f0 0f0 0f0 0f0 0f0 0f0 0f0 0f0 0f0))
   :test #'equalp)
 
-(au:define-constant +id+
+(a:define-constant +id+
     (make-array 9 :element-type 'single-float
                   :initial-contents '(1f0 0f0 0f0 0f0 1f0 0f0 0f0 0f0 1f0))
   :test #'equalp)
@@ -223,15 +224,15 @@
                    (max single-float most-positive-single-float))
     (:out mat :inline nil)
   (with-components ((o out) (m in))
-    (psetf o00 (au:clamp m00 min max)
-           o01 (au:clamp m01 min max)
-           o02 (au:clamp m02 min max)
-           o10 (au:clamp m10 min max)
-           o11 (au:clamp m11 min max)
-           o12 (au:clamp m12 min max)
-           o20 (au:clamp m20 min max)
-           o21 (au:clamp m21 min max)
-           o22 (au:clamp m22 min max)))
+    (psetf o00 (a:clamp m00 min max)
+           o01 (a:clamp m01 min max)
+           o02 (a:clamp m02 min max)
+           o10 (a:clamp m10 min max)
+           o11 (a:clamp m11 min max)
+           o12 (a:clamp m12 min max)
+           o20 (a:clamp m20 min max)
+           o21 (a:clamp m21 min max)
+           o22 (a:clamp m22 min max)))
   out)
 
 (define-op clamp ((in mat)

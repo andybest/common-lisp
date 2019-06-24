@@ -1,7 +1,8 @@
 (in-package #:cl-user)
 
 (defpackage #:origin.mat2
-  (:local-nicknames (#:v2 #:origin.vec2))
+  (:local-nicknames (#:a #:alexandria)
+                    (#:v2 #:origin.vec2))
   (:use #:cl #:origin.internal)
   (:shadow
    #:=
@@ -99,12 +100,12 @@
             `(with-elements ,rest ,@body)
             `(progn ,@body)))))
 
-(au:define-constant +zero+
+(a:define-constant +zero+
     (make-array 4 :element-type 'single-float
                   :initial-contents '(0f0 0f0 0f0 0f0))
   :test #'equalp)
 
-(au:define-constant +id+
+(a:define-constant +id+
     (make-array 4 :element-type 'single-float
                   :initial-contents '(1f0 0f0 0f0 1f0))
   :test #'equalp)
@@ -172,10 +173,10 @@
                    (max single-float most-positive-single-float))
     (:out mat)
   (with-components ((o out) (m in))
-    (psetf o00 (au:clamp m00 min max)
-           o01 (au:clamp m01 min max)
-           o10 (au:clamp m10 min max)
-           o11 (au:clamp m11 min max)))
+    (psetf o00 (a:clamp m00 min max)
+           o01 (a:clamp m01 min max)
+           o10 (a:clamp m10 min max)
+           o11 (a:clamp m11 min max)))
   out)
 
 (define-op clamp ((in mat)

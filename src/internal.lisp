@@ -1,6 +1,8 @@
 (in-package #:cl-user)
 
 (defpackage #:origin.internal
+  (:local-nicknames (#:a #:alexandria)
+                    (#:u #:golden-utils))
   (:use #:cl)
   (:export
    #:make-accessor-symbol
@@ -13,8 +15,8 @@
 
 (declaim (inline make-accessor-symbol))
 (defun make-accessor-symbol (prefix &rest args)
-  (au:format-symbol (symbol-package prefix) "~@:(~{~a~}~)"
-                    (cons prefix args)))
+  (a:format-symbol (symbol-package prefix) "~@:(~{~a~}~)"
+                   (cons prefix args)))
 
 (defun split-arg-spec (arg-spec)
   (let ((rest (position '&rest arg-spec))
@@ -53,14 +55,14 @@
        (lambda (x)
          (destructuring-bind (arg type &optional default) x
            (declare (ignore default))
-           (list (au:make-keyword arg) type)))
+           (list (a:make-keyword arg) type)))
        keywords)))
 
 (defmacro define-op (op arg-spec (&key out (inline t)) &body body)
-  (au:mvlet* ((required rest keywords (split-arg-spec arg-spec))
-              (args (generate-function-args required rest keywords))
-              (types (generate-type-signature required rest keywords))
-              (body decls doc (au:parse-body body :documentation t)))
+  (u:mvlet ((required rest keywords (split-arg-spec arg-spec))
+            (args (generate-function-args required rest keywords))
+            (types (generate-type-signature required rest keywords))
+            (body decls doc (a:parse-body body :documentation t)))
     `(progn
        ,@(when inline
            `((declaim (inline ,op))))
