@@ -1,4 +1,4 @@
-(in-package :dungen)
+(in-package #:dungen)
 
 (defun make-region ()
   (incf (state-current-region *state*)))
@@ -6,10 +6,10 @@
 (defun add-cell-to-region (cell)
   (let* ((region (state-current-region *state*))
          (regions (state-regions *state*))
-         (cells (au:href regions region)))
+         (cells (u:href regions region)))
     (unless cells
-      (setf (au:href regions region) (au:dict #'eq)))
-    (setf (au:href regions region cell) cell
+      (setf (u:href regions region) (u:dict #'eq)))
+    (setf (u:href regions region cell) cell
           (cell-region cell) region)))
 
 (defun cell-regions-distinct-p (cell1 cell2)

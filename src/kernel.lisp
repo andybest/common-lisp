@@ -1,4 +1,4 @@
-(in-package :dungen)
+(in-package #:dungen)
 
 (defstruct (extent (:copier nil)
                    (:predicate nil))
@@ -42,7 +42,7 @@
   (block nil
     (kernel-map kernel
                 (lambda (cell)
-                  (au:when-let ((value (funcall func cell)))
+                  (a:when-let ((value (funcall func cell)))
                     (return value))))
     nil))
 
@@ -143,5 +143,5 @@
         :while items
         :for kernel = (funcall generator (pop items))
         :when (funcall filter kernel)
-          :do (au:when-let ((new (funcall processor kernel)))
+          :do (a:when-let ((new (funcall processor kernel)))
                 (push new items))))

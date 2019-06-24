@@ -6,11 +6,10 @@
   :homepage "https://github.com/mfiano/dungen"
   :source-control (:git "https://github.com/mfiano/dungen.git")
   :bug-tracker "https://github.com/mfiano/dungen/issues"
-  :version "0.1.0"
   :encoding :utf-8
   :depends-on (#:golden-utils
+               #:alexandria
                #:cl-pcg
-               #:lparallel
                #:graph)
   :pathname "src"
   :serial t

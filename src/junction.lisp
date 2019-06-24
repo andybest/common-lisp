@@ -1,4 +1,4 @@
-(in-package :dungen)
+(in-package #:dungen)
 
 (defun filter-connectable (kernel)
   (and (not (carved-p (select kernel 0 0)))
@@ -9,21 +9,21 @@
   (let ((cell (select kernel 0 0))
         (regions (remove 0 (kernel-map kernel #'cell-region))))
     (add-feature cell +connector+)
-    (push cell (au:href (state-connections *state*) regions))))
+    (push cell (u:href (state-connections *state*) regions))))
 
 (defun connect-regions (stage)
   (convolve stage (layout :orthogonal) #'filter-connectable #'make-connector))
 
 (defun connectable-edges ()
   (let (edges)
-    (au:do-hash-keys (k (state-connections *state*))
+    (u:do-hash-keys (k (state-connections *state*))
       (push (cons k 1) edges))
     edges))
 
 (defun make-graph ()
   (graph:populate (make-instance 'graph:graph)
-                  :nodes (au:iota (hash-table-count (state-regions *state*))
-                                  :start 1)
+                  :nodes (a:iota (hash-table-count (state-regions *state*))
+                                 :start 1)
                   :edges-w-values (connectable-edges)))
 
 (defun make-tree ()
@@ -56,7 +56,7 @@
 
 (defun get-random-edge-connector (edge)
   (random-element (state-rng *state*)
-                  (au:href (state-connections *state*) edge)))
+                  (u:href (state-connections *state*) edge)))
 
 (defun carve-junctions (stage)
   (loop :with graph = (make-tree)

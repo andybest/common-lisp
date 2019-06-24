@@ -1,4 +1,4 @@
-(in-package :dungen)
+(in-package #:dungen)
 
 (defvar *state*)
 
@@ -7,8 +7,8 @@
                   (:predicate nil))
   rng
   (current-region 0)
-  (regions (au:dict #'eql))
-  (connections (au:dict #'equal))
+  (regions (u:dict #'eql))
+  (connections (u:dict #'equal))
   dead-ends)
 
 (defun make-state (seed)

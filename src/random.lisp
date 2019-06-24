@@ -1,9 +1,9 @@
-(in-package :dungen)
+(in-package #:dungen)
 
 (defun make-seed ()
   (values
    (parse-integer
-    (au:shuffle
+    (a:shuffle
      (format nil "~d~d"
              (get-universal-time)
              (get-internal-real-time))))))

@@ -1,6 +1,8 @@
-(in-package :cl-user)
+(in-package #:cl-user)
 
 (defpackage #:dungen
+  (:local-nicknames (#:a #:alexandria)
+                    (#:u #:golden-utils))
   (:use #:cl)
   (:export #:make-stage
            #:make-seed
