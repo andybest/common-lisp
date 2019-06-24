@@ -9,6 +9,7 @@
   :version "0.1.0"
   :encoding :utf-8
   :depends-on (#:golden-utils
+               #:alexandria
                #:defpackage-plus
                #:shadow)
   :pathname "src"

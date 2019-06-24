@@ -29,6 +29,7 @@
            #:map-domain))
 
 (defpackage+ #:umbra.swizzle
+  (:local-nicknames (#:u #:golden-utils))
   (:use #:cl #:vari))
 
 (defpackage+ #:umbra.user
