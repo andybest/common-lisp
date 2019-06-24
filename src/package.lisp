@@ -1,6 +1,8 @@
 (in-package #:cl-user)
 
 (defpackage #:shadow
+  (:local-nicknames (#:a #:alexandria)
+                    (#:u #:golden-utils))
   (:use #:cl)
   (:export #:define-function
            #:define-struct

@@ -13,6 +13,7 @@
                #:varjo
                #:cl-opengl
                #:golden-utils
+               #:alexandria
                #:origin)
   :pathname "src"
   :serial t

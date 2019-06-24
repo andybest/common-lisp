@@ -2,34 +2,34 @@
 
 (defclass state ()
   ((%shader-definitions :reader shader-definitions
-                        :initform (au:dict #'eq))
+                        :initform (u:dict #'eq))
    (%programs :reader programs
-              :initform (au:dict #'eq))
+              :initform (u:dict #'eq))
    (%blocks :reader blocks
-            :initform (au:dict #'eq
-                               :bindings (au:dict #'eq
-                                                  :uniform (au:dict)
-                                                  :buffer (au:dict))
-                               :aliases (au:dict #'equalp)))
+            :initform (u:dict #'eq
+                              :bindings (u:dict #'eq
+                                                :uniform (u:dict)
+                                                :buffer (u:dict))
+                              :aliases (u:dict #'equalp)))
    (%track-dependencies-p :reader track-dependencies-p
                           :initform nil)
    (%dependencies :reader dependencies
-                  :initform (au:dict #'eq
-                                     :fn->deps (au:dict #'equal)
-                                     :dep->fns (au:dict #'equal)
-                                     :stage-fn->programs (au:dict #'equal)))
+                  :initform (u:dict #'eq
+                                    :fn->deps (u:dict #'equal)
+                                    :dep->fns (u:dict #'equal)
+                                    :stage-fn->programs (u:dict #'equal)))
    (%modify-hook :accessor modify-hook
                  :initform (constantly nil))
    (%buffers :reader buffers
-             :initform (au:dict #'eq))))
+             :initform (u:dict #'eq))))
 
 (defvar *state* (make-instance 'state))
 
 (defun reset-program-state ()
-  (clrhash (au:href (blocks *state*) :bindings :uniform))
-  (clrhash (au:href (blocks *state*) :bindings :buffer))
-  (clrhash (au:href (blocks *state*) :aliases))
-  (clrhash (au:href (buffers *state*))))
+  (clrhash (u:href (blocks *state*) :bindings :uniform))
+  (clrhash (u:href (blocks *state*) :bindings :buffer))
+  (clrhash (u:href (blocks *state*) :aliases))
+  (clrhash (buffers *state*)))
 
 (defun enable-dependency-tracking ()
   (setf (slot-value *state* '%track-dependencies-p) t))
@@ -39,14 +39,14 @@
 
 (defun store-source (program stage)
   (let ((source (varjo:glsl-code stage)))
-    (setf (au:href (source program) (stage-type stage))
+    (setf (u:href (source program) (stage-type stage))
           (subseq source
                   (1+ (position #\newline source))
                   (- (length source) 2)))))
 
 (defun load-shaders (modify-hook)
   (reset-program-state)
-  (au:do-hash-values (shader-factory (shader-definitions *state*))
+  (u:do-hash-values (shader-factory (shader-definitions *state*))
     (funcall shader-factory))
   (enable-dependency-tracking)
   (set-modify-hook modify-hook)

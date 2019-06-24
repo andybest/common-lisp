@@ -10,24 +10,24 @@
    (%translated-stages :reader translated-stages
                        :initform nil)
    (%source :reader source
-            :initform (au:dict #'eq))
+            :initform (u:dict #'eq))
    (%primitive :reader primitive
                :initarg :primitive)
    (%stage-specs :reader stage-specs
                  :initarg :stage-specs)
    (%attributes :reader attributes
-                :initform (au:dict #'eq))
+                :initform (u:dict #'eq))
    (%uniforms :reader uniforms
-              :initform (au:dict #'eq))
+              :initform (u:dict #'eq))
    (%blocks :reader blocks
-            :initform (au:dict #'equal))))
+            :initform (u:dict #'equal))))
 
 (defun find-program (program-name)
-  (au:href (programs *state*) program-name))
+  (u:href (programs *state*) program-name))
 
 (defun view-source (program-name stage)
-  (au:when-let ((program (find-program program-name)))
-    (format t "~a" (au:href (source program) stage))))
+  (a:when-let ((program (find-program program-name)))
+    (format t "~a" (u:href (source program) stage))))
 
 (defun compile-stages (program)
   (let ((shaders))
@@ -81,7 +81,7 @@ See MAKE-SHADER-PROGRAM"
   "Compile all shader programs defined with MAKE-SHADER-PROGRAM.
 
 See MAKE-SHADER-PROGRAM"
-  (au:maphash-keys #'build-shader-program (programs *state*))
+  (a:maphash-keys #'build-shader-program (programs *state*))
   (programs *state*))
 
 (defun store-stage-program-dependencies (program)
@@ -89,8 +89,8 @@ See MAKE-SHADER-PROGRAM"
     (destructuring-bind (stage-type func-spec) stage-spec
       (declare (ignore stage-type))
       (pushnew (name program)
-               (au:href (dependencies *state*)
-                        :stage-fn->programs func-spec)))))
+               (u:href (dependencies *state*)
+                       :stage-fn->programs func-spec)))))
 
 (defun translate-program (program)
   (with-slots (%name %version %primitive %stage-specs) program
@@ -106,7 +106,7 @@ See MAKE-SHADER-PROGRAM"
                                 :version version
                                 :primitive primitive
                                 :stage-specs stage-specs)))
-    (setf (au:href (programs *state*) name) program)
+    (setf (u:href (programs *state*) name) program)
     (translate-program program)
     (store-attributes program)
     (store-uniforms program)
@@ -122,7 +122,7 @@ per-function basis.
 
 PRIMITIVE: The drawing primitive to use for the vertex stage."
   `(progn
-     (setf (au:href (shader-definitions *state*) ',name)
+     (setf (u:href (shader-definitions *state*) ',name)
            (lambda ()
              (%make-shader-program ',name ,version ,primitive ',body)))
      (export ',name)))

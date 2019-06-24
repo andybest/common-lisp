@@ -29,26 +29,26 @@
     (:buffer :ssbo)))
 
 (defun find-buffer (buffer-name)
-  (au:href (buffers *state*) buffer-name))
+  (u:href (buffers *state*) buffer-name))
 
 (defun create-buffer (buffer-name block-alias)
   "Create a buffer of the given TYPE and NAME, using the block BLOCK-ID of
 PROGRAM-NAME."
-  (au:if-let ((block (find-block block-alias)))
+  (a:if-let ((block (find-block block-alias)))
     (let* ((type (block-type->buffer-type (block-type block)))
            (target (buffer-type->target type))
            (buffer (%make-buffer buffer-name target (layout block))))
       (with-slots (%id %layout) buffer
         (%gl:bind-buffer target %id)
         (%gl:buffer-data target (size %layout) (cffi:null-pointer) :static-draw)
-        (setf (au:href (buffers *state*) buffer-name) buffer)))
+        (setf (u:href (buffers *state*) buffer-name) buffer)))
     (error "Cannot find the block with alias ~s when attempting to create a ~
             buffer."
            block-alias)))
 
 (defun bind-buffer (buffer-name binding-point)
   "Bind a buffer with name BUFFER-NAME to BINDING-POINT."
-  (au:if-let ((buffer (find-buffer buffer-name)))
+  (a:if-let ((buffer (find-buffer buffer-name)))
     (with-slots (%target %id) buffer
       (%gl:bind-buffer-base %target binding-point %id)
       (%gl:bind-buffer %target 0))
@@ -120,7 +120,7 @@ Note: Writing to arrays which contain other aggregate types (other arrays or
 structures) is not possible. This is a design decision to allow this library to
 have a simple \"path-based\" buffer writing interface."
   (with-slots (%type %id %target %layout) (find-buffer buffer-name)
-    (let ((member (au:href (members %layout) path)))
+    (let ((member (u:href (members %layout) path)))
       (check-type value sequence)
       (gl:bind-buffer %target %id)
       (if (eq (object-type member) :mat)
@@ -137,7 +137,7 @@ have a simple \"path-based\" buffer writing interface."
 (defun %read-buffer-member/vector (member data count)
   (with-slots (%dimensions %element-stride) member
     (let* ((size (car %dimensions))
-           (func (au:format-symbol :origin "VEC~a" size)))
+           (func (a:format-symbol :origin "VEC~a" size)))
       (flet ((make-vector (data index size)
                (let ((args (loop :for i :below size
                                  :collect (aref data (+ index i)))))
@@ -151,7 +151,7 @@ have a simple \"path-based\" buffer writing interface."
 (defun %read-buffer-member/matrix (member data count)
   (with-slots (%dimensions %element-stride) member
     (destructuring-bind (columns rows) %dimensions
-      (let ((func (au:format-symbol :origin "MAT~d" columns)))
+      (let ((func (a:format-symbol :origin "MAT~d" columns)))
         (flet ((make-matrix (data index)
                  (let ((args (loop :repeat columns
                                    :for i :from index :by %element-stride
@@ -190,7 +190,7 @@ have a simple \"path-based\" buffer writing interface."
 
 (defun read-buffer-path (buffer-name path &optional count)
   (with-slots (%id %target %layout) (find-buffer buffer-name)
-    (let ((member (au:href (members %layout) path)))
+    (let ((member (u:href (members %layout) path)))
       (gl:bind-buffer %target %id)
       (unwind-protect (%read-buffer-member %target member count)
         (gl:bind-buffer %target 0)))))
