@@ -2,26 +2,23 @@
 
 (defclass state ()
   ((%shader-definitions :reader shader-definitions
-                        :initform (u:dict #'eq))
+                        :initform (u:dict))
    (%programs :reader programs
-              :initform (u:dict #'eq))
+              :initform (u:dict))
    (%blocks :reader blocks
-            :initform (u:dict #'eq
-                              :bindings (u:dict #'eq
-                                                :uniform (u:dict)
+            :initform (u:dict :bindings (u:dict :uniform (u:dict)
                                                 :buffer (u:dict))
                               :aliases (u:dict #'equalp)))
    (%track-dependencies-p :reader track-dependencies-p
                           :initform nil)
    (%dependencies :reader dependencies
-                  :initform (u:dict #'eq
-                                    :fn->deps (u:dict #'equal)
+                  :initform (u:dict :fn->deps (u:dict #'equal)
                                     :dep->fns (u:dict #'equal)
                                     :stage-fn->programs (u:dict #'equal)))
    (%modify-hook :accessor modify-hook
                  :initform (constantly nil))
    (%buffers :reader buffers
-             :initform (u:dict #'eq))))
+             :initform (u:dict))))
 
 (defvar *state* (make-instance 'state))
 

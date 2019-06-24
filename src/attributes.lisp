@@ -7,8 +7,7 @@
             :for id = (ensure-keyword (varjo:name attr))
             :for type = (varjo:v-type-of attr)
             :do (setf (u:href (attributes program) id)
-                      (u:dict #'eq
-                              :name (varjo:glsl-name attr)
+                      (u:dict :name (varjo:glsl-name attr)
                               :type (varjo:type->type-spec type)))))))
 
 (defun store-attribute-locations (program)

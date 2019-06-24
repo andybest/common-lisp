@@ -5,7 +5,7 @@
           :initarg :type)
    (%size :accessor size)
    (%members :reader members
-             :initform (u:dict #'eq))
+             :initform (u:dict))
    (%uniform :reader uniform
              :initarg :uniform)))
 

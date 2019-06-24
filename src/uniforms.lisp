@@ -31,8 +31,7 @@
       (loop :for (parts type-spec) :in (%get-uniforms stage)
             :for id = (ensure-keyword (parts->string parts))
             :do (setf (u:href (uniforms program) id)
-                      (u:dict #'eq
-                              :name (parts->string
+                      (u:dict :name (parts->string
                                      parts
                                      #'varjo.internals:safe-glsl-name-string)
                               :type type-spec))))))

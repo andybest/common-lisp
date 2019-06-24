@@ -10,15 +10,15 @@
    (%translated-stages :reader translated-stages
                        :initform nil)
    (%source :reader source
-            :initform (u:dict #'eq))
+            :initform (u:dict))
    (%primitive :reader primitive
                :initarg :primitive)
    (%stage-specs :reader stage-specs
                  :initarg :stage-specs)
    (%attributes :reader attributes
-                :initform (u:dict #'eq))
+                :initform (u:dict))
    (%uniforms :reader uniforms
-              :initform (u:dict #'eq))
+              :initform (u:dict))
    (%blocks :reader blocks
             :initform (u:dict #'equal))))
 
