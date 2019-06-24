@@ -6,7 +6,6 @@
   :homepage "https://www.michaelfiano.com/projects/patchwork"
   :source-control (:git "https://github.com/mfiano/patchwork.git")
   :bug-tracker "https://github.com/mfiano/patchwork/issues"
-  :version "1.0.5"
   :encoding :utf-8
   :depends-on (#:pngload
                #:opticl
