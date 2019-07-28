@@ -196,7 +196,7 @@
          (cl:< (cl:abs (cl:- a21 b21)) tolerance)
          (cl:< (cl:abs (cl:- a22 b22)) tolerance))))
 
-(define-op random! ((out mat) &key (min real 0.0) (max real 1.0)) (:out mat)
+(define-op random! ((out mat) &key (min real 0f0) (max real 1f0)) (:out mat)
   (with-components ((o out))
     (psetf o00 (cl:+ min (cl:random (cl:- max min)))
            o01 (cl:+ min (cl:random (cl:- max min)))
@@ -209,7 +209,7 @@
            o22 (cl:+ min (cl:random (cl:- max min)))))
   out)
 
-(define-op random (&key (min real 0.0) (max real 1.0)) (:out mat)
+(define-op random (&key (min real 0f0) (max real 1f0)) (:out mat)
   (random! (zero) :min min :max max))
 
 (define-op copy! ((out mat) (in mat)) (:out mat)

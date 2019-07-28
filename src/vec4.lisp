@@ -185,7 +185,7 @@
          (zerop vz)
          (zerop vw))))
 
-(define-op random! ((out vec) &key (min real 0.0) (max real 1.0)) (:out vec)
+(define-op random! ((out vec) &key (min real 0f0) (max real 1f0)) (:out vec)
   (with-components ((o out))
     (psetf ox (cl:+ min (cl:random (cl:- max min)))
            oy (cl:+ min (cl:random (cl:- max min)))
@@ -193,7 +193,7 @@
            ow (cl:+ min (cl:random (cl:- max min)))))
   out)
 
-(define-op random (&key (min real 0.0) (max real 1.0)) (:out vec)
+(define-op random (&key (min real 0f0) (max real 1f0)) (:out vec)
   (random! (zero) :min min :max max))
 
 (define-op copy! ((out vec) (in vec)) (:out vec)
