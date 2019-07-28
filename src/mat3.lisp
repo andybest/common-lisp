@@ -51,6 +51,8 @@
    #:translate
    #:copy-rotation!
    #:copy-rotation
+   #:normalize-rotation!
+   #:normalize-rotation
    #:rotation-axis-to-vec2!
    #:rotation-axis-to-vec2
    #:rotation-axis-from-vec2!
@@ -80,7 +82,9 @@
 (deftype mat () '(simple-array single-float (9)))
 
 (defstruct (matrix (:type (vector single-float))
-                   (:constructor %make (m00 m01 m02 m10 m11 m12 m20 m21 m22))
+                   (:constructor %make (m00 m01 m02
+                                        m10 m11 m12
+                                        m20 m21 m22))
                    (:conc-name nil)
                    (:predicate nil)
                    (:copier nil))
@@ -305,6 +309,16 @@
 
 (define-op copy-rotation ((in mat)) (:out mat)
   (copy-rotation! (id) in))
+
+(define-op normalize-rotation! ((out mat) (in mat)) (:out mat)
+  (with-components ((o out) (m in))
+    (v2::%normalize o00 o10 m00 m10)
+    (v2::%normalize o01 o11 m01 m11)
+    (v2::%normalize o02 o12 m02 m12))
+  out)
+
+(define-op normalize-rotation ((in mat)) (:out mat)
+  (normalize-rotation! (copy in) in))
 
 (define-op get-column! ((out v3:vec) (in mat) (index (integer 0 2)))
     (:out v3:vec)

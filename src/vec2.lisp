@@ -274,10 +274,13 @@
 (define-op / ((in1 vec) (in2 vec)) (:out vec)
   (/! (zero) in1 in2))
 
+(defmacro %scale (ox oy x y scalar)
+  `(psetf ,ox (cl:* ,x ,scalar)
+          ,oy (cl:* ,y ,scalar)))
+
 (define-op scale! ((out vec) (in vec) (scalar single-float)) (:out vec)
   (with-components ((o out) (v in))
-    (psetf ox (cl:* vx scalar)
-           oy (cl:* vy scalar)))
+    (%scale ox oy vx vy scalar))
   out)
 
 (define-op scale ((in vec) (scalar single-float)) (:out vec)
@@ -290,8 +293,14 @@
   (with-components ((v1 in1) (v2 in2))
     (%dot v1x v1y v2x v2y)))
 
+(defmacro %length-squared (x y)
+  `(%dot ,x ,y ,x ,y))
+
 (define-op length-squared ((in vec)) (:out single-float)
   (dot in in))
+
+(defmacro %length (x y)
+  `(cl:sqrt (%length-squared ,x ,y)))
 
 (define-op length ((in vec)) (:out single-float)
   (cl:sqrt (length-squared in)))
@@ -302,10 +311,15 @@
 (define-op distance ((in1 vec) (in2 vec)) (:out single-float)
   (cl:sqrt (distance-squared in1 in2)))
 
+(defmacro %normalize (ox oy x y)
+  (a:with-gensyms (length)
+    `(let ((,length (%length ,x ,y)))
+       (unless (zerop ,length)
+         (%scale ,ox ,oy ,x ,y (cl:/ ,length))))))
+
 (define-op normalize! ((out vec) (in vec)) (:out vec)
-  (let ((length (length in)))
-    (unless (zerop length)
-      (scale! out in (cl:/ length))))
+  (with-components ((o out) (v in))
+    (%normalize ox oy vx vy))
   out)
 
 (define-op normalize ((in vec)) (:out vec)

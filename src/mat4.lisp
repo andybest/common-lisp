@@ -51,6 +51,8 @@
    #:translate
    #:copy-rotation!
    #:copy-rotation
+   #:normalize-rotation!
+   #:normalize-rotation
    #:rotation-axis-to-vec3!
    #:rotation-axis-to-vec3
    #:rotation-axis-from-vec3!
@@ -417,6 +419,16 @@
 
 (define-op copy-rotation ((in mat)) (:out mat)
   (copy-rotation! (id) in))
+
+(define-op normalize-rotation! ((out mat) (in mat)) (:out mat)
+  (with-components ((o out) (m in))
+    (v3::%normalize o00 o10 o20 m00 m10 m20)
+    (v3::%normalize o01 o11 o21 m01 m11 m21)
+    (v3::%normalize o02 o12 o22 m02 m12 m22))
+  out)
+
+(define-op normalize-rotation ((in mat)) (:out mat)
+  (normalize-rotation! (copy in) in))
 
 (define-op get-column! ((out v4:vec) (in mat) (index (integer 0 3)))
     (:out v4:vec)
