@@ -61,6 +61,8 @@
    #:rotate-euler
    #:rotate!
    #:rotate
+   #:to-euler!
+   #:to-euler
    #:to-vec3!
    #:to-vec3
    #:to-vec4!
@@ -330,6 +332,27 @@
 (define-op rotate ((in1 quat) (in2 quat) &key (space keyword :local))
     (:out quat)
   (rotate! (id) in1 in2 :space space))
+
+(define-op to-euler! ((out v3:vec) (in quat)) (:out v3:vec)
+  (with-components ((q in))
+    (let* ((sinr-cosp (cl:* 2f0 (cl:+ (cl:* qw qx) (cl:* qy qz))))
+           (cosr-cosp (cl:- 1f0 (cl:* 2f0 (cl:+ (cl:* qx qx) (cl:* qy qy)))))
+           (roll (atan sinr-cosp cosr-cosp))
+           (sinp (cl:* 2f0 (cl:- (cl:* qw qy) (cl:* qz qx))))
+           (pitch (if (>= (abs sinp) 1f0)
+                      (float (cl:* (abs (cl:* pi 0.5f0)) (signum sinp)) 1f0)
+                      (asin sinp)))
+           (siny-cosp (cl:* 2f0 (cl:+ (cl:* qw qz) (cl:* qx qy))))
+           (cosy-cosp (cl:- 1f0 (cl:* 2f0 (cl:+ (cl:* qy qy) (cl:* qz qz)))))
+           (yaw (atan siny-cosp cosy-cosp)))
+      (v3:with-components ((o out))
+        (psetf ox roll
+               oy pitch
+               oz yaw))))
+  out)
+
+(define-op to-euler ((in quat)) (:out v3:vec)
+  (to-euler! (v3:zero) in))
 
 (define-op to-vec3! ((out v3:vec) (in quat)) (:out v3:vec)
   (v3:with-components ((v out))
