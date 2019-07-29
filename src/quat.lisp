@@ -27,7 +27,6 @@
    #:+id+
    #:id!
    #:id
-   #:make
    #:zero!
    #:zero
    #:=
@@ -91,7 +90,7 @@
 (deftype quat () '(simple-array single-float (4)))
 
 (defstruct (quat (:type (vector single-float))
-                 (:constructor %make (w x y z))
+                 (:constructor %quat (w x y z))
                  (:conc-name nil)
                  (:predicate nil)
                  (:copier nil))
@@ -132,8 +131,8 @@
                   :initial-contents '(1f0 0f0 0f0 0f0))
   :test #'equalp)
 
-(define-op make ((w real) (x real) (y real) (z real)) (:out quat)
-  (%make (float w 1f0) (float x 1f0) (float y 1f0) (float z 1f0)))
+(define-op quat ((w real) (x real) (y real) (z real)) (:out quat)
+  (%quat (float w 1f0) (float x 1f0) (float y 1f0) (float z 1f0)))
 
 (define-op id! ((in quat)) (:out quat)
   (with-components ((q in))
@@ -141,7 +140,7 @@
   in)
 
 (define-op id () (:out quat)
-  (id! (make 0f0 0f0 0f0 0f0)))
+  (id! (quat 0f0 0f0 0f0 0f0)))
 
 (define-op zero! ((in quat)) (:out quat)
   (with-components ((q in))
@@ -149,7 +148,7 @@
   in)
 
 (define-op zero () (:out quat)
-  (make 0f0 0f0 0f0 0f0))
+  (quat 0f0 0f0 0f0 0f0))
 
 (define-op = ((in1 quat) (in2 quat)) (:out boolean)
   (with-components ((q1 in1) (q2 in2))

@@ -17,7 +17,6 @@
    #:with-elements
    #:+zero+
    #:+id+
-   #:make
    #:zero!
    #:zero
    #:random
@@ -69,7 +68,7 @@
 (deftype mat () '(simple-array single-float (4)))
 
 (defstruct (matrix (:type (vector single-float))
-                   (:constructor %make (m00 m01 m10 m11))
+                   (:constructor %mat (m00 m01 m10 m11))
                    (:conc-name nil)
                    (:predicate nil)
                    (:copier nil))
@@ -110,8 +109,8 @@
                   :initial-contents '(1f0 0f0 0f0 1f0))
   :test #'equalp)
 
-(define-op make ((m00 real) (m01 real) (m10 real) (m11 real)) (:out mat)
-  (%make (float m00 1f0) (float m01 1f0) (float m10 1f0) (float m11 1f0)))
+(define-op mat ((m00 real) (m01 real) (m10 real) (m11 real)) (:out mat)
+  (%mat (float m00 1f0) (float m01 1f0) (float m10 1f0) (float m11 1f0)))
 
 (define-op zero! ((in mat)) (:out mat)
   (with-components ((m in))
@@ -119,7 +118,7 @@
   in)
 
 (define-op zero () (:out mat)
-  (%make 0f0 0f0 0f0 0f0))
+  (%mat 0f0 0f0 0f0 0f0))
 
 (define-op id! ((in mat)) (:out mat)
   (with-components ((m in))
@@ -127,7 +126,7 @@
   in)
 
 (define-op id () (:out mat)
-  (%make 1f0 0f0 0f0 1f0))
+  (%mat 1f0 0f0 0f0 1f0))
 
 (define-op id-p ((in mat)) (:out boolean)
   (with-components ((m in))

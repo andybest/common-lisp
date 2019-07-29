@@ -38,7 +38,6 @@
    #:w
    #:with-components
    #:with-elements
-   #:make
    #:+zero+
    #:zero!
    #:zero
@@ -123,7 +122,7 @@
 (deftype vec () '(simple-array single-float (4)))
 
 (defstruct (vec (:type (vector single-float))
-                (:constructor %make (x y z w))
+                (:constructor %vec (x y z w))
                 (:conc-name nil)
                 (:predicate nil)
                 (:copier nil))
@@ -159,8 +158,8 @@
                   :initial-contents '(0f0 0f0 0f0 0f0))
   :test #'equalp)
 
-(define-op make ((x real) (y real) (z real) (w real)) (:out vec)
-  (%make (float x 1f0) (float y 1f0) (float z 1f0) (float w 1f0)))
+(define-op vec ((x real) (y real) (z real) (w real)) (:out vec)
+  (%vec (float x 1f0) (float y 1f0) (float z 1f0) (float w 1f0)))
 
 (define-op zero! ((in vec)) (:out vec)
   (with-components ((v in))
@@ -168,7 +167,7 @@
   in)
 
 (define-op zero () (:out vec)
-  (make 0f0 0f0 0f0 0f0))
+  (vec 0f0 0f0 0f0 0f0))
 
 (define-op one! ((in vec)) (:out vec)
   (with-components ((v in))
