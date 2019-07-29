@@ -59,10 +59,10 @@
        keywords)))
 
 (defmacro define-op (op arg-spec (&key out (inline t)) &body body)
-  (u:mvlet ((required rest keywords (split-arg-spec arg-spec))
-            (args (generate-function-args required rest keywords))
-            (types (generate-type-signature required rest keywords))
-            (body decls doc (a:parse-body body :documentation t)))
+  (u:mvlet* ((required rest keywords (split-arg-spec arg-spec))
+             (args (generate-function-args required rest keywords))
+             (types (generate-type-signature required rest keywords))
+             (body decls doc (a:parse-body body :documentation t)))
     `(progn
        ,@(when inline
            `((declaim (inline ,op))))
