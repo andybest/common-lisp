@@ -21,6 +21,7 @@
    #:+id+
    #:zero!
    #:zero
+   #:zero-p
    #:id!
    #:id
    #:id-p
@@ -160,6 +161,10 @@
 
 (define-op zero () (:out mat)
   (%mat 0f0 0f0 0f0 0f0 0f0 0f0 0f0 0f0 0f0))
+
+(define-op zero-p ((in mat)) (:out boolean)
+  (with-components ((m in))
+    (cl:= 0f0 m00 m01 m02 m10 m11 m12 m20 m21 m22)))
 
 (define-op id! ((in mat)) (:out mat)
   (with-components ((m in))

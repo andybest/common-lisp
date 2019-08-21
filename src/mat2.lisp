@@ -19,6 +19,7 @@
    #:+id+
    #:zero!
    #:zero
+   #:zero-p
    #:random
    #:id!
    #:id
@@ -119,6 +120,10 @@
 
 (define-op zero () (:out mat)
   (%mat 0f0 0f0 0f0 0f0))
+
+(define-op zero-p ((in mat)) (:out boolean)
+  (with-components ((m in))
+    (cl:= 0f0 m00 m01 m10 m11)))
 
 (define-op id! ((in mat)) (:out mat)
   (with-components ((m in))
