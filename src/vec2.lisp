@@ -277,12 +277,12 @@
   `(psetf ,ox (cl:* ,x ,scalar)
           ,oy (cl:* ,y ,scalar)))
 
-(define-op scale! ((out vec) (in vec) (scalar float)) (:out vec)
+(define-op scale! ((out vec) (in vec) (scalar single-float)) (:out vec)
   (with-components ((o out) (v in))
-    (%scale ox oy vx vy (float scalar 1f0)))
+    (%scale ox oy vx vy scalar))
   out)
 
-(define-op scale ((in vec) (scalar float)) (:out vec)
+(define-op scale ((in vec) (scalar single-float)) (:out vec)
   (scale! (zero) in scalar))
 
 (defmacro %dot (v1x v1y v2x v2y)
@@ -356,14 +356,14 @@
 (define-op direction= ((in1 vec) (in2 vec)) (:out boolean)
   (cl:>= (dot (normalize in1) (normalize in2)) (cl:- 1 1e-7)))
 
-(define-op lerp! ((out vec) (in1 vec) (in2 vec) (factor float)) (:out vec)
-  (let ((factor (float factor 1f0)))
-    (with-components ((o out) (v1 in1) (v2 in2))
-      (psetf ox (a:lerp factor v1x v2x)
-             oy (a:lerp factor v1y v2y))))
+(define-op lerp! ((out vec) (in1 vec) (in2 vec) (factor single-float))
+    (:out vec)
+  (with-components ((o out) (v1 in1) (v2 in2))
+    (psetf ox (a:lerp factor v1x v2x)
+           oy (a:lerp factor v1y v2y)))
   out)
 
-(define-op lerp ((in1 vec) (in2 vec) (factor float)) (:out vec)
+(define-op lerp ((in1 vec) (in2 vec) (factor single-float)) (:out vec)
   (lerp! (zero) in1 in2 factor))
 
 (define-op < ((in1 vec) (in2 vec)) (:out boolean)
