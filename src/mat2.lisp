@@ -276,7 +276,8 @@
     (:out mat)
   (rotation-axis-from-vec2! (copy in) vec axis))
 
-(define-op rotate! ((out mat) (in mat) (angle float) &key (space keyword :local))
+(define-op rotate! ((out mat) (in mat) (angle float)
+                    &key (space keyword :local))
     (:out mat :inline nil)
   (with-components ((m (id)))
     (copy! out in)

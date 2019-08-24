@@ -245,7 +245,8 @@
          (cl:= v1y v2y)
          (cl:= v1z v2z))))
 
-(define-op ~ ((in1 vec) (in2 vec) &key (tolerance single-float 1e-7)) (:out boolean)
+(define-op ~ ((in1 vec) (in2 vec)
+              &key (tolerance single-float 1e-7)) (:out boolean)
   (with-components ((v1 in1) (v2 in2))
     (and (cl:< (cl:abs (cl:- v1x v2x)) tolerance)
          (cl:< (cl:abs (cl:- v1y v2y)) tolerance)
