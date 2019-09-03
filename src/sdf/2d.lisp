@@ -36,8 +36,8 @@
     (* p m)))
 
 (define-function translate ((p :vec2)
-                            (t :vec2))
-  (- p t))
+                            (v :vec2))
+  (- p v))
 
 ;;; Distance functions
 
