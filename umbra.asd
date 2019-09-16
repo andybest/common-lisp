@@ -7,60 +7,36 @@
   :source-control (:git "https://github.com/mfiano/umbra.git")
   :bug-tracker "https://github.com/mfiano/umbra/issues"
   :encoding :utf-8
-  :depends-on (#:golden-utils
-               #:alexandria
-               #:defpackage-plus
-               #:shadow)
+  :depends-on (#:alexandria
+               #:shadow
+               #:varjo)
   :pathname "src"
   :serial t
   :components
-  ((:module "common"
-    :components
-    ((:file "package")
-     (:file "common")
-     (:file "swizzle")
-     (:file "vari")
-     (:file "math")
-     (:file "structs")))
-   (:module "color"
-    :components
-    ((:file "package")
-     (:file "grading")
-     (:file "space")))
-   (:module "graph"
-    :components
-    ((:file "package")
-     (:file "graph")))
-   (:module "shaping"
-    :components
-    ((:file "package")
-     (:file "iq")
-     (:file "levin")
-     (:file "misc")
-     (:file "penner")))
-   (:module "hashing"
-    :components
-    ((:file "package")
-     (:file "bbs")
-     (:file "fast32")
-     (:file "fast32-2")
-     (:file "sgpp")))
-   (:module "noise"
-    :components
-    ((:file "package")
-     (:file "cellular")
-     (:file "hermite")
-     (:file "misc")
-     (:file "perlin")
-     (:file "polkadot")
-     (:file "simplex")
-     (:file "value")))
-   (:module "sdf"
-    :components
-    ((:file "package")
-     (:file "2d")))
-   (:module "sprite"
-    :components
-    ((:file "package")
-     (:file "sprite")
-     (:file "tile-map")))))
+  ((:file "package")
+   (:file "common")
+   (:file "common-swizzle")
+   (:file "common-vari")
+   (:file "common-math")
+   (:file "common-structs")
+   (:file "color-grading")
+   (:file "color-space")
+   (:file "graphing")
+   (:file "shaping-iq")
+   (:file "shaping-levin")
+   (:file "shaping-penner")
+   (:file "shaping-misc")
+   (:file "hashing-bbs")
+   (:file "hashing-fast32")
+   (:file "hashing-fast32-2")
+   (:file "hashing-sgpp")
+   (:file "noise-cellular")
+   (:file "noise-hermite")
+   (:file "noise-perlin")
+   (:file "noise-polkadot")
+   (:file "noise-simplex")
+   (:file "noise-value")
+   (:file "noise-misc")
+   (:file "sdf-2d")
+   (:file "sprite")
+   (:file "effects-window-rain")))

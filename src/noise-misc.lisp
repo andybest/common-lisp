@@ -24,19 +24,22 @@
 
 (define-function cubist ((point :vec2)
                          (range-clamp :vec2))
-  (cubist point range-clamp (lambda ((x :vec2)) (umbra.hash:fast32/3-per-corner x))))
+  (cubist point range-clamp (lambda ((x :vec2))
+                              (umbra.hashing:fast32/3-per-corner x))))
 
 ;;; 3D Cubist noise
 
 (define-function cubist ((point :vec3)
                          (range-clamp :vec2)
-                         (hash-fn (function
-                                   (:vec3)
-                                   (:vec4 :vec4 :vec4 :vec4 :vec4 :vec4 :vec4 :vec4))))
+                         (hash-fn
+                          (function
+                           (:vec3)
+                           (:vec4 :vec4 :vec4 :vec4 :vec4 :vec4 :vec4 :vec4))))
   (mvlet* ((cell (floor point))
            (vec (- point cell))
            (vec-1 (1- vec))
-           (hash-x0 hash-y0 hash-z0 hash0 hash-x1 hash-y1 hash-z1 hash1 (funcall hash-fn cell))
+           (hash-x0 hash-y0 hash-z0 hash0 hash-x1 hash-y1 hash-z1 hash1
+                    (funcall hash-fn cell))
            (grad-x0 (- hash-x0 0.5 +epsilon+))
            (grad-y0 (- hash-y0 0.5 +epsilon+))
            (grad-z0 (- hash-z0 0.5 +epsilon+))
@@ -66,7 +69,8 @@
 
 (define-function cubist ((point :vec3)
                          (range-clamp :vec2))
-  (cubist point range-clamp (lambda ((x :vec3)) (umbra.hash:fast32/4-per-corner x))))
+  (cubist point range-clamp (lambda ((x :vec3))
+                              (umbra.hashing:fast32/4-per-corner x))))
 
 ;;; 2D Stars noise
 
@@ -91,4 +95,4 @@
                         (max-dimness :float)
                         (radius :float))
   (stars point probability-threshold max-dimness radius
-         (lambda ((x :vec2)) (umbra.hash:fast32/cell x))))
+         (lambda ((x :vec2)) (umbra.hashing:fast32/cell x))))

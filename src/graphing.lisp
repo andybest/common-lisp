@@ -1,4 +1,4 @@
-(in-package #:umbra.graph)
+(in-package #:umbra.graphing)
 
 ;;;; Graphing
 ;;;; Credits:

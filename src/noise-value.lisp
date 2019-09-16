@@ -14,7 +14,7 @@
     (dot hash (* (.zxzx blend) (.wwyy blend)))))
 
 (define-function value ((point :vec2))
-  (value point (lambda ((x :vec2)) (umbra.hash:fast32 x))))
+  (value point (lambda ((x :vec2)) (umbra.hashing:fast32 x))))
 
 ;;; 2D Value noise with derivatives
 
@@ -29,7 +29,7 @@
        (* (- (.yyw out) (.xxz out)) (.xzw blend)))))
 
 (define-function value/derivs ((point :vec2))
-  (value/derivs point (lambda ((x :vec2)) (umbra.hash:fast32 x))))
+  (value/derivs point (lambda ((x :vec2)) (umbra.hashing:fast32 x))))
 
 ;;; 3D Value noise
 
@@ -44,7 +44,7 @@
     (dot out (* (.zxzx blend) (.wwyy blend)))))
 
 (define-function value ((point :vec3))
-  (value point (lambda ((x :vec3)) (umbra.hash:fast32 x))))
+  (value point (lambda ((x :vec3)) (umbra.hashing:fast32 x))))
 
 ;;; 3D Value noise with derivatives
 
@@ -65,7 +65,7 @@
           (vec4 (.x blend) (umbra.shaping:quintic-curve/derivative vec))))))
 
 (define-function value/derivs ((point :vec3))
-  (value/derivs point (lambda ((x :vec3)) (umbra.hash:fast32 x))))
+  (value/derivs point (lambda ((x :vec3)) (umbra.hashing:fast32 x))))
 
 ;;; 4D Value noise
 
@@ -76,12 +76,13 @@
            (z0w0 z1w0 z0w1 z1w1 (funcall hash-fn cell))
            (blend (umbra.shaping:quintic-curve vec))
            (temp (+ z0w0 (* (- z0w1 z0w0) (.w blend))))
-           (temp (+ temp (* (- (+ z1w0 (* (- z1w1 z1w0) (.w blend))) temp) (.z blend))))
+           (temp (+ temp (* (- (+ z1w0 (* (- z1w1 z1w0) (.w blend))) temp)
+                            (.z blend))))
            (blend (vec4 (.xy blend) (- 1 (.xy blend)))))
     (dot temp (* (.zxzx blend) (.wwyy blend)))))
 
 (define-function value ((point :vec4))
-  (value point (lambda ((x :vec4)) (umbra.hash:fast32-2 x))))
+  (value point (lambda ((x :vec4)) (umbra.hashing:fast32-2 x))))
 
 ;;; 2D Value Hermite noise
 
@@ -89,7 +90,9 @@
                                 (value-scale :float)
                                 (gradient-scale :float)
                                 (normalization-value :float)
-                                (hash-fn (function (:vec2) (:vec4 :vec4 :vec4))))
+                                (hash-fn
+                                 (function (:vec2)
+                                           (:vec4 :vec4 :vec4))))
   (mvlet* ((cell (floor point))
            (vec (- point cell))
            (hash-x hash-y hash-z (funcall hash-fn cell))
@@ -102,7 +105,8 @@
                  (vec4 (.zw hash-x) (.zw hash-y))
                  (vec4 (.xy hash-z) 0 0)
                  (vec4 (.zw hash-z) 0 0)))
-           (out (* (umbra.shaping:quintic-hermite (.x vec) (.x out) (.y out) (.z out) (.w out))
+           (out (* (umbra.shaping:quintic-hermite
+                    (.x vec) (.x out) (.y out) (.z out) (.w out))
                    normalization-value)))
     (map-domain out -1 1 0 1)))
 
@@ -111,7 +115,7 @@
                                 (gradient-scale :float)
                                 (normalization-value :float))
   (value-hermite point value-scale gradient-scale normalization-value
-                 (lambda ((x :vec2)) (umbra.hash:fast32/3-per-corner x))))
+                 (lambda ((x :vec2)) (umbra.hashing:fast32/3-per-corner x))))
 
 ;;; 3D Value Hermite noise
 
@@ -119,11 +123,14 @@
                                 (value-scale :float)
                                 (gradient-scale :float)
                                 (normalization-value :float)
-                                (hash-fn (function (:vec3) (:vec4 :vec4 :vec4 :vec4
-                                                            :vec4 :vec4 :vec4 :vec4))))
+                                (hash-fn
+                                 (function (:vec3)
+                                           (:vec4 :vec4 :vec4 :vec4
+                                            :vec4 :vec4 :vec4 :vec4))))
   (mvlet* ((cell (floor point))
            (vec (- point cell))
-           (hash-x0 hash-y0 hash-z0 hash-w0 hash-x1 hash-y1 hash-z1 hash-w1 (funcall hash-fn cell))
+           (hash-x0 hash-y0 hash-z0 hash-w0 hash-x1 hash-y1 hash-z1 hash-w1
+                    (funcall hash-fn cell))
            (hash-x0 (* (- hash-x0 0.5) value-scale))
            (hash-y0 (* (- hash-y0 0.5 +epsilon+) gradient-scale))
            (hash-z0 (* (- hash-z0 0.5 +epsilon+) gradient-scale))
@@ -133,15 +140,16 @@
            (hash-z1 (* (- hash-z1 0.5 +epsilon+) gradient-scale))
            (hash-w1 (* (- hash-w1 0.5 +epsilon+) gradient-scale))
            (ival igrad-x igrad-y (umbra.shaping:quintic-hermite
-                                  (.z vec) hash-x0 hash-x1 hash-y0 hash-y1 hash-z0 hash-z1 hash-w0
-                                  hash-w1))
+                                  (.z vec) hash-x0 hash-x1 hash-y0 hash-y1
+                                  hash-z0 hash-z1 hash-w0 hash-w1))
            (out (umbra.shaping:quintic-hermite
                  (.y vec)
                  (vec4 (.xy ival) (.xy igrad-x))
                  (vec4 (.zw ival) (.zw igrad-x))
                  (vec4 (.xy igrad-y) 0 0)
                  (vec4 (.zw igrad-y) 0 0)))
-           (out (* (umbra.shaping:quintic-hermite (.x vec) (.x out) (.y out) (.z out) (.w out))
+           (out (* (umbra.shaping:quintic-hermite
+                    (.x vec) (.x out) (.y out) (.z out) (.w out))
                    normalization-value)))
     (map-domain out -1 1 0 1)))
 
@@ -150,7 +158,7 @@
                                 (gradient-scale :float)
                                 (normalization-value :float))
   (value-hermite point value-scale gradient-scale normalization-value
-                 (lambda ((x :vec3)) (umbra.hash:fast32/4-per-corner x))))
+                 (lambda ((x :vec3)) (umbra.hashing:fast32/4-per-corner x))))
 
 ;;; 2D Value Perlin noise
 
@@ -163,7 +171,8 @@
            (grad-x (- hash-x 0.5 +epsilon+))
            (grad-y (- hash-y 0.5 +epsilon+))
            (grad-results (mix (1- (* hash 2))
-                              (* (inversesqrt (+ (* grad-x grad-x) (* grad-y grad-y)))
+                              (* (inversesqrt (+ (* grad-x grad-x)
+                                                 (* grad-y grad-y)))
                                  (+ (* grad-x (.xzxz vecs))
                                     (* grad-y (.yyww vecs)))
                                  1.4142135)
@@ -175,18 +184,22 @@
 
 (define-function value-perlin ((point :vec2)
                                (blend-value :float))
-  (value-perlin point blend-value (lambda ((x :vec2)) (umbra.hash:fast32/3-per-corner x))))
+  (value-perlin point blend-value (lambda ((x :vec2))
+                                    (umbra.hashing:fast32/3-per-corner x))))
 
 ;;; 3D Value Perlin noise
 
 (define-function value-perlin ((point :vec3)
                                (blend-value :float)
-                               (hash-fn (function (:vec3) (:vec4 :vec4 :vec4 :vec4
-                                                           :vec4 :vec4 :vec4 :vec4))))
+                               (hash-fn
+                                (function (:vec3)
+                                          (:vec4 :vec4 :vec4 :vec4
+                                           :vec4 :vec4 :vec4 :vec4))))
   (mvlet* ((cell (floor point))
            (vec (- point cell))
            (vec-1 (1- vec))
-           (hash0 hash-x0 hash-y0 hash-z0 hash1 hash-x1 hash-y1 hash-z1 (funcall hash-fn cell))
+           (hash0 hash-x0 hash-y0 hash-z0 hash1 hash-x1 hash-y1 hash-z1
+                  (funcall hash-fn cell))
            (grad-x0 (- hash-x0 0.5 +epsilon+))
            (grad-y0 (- hash-y0 0.5 +epsilon+))
            (grad-z0 (- hash-z0 0.5 +epsilon+))
@@ -219,4 +232,5 @@
 
 (define-function value-perlin ((point :vec3)
                                (blend-value :float))
-  (value-perlin point blend-value (lambda ((x :vec3)) (umbra.hash:fast32/4-per-corner x))))
+  (value-perlin point blend-value (lambda ((x :vec3))
+                                    (umbra.hashing:fast32/4-per-corner x))))
