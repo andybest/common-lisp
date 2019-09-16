@@ -23,55 +23,50 @@
             :initform (u:dict #'equal))))
 
 (defun find-program (program-name)
-  (u:href (programs *state*) program-name))
+  (u:href (meta :programs) program-name))
 
 (defun view-source (program-name stage)
   (a:when-let ((program (find-program program-name)))
     (format t "~a" (u:href (source program) stage))))
 
 (defun compile-stages (program)
-  (let ((shaders))
-    (maphash
-     (lambda (k v)
-       (let* ((type (stage-type->shader-type k))
-              (shader (gl:create-shader type)))
-         (gl:shader-source shader v)
-         (gl:compile-shader shader)
-         (push shader shaders)
-         (unless (gl:get-shader shader :compile-status)
-           (error "Failed to compile ~a shader stage:~%~a~%"
-                  type (gl:get-shader-info-log shader)))))
-     (source program))
+  (let (shaders)
+    (u:do-hash (k v (source program))
+      (let* ((type (stage-type->shader-type k))
+             (shader (gl:create-shader type)))
+        (gl:shader-source shader v)
+        (gl:compile-shader shader)
+        (push shader shaders)
+        (unless (gl:get-shader shader :compile-status)
+          (error "Failed to compile ~a shader stage:~%~a~%"
+                 type (gl:get-shader-info-log shader)))))
     shaders))
 
 (defun link-program (shaders)
   (let ((program (gl:create-program)))
-    (if (zerop program)
-        (progn
-          (dolist (shader shaders)
-            (gl:delete-shader shader))
-          (error "Failed to create program: ~a" (gl:get-error)))
-        (progn
-          (dolist (shader shaders)
-            (gl:attach-shader program shader))
-          (without-float-traps
-            (gl:link-program program))
-          (unless (gl:get-program program :link-status)
-            (error "Failed to link shader program: ~a"
-                   (gl:get-program-info-log program)))
-          (dolist (shader shaders)
-            (gl:detach-shader program shader)
-            (gl:delete-shader shader))))
+    (case program
+      (0
+       (dolist (shader shaders)
+         (gl:delete-shader shader))
+       (error "Failed to create program: ~a." (gl:get-error)))
+      (t
+       (dolist (shader shaders)
+         (gl:attach-shader program shader))
+       (gl:link-program program)
+       (unless (gl:get-program program :link-status)
+         (error "Failed to link shader program: ~a."
+                (gl:get-program-info-log program)))
+       (dolist (shader shaders)
+         (gl:detach-shader program shader)
+         (gl:delete-shader shader))))
     program))
 
 (defun build-shader-program (name)
   "Compile the shader stages of NAME, linking them into a program. NAME refers
 to a previously defined shader program using MAKE-SHADER-PROGRAM.
-
 See MAKE-SHADER-PROGRAM"
   (let* ((program (find-program name))
-         (shaders (compile-stages program))
-         (id (link-program shaders)))
+         (id (link-program (compile-stages program))))
     (setf (slot-value program '%id) id)
     (store-attribute-locations program)
     (store-uniforms program)
@@ -80,26 +75,26 @@ See MAKE-SHADER-PROGRAM"
 
 (defun build-shader-dictionary ()
   "Compile all shader programs defined with MAKE-SHADER-PROGRAM.
-
 See MAKE-SHADER-PROGRAM"
-  (a:maphash-keys #'build-shader-program (programs *state*))
-  (programs *state*))
+  (let ((programs (meta :programs)))
+    (a:maphash-keys #'build-shader-program programs)
+    programs))
 
 (defun store-stage-program-dependencies (program)
-  (dolist (stage-spec (stage-specs program))
-    (destructuring-bind (stage-type func-spec) stage-spec
-      (declare (ignore stage-type))
-      (pushnew (name program)
-               (u:href (dependencies *state*)
-                       :stage-fn->programs func-spec)))))
+  (let ((stage-fn->programs (meta :stage-fn->programs)))
+    (dolist (stage-spec (stage-specs program))
+      (destructuring-bind (stage-type func-spec) stage-spec
+        (declare (ignore stage-type))
+        (pushnew (name program) (u:href stage-fn->programs func-spec))))))
 
 (defun translate-program (program)
-  (with-slots (%name %version %primitive %stage-specs) program
+  (with-slots (%name %version %primitive %stage-specs %translated-stages)
+      program
     (let ((stages (translate-stages %version %primitive %stage-specs)))
       (dolist (stage stages)
         (store-source program stage)
         (store-blocks program stage))
-      (setf (slot-value program '%translated-stages) stages))))
+      (setf %translated-stages stages))))
 
 (defun %make-shader-program (name version primitive stage-specs)
   (let ((program (make-instance 'program
@@ -107,7 +102,7 @@ See MAKE-SHADER-PROGRAM"
                                 :version version
                                 :primitive primitive
                                 :stage-specs stage-specs)))
-    (setf (u:href (programs *state*) name) program)
+    (setf (u:href (meta :programs) name) program)
     (translate-program program)
     (store-attributes program)
     (store-uniforms program)
@@ -117,13 +112,11 @@ See MAKE-SHADER-PROGRAM"
 (defmacro define-shader (name (&key (version :430) (primitive :triangles))
                          &body body)
   "Create a new shader program using the stage-specs defined in BODY.
-
 VERSION: The default version shader stages use, and can be overridden on a
 per-function basis.
-
 PRIMITIVE: The drawing primitive to use for the vertex stage."
-  `(progn
-     (setf (u:href (shader-definitions *state*) ',name)
+  `(u:eval-always
+     (setf (u:href (meta :shader-definitions) ',name)
            (lambda ()
              (%make-shader-program ',name ,version ,primitive ',body)))
      (export ',name)))
@@ -140,7 +133,7 @@ PRIMITIVE: The drawing primitive to use for the vertex stage."
 
 (defun set-modify-hook (function)
   "Specify a function to be called when shader programs need to be updated."
-  (setf (modify-hook *state*) function))
+  (setf (meta :modify-hook) function))
 
 (defmacro with-shader (name &body body)
   "Run a body of code which uses (as in glUseProgram) the program identified by

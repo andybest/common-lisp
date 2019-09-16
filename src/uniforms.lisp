@@ -53,13 +53,11 @@
   (let ((id (id program)))
     (gl:use-program id)
     (u:do-hash-values (v (uniforms program))
-      (setf (u:href v :location) (gl:get-uniform-location
-                                  id (u:href v :name))))
+      (setf (u:href v :location) (gl:get-uniform-location id (u:href v :name))))
     (gl:use-program 0)))
 
 (defun get-uniform-location (program-name uniform)
-  (let ((program (find-program program-name)))
-    (u:href (uniforms program) uniform :location)))
+  (u:href (uniforms (find-program program-name)) uniform :location))
 
 (defmacro %uniform-array (location func component-count element-type sequence)
   (a:with-gensyms (count sv)
@@ -128,7 +126,8 @@
 (defun uniform-vec4 (program-name uniform value)
   "Specify a vec4 as the VALUE for the uniform variable, UNIFORM."
   (let ((location (get-uniform-location program-name uniform)))
-    (%gl:uniform-4f location (aref value 0) (aref value 1) (aref value 2) (aref value 3))))
+    (%gl:uniform-4f
+     location (aref value 0) (aref value 1) (aref value 2) (aref value 3))))
 
 (defun uniform-vec4-array (program-name uniform value)
   "Specify an array of vec4's as the VALUE for the uniform variable, UNIFORM."

@@ -40,15 +40,16 @@
 
 (defun create-block-alias (block-type block-id program-name block-alias)
   (let* ((program-name (name (find-program program-name)))
+         (aliases (meta :block-aliases))
          (block (%find-block program-name block-type block-id)))
-    (if (u:href (blocks *state*) :aliases block-alias)
+    (if (u:href aliases block-alias)
         (error "The block alias ~s is already in use." block-alias)
-        (setf (u:href (blocks *state*) :aliases block-alias) block))))
+        (setf (u:href aliases block-alias) block))))
 
 (defun delete-block-alias (block-alias &key unbind-block)
   (when unbind-block
     (unbind-block block-alias))
-  (remhash block-alias (u:href (blocks *state*) :aliases)))
+  (remhash block-alias (meta :block-aliases)))
 
 (defun store-blocks (program stage)
   (dolist (layout (collect-layouts stage))
@@ -61,15 +62,16 @@
       (error "Block ID must be a keyword symbol: ~a" block-id)))
 
 (defun find-block (block-alias)
-  (u:href (blocks *state*) :aliases block-alias))
+  (u:href (meta :block-aliases) block-alias))
 
 (defun block-binding-valid-p (block binding-point)
-  (every
-   (lambda (x)
-     (varjo:v-type-eq
-      (varjo:v-type-of (uniform (layout block)))
-      (varjo:v-type-of (uniform (layout x)))))
-   (u:href (blocks *state*) :bindings (block-type block) binding-point)))
+  (let ((bindings (meta :block-bindings)))
+    (every
+     (lambda (x)
+       (varjo:v-type-eq
+        (varjo:v-type-of (uniform (layout block)))
+        (varjo:v-type-of (uniform (layout x)))))
+     (u:href bindings (block-type block) binding-point))))
 
 (defmethod %bind-block ((block-type (eql :uniform)) block binding-point)
   (let* ((program-id (id (program block)))
@@ -84,12 +86,12 @@
 
 (defun bind-block (block-alias binding-point)
   "Bind a block referenced by BLOCK-ALIAS to a binding point."
-  (let* ((block (find-block block-alias)))
+  (let ((bindings (meta :block-bindings))
+        (block (find-block block-alias)))
     (or (block-binding-valid-p block binding-point)
         (error "Cannot bind a block to a binding point with existing blocks of ~
                 a different layout."))
-    (pushnew block (u:href (blocks *state*)
-                           :bindings (block-type block) binding-point))
+    (pushnew block (u:href bindings (block-type block) binding-point))
     (%bind-block (block-type block) block binding-point)
     (setf (slot-value block '%binding-point) binding-point)))
 
@@ -100,7 +102,8 @@
 (defun rebind-blocks (programs)
   "Rebind all blocks that are members of PROGRAMS."
   (flet ((rebind (block-type)
-           (let ((table (u:href (blocks *state*) :bindings block-type)))
+           (let* ((bindings (meta :block-bindings))
+                  (table (u:href bindings block-type)))
              (u:do-hash-values (blocks table)
                (dolist (block blocks)
                  (with-slots (%program %binding-point) block

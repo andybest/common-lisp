@@ -14,6 +14,5 @@
   (let ((id (id program)))
     (gl:use-program id)
     (u:do-hash-values (v (attributes program))
-      (setf (u:href v :location) (gl:get-attrib-location
-                                  id (u:href v :name))))
+      (setf (u:href v :location) (gl:get-attrib-location id (u:href v :name))))
     (gl:use-program 0)))

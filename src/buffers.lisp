@@ -29,19 +29,20 @@
     (:buffer :ssbo)))
 
 (defun find-buffer (buffer-name)
-  (u:href (buffers *state*) buffer-name))
+  (u:href (meta :buffers) buffer-name))
 
 (defun create-buffer (buffer-name block-alias)
   "Create a buffer of the given TYPE and NAME, using the block BLOCK-ID of
 PROGRAM-NAME."
   (a:if-let ((block (find-block block-alias)))
-    (let* ((type (block-type->buffer-type (block-type block)))
+    (let* ((buffer-table (meta :buffers))
+           (type (block-type->buffer-type (block-type block)))
            (target (buffer-type->target type))
            (buffer (%make-buffer buffer-name target (layout block))))
       (with-slots (%id %layout) buffer
         (%gl:bind-buffer target %id)
         (%gl:buffer-data target (size %layout) (cffi:null-pointer) :static-draw)
-        (setf (u:href (buffers *state*) buffer-name) buffer)))
+        (setf (u:href buffer-table buffer-name) buffer)))
     (error "Cannot find the block with alias ~s when attempting to create a ~
             buffer."
            block-alias)))
@@ -63,7 +64,7 @@ PROGRAM-NAME."
   (let ((buffer (find-buffer buffer-name)))
     (unbind-buffer buffer-name)
     (gl:delete-buffers (list (id buffer)))
-    (remhash buffer-name (buffers *state*))))
+    (remhash buffer-name (meta :buffers))))
 
 (defun %write-buffer-member (target member value)
   (with-slots (%element-type %offset %element-stride %byte-stride) member
@@ -109,13 +110,10 @@ PROGRAM-NAME."
 (defun write-buffer-path (buffer-name path value)
   "Write VALUE to the buffer with the name BUFFER-NAME, starting at the given
 PATH.
-
 PATH: A \"dot-separated\" keyword symbol, where each part denotes a member in
 the buffer's block layout.
-
 VALUE: A value to write, such as a scalar or matrix depending on the type of the
 member PATH refers to. To write to an array, use a sequence of values.
-
 Note: Writing to arrays which contain other aggregate types (other arrays or
 structures) is not possible. This is a design decision to allow this library to
 have a simple \"path-based\" buffer writing interface."
@@ -137,7 +135,7 @@ have a simple \"path-based\" buffer writing interface."
 (defun %read-buffer-member/vector (member data count)
   (with-slots (%dimensions %element-stride) member
     (let* ((size (car %dimensions))
-           (func (a:format-symbol :origin "VEC~a" size)))
+           (func (intern "VEC" (a:format-symbol :keyword "ORIGIN.VEC~d" size))))
       (flet ((make-vector (data index size)
                (let ((args (loop :for i :below size
                                  :collect (aref data (+ index i)))))
@@ -151,7 +149,8 @@ have a simple \"path-based\" buffer writing interface."
 (defun %read-buffer-member/matrix (member data count)
   (with-slots (%dimensions %element-stride) member
     (destructuring-bind (columns rows) %dimensions
-      (let ((func (a:format-symbol :origin "MAT~d" columns)))
+      (let ((func (intern "MAT"
+                          (a:format-symbol :keyword "ORIGIN.MAT~d" columns))))
         (flet ((make-matrix (data index)
                  (let ((args (loop :repeat columns
                                    :for i :from index :by %element-stride
@@ -167,7 +166,7 @@ have a simple \"path-based\" buffer writing interface."
                   (loop :for i :below count
                         :for index = (* columns %element-stride i)
                         :collect (make-matrix data index)))
-              (error "Only 2x2, 3x3, and 4x4.")))))))
+              (error "Only square matrices are supported.")))))))
 
 (defun %read-buffer-member (target member &optional count)
   (with-slots (%type %dimensions %count %element-stride %element-type %offset

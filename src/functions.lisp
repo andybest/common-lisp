@@ -16,8 +16,8 @@
   (setf (u:href fn-deps spec) (u:dict #'equal)))
 
 (defun store-function-dependencies (spec dependencies)
-  (symbol-macrolet ((fn-deps (u:href (dependencies *state*) :fn->deps))
-                    (dep-fns (u:href (dependencies *state*) :dep->fns)))
+  (symbol-macrolet ((fn-deps (meta :fn->deps))
+                    (dep-fns (meta :dep->fns)))
     (when (u:href fn-deps spec)
       (u:do-hash-keys (k (u:href fn-deps spec))
         (u:when-found (dep-key (u:href dep-fns k))
@@ -34,14 +34,13 @@
               (u:href dep-fns dep-spec spec) spec)))))
 
 (defun compute-outdated-programs (spec)
-  (let ((programs)
-        (spec-fns (u:href (dependencies *state*) :dep->fns spec)))
-    (maphash
-     (lambda (k v)
-       (when (or (u:href spec-fns k)
-                 (equal k spec))
-         (setf programs (union v programs :test #'equal))))
-     (u:href (dependencies *state*) :stage-fn->programs))
+  (let* ((dep->fns (meta :dep->fns))
+         (spec-fns (u:href dep->fns spec))
+         (programs))
+    (u:do-hash (k v (meta :stage-fn->programs))
+      (when (or (u:href spec-fns k)
+                (equal k spec))
+        (setf programs (union v programs :test #'equal))))
     programs))
 
 (defmacro define-function (name args &body body)
@@ -54,14 +53,14 @@
              (let* ((,fn (varjo:add-external-function
                           ',name ',in-args ',uniforms ',body))
                     (,spec (get-function-spec ,fn)))
-               (when (track-dependencies-p *state*)
+               (when (meta :track-dependencies-p)
                  (let* ((,split-details
                           (varjo:test-translate-function-split-details
                            ',name ',in-args ',uniforms ',context ',body))
                         (,deps (varjo:used-external-functions
                                 (first ,split-details))))
                    (store-function-dependencies ,spec ,deps)
-                   (funcall (modify-hook *state*)
+                   (funcall (meta :modify-hook)
                             (compute-outdated-programs ,spec))))
                ,fn))
            (export ',name))))))

@@ -7,13 +7,13 @@
   :source-control (:git "git@github.com:mfiano/shadow.git")
   :bug-tracker "https://github.com/mfiano/shadow/issues"
   :encoding :utf-8
-  :depends-on (#:static-vectors
-               #:glsl-packing
-               #:varjo
+  :depends-on (#:alexandria
                #:cl-opengl
+               #:glsl-packing
                #:golden-utils
-               #:alexandria
-               #:origin)
+               #:origin
+               #:static-vectors
+               #:varjo)
   :pathname "src"
   :serial t
   :components

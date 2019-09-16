@@ -1,38 +1,24 @@
 (in-package #:shadow)
 
-(defclass state ()
-  ((%shader-definitions :reader shader-definitions
-                        :initform (u:dict))
-   (%programs :reader programs
-              :initform (u:dict))
-   (%blocks :reader blocks
-            :initform (u:dict :bindings (u:dict :uniform (u:dict)
-                                                :buffer (u:dict))
-                              :aliases (u:dict #'equalp)))
-   (%track-dependencies-p :reader track-dependencies-p
-                          :initform nil)
-   (%dependencies :reader dependencies
-                  :initform (u:dict :fn->deps (u:dict #'equal)
-                                    :dep->fns (u:dict #'equal)
-                                    :stage-fn->programs (u:dict #'equal)))
-   (%modify-hook :accessor modify-hook
-                 :initform (constantly nil))
-   (%buffers :reader buffers
-             :initform (u:dict))))
+(defvar *metadata* (u:dict))
 
-(defvar *state* (make-instance 'state))
+(defun meta (key)
+  (u:href *metadata* key))
+
+(defun (setf meta) (value key)
+  (setf (u:href *metadata* key) value))
 
 (defun reset-program-state ()
-  (clrhash (u:href (blocks *state*) :bindings :uniform))
-  (clrhash (u:href (blocks *state*) :bindings :buffer))
-  (clrhash (u:href (blocks *state*) :aliases))
-  (clrhash (buffers *state*)))
+  (setf (meta :programs) (u:dict)
+        (meta :block-bindings) (u:dict :uniform (u:dict) :buffer (u:dict))
+        (meta :block-aliases) (u:dict #'equalp)
+        (meta :buffers) (u:dict)))
 
 (defun enable-dependency-tracking ()
-  (setf (slot-value *state* '%track-dependencies-p) t))
+  (setf (meta :track-dependencies-p) t))
 
 (defun disable-dependency-tracking ()
-  (setf (slot-value *state* '%track-dependencies-p) nil))
+  (setf (meta :track-dependencies-p) nil))
 
 (defun store-source (program stage)
   (let ((source (varjo:glsl-code stage)))
@@ -43,7 +29,7 @@
 
 (defun load-shaders (modify-hook)
   (reset-program-state)
-  (u:do-hash-values (shader-factory (shader-definitions *state*))
+  (u:do-hash-values (shader-factory (meta :shader-definitions))
     (funcall shader-factory))
   (enable-dependency-tracking)
   (set-modify-hook modify-hook)
@@ -66,3 +52,12 @@
 (defmacro define-macro (name lambda-list &body body)
   "Define a GPU macro."
   `(varjo:define-vari-macro ,name ,lambda-list ,@body))
+
+(setf (meta :track-dependencies-p) nil
+      (meta :fn->deps) (u:dict #'equal)
+      (meta :dep->fns) (u:dict #'equal)
+      (meta :stage-fn->programs) (u:dict #'equal)
+      (meta :modify-hook) (constantly nil)
+      (meta :shader-definitions) (u:dict))
+
+(reset-program-state)
