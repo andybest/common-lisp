@@ -25,6 +25,9 @@
 (defun find-program (program-name)
   (u:href (meta :programs) program-name))
 
+(defun get-program-id (program-name)
+  (id (find-program program-name)))
+
 (defun view-source (program-name stage)
   (a:when-let ((program (find-program program-name)))
     (format t "~a" (u:href (source program) stage))))

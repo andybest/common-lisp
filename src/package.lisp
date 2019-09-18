@@ -15,6 +15,7 @@
    #:with-shader
    #:view-source
    #:find-program
+   #:get-program-id
    #:create-block-alias
    #:find-block
    #:bind-block
