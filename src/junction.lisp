@@ -8,7 +8,7 @@
 (defun make-connector (kernel)
   (let ((cell (select kernel 0 0))
         (regions (remove 0 (kernel-map kernel #'cell-region))))
-    (add-feature cell +connector+)
+    (add-feature cell :connector)
     (push cell (u:href (state-connections *state*) regions))))
 
 (defun connect-regions (stage)
@@ -31,18 +31,15 @@
     (graph/graph:minimum-spanning-tree graph graph)))
 
 (defun adjacent-junction-p (kernel)
-  (kernel-detect kernel (lambda (x)
-                          (or (has-feature-p x +junction+)
-                              (has-feature-p x +door/horizontal+)
-                              (has-feature-p x +door/vertical+)))))
+  (kernel-detect kernel (lambda (x) (feature-intersect x :junction :door))))
 
 (defun generate-junction-feature (stage)
   (if (random-boolean (state-rng *state*) (stage-door-rate stage))
-      +none+
-      +junction+))
+      :door
+      :junction))
 
 (defun remove-connectors (kernel)
-  (kernel-map kernel (lambda (x) (remove-feature x +connector+))))
+  (kernel-map kernel (lambda (x) (remove-feature x :connector))))
 
 (defun maybe-make-junction (stage cell)
   (let ((kernel (cell->kernel stage cell (layout :orthogonal))))
@@ -50,9 +47,9 @@
       (carve cell (generate-junction-feature stage))
       (remove-connectors kernel)
       (cond ((cell-regions-distinct-p (select kernel 0 1) (select kernel 0 -1))
-             (add-feature cell +door/horizontal+))
+             (add-feature cell :door/horizontal))
             ((cell-regions-distinct-p (select kernel 1 0) (select kernel -1 0))
-             (add-feature cell +door/vertical+))))))
+             (add-feature cell :door/vertical))))))
 
 (defun get-random-edge-connector (edge)
   (random-element (state-rng *state*)

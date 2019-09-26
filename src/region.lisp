@@ -12,9 +12,7 @@
     (setf (u:href regions region cell) cell
           (cell-region cell) region)))
 
-(defun cell-regions-distinct-p (cell1 cell2)
-  (let ((region1 (cell-region cell1))
-        (region2 (cell-region cell2)))
-    (and (plusp region1)
-         (plusp region2)
-         (/= region1 region2))))
+(defun cell-regions-distinct-p (&rest cells)
+  (let ((regions (remove 0 (mapcar #'cell-region cells))))
+    (and (> (length regions) 1)
+         (apply #'/= regions))))

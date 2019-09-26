@@ -18,4 +18,5 @@
            #:region
            #:carved-p
            #:features
-           #:has-feature-p))
+           #:has-feature-p
+           #:feature-intersect))

@@ -22,7 +22,7 @@
   (let ((origin (select kernel 0 0)))
     (a:if-let ((choice (choose-corridor-direction kernel)))
       (loop :for cell :in choice
-            :do (carve cell +corridor+)
+            :do (carve cell :corridor)
             :finally (return (push cell cells)))
       (progn
         (push origin (state-dead-ends *state*))
@@ -33,7 +33,7 @@
         (origin (select kernel 0 0))
         (layout (layout :orthogonal :max-x 2 :max-y 2)))
     (make-region)
-    (carve origin +corridor+)
+    (carve origin :corridor)
     (labels ((recurse (cells)
                (when cells
                  (let* ((cell (choose-corridor-cell stage cells))
