@@ -6,12 +6,10 @@
   (:use #:cl)
   (:export #:make-stage
            #:make-seed
-           #:options
-           #:stage-options->plist
-           #:width
-           #:height
-           #:seed
-           #:grid
+           #:stage-width
+           #:stage-height
+           #:stage-seed
+           #:stage-grid
            #:x
            #:y
            #:get-cell
