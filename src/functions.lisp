@@ -42,25 +42,3 @@
                 (equal k spec))
         (setf programs (union v programs :test #'equal))))
     programs))
-
-(defmacro define-function (name args &body body)
-  "Define a GPU function."
-  (a:with-gensyms (split-details deps fn spec)
-    (let ((split-args (varjo.utils:split-arguments args '(&uniform &context))))
-      (destructuring-bind (in-args uniforms context) split-args
-        `(varjo:with-constant-inject-hook #'lisp-constant->glsl-constant
-           (varjo:with-stemcell-infer-hook #'lisp-symbol->glsl-type
-             (let* ((,fn (varjo:add-external-function
-                          ',name ',in-args ',uniforms ',body))
-                    (,spec (get-function-spec ,fn)))
-               (when (meta :track-dependencies-p)
-                 (let* ((,split-details
-                          (varjo:test-translate-function-split-details
-                           ',name ',in-args ',uniforms ',context ',body))
-                        (,deps (varjo:used-external-functions
-                                (first ,split-details))))
-                   (store-function-dependencies ,spec ,deps)
-                   (funcall (meta :modify-hook)
-                            (compute-outdated-programs ,spec))))
-               ,fn))
-           (export ',name))))))

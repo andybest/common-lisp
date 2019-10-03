@@ -45,14 +45,6 @@
     (build-shader-programs programs-list)
     (rebind-blocks programs-list)))
 
-(defmacro define-struct (name &body slots)
-  "Define a GPU structure."
-  `(varjo:define-vari-struct ,name () ,@slots))
-
-(defmacro define-macro (name lambda-list &body body)
-  "Define a GPU macro."
-  `(varjo:define-vari-macro ,name ,lambda-list ,@body))
-
 (setf (meta :track-dependencies-p) nil
       (meta :fn->deps) (u:dict #'equal)
       (meta :dep->fns) (u:dict #'equal)
