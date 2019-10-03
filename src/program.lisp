@@ -112,18 +112,6 @@ See MAKE-SHADER-PROGRAM"
     (store-stage-program-dependencies program)
     program))
 
-(defmacro define-shader (name (&key (version :430) (primitive :triangles))
-                         &body body)
-  "Create a new shader program using the stage-specs defined in BODY.
-VERSION: The default version shader stages use, and can be overridden on a
-per-function basis.
-PRIMITIVE: The drawing primitive to use for the vertex stage."
-  `(u:eval-always
-     (setf (u:href (meta :shader-definitions) ',name)
-           (lambda ()
-             (%make-shader-program ',name ,version ,primitive ',body)))
-     (export ',name)))
-
 (defun translate-shader-programs (program-list)
   "Re-translate a collection of shader programs."
   (dolist (program-name program-list)

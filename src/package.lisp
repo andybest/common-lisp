@@ -5,9 +5,9 @@
                     (#:u #:golden-utils))
   (:use #:cl)
   (:export
-   #:define-function
-   #:define-struct
-   #:define-macro
+   #:defun
+   #:defstruct
+   #:defmacro
    #:define-shader
    #:load-shaders
    #:unload-shaders
@@ -47,3 +47,30 @@
    #:uniform-mat3-array
    #:uniform-mat4
    #:uniform-mat4-array))
+
+(defpackage #:shadow.glsl
+  (:local-nicknames (#:a #:alexandria)
+                    (#:u #:golden-utils))
+  (:use #:cl #:vari)
+  (:shadow
+   #:defun
+   #:defstruct
+   #:defmacro)
+  ;; export external CL and VARI symbols
+  #.(cons
+     :export
+     (flet ((find-symbols (&rest packages)
+              (let (symbols)
+                (dolist (package packages)
+                  (do-external-symbols (x package)
+                    (push x symbols)))
+                (nreverse symbols))))
+       (loop :for symbol :in (find-symbols '#:cl '#:vari)
+             :unless (member (symbol-name symbol)
+                             '("DEFUN" "DEFSTRUCT" "DEFMACRO"))
+               :collect symbol)))
+  (:export
+   #:defun
+   #:defstruct
+   #:defmacro
+   #:define-shader))
