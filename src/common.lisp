@@ -1,15 +1,15 @@
 (in-package #:umbra.common)
 
-(define-macro mvlet* ((&rest binds) &body body)
-  (cond
-    ((null binds)
-     `(progn ,@body))
-    ((listp (car binds))
-     (case (length (car binds))
-       (0 (error "Need at least one var in a binding list"))
-       ((1 2) `(let (,(car binds)) (mvlet* (,@(cdr binds)) ,@body)))
-       (t `(multiple-value-bind ,(butlast (car binds)) ,(car (last (car binds)))
-             (mvlet* (,@(cdr binds)) ,@body)))))
-    ((symbolp (car binds))
-     `(let (,(car binds))
-        (mvlet* (,@(cdr binds)) ,@body)))))
+(defmacro mvlet* ((&rest bindings) &body body)
+  (destructuring-bind (&optional car . cdr) bindings
+    (typecase car
+      (null
+       `(progn ,@body))
+      (list
+       (case (length car)
+         (0 (error "Missing variable in binding list."))
+         ((1 2) `(let (,car) (mvlet* ,cdr ,@body)))
+         (t `(multiple-value-bind ,(butlast car) ,(car (last car))
+               (mvlet* ,cdr ,@body)))))
+      (symbol
+       `(mvlet* ,cdr ,@body)))))

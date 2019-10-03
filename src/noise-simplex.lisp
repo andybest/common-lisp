@@ -3,25 +3,33 @@
 ;;;; Simplex noise
 
 (defconstant +simplex-2d/skew-factor+ (* 0.5 (1- (sqrt 3))))
+
 (defconstant +simplex-2d/unskew-factor+ (/ (- 3 (sqrt 3)) 6))
+
 (defconstant +simplex-2d/triangle-height+ (sqrt 0.5))
+
 (defconstant +simplex-2d/inverse-triangle-height+ (sqrt (/ 0.5)))
-(defconstant +simplex-2d/inverse-triangle-half-edge-length+ (/ (sqrt 0.75)
-                                                               (sqrt 0.125)))
-(defconstant +simplex-2d/norm-factor+ (/ (* 0.4082483
-                                            (expt (- 0.5 (expt 0.4082483 2)) 4)
-                                            2)))
+
+(defconstant +simplex-2d/inverse-triangle-half-edge-length+
+  (/ (sqrt 0.75) (sqrt 0.125)))
+
+(defconstant +simplex-2d/norm-factor+
+  (/ (* 0.4082483 (expt (- 0.5 (expt 0.4082483 2)) 4) 2)))
 
 (defconstant +simplex-3d/skew-factor+ (/ 3.0))
-(defconstant +simplex-3d/unskew-factor+ (/ 6.0))
-(defconstant +simplex-3d/pyramid-height+ (sqrt 0.5))
-(defconstant +simplex-3d/inverse-pyramid-height+ (sqrt (/ 0.5)))
-(defconstant +simplex-3d/inverse-triangle-half-edge-length+ (/ 2 (sqrt 0.75)))
-(defconstant +simplex-3d/norm-factor+ (/ (* 0.4330127
-                                            (expt (- 0.5 (expt 0.4330127 2)) 3)
-                                            2)))
 
-(define-function simplex/get-corner-vectors ((point :vec3))
+(defconstant +simplex-3d/unskew-factor+ (/ 6.0))
+
+(defconstant +simplex-3d/pyramid-height+ (sqrt 0.5))
+
+(defconstant +simplex-3d/inverse-pyramid-height+ (sqrt (/ 0.5)))
+
+(defconstant +simplex-3d/inverse-triangle-half-edge-length+ (/ 2 (sqrt 0.75)))
+
+(defconstant +simplex-3d/norm-factor+
+  (/ (* 0.4330127 (expt (- 0.5 (expt 0.4330127 2)) 3) 2)))
+
+(defun simplex/get-corner-vectors ((point :vec3))
   (let* ((point (* point +simplex-3d/pyramid-height+))
          (cell1 (floor (+ point (dot point (vec3 +simplex-3d/skew-factor+)))))
          (x0 (+ (- point cell1) (dot cell1 (vec3 +simplex-3d/unskew-factor+))))
@@ -37,9 +45,9 @@
          (v1234-z (vec4 (.z x0) (.z x1) (.z x2) (.z x3))))
     (values cell1 cell2 cell3 v1234-x v1234-y v1234-z)))
 
-(define-function simplex/get-surflet-weights ((v1234-x :vec4)
-                                              (v1234-y :vec4)
-                                              (v1234-z :vec4))
+(defun simplex/get-surflet-weights ((v1234-x :vec4)
+                                    (v1234-y :vec4)
+                                    (v1234-z :vec4))
   (let* ((surflet-weights (+ (* v1234-x v1234-x)
                              (* v1234-y v1234-y)
                              (* v1234-z v1234-z)))
@@ -48,8 +56,8 @@
 
 ;;; 2D Simplex Perlin noise
 
-(define-function simplex-perlin ((point :vec2)
-                                 (hash-fn (function (:vec2) (:vec4 :vec4))))
+(defun simplex-perlin ((point :vec2)
+                       (hash-fn (function (:vec2) (:vec4 :vec4))))
   (mvlet* ((simplex-points (vec3 (- 1 +simplex-2d/unskew-factor+)
                                  (- +simplex-2d/unskew-factor+)
                                  (- 1 (* 2 +simplex-2d/unskew-factor+))))
@@ -82,16 +90,16 @@
                    +simplex-2d/norm-factor+)))
     (map-domain out -1 1 0 1)))
 
-(define-function simplex-perlin ((point :vec2))
+(defun simplex-perlin ((point :vec2))
   (simplex-perlin point (lambda ((x :vec2))
                           (umbra.hashing:fast32/2-per-corner x))))
 
 ;;; 2D Simplex Perlin noise with derivatives
 
-(define-function simplex-perlin/derivs ((point :vec2)
-                                        (hash-fn
-                                         (function (:vec2)
-                                                   (:vec4 :vec4))))
+(defun simplex-perlin/derivs ((point :vec2)
+                              (hash-fn
+                               (function (:vec2)
+                                (:vec4 :vec4))))
   (mvlet* ((simplex-points (vec3 (- 1 +simplex-2d/unskew-factor+)
                                  (- +simplex-2d/unskew-factor+)
                                  (- 1 (* 2 +simplex-2d/unskew-factor+))))
@@ -133,17 +141,17 @@
                       49.60217)))
     (vec3 noise derivs)))
 
-(define-function simplex-perlin/derivs ((point :vec2))
+(defun simplex-perlin/derivs ((point :vec2))
   (simplex-perlin/derivs point
                          (lambda ((x :vec2))
                            (umbra.hashing:fast32/2-per-corner x))))
 
 ;;; 3D Simplex Perlin noise
 
-(define-function simplex-perlin ((point :vec3)
-                                 (hash-fn
-                                  (function (:vec3 :vec3 :vec3)
-                                            (:vec4 :vec4 :vec4))))
+(defun simplex-perlin ((point :vec3)
+                       (hash-fn
+                        (function (:vec3 :vec3 :vec3)
+                         (:vec4 :vec4 :vec4))))
   (mvlet* ((cell1 cell2 cell3 corners-x corners-y corners-z
                   (simplex/get-corner-vectors point))
            (hash0 hash1 hash2 (funcall hash-fn cell1 cell2 cell3))
@@ -161,16 +169,16 @@
                    +simplex-3d/norm-factor+)))
     (map-domain out -1 1 0 1)))
 
-(define-function simplex-perlin ((point :vec3))
+(defun simplex-perlin ((point :vec3))
   (simplex-perlin point (lambda ((x :vec3) (y :vec3) (z :vec3))
                           (umbra.hashing:fast32/3-per-corner x y z))))
 
 ;;; 3D Simplex Perlin noise with derivatives
 
-(define-function simplex-perlin/derivs ((point :vec3)
-                                        (hash-fn (function
-                                                  (:vec3 :vec3 :vec3)
-                                                  (:vec4 :vec4 :vec4))))
+(defun simplex-perlin/derivs ((point :vec3)
+                              (hash-fn (function
+                                        (:vec3 :vec3 :vec3)
+                                        (:vec4 :vec4 :vec4))))
   (mvlet* ((cell1 cell2 cell3 corners-x corners-y corners-z
                   (simplex/get-corner-vectors point))
            (hash0 hash1 hash2 (funcall hash-fn cell1 cell2 cell3))
@@ -201,14 +209,14 @@
                       18.918613)))
     (vec4 noise derivs)))
 
-(define-function simplex-perlin/derivs ((point :vec3))
+(defun simplex-perlin/derivs ((point :vec3))
   (simplex-perlin/derivs point (lambda ((x :vec3) (y :vec3) (z :vec3))
                                  (umbra.hashing:fast32/3-per-corner x y z))))
 
 ;;; 2D Simplex Cellular noise
 
-(define-function simplex-cellular ((point :vec2)
-                                   (hash-fn (function (:vec2) (:vec4 :vec4))))
+(defun simplex-cellular ((point :vec2)
+                         (hash-fn (function (:vec2) (:vec4 :vec4))))
   (mvlet* ((jitter-window (* 0.105662435 +simplex-2d/inverse-triangle-height+))
            (simplex-points (* (vec3 (- 1 +simplex-2d/unskew-factor+)
                                     (- +simplex-2d/unskew-factor+)
@@ -229,17 +237,17 @@
            (temp (min (.xy dist-sq) (.zw dist-sq))))
     (min (.x temp) (.y temp))))
 
-(define-function simplex-cellular ((point :vec2))
+(defun simplex-cellular ((point :vec2))
   (simplex-cellular point
                     (lambda ((x :vec2))
                       (umbra.hashing:fast32/2-per-corner x))))
 
 ;;; 3D Simplex Cellular noise
 
-(define-function simplex-cellular ((point :vec3)
-                                   (hash-fn
-                                    (function (:vec3 :vec3 :vec3)
-                                              (:vec4 :vec4 :vec4))))
+(defun simplex-cellular ((point :vec3)
+                         (hash-fn
+                          (function (:vec3 :vec3 :vec3)
+                           (:vec4 :vec4 :vec4))))
   (mvlet* ((cell1 cell2 cell3 corners-x corners-y corners-z
                   (simplex/get-corner-vectors point))
            (hash-x hash-y hash-z (funcall hash-fn cell1 cell2 cell3))
@@ -259,17 +267,17 @@
     (min (min (.x dist-sq) (.y dist-sq))
          (min (.z dist-sq) (.w dist-sq)))))
 
-(define-function simplex-cellular ((point :vec3))
+(defun simplex-cellular ((point :vec3))
   (simplex-cellular point
                     (lambda ((x :vec3) (y :vec3) (z :vec3))
                       (umbra.hashing:fast32/3-per-corner x y z))))
 
 ;;; 2D Simplex Polka-dot noise
 
-(define-function simplex-polkadot ((point :vec2)
-                                   (radius :float)
-                                   (max-dimness :float)
-                                   (hash-fn (function (:vec2) :vec4)))
+(defun simplex-polkadot ((point :vec2)
+                         (radius :float)
+                         (max-dimness :float)
+                         (hash-fn (function (:vec2) :vec4)))
   (let* ((simplex-points (vec3 (- 1 +simplex-2d/unskew-factor+)
                                (- +simplex-2d/unskew-factor+)
                                (- 1 (* +simplex-2d/unskew-factor+ 2))))
@@ -284,20 +292,20 @@
                                                (* corners-y corners-y))))))
     (dot (- 1 (* hash max-dimness)) (expt point-distance (vec4 3)))))
 
-(define-function simplex-polkadot ((point :vec2)
-                                   (radius :float)
-                                   (max-dimness :float))
+(defun simplex-polkadot ((point :vec2)
+                         (radius :float)
+                         (max-dimness :float))
   (simplex-polkadot point radius max-dimness (lambda ((x :vec2))
                                                (umbra.hashing:fast32 x))))
 
 ;;; 3D Simplex Polka-dot noise
 
-(define-function simplex-polkadot ((point :vec3)
-                                   (radius :float)
-                                   (max-dimness :float)
-                                   (hash-fn
-                                    (function (:vec3 :vec3 :vec3)
-                                              :vec4)))
+(defun simplex-polkadot ((point :vec3)
+                         (radius :float)
+                         (max-dimness :float)
+                         (hash-fn
+                          (function (:vec3 :vec3 :vec3)
+                           :vec4)))
   (mvlet* ((cell1 cell2 cell3 corners-x corners-y corners-z
                   (simplex/get-corner-vectors point))
            (hash (funcall hash-fn cell1 cell2 cell3))
@@ -311,9 +319,9 @@
     (setf point-distance (* point-distance point-distance point-distance))
     (dot (- 1 (* hash max-dimness)) point-distance)))
 
-(define-function simplex-polkadot ((point :vec3)
-                                   (radius :float)
-                                   (max-dimness :float))
+(defun simplex-polkadot ((point :vec3)
+                         (radius :float)
+                         (max-dimness :float))
   (simplex-polkadot point radius max-dimness
                     (lambda ((x :vec3) (y :vec3) (z :vec3))
                       (umbra.hashing:fast32 x y z))))

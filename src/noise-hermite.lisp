@@ -4,8 +4,8 @@
 
 ;;; 2D Hermite noise
 
-(define-function hermite ((point :vec2)
-                          (hash-fn (function (:vec2) (:vec4 :vec4))))
+(defun hermite ((point :vec2)
+                (hash-fn (function (:vec2) (:vec4 :vec4))))
   (mvlet* ((cell (floor point))
            (vec (- point cell))
            (hash-x hash-y (funcall hash-fn cell))
@@ -21,13 +21,13 @@
                    2.2627418)))
     (map-domain out -1 1 0 1)))
 
-(define-function hermite ((point :vec2))
+(defun hermite ((point :vec2))
   (hermite point (lambda ((x :vec2)) (umbra.hashing:fast32/2-per-corner x))))
 
 ;;; 2D Hermite noise with derivatives
 
-(define-function hermite/derivs ((point :vec2)
-                                 (hash-fn (function (:vec2) (:vec4 :vec4))))
+(defun hermite/derivs ((point :vec2)
+                       (hash-fn (function (:vec2) (:vec4 :vec4))))
   (mvlet* ((cell (floor point))
            (vec (- point cell))
            (hash-x hash-y (funcall hash-fn cell))
@@ -54,17 +54,17 @@
                       1.1313709)))
     (vec3 noise derivs)))
 
-(define-function hermite/derivs ((point :vec2))
+(defun hermite/derivs ((point :vec2))
   (hermite/derivs point
                   (lambda ((x :vec2))
                     (umbra.hashing:fast32/2-per-corner x))))
 
 ;;; 3D Hermite noise
 
-(define-function hermite ((point :vec3)
-                          (hash-fn
-                           (function (:vec3)
-                                     (:vec4 :vec4 :vec4 :vec4 :vec4 :vec4))))
+(defun hermite ((point :vec3)
+                (hash-fn
+                 (function (:vec3)
+                  (:vec4 :vec4 :vec4 :vec4 :vec4 :vec4))))
   (mvlet* ((cell (floor point))
            (vec (- point cell))
            (hash-x0 hash-y0 hash-z0 hash-x1 hash-y1 hash-z1
@@ -99,16 +99,16 @@
                    1.8475208)))
     (map-domain out -1 1 0 1)))
 
-(define-function hermite ((point :vec3))
+(defun hermite ((point :vec3))
   (hermite point (lambda ((x :vec3)) (umbra.hashing:fast32/3-per-corner x))))
 
 ;;; 3D Hermite noise with derivatives
 
-(define-function hermite/derivs ((point :vec3)
-                                 (hash-fn
-                                  (function
-                                   (:vec3)
-                                   (:vec4 :vec4 :vec4 :vec4 :vec4 :vec4))))
+(defun hermite/derivs ((point :vec3)
+                       (hash-fn
+                        (function
+                         (:vec3)
+                         (:vec4 :vec4 :vec4 :vec4 :vec4 :vec4))))
   (mvlet* ((cell (floor point))
            (vec (- point cell))
            (hash-x0 hash-y0 hash-z0 hash-x1 hash-y1 hash-z1
@@ -173,7 +173,7 @@
                       0.92376035)))
     (vec4 noise derivs)))
 
-(define-function hermite/derivs ((point :vec3))
+(defun hermite/derivs ((point :vec3))
   (hermite/derivs point
                   (lambda ((x :vec3))
                     (umbra.hashing:fast32/3-per-corner x))))
