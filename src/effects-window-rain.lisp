@@ -1,9 +1,9 @@
 (in-package #:umbra.effects)
 
-(define-function window-rain/hash ((n :float))
+(defun window-rain/hash ((n :float))
   (fract (* (sin (* n 51384.508)) 6579.492)))
 
-(define-function window-rain/hash-1-3 ((n :float))
+(defun window-rain/hash-1-3 ((n :float))
   (let* ((n (fract (* (vec3 n) (vec3 0.1031 0.11369 0.13787))))
          (n (+ n (dot n (+ (.yzx n) 19.19)))))
     (fract
@@ -11,8 +11,8 @@
            (* (+ (.x n) (.z n)) (.y n))
            (* (+ (.y n) (.z n)) (.x n))))))
 
-(define-function window-rain/drop-layer-1 ((uv :vec2)
-                                           (time :float))
+(defun window-rain/drop-layer-1 ((uv :vec2)
+                                 (time :float))
   (let* ((uv (* uv 30.0))
          (id (floor uv))
          (uv (- (fract uv) 0.5))
@@ -26,8 +26,8 @@
        (fract (* (.z n) 10))
        fade)))
 
-(define-function window-rain/drop-layer-2-3 ((uv :vec2)
-                                             (time :float))
+(defun window-rain/drop-layer-2-3 ((uv :vec2)
+                                   (time :float))
   (let* ((uv2 uv)
          (uv (+ uv (vec2 0 (* time 0.85))))
          (a (vec2 6 1))
@@ -63,11 +63,11 @@
          (droplets (smoothstep 0.3 0 (length (- st (vec2 x y))))))
     (vec2 (+ (* droplets r trail-front) drop) trail)))
 
-(define-function window-rain/drops ((uv :vec2)
-                                    (time :float)
-                                    (layer1 :float)
-                                    (layer2 :float)
-                                    (layer3 :float))
+(defun window-rain/drops ((uv :vec2)
+                          (time :float)
+                          (layer1 :float)
+                          (layer2 :float)
+                          (layer3 :float))
   (let* ((s (* (window-rain/drop-layer-1 uv time) layer1))
          (m1 (* (window-rain/drop-layer-2-3 uv time) layer2))
          (m2 (* (window-rain/drop-layer-2-3 (* uv 1.85) time) layer3))
@@ -75,21 +75,21 @@
          (c (smoothstep 0.3 1.0 c)))
     (vec2 c (max (* (.y m1) layer1) (* (.y m2) layer2)))))
 
-(define-function window-rain/v ((mesh-attrs mesh-attrs)
-                                &uniform
-                                (model :mat4)
-                                (view :mat4)
-                                (proj :mat4))
+(defun window-rain/v ((mesh-attrs mesh-attrs)
+                      &uniforms
+                      (model :mat4)
+                      (view :mat4)
+                      (proj :mat4))
   (with-slots (mesh/pos) mesh-attrs
     (* proj view model (vec4 mesh/pos 1))))
 
-(define-function window-rain/f (&uniform
-                                (time :float)
-                                (res :vec2)
-                                (blur :float)
-                                (speed :float)
-                                (zoom :float)
-                                (sampler :sampler-2d))
+(defun window-rain/f (&uniforms
+                      (time :float)
+                      (res :vec2)
+                      (blur :float)
+                      (speed :float)
+                      (zoom :float)
+                      (sampler :sampler-2d))
   (let* ((uv (/ (- (.xy gl-frag-coord) (* res 0.5)) (.y res)))
          (uv2 (/ (.xy gl-frag-coord) (.xy res)))
          (time (* time speed))

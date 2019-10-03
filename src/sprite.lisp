@@ -1,22 +1,22 @@
 (in-package #:umbra.sprite)
 
-(define-struct sprite-data
+(defstruct sprite-data
   (sampler :sampler-2d :accessor sampler)
   (index :int :accessor index))
 
-(define-struct spritesheet-data
+(defstruct spritesheet-data
   (pos (:vec2 2048) :accessor pos)
   (size (:vec2 2048) :accessor size))
 
-(define-function sprite/v ()
+(defun  sprite/v ()
   (values))
 
-(define-function sprite/g (&uniform
-                           (model :mat4)
-                           (view :mat4)
-                           (proj :mat4)
-                           (sprite sprite-data)
-                           (spritesheet spritesheet-data :ssbo :std-430))
+(defun  sprite/g (&uniforms
+                  (model :mat4)
+                  (view :mat4)
+                  (proj :mat4)
+                  (sprite sprite-data)
+                  (spritesheet spritesheet-data :ssbo :std-430))
   (declare (output-primitive :kind :triangle-strip :max-vertices 6))
   (let* ((mvp (* proj view model))
          (extents (vec4 (aref (pos spritesheet) (index sprite))
@@ -39,11 +39,11 @@
     (end-primitive))
   (values))
 
-(define-function sprite/f ((uv :vec2)
-                           &uniform
-                           (opacity :float)
-                           (alpha-cutoff :float)
-                           (sprite sprite-data))
+(defun  sprite/f ((uv :vec2)
+                  &uniforms
+                  (opacity :float)
+                  (alpha-cutoff :float)
+                  (sprite sprite-data))
   (let ((color (texture (sampler sprite) uv)))
     (if (< (.a color) alpha-cutoff)
         (discard)

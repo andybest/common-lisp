@@ -1,18 +1,7 @@
 (in-package #:cl-user)
 
 (defpackage #:umbra.common
-  (:use #:cl #:vari)
-  (:import-from
-   #:shadow
-   #:define-function
-   #:define-struct
-   #:define-macro
-   #:define-shader)
-  (:export
-   #:define-function
-   #:define-struct
-   #:define-macro
-   #:define-shader)
+  (:use #:shadow.glsl)
   ;; structs
   (:export
    #:mesh-attrs
@@ -37,7 +26,7 @@
    #:map-domain))
 
 (defpackage #:umbra.color
-  (:use #:cl #:vari #:umbra.common)
+  (:use #:shadow.glsl #:umbra.common)
   ;; color space conversion
   (:export
    #:rgb->grayscale
@@ -74,17 +63,17 @@
    #:tone-map/uncharted2))
 
 (defpackage #:umbra.effects
-  (:use #:cl #:vari #:umbra.common)
+  (:use #:shadow.glsl #:umbra.common)
   (:export
    #:window-rain))
 
 (defpackage #:umbra.graphing
-  (:use #:cl #:vari #:umbra.common)
+  (:use #:shadow.glsl #:umbra.common)
   (:export
    #:graph))
 
 (defpackage #:umbra.hashing
-  (:use #:cl #:vari #:umbra.common)
+  (:use #:shadow.glsl #:umbra.common)
   (:export
    #:blum-blum-shub
    #:blum-blum-shub/hq
@@ -100,7 +89,7 @@
    #:fast32-2/4-per-corner))
 
 (defpackage #:umbra.noise
-  (:use #:cl #:vari #:umbra.common)
+  (:use #:shadow.glsl #:umbra.common)
   (:export
    #:perlin
    #:perlin/derivs
@@ -126,7 +115,7 @@
    #:stars))
 
 (defpackage #:umbra.sdf
-  (:use #:cl #:vari #:umbra.common)
+  (:use #:shadow.glsl #:umbra.common)
   (:export
    #:dist/box
    #:dist/circle
@@ -139,7 +128,7 @@
    #:mask/outer-border))
 
 (defpackage #:umbra.shaping
-  (:use #:cl #:vari #:umbra.common)
+  (:use #:shadow.glsl #:umbra.common)
   ;; penner
   (:export
    #:linear
@@ -211,6 +200,6 @@
    #:falloff-squared-c2))
 
 (defpackage #:umbra.sprite
-  (:use #:cl #:vari #:umbra.common)
+  (:use #:shadow.glsl #:umbra.common)
   (:export
    #:sprite))

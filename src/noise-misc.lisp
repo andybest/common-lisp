@@ -5,9 +5,9 @@
 
 ;;; 2D Cubist noise
 
-(define-function cubist ((point :vec2)
-                         (range-clamp :vec2)
-                         (hash-fn (function (:vec2) (:vec4 :vec4 :vec4))))
+(defun cubist ((point :vec2)
+               (range-clamp :vec2)
+               (hash-fn (function (:vec2) (:vec4 :vec4 :vec4))))
   (mvlet* ((cell (floor point))
            (vecs (- (.xyxy point) (vec4 cell (1+ cell))))
            (hash-x hash-y hash (funcall hash-fn cell))
@@ -22,19 +22,19 @@
            (out (dot temp (* (.zxzx blend) (.wwyy blend)))))
     (saturate (* (- out (.x range-clamp)) (.y range-clamp)))))
 
-(define-function cubist ((point :vec2)
-                         (range-clamp :vec2))
+(defun cubist ((point :vec2)
+               (range-clamp :vec2))
   (cubist point range-clamp (lambda ((x :vec2))
                               (umbra.hashing:fast32/3-per-corner x))))
 
 ;;; 3D Cubist noise
 
-(define-function cubist ((point :vec3)
-                         (range-clamp :vec2)
-                         (hash-fn
-                          (function
-                           (:vec3)
-                           (:vec4 :vec4 :vec4 :vec4 :vec4 :vec4 :vec4 :vec4))))
+(defun cubist ((point :vec3)
+               (range-clamp :vec2)
+               (hash-fn
+                (function
+                 (:vec3)
+                 (:vec4 :vec4 :vec4 :vec4 :vec4 :vec4 :vec4 :vec4))))
   (mvlet* ((cell (floor point))
            (vec (- point cell))
            (vec-1 (1- vec))
@@ -67,18 +67,18 @@
                     (.x range-clamp))
                  (.y range-clamp)))))
 
-(define-function cubist ((point :vec3)
-                         (range-clamp :vec2))
+(defun cubist ((point :vec3)
+               (range-clamp :vec2))
   (cubist point range-clamp (lambda ((x :vec3))
                               (umbra.hashing:fast32/4-per-corner x))))
 
 ;;; 2D Stars noise
 
-(define-function stars ((point :vec2)
-                        (probability-threshold :float)
-                        (max-dimness :float)
-                        (radius :float)
-                        (hash-fn (function (:vec2) :vec4)))
+(defun stars ((point :vec2)
+              (probability-threshold :float)
+              (max-dimness :float)
+              (radius :float)
+              (hash-fn (function (:vec2) :vec4)))
   (let* ((cell (floor point))
          (vec (- point cell))
          (hash (funcall hash-fn cell))
@@ -90,9 +90,9 @@
         (* (umbra.shaping:falloff-squared-c1 (min (dot vec vec) 1)) value)
         0.0)))
 
-(define-function stars ((point :vec2)
-                        (probability-threshold :float)
-                        (max-dimness :float)
-                        (radius :float))
+(defun stars ((point :vec2)
+              (probability-threshold :float)
+              (max-dimness :float)
+              (radius :float))
   (stars point probability-threshold max-dimness radius
          (lambda ((x :vec2)) (umbra.hashing:fast32/cell x))))

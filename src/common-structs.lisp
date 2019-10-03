@@ -1,6 +1,6 @@
 (in-package #:umbra.common)
 
-(define-struct mesh-attrs
+(defstruct mesh-attrs
   (mesh/pos :vec3)
   (mesh/normal :vec3)
   (mesh/tangent :vec4)
