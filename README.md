@@ -112,19 +112,11 @@ sprite images given a spritesheet's image and metadata files.
 
 ```lisp
 (unpack-atlas #p"/tmp/spritesheet.png"
-              :out-path #p"/tmp/sprites/"
-              :denormalize nil
-              :flip-y nil)
+              :out-path #p"/tmp/sprites/")
 ```
 
 This will unpack all the sprites in `/tmp/spritesheet.png` to the directory
 `/tmp/sprites/`, assuming the metadata file `/tmp/spritesheet.spec` exists.
-
-You can optionally supply `:denormalize t` if the metadata was created with
-normalized floats rather than pixel integers.
-
-You can also supply the `:flip-y t` option if the metadata was written with the
-Y axis flipped.
 
 ## License
 

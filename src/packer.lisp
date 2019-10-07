@@ -63,13 +63,20 @@
 (defgeneric make-coords (rect width height normalize flip-y)
   (:method (rect width height normalize flip-y)
     (let ((y (if flip-y (- height (y rect) (h rect)) (y rect))))
-      (list :x (x rect) :y y :w (w rect) :h (h rect))))
+      (list :x (x rect)
+            :y y
+            :w (w rect)
+            :h (h rect)
+            :normalized nil
+            :y-inverted flip-y)))
   (:method (rect width height (normalize (eql t)) flip-y)
     (let ((y (if flip-y (- height (y rect) (h rect)) (y rect))))
       (list :x (float (/ (x rect) width))
             :y (float (/ y height))
             :w (float (/ (w rect) width))
-            :h (float (/ (h rect) height))))))
+            :h (float (/ (h rect) height))
+            :normalized t
+            :y-inverted flip-y))))
 
 (defun write-atlas (atlas sprite rect)
   (let ((sprite (opticl:coerce-image sprite 'opticl:rgba-image)))
