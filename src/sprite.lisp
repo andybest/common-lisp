@@ -8,15 +8,15 @@
   (pos (:vec2 2048) :accessor pos)
   (size (:vec2 2048) :accessor size))
 
-(defun  sprite/v ()
+(defun sprite/v ()
   (values))
 
-(defun  sprite/g (&uniforms
-                  (model :mat4)
-                  (view :mat4)
-                  (proj :mat4)
-                  (sprite sprite-data)
-                  (spritesheet spritesheet-data :ssbo :std-430))
+(defun sprite/g (&uniforms
+                 (model :mat4)
+                 (view :mat4)
+                 (proj :mat4)
+                 (sprite sprite-data)
+                 (spritesheet spritesheet-data :ssbo :std-430))
   (declare (output-primitive :kind :triangle-strip :max-vertices 4))
   (let* ((mvp (* proj view model))
          (size (.xyxy (texture-size (sampler sprite) 0)))
@@ -38,11 +38,11 @@
       (.xy extents))
     (end-primitive)))
 
-(defun  sprite/f ((uv :vec2)
-                  &uniforms
-                  (opacity :float)
-                  (alpha-cutoff :float)
-                  (sprite sprite-data))
+(defun sprite/f ((uv :vec2)
+                 &uniforms
+                 (opacity :float)
+                 (alpha-cutoff :float)
+                 (sprite sprite-data))
   (let ((color (texture (sampler sprite) uv)))
     (if (< (.a color) alpha-cutoff)
         (discard)
