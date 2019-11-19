@@ -12,7 +12,7 @@
   (setf (meta :programs) (u:dict)
         (meta :block-bindings) (u:dict :uniform (u:dict) :buffer (u:dict))
         (meta :block-aliases) (u:dict #'equalp)
-        (meta :buffers) (u:dict)))
+        (meta :buffers) (u:dict #'equalp)))
 
 (defun enable-dependency-tracking ()
   (setf (meta :track-dependencies-p) t))
