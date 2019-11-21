@@ -42,9 +42,7 @@
   (let* ((program-name (name (find-program program-name)))
          (aliases (meta :block-aliases))
          (block (%find-block program-name block-type block-id)))
-    (if (u:href aliases block-alias)
-        (error "The block alias ~s is already in use." block-alias)
-        (setf (u:href aliases block-alias) block))))
+    (setf (u:href aliases block-alias) block)))
 
 (defun delete-block-alias (block-alias &key unbind-block)
   (when unbind-block
