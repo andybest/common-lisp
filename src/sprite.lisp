@@ -41,12 +41,9 @@
 (defun sprite/f ((uv :vec2)
                  &uniforms
                  (opacity :float)
-                 (alpha-cutoff :float)
                  (sprite sprite-data))
   (let ((color (texture (sampler sprite) uv)))
-    (if (< (.a color) alpha-cutoff)
-        (discard)
-        (vec4 (.rgb color) opacity))))
+    (vec4 (.rgb color) (* (.a color) opacity))))
 
 (define-shader sprite (:primitive :points)
   (:vertex (sprite/v))
