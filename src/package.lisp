@@ -60,7 +60,8 @@
    #:tone-map/reinhard
    #:tone-map/haarm-peter-duiker
    #:tone-map/hejl-burgess-dawson
-   #:tone-map/uncharted2))
+   #:tone-map/uncharted2
+   #:tone-map/aces))
 
 (defpackage #:umbra.effects
   (:use #:shadow.glsl #:umbra.common)

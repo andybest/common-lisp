@@ -131,3 +131,18 @@
 (defun tone-map/uncharted2 ((color :vec4)
                             (exposure :int))
   (vec4 (tone-map/uncharted2 (.rgb color) exposure) (.a color)))
+
+(defun tone-map/aces ((color :vec3)
+                      (exposure :int))
+  (let ((color (set-exposure color exposure))
+        (a 2.51)
+        (b 0.03)
+        (c 2.43)
+        (d 0.59)
+        (e 0.14))
+    (saturate (/ (* color (+ (* color a) b))
+                 (+ (* color (+ (* color c) d)) e)))))
+
+(defun tone-map/aces ((color :vec4)
+                      (exposure :int))
+  (vec4 (tone-map/aces (.rgb color) exposure) (.a color)))
