@@ -1,7 +1,8 @@
 (in-package #:umbra.common)
 
-(cl:defmacro emit ((&key point-size) &body data)
-  (declare (ignore point-size data)))
+(locally (declare #+sbcl (sb-ext:muffle-conditions style-warning))
+  (cl:defmacro emit ((&key point-size) &body data)
+    (declare (ignore point-size data))))
 
 (v-def-glsl-template-fun vec2 (a) "vec2(~a)" (:vec2) :vec2 :pure t)
 (v-def-glsl-template-fun vec2 (a) "vec2(~a)" (:vec3) :vec2 :pure t)
