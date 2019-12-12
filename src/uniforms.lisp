@@ -78,7 +78,8 @@
 (defun uniform-bool (program-name uniform value)
   (let ((location (get-uniform-location program-name uniform)))
     (%gl:uniform-1i location (if (or (null value)
-                                     (zerop value))
+                                     (and (realp value)
+                                          (zerop value)))
                                  0
                                  1))))
 
