@@ -77,7 +77,10 @@
 
 (defun uniform-bool (program-name uniform value)
   (let ((location (get-uniform-location program-name uniform)))
-    (%gl:uniform-1i location (if (null value) 0 1))))
+    (%gl:uniform-1i location (if (or (null value)
+                                     (zerop value))
+                                 0
+                                 1))))
 
 (defun uniform-bool-array (program-name uniform value)
   (let ((location (get-uniform-location program-name uniform)))
