@@ -23,4 +23,5 @@
    (:file "mat2")
    (:file "mat3")
    (:file "mat4")
-   (:file "quat")))
+   (:file "quat")
+   (:file "physics")))
