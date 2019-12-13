@@ -68,26 +68,16 @@
 
 (deftype mat () '(simple-array single-float (4)))
 
-(defstruct (matrix (:type (vector single-float))
-                   (:constructor %mat (m00 m01 m10 m11))
-                   (:conc-name nil)
-                   (:predicate nil)
-                   (:copier nil))
-  (m00 0f0 :type single-float)
-  (m10 0f0 :type single-float)
-  (m01 0f0 :type single-float)
-  (m11 0f0 :type single-float))
-
 (defmacro with-components (((prefix matrix) &rest rest) &body body)
-  `(with-accessors ((,prefix identity)
-                    (,(make-accessor-symbol prefix "00") m00)
-                    (,(make-accessor-symbol prefix "01") m01)
-                    (,(make-accessor-symbol prefix "10") m10)
-                    (,(make-accessor-symbol prefix "11") m11))
-       ,matrix
-     ,(if rest
-          `(with-components ,rest ,@body)
-          `(progn ,@body))))
+  (a:once-only (matrix)
+    `(symbol-macrolet ((,prefix ,matrix)
+                       (,(make-accessor-symbol prefix "00") (aref ,matrix 0))
+                       (,(make-accessor-symbol prefix "10") (aref ,matrix 1))
+                       (,(make-accessor-symbol prefix "01") (aref ,matrix 2))
+                       (,(make-accessor-symbol prefix "11") (aref ,matrix 3)))
+       ,(if rest
+            `(with-components ,rest ,@body)
+            `(progn ,@body)))))
 
 (defmacro with-elements (((prefix m00 m01 m10 m11) &rest rest) &body body)
   (let ((%m00 (make-accessor-symbol prefix "00"))
@@ -110,8 +100,13 @@
                   :initial-contents '(1f0 0f0 0f0 1f0))
   :test #'equalp)
 
-(define-op mat ((m00 real) (m01 real) (m10 real) (m11 real)) (:out mat)
-  (%mat (float m00 1f0) (float m01 1f0) (float m10 1f0) (float m11 1f0)))
+(define-op mat ((m00 single-float) (m01 single-float) (m10 single-float)
+                (m11 single-float))
+    (:out mat)
+  (let ((mat (make-array 4 :element-type 'single-float :initial-element 0f0)))
+    (with-components ((%m mat))
+      (psetf %m00 m00 %m01 m01 %m10 m10 %m11 m11))
+    mat))
 
 (define-op zero! ((in mat)) (:out mat)
   (with-components ((m in))
@@ -119,7 +114,7 @@
   in)
 
 (define-op zero () (:out mat)
-  (%mat 0f0 0f0 0f0 0f0))
+  (mat 0f0 0f0 0f0 0f0))
 
 (define-op zero-p ((in mat)) (:out boolean)
   (with-components ((m in))
@@ -131,7 +126,7 @@
   in)
 
 (define-op id () (:out mat)
-  (%mat 1f0 0f0 0f0 1f0))
+  (mat 1f0 0f0 0f0 1f0))
 
 (define-op id-p ((in mat)) (:out boolean)
   (with-components ((m in))
@@ -146,13 +141,14 @@
 (define-op ~ ((in1 mat) (in2 mat) &key (tolerance single-float 1e-7))
     (:out boolean)
   (with-components ((a in1) (b in2))
-    (and
-     (cl:< (cl:abs (cl:- a00 b00)) tolerance)
-     (cl:< (cl:abs (cl:- a01 b01)) tolerance)
-     (cl:< (cl:abs (cl:- a10 b10)) tolerance)
-     (cl:< (cl:abs (cl:- a11 b11)) tolerance))))
+    (and (cl:< (cl:abs (cl:- a00 b00)) tolerance)
+         (cl:< (cl:abs (cl:- a01 b01)) tolerance)
+         (cl:< (cl:abs (cl:- a10 b10)) tolerance)
+         (cl:< (cl:abs (cl:- a11 b11)) tolerance))))
 
-(define-op random! ((out mat) &key (min real 0f0) (max real 1f0)) (:out mat)
+(define-op random! ((out mat)
+                    &key (min single-float 0f0) (max single-float 1f0))
+    (:out mat)
   (with-components ((o out))
     (psetf o00 (cl:+ min (cl:random (cl:- max min)))
            o01 (cl:+ min (cl:random (cl:- max min)))
@@ -160,7 +156,8 @@
            o11 (cl:+ min (cl:random (cl:- max min)))))
   out)
 
-(define-op random (&key (min real 0f0) (max real 1f0)) (:out mat)
+(define-op random (&key (min single-float 0f0) (max single-float 1f0))
+    (:out mat)
   (random! (zero) :min min :max max))
 
 (define-op copy! ((out mat) (in mat)) (:out mat)
@@ -276,7 +273,7 @@
     (:out mat)
   (rotation-axis-from-vec2! (copy in) vec axis))
 
-(define-op rotate! ((out mat) (in mat) (angle float)
+(define-op rotate! ((out mat) (in mat) (angle single-float)
                     &key (space keyword :local))
     (:out mat :inline nil)
   (with-components ((m (id)))
@@ -347,8 +344,7 @@
 
 (define-op diagonal-p ((in mat)) (:out boolean)
   (with-components ((m in))
-    (and (zerop m10)
-         (zerop m01))))
+    (cl:= 0f0 m10 m01)))
 
 (define-op main-diagonal! ((out v2:vec) (in mat)) (:out v2:vec)
   (with-components ((m in))

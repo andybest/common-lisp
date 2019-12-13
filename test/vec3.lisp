@@ -1,33 +1,21 @@
 (in-package #:origin.test)
 
-(define-test v3/accessors
-  (let ((v (v3:vec 1 2 3)))
-    (is = (v3:x v) 1)
-    (is = (v3:y v) 2)
-    (is = (v3:z v) 3)
-    (psetf (v3:x v) 10.0
-           (v3:y v) 20.0
-           (v3:z v) 30.0)
-    (is = (v3:x v) 10)
-    (is = (v3:y v) 20)
-    (is = (v3:z v) 30)))
-
 (define-test v3/sign
   (let ((o (v3:zero)))
     (is v3:= (v3:sign (v3:zero)) (v3:zero))
-    (is v3:= (v3:sign (v3:vec 10 10 10)) (v3:vec 1 1 1))
-    (is v3:= (v3:sign (v3:vec -10 -10 -10)) (v3:vec -1 -1 -1))
+    (is v3:= (v3:sign (v3:vec 10f0 10f0 10f0)) (v3:vec 1f0 1f0 1f0))
+    (is v3:= (v3:sign (v3:vec -10f0 -10f0 -10f0)) (v3:vec -1f0 -1f0 -1f0))
     (v3:sign! o (v3:zero))
     (is v3:= o (v3:zero))
-    (v3:sign! o (v3:vec 10 10 10))
-    (is v3:= o (v3:vec 1 1 1))
-    (v3:sign! o (v3:vec -10 -10 -10))
-    (is v3:= o (v3:vec -1 -1 -1))))
+    (v3:sign! o (v3:vec 10f0 10f0 10f0))
+    (is v3:= o (v3:vec 1f0 1f0 1f0))
+    (v3:sign! o (v3:vec -10f0 -10f0 -10f0))
+    (is v3:= o (v3:vec -1f0 -1f0 -1f0))))
 
 (define-test v3/fract
   (let ((o (v3:zero))
-        (v (v3:vec 10.42 -10.42 0))
-        (r (v3:vec 0.42 0.58 0)))
+        (v (v3:vec 10.42 -10.42 0f0))
+        (r (v3:vec 0.42 0.58 0f0)))
     (is v3:= (v3:fract (v3:zero)) (v3:zero))
     (is v3:~ (v3:fract v) r)
     (v3:fract! o (v3:zero))
@@ -36,7 +24,7 @@
     (is v3:~ o r)))
 
 (define-test v3/copy
-  (let ((v (v3:vec 1 2 3))
+  (let ((v (v3:vec 1f0 2f0 3f0))
         (o (v3:zero)))
     (is v3:= (v3:copy! o v) v)
     (is v3:= o v)
@@ -45,7 +33,7 @@
 
 (define-test v3/clamp
   (let ((v (v3:vec -1.5185602 0.3374052 1.5218115))
-        (r (v3:vec -1 0.3374052 1))
+        (r (v3:vec -1f0 0.3374052 1f0))
         (o (v3:zero)))
     (is v3:= (v3:clamp! o v :min -1.0 :max 1.0) r)
     (is v3:= o r)
@@ -59,8 +47,8 @@
     (is v3:= (v3:zero) v3:+zero+)))
 
 (define-test v3/one
-  (let ((v (v3:vec -81 92 46))
-        (r (v3:vec 1 1 1)))
+  (let ((v (v3:vec -81f0 92f0 46f0))
+        (r (v3:vec 1f0 1f0 1f0)))
     (is v3:= (v3:one! v) r)
     (is v3:= v r)
     (is v3:= (v3:one) r)))
@@ -127,28 +115,34 @@
   (is = (v3:dot (v3:vec -0.21361923 0.39387107 0.0043354034)
                 (v3:vec -0.13104868 0.399935 0.62945867))
       0.1882463)
-  (is = (v3:dot (v3:vec 1 0 0) (v3:vec 0 1 0)) 0)
-  (is = (v3:dot (v3:vec 1 0 0) (v3:vec 0 0 1)) 0)
-  (is = (v3:dot (v3:vec 0 1 0) (v3:vec 0 0 1)) 0)
-  (is = (v3:dot (v3:vec 1 0 0) (v3:vec 1 0 0)) 1)
-  (is = (v3:dot (v3:vec 1 0 0) (v3:vec -1 0 0)) -1))
+  (is = (v3:dot (v3:vec 1f0 0f0 0f0) (v3:vec 0f0 1f0 0f0)) 0)
+  (is = (v3:dot (v3:vec 1f0 0f0 0f0) (v3:vec 0f0 0f0 1f0)) 0)
+  (is = (v3:dot (v3:vec 0f0 1f0 0f0) (v3:vec 0f0 0f0 1f0)) 0)
+  (is = (v3:dot (v3:vec 1f0 0f0 0f0) (v3:vec 1f0 0f0 0f0)) 1)
+  (is = (v3:dot (v3:vec 1f0 0f0 0f0) (v3:vec -1f0 0f0 0f0)) -1))
 
 (define-test v3/cross-product
-  (let ((v1 (v3:vec 1 0 0))
-        (v2 (v3:vec 0 1 0))
+  (let ((v1 (v3:vec 1f0 0f0 0f0))
+        (v2 (v3:vec 0f0 1f0 0f0))
         (o (v3:zero)))
-    (is v3:= (v3:cross! o v1 v2) (v3:vec 0 0 1))
-    (is v3:= o (v3:vec 0 0 1))
-    (is v3:= (v3:cross (v3:vec 1 0 0) (v3:vec 0 1 0)) (v3:vec 0 0 1))
-    (is v3:= (v3:cross (v3:vec 1 0 0) (v3:vec 0 0 1)) (v3:vec 0 -1 0))
-    (is v3:= (v3:cross (v3:vec 0 1 0) (v3:vec 1 0 0)) (v3:vec 0 0 -1))
-    (is v3:= (v3:cross (v3:vec 0 1 0) (v3:vec 0 0 1)) (v3:vec 1 0 0))
-    (is v3:= (v3:cross (v3:vec 0 0 1) (v3:vec 1 0 0)) (v3:vec 0 1 0))
-    (is v3:= (v3:cross (v3:vec 0 0 1) (v3:vec 0 1 0)) (v3:vec -1 0 0))))
+    (is v3:= (v3:cross! o v1 v2) (v3:vec 0f0 0f0 1f0))
+    (is v3:= o (v3:vec 0f0 0f0 1f0))
+    (is v3:= (v3:cross (v3:vec 1f0 0f0 0f0) (v3:vec 0f0 1f0 0f0))
+        (v3:vec 0f0 0f0 1f0))
+    (is v3:= (v3:cross (v3:vec 1f0 0f0 0f0) (v3:vec 0f0 0f0 1f0))
+        (v3:vec 0f0 -1f0 0f0))
+    (is v3:= (v3:cross (v3:vec 0f0 1f0 0f0) (v3:vec 1f0 0f0 0f0))
+        (v3:vec 0f0 0f0 -1f0))
+    (is v3:= (v3:cross (v3:vec 0f0 1f0 0f0) (v3:vec 0f0 0f0 1f0))
+        (v3:vec 1f0 0f0 0f0))
+    (is v3:= (v3:cross (v3:vec 0f0 0f0 1f0) (v3:vec 1f0 0f0 0f0))
+        (v3:vec 0f0 1f0 0f0))
+    (is v3:= (v3:cross (v3:vec 0f0 0f0 1f0) (v3:vec 0f0 1f0 0f0))
+        (v3:vec -1f0 0f0 0f0))))
 
 (define-test v3/length
   (is = (v3:length v3:+zero+) 0)
-  (is = (v3:length (v3:vec 1 0 0)) 1)
+  (is = (v3:length (v3:vec 1f0 0f0 0f0)) 1)
   (is = (v3:length (v3:vec 0.32979298 0.2571392 0.19932675)) 0.46326572))
 
 (define-test v3/normalize
@@ -158,13 +152,13 @@
     (is v3:= (v3:normalize! o v) r)
     (is v3:= o r)
     (is v3:= (v3:normalize v) r)
-    (is v3:= (v3:normalize (v3:vec 2 0 0)) (v3:vec 1 0 0))
-    (is v3:= (v3:normalize (v3:vec 0 2 0)) (v3:vec 0 1 0))
-    (is v3:= (v3:normalize (v3:vec 0 0 2)) (v3:vec 0 0 1))))
+    (is v3:= (v3:normalize (v3:vec 2f0 0f0 0f0)) (v3:vec 1f0 0f0 0f0))
+    (is v3:= (v3:normalize (v3:vec 0f0 2f0 0f0)) (v3:vec 0f0 1f0 0f0))
+    (is v3:= (v3:normalize (v3:vec 0f0 0f0 2f0)) (v3:vec 0f0 0f0 1f0))))
 
 (define-test v3/round
   (let ((v (v3:vec -0.70498157 0.3615427 0.50702953))
-        (r (v3:vec -1 0 1))
+        (r (v3:vec -1f0 0f0 1f0))
         (o (v3:zero)))
     (is v3:= (v3:round! o v) r)
     (is v3:= o r)
@@ -187,26 +181,31 @@
     (is v3:= (v3:negate v) r)))
 
 (define-test v3/angle
-  (let ((angle (v3:angle (v3:vec 0 1 0) (v3:vec 1 0 1))))
+  (let ((angle (v3:angle (v3:vec 0f0 1f0 0f0) (v3:vec 1f0 0f0 1f0))))
     (true (<= (abs (- angle (/ pi 2))) 1e-7)))
-  (let ((angle (v3:angle (v3:vec 1 1 0) (v3:vec 1 0 1))))
+  (let ((angle (v3:angle (v3:vec 1f0 1f0 0f0) (v3:vec 1f0 0f0 1f0))))
     (true (<= (abs (- angle (/ pi 3))) 1e-7)))
-  (let ((angle (v3:angle (v3:vec 1 0 0) (v3:vec 1 1 0))))
+  (let ((angle (v3:angle (v3:vec 1f0 0f0 0f0) (v3:vec 1f0 1f0 0f0))))
     (true (<= (abs (- angle (/ pi 4))) 1e-7))))
 
 (define-test v3/zero-predicate
   (true (v3:zero-p v3:+zero+))
-  (true (v3:zero-p (v3:vec 0 0 0))))
+  (true (v3:zero-p (v3:vec 0f0 0f0 0f0))))
 
 (define-test v3/direction-equality
-  (true (v3:direction= (v3:vec 0.0073252916 0 0) (v3:vec 0.31148136 0 0)))
-  (true (v3:direction= (v3:vec 0 0.6982585 0) (v3:vec 0 0.72258794 0)))
-  (true (v3:direction= (v3:vec 0 0 0.86798644) (v3:vec 0 0 42384863))))
+  (true (v3:direction= (v3:vec 0.0073252916 0f0 0f0)
+                       (v3:vec 0.31148136 0f0 0f0)))
+  (true (v3:direction= (v3:vec 0f0 0.6982585 0f0)
+                       (v3:vec 0f0 0.72258794 0f0)))
+  (true (v3:direction= (v3:vec 0f0 0f0 0.86798644)
+                       (v3:vec 0f0 0f0 42384863f0))))
 
 (define-test v3/parallel-predicate
-  (true (v3:parallel-p (v3:vec 0.6883507 0 0) (v3:vec -0.37808847 0 0)))
-  (true (v3:parallel-p (v3:vec 0 -0.31525326 0) (v3:vec 0 0.20765233 0)))
-  (true (v3:parallel-p (v3:vec 0 0 0.18911958) (v3:vec 0 0 -0.17581582))))
+  (true (v3:parallel-p (v3:vec 0.6883507 0f0 0f0) (v3:vec -0.37808847 0f0 0f0)))
+  (true (v3:parallel-p (v3:vec 0f0 -0.31525326 0f0)
+                       (v3:vec 0f0 0.20765233 0f0)))
+  (true (v3:parallel-p (v3:vec 0f0 0f0 0.18911958)
+                       (v3:vec 0f0 0f0 -0.17581582))))
 
 (define-test v3/lerp
   (let ((v1 (v3:vec 0.74485755 0.092342734 0.2982279))
@@ -223,8 +222,8 @@
   (let ((v1 (v3:vec 0.34003425 -0.4920528 0.8754709))
         (v2 (v3:vec 0.6535034 -0.11586404 -0.47056317))
         (v3 (v3:vec 0.9715252 0.8300271 0.9858451))
-        (v4 (v3:vec 1 2 3))
-        (v5 (v3:vec 2 3 4)))
+        (v4 (v3:vec 1f0 2f0 3f0))
+        (v5 (v3:vec 2f0 3f0 4f0)))
     (true (v3:< v2 v3))
     (true (v3:<= v4 v4))
     (true (v3:<= v4 v5))
@@ -235,7 +234,7 @@
 (define-test v3/min
   (let* ((v1 (v3:vec 0.98117805 0.06889212 0.32721102))
          (v2 (v3:vec 0.8774886 0.25179327 0.76311684))
-         (r (v3:vec (v3:x v2) (v3:y v1) (v3:z v1)))
+         (r (v3:vec (aref v2 0) (aref v1 1) (aref v1 2)))
          (o (v3:zero)))
     (is v3:= (v3:min! o v1 v2) r)
     (is v3:= o r)
@@ -244,7 +243,7 @@
 (define-test v3/max
   (let* ((v1 (v3:vec 0.64380646 0.38965714 0.2503655))
          (v2 (v3:vec 0.6341989 0.5274999 0.90044403))
-         (r (v3:vec (v3:x v1) (v3:y v2) (v3:z v2)))
+         (r (v3:vec (aref v1 0) (aref v2 1) (aref v2 2)))
          (o (v3:zero)))
     (is v3:= (v3:max! o v1 v2) r)
     (is v3:= o r)

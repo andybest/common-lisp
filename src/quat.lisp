@@ -89,32 +89,22 @@
 
 (deftype quat () '(simple-array single-float (4)))
 
-(defstruct (quat (:type (vector single-float))
-                 (:constructor %quat (w x y z))
-                 (:conc-name nil)
-                 (:predicate nil)
-                 (:copier nil))
-  (w 0f0 :type single-float)
-  (x 0f0 :type single-float)
-  (y 0f0 :type single-float)
-  (z 0f0 :type single-float))
-
 (defmacro with-components (((prefix quat) &rest rest) &body body)
-  `(with-accessors ((,prefix identity)
-                    (,(make-accessor-symbol prefix 'w) w)
-                    (,(make-accessor-symbol prefix 'x) x)
-                    (,(make-accessor-symbol prefix 'y) y)
-                    (,(make-accessor-symbol prefix 'z) z))
-       ,quat
-     ,(if rest
-          `(with-components ,rest ,@body)
-          `(progn ,@body))))
+  (a:once-only (quat)
+    `(symbol-macrolet ((,prefix ,quat)
+                       (,(make-accessor-symbol prefix "W") (aref ,quat 0))
+                       (,(make-accessor-symbol prefix "X") (aref ,quat 1))
+                       (,(make-accessor-symbol prefix "Y") (aref ,quat 2))
+                       (,(make-accessor-symbol prefix "Z") (aref ,quat 3)))
+       ,(if rest
+            `(with-components ,rest ,@body)
+            `(progn ,@body)))))
 
 (defmacro with-elements (((prefix w x y z) &rest rest) &body body)
-  (let ((%w (make-accessor-symbol prefix 'w))
-        (%x (make-accessor-symbol prefix 'x))
-        (%y (make-accessor-symbol prefix 'y))
-        (%z (make-accessor-symbol prefix 'z)))
+  (let ((%w (make-accessor-symbol prefix "W"))
+        (%x (make-accessor-symbol prefix "X"))
+        (%y (make-accessor-symbol prefix "Y"))
+        (%z (make-accessor-symbol prefix "Z")))
     `(let ((,%w ,w) (,%x ,x) (,%y ,y) (,%z ,z))
        (declare (ignorable ,%w ,%x ,%y ,%x))
        ,(if rest
@@ -131,8 +121,13 @@
                   :initial-contents '(1f0 0f0 0f0 0f0))
   :test #'equalp)
 
-(define-op quat ((w real) (x real) (y real) (z real)) (:out quat)
-  (%quat (float w 1f0) (float x 1f0) (float y 1f0) (float z 1f0)))
+(define-op quat ((w single-float) (x single-float) (y single-float)
+                 (z single-float))
+    (:out quat)
+  (let ((quat (make-array 4 :element-type 'single-float :initial-element 0f0)))
+    (with-components ((q quat))
+      (psetf qw w qx x qy y qz z))
+    quat))
 
 (define-op id! ((in quat)) (:out quat)
   (with-components ((q in))
@@ -165,7 +160,9 @@
          (cl:< (cl:abs (cl:- q1y q2y)) tolerance)
          (cl:< (cl:abs (cl:- q1z q2z)) tolerance))))
 
-(define-op random! ((out quat) &key (min real 0f0) (max real 1f0)) (:out quat)
+(define-op random! ((out quat)
+                    &key (min single-float 0f0) (max single-float 1f0))
+    (:out quat)
   (with-components ((o out))
     (psetf ow (cl:+ min (cl:random (cl:- max min)))
            ox (cl:+ min (cl:random (cl:- max min)))
@@ -173,7 +170,8 @@
            oz (cl:+ min (cl:random (cl:- max min)))))
   out)
 
-(define-op random (&key (min real 0f0) (max real 1f0)) (:out quat)
+(define-op random (&key (min single-float 0f0) (max single-float 1f0))
+    (:out quat)
   (random! (zero) :min min :max max))
 
 (define-op copy! ((out quat) (in quat)) (:out quat)
@@ -230,9 +228,9 @@
           ,oy (cl:* ,y ,scalar)
           ,oz (cl:* ,z ,scalar)))
 
-(define-op scale! ((out quat) (in quat) (scalar float)) (:out quat)
+(define-op scale! ((out quat) (in quat) (scalar single-float)) (:out quat)
   (with-components ((o out) (v in))
-    (%scale ow ox oy oz vw vx vy vz (float scalar 1f0)))
+    (%scale ow ox oy oz vw vx vy vz scalar))
   out)
 
 (define-op scale ((in quat) (scalar float)) (:out quat)
@@ -257,7 +255,7 @@
 
 (define-op length-squared ((in quat)) (:out single-float)
   (with-components ((q in))
-    (cl:+ (cl:* qw qw) (cl:* qx qx) (cl:* qy qy) (cl:* qz qz))))
+    (cl:+ (expt qw 2) (expt qx 2) (expt qy 2) (expt qz 2))))
 
 (define-op length ((in quat)) (:out single-float)
   (sqrt (length-squared in)))
@@ -335,7 +333,7 @@
     (:out quat)
   (rotate! (id) in1 in2 :space space))
 
-(define-op to-euler! ((out v3:vec) (in quat)) (:out v3:vec)
+(define-op to-euler! ((out v3:vec) (in quat)) (:out v3:vec :speed nil)
   (with-components ((q in))
     (let* ((sinr-cosp (cl:* 2f0 (cl:+ (cl:* qw qx) (cl:* qy qz))))
            (cosr-cosp (cl:- 1f0 (cl:* 2f0 (cl:+ (cl:* qx qx) (cl:* qy qy)))))
@@ -353,7 +351,7 @@
                oz yaw))))
   out)
 
-(define-op to-euler ((in quat)) (:out v3:vec)
+(define-op to-euler ((in quat)) (:out v3:vec :speed nil)
   (to-euler! (v3:zero) in))
 
 (define-op to-vec3! ((out v3:vec) (in quat)) (:out v3:vec)
@@ -443,7 +441,8 @@
 (define-op to-mat4 ((in quat)) (:out m4:mat)
   (to-mat4! (m4:id) in))
 
-(define-op from-mat3! ((out quat) (in m3:mat)) (:out quat :inline nil)
+(define-op from-mat3! ((out quat) (in m3:mat))
+    (:out quat :inline nil :speed nil)
   (with-components ((o out))
     (m3:with-components ((m in))
       (v3:with-elements ((r (v3::%length m00 m10 m20)
@@ -487,7 +486,7 @@
 (define-op from-mat3 ((in m3:mat)) (:out quat)
   (from-mat3! (id) in))
 
-(define-op from-mat4! ((out quat) (in m4:mat)) (:out quat)
+(define-op from-mat4! ((out quat) (in m4:mat)) (:out quat :speed nil)
   (with-components ((o out))
     (m4:with-components ((m in))
       (v3:with-elements ((r (v3::%length m00 m10 m20)
@@ -528,12 +527,12 @@
                      oz (/ 0.25f0 s))))))))
     o))
 
-(define-op from-mat4 ((in m4:mat)) (:out quat)
+(define-op from-mat4 ((in m4:mat)) (:out quat :speed nil)
   (from-mat4! (id) in))
 
-(define-op slerp! ((out quat) (in1 quat) (in2 quat) (factor float))
+(define-op slerp! ((out quat) (in1 quat) (in2 quat) (factor single-float))
     (:out quat :inline nil)
-  (let ((factor (float factor 1f0)))
+  (let ((factor factor))
     (with-components ((o out) (q1 in1) (q2 in2))
       (let ((dot (dot q1 q2))
             (q2 q2))
@@ -545,7 +544,7 @@
                    ox (a:lerp factor q1x q2x)
                    oy (a:lerp factor q1y q2y)
                    oz (a:lerp factor q1z q2z))
-            (let* ((angle (acos dot))
+            (let* ((angle (acos (the (single-float -0.9995 0.9995) dot)))
                    (sin-angle (sin angle))
                    (scale1 (/ (sin (cl:* angle (cl:- 1 factor))) sin-angle))
                    (scale2 (/ (sin (cl:* factor angle)) sin-angle)))
@@ -568,7 +567,8 @@
               ,qy (cl:* ,vy ,s)
               ,qz (cl:* ,vz ,s)))))
 
-(define-op from-axis-angle! ((out quat) (axis v3:vec) (angle real)) (:out quat)
+(define-op from-axis-angle! ((out quat) (axis v3:vec) (angle single-float))
+    (:out quat)
   (with-components ((o out))
     (v3:with-components ((v axis))
       (%from-axis-angle ow ox oy oz vx vy vz angle)))
@@ -578,8 +578,8 @@
   (from-axis-angle! (id) axis angle))
 
 (define-op orient! ((out quat) (space keyword)
-                    &rest (axes/angles (or keyword v3:vec real)))
-    (:out quat)
+                    &rest (axes/angles (or keyword v3:vec single-float)))
+    (:out quat :speed nil)
   (with-components ((o out))
     (with-elements ((q 1f0 0f0 0f0 0f0))
       (v3:with-elements ((v 0f0 0f0 0f0))
@@ -601,5 +601,6 @@
   out)
 
 (define-op orient ((space keyword)
-                   &rest (axes/angles (or keyword v3:vec real))) (:out quat)
+                   &rest (axes/angles (or keyword v3:vec real)))
+    (:out quat)
   (apply #'orient! (id) space axes/angles))

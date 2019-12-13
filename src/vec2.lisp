@@ -120,26 +120,18 @@
 
 (deftype vec () '(simple-array single-float (2)))
 
-(defstruct (vec (:type (vector single-float))
-                (:constructor %vec (x y))
-                (:conc-name nil)
-                (:predicate nil)
-                (:copier nil))
-  (x 0f0 :type single-float)
-  (y 0f0 :type single-float))
-
 (defmacro with-components (((prefix vec) &rest rest) &body body)
-  `(with-accessors ((,prefix identity)
-                    (,(make-accessor-symbol prefix 'x) x)
-                    (,(make-accessor-symbol prefix 'y) y))
-       ,vec
-     ,(if rest
-          `(with-components ,rest ,@body)
-          `(progn ,@body))))
+  (a:once-only (vec)
+    `(symbol-macrolet ((,prefix ,vec)
+                       (,(make-accessor-symbol prefix "X") (aref ,vec 0))
+                       (,(make-accessor-symbol prefix "Y") (aref ,vec 1)))
+       ,(if rest
+            `(with-components ,rest ,@body)
+            `(progn ,@body)))))
 
 (defmacro with-elements (((prefix x y) &rest rest) &body body)
-  (let ((%x (make-accessor-symbol prefix 'x))
-        (%y (make-accessor-symbol prefix 'y)))
+  (let ((%x (make-accessor-symbol prefix "X"))
+        (%y (make-accessor-symbol prefix "Y")))
     `(let ((,%x ,x) (,%y ,y))
        (declare (ignorable ,%x ,%y))
        ,(if rest
@@ -150,8 +142,11 @@
     (make-array 2 :element-type 'single-float :initial-contents '(0f0 0f0))
   :test #'equalp)
 
-(define-op vec ((x real) (y real)) (:out vec)
-  (%vec (float x 1f0) (float y 1f0)))
+(define-op vec ((x single-float) (y single-float)) (:out vec)
+  (let ((vec (make-array 2 :element-type 'single-float :initial-element 0f0)))
+    (with-components ((v vec))
+      (psetf vx x vy y))
+    vec))
 
 (define-op zero! ((in vec)) (:out vec)
   (with-components ((v in))
@@ -171,16 +166,18 @@
 
 (define-op zero-p ((in vec)) (:out boolean)
   (with-components ((v in))
-    (and (zerop vx)
-         (zerop vy))))
+    (cl:= 0f0 vx vy)))
 
-(define-op random! ((out vec) &key (min real 0f0) (max real 1f0)) (:out vec)
+(define-op random! ((out vec)
+                    &key (min single-float 0f0) (max single-float 1f0))
+    (:out vec)
   (with-components ((o out))
     (psetf ox (cl:+ min (cl:random (cl:- max min)))
            oy (cl:+ min (cl:random (cl:- max min)))))
   out)
 
-(define-op random ((min real) (max real)) (:out vec)
+(define-op random ((min single-float) (max single-float))
+    (:out vec)
   (random! (zero) :min min :max max))
 
 (define-op copy! ((out vec) (in vec)) (:out vec)
@@ -202,8 +199,8 @@
 
 (define-op fract! ((out vec) (in vec)) (:out vec)
   (with-components ((o out) (v in))
-    (psetf ox (cl:- vx (cl:floor vx))
-           oy (cl:- vy (cl:floor vy))))
+    (psetf ox (cl:- vx (ffloor vx))
+           oy (cl:- vy (ffloor vy))))
   out)
 
 (define-op fract ((in vec)) (:out vec)
@@ -293,10 +290,16 @@
     (%dot v1x v1y v2x v2y)))
 
 (defmacro %length-squared (x y)
-  `(%dot ,x ,y ,x ,y))
+  ;; NOTE: This is not using %DOT because using * instead of EXPT and SBCL 1.5.9
+  ;; cannot correctly infer the type of the SQRT of the sum of squares as being
+  ;; a single-float. This is because SBCL's memory model policy is "everything
+  ;; is volatile", which is acceptable because two AREF calls to the same array
+  ;; may infact produce different values when threading is involved.
+  `(cl:+ (cl:expt ,x 2) (cl:expt ,y 2)))
 
 (define-op length-squared ((in vec)) (:out single-float)
-  (dot in in))
+  (with-components ((v in))
+    (%length-squared vx vy)))
 
 (defmacro %length (x y)
   `(cl:sqrt (%length-squared ,x ,y)))
@@ -348,7 +351,7 @@
 (define-op negate ((in vec)) (:out vec)
   (negate! (zero) in))
 
-(define-op angle ((in1 vec) (in2 vec)) (:out single-float)
+(define-op angle ((in1 vec) (in2 vec)) (:out single-float :speed nil)
   (let ((dot (dot in1 in2))
         (m*m (cl:* (length in1) (length in2))))
     (if (zerop m*m) 0f0 (cl:acos (cl:/ dot m*m)))))
@@ -424,19 +427,21 @@
 (define-op degrees ((in vec)) (:out vec)
   (degrees! (zero) in))
 
-(define-op expt! ((out vec) (in vec) (power real)) (:out vec)
+(define-op expt! ((out vec) (in vec) (power real)) (:out vec :speed nil)
   (with-components ((o out) (v in))
     (psetf ox (cl:expt vx power)
            oy (cl:expt vy power)))
   out)
 
-(define-op expt ((in vec) (power real)) (:out vec)
+(define-op expt ((in vec) (power real)) (:out vec :speed nil)
   (expt! (zero) in power))
 
 (define-op sqrt! ((out vec) (in vec)) (:out vec)
   (with-components ((o out) (v in))
-    (psetf ox (cl:sqrt vx)
-           oy (cl:sqrt vy)))
+    (check-type vx (single-float 0f0))
+    (check-type vy (single-float 0f0))
+    (psetf ox (cl:sqrt (the (single-float 0f0) vx))
+           oy (cl:sqrt (the (single-float 0f0) vy))))
   out)
 
 (define-op sqrt ((in vec)) (:out vec)
@@ -444,8 +449,8 @@
 
 (define-op floor! ((out vec) (in vec)) (:out vec)
   (with-components ((o out) (v in))
-    (psetf ox (float (cl:floor vx) 1f0)
-           oy (float (cl:floor vy) 1f0)))
+    (psetf ox (ffloor vx)
+           oy (ffloor vy)))
   out)
 
 (define-op floor ((in vec)) (:out vec)
@@ -453,20 +458,20 @@
 
 (define-op ceiling! ((out vec) (in vec)) (:out vec)
   (with-components ((o out) (v in))
-    (psetf ox (float (cl:ceiling vx) 1f0)
-           oy (float (cl:ceiling vy) 1f0)))
+    (psetf ox (fceiling vx)
+           oy (fceiling vy)))
   out)
 
 (define-op ceiling ((in vec)) (:out vec)
   (ceiling! (zero) in))
 
-(define-op mod! ((out vec) (in vec) (divisor real)) (:out vec)
+(define-op mod! ((out vec) (in vec) (divisor real)) (:out vec :speed nil)
   (with-components ((o out) (v in))
     (psetf ox (cl:mod vx divisor)
            oy (cl:mod vy divisor)))
   out)
 
-(define-op mod ((in vec) (divisor real)) (:out vec)
+(define-op mod ((in vec) (divisor real)) (:out vec :speed nil)
   (mod! (zero) in divisor))
 
 (define-op sin! ((out vec) (in vec)) (:out vec)
@@ -496,22 +501,22 @@
 (define-op tan ((in vec)) (:out vec)
   (tan! (zero) in))
 
-(define-op asin! ((out vec) (in vec)) (:out vec)
+(define-op asin! ((out vec) (in vec)) (:out vec :speed nil)
   (with-components ((o out) (v in))
     (psetf ox (cl:asin vx)
            oy (cl:asin vy)))
   out)
 
-(define-op asin ((in vec)) (:out vec)
+(define-op asin ((in vec)) (:out vec :speed nil)
   (asin! (zero) in))
 
-(define-op acos! ((out vec) (in vec)) (:out vec)
+(define-op acos! ((out vec) (in vec)) (:out vec :speed nil)
   (with-components ((o out) (v in))
     (psetf ox (cl:acos vx)
            oy (cl:acos vy)))
   out)
 
-(define-op acos ((in vec)) (:out vec)
+(define-op acos ((in vec)) (:out vec :speed nil)
   (acos! (zero) in))
 
 (define-op atan! ((out vec) (in vec)) (:out vec)

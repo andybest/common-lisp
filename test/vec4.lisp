@@ -1,22 +1,7 @@
 (in-package #:origin.test)
 
-(define-test v4/accessors
-  (let ((v (v4:vec 1 2 3 4)))
-    (is = (v4:x v) 1)
-    (is = (v4:y v) 2)
-    (is = (v4:z v) 3)
-    (is = (v4:w v) 4)
-    (psetf (v4:x v) 10.0
-           (v4:y v) 20.0
-           (v4:z v) 30.0
-           (v4:w v) 40.0)
-    (is = (v4:x v) 10)
-    (is = (v4:y v) 20)
-    (is = (v4:z v) 30)
-    (is = (v4:w v) 40)))
-
 (define-test v4/copy
-  (let ((v (v4:vec 1 2 3 4))
+  (let ((v (v4:vec 1f0 2f0 3f0 4f0))
         (o (v4:zero)))
     (is v4:= (v4:copy! o v) v)
     (is v4:= o v)
@@ -26,19 +11,20 @@
 (define-test v4/sign
   (let ((o (v4:zero)))
     (is v4:= (v4:sign (v4:zero)) (v4:zero))
-    (is v4:= (v4:sign (v4:vec 10 10 10 10)) (v4:vec 1 1 1 1))
-    (is v4:= (v4:sign (v4:vec -10 -10 -10 -10)) (v4:vec -1 -1 -1 -1))
+    (is v4:= (v4:sign (v4:vec 10f0 10f0 10f0 10f0)) (v4:vec 1f0 1f0 1f0 1f0))
+    (is v4:= (v4:sign (v4:vec -10f0 -10f0 -10f0 -10f0))
+        (v4:vec -1f0 -1f0 -1f0 -1f0))
     (v4:sign! o (v4:zero))
     (is v4:= o (v4:zero))
-    (v4:sign! o (v4:vec 10 10 10 10))
-    (is v4:= o (v4:vec 1 1 1 1))
-    (v4:sign! o (v4:vec -10 -10 -10 -10))
-    (is v4:= o (v4:vec -1 -1 -1 -1))))
+    (v4:sign! o (v4:vec 10f0 10f0 10f0 10f0))
+    (is v4:= o (v4:vec 1f0 1f0 1f0 1f0))
+    (v4:sign! o (v4:vec -10f0 -10f0 -10f0 -10f0))
+    (is v4:= o (v4:vec -1f0 -1f0 -1f0 -1f0))))
 
 (define-test v4/fract
   (let ((o (v4:zero))
-        (v (v4:vec 10.42 -10.42 0 0))
-        (r (v4:vec 0.42 0.58 0 0)))
+        (v (v4:vec 10.42 -10.42 0f0 0f0))
+        (r (v4:vec 0.42 0.58 0f0 0f0)))
     (is v4:= (v4:fract (v4:zero)) (v4:zero))
     (is v4:~ (v4:fract v) r)
     (v4:fract! o (v4:zero))
@@ -48,7 +34,7 @@
 
 (define-test v4/clamp
   (let ((v (v4:vec -1.5185602 0.3374052 1.5218115 1.8188539))
-        (r (v4:vec -1 0.3374052 1 1))
+        (r (v4:vec -1f0 0.3374052 1f0 1f0))
         (o (v4:zero)))
     (is v4:= (v4:clamp! o v :min -1.0 :max 1.0) r)
     (is v4:= o r)
@@ -62,8 +48,8 @@
     (is v4:= (v4:zero) v4:+zero+)))
 
 (define-test v4/one
-  (let ((v (v4:vec -81 92 46 11))
-        (r (v4:vec 1 1 1 1)))
+  (let ((v (v4:vec -81f0 92f0 46f0 11f0))
+        (r (v4:vec 1f0 1f0 1f0 1f0)))
     (is v4:= (v4:one! v) r)
     (is v4:= v r)
     (is v4:= (v4:one) r)))
@@ -130,15 +116,15 @@
   (is = (v4:dot (v4:vec -0.21361923 0.39387107 0.0043354034 0.8267517)
                 (v4:vec -0.13104868 0.399935 0.62945867 0.44206798))
       0.55372673)
-  (is = (v4:dot (v4:vec 1 0 0 0) (v4:vec 0 1 0 0)) 0)
-  (is = (v4:dot (v4:vec 1 0 0 0) (v4:vec 0 0 1 0)) 0)
-  (is = (v4:dot (v4:vec 0 1 0 0) (v4:vec 0 0 1 0)) 0)
-  (is = (v4:dot (v4:vec 1 0 0 0) (v4:vec 1 0 0 0)) 1)
-  (is = (v4:dot (v4:vec 1 0 0 0) (v4:vec -1 0 0 0)) -1))
+  (is = (v4:dot (v4:vec 1f0 0f0 0f0 0f0) (v4:vec 0f0 1f0 0f0 0f0)) 0)
+  (is = (v4:dot (v4:vec 1f0 0f0 0f0 0f0) (v4:vec 0f0 0f0 1f0 0f0)) 0)
+  (is = (v4:dot (v4:vec 0f0 1f0 0f0 0f0) (v4:vec 0f0 0f0 1f0 0f0)) 0)
+  (is = (v4:dot (v4:vec 1f0 0f0 0f0 0f0) (v4:vec 1f0 0f0 0f0 0f0)) 1)
+  (is = (v4:dot (v4:vec 1f0 0f0 0f0 0f0) (v4:vec -1f0 0f0 0f0 0f0)) -1))
 
 (define-test v4/length
   (is = (v4:length v4:+zero+) 0)
-  (is = (v4:length (v4:vec 1 0 0 0)) 1)
+  (is = (v4:length (v4:vec 1f0 0f0 0f0 0f0)) 1)
   (is = (v4:length (v4:vec 0.32979298 0.2571392 0.19932675 0.2647184))
       0.5335644))
 
@@ -149,13 +135,13 @@
     (is v4:= (v4:normalize! o v) r)
     (is v4:= o r)
     (is v4:= (v4:normalize v) r)
-    (is v4:= (v4:normalize (v4:vec 2 0 0 0)) (v4:vec 1 0 0 0))
-    (is v4:= (v4:normalize (v4:vec 0 2 0 0)) (v4:vec 0 1 0 0))
-    (is v4:= (v4:normalize (v4:vec 0 0 2 0)) (v4:vec 0 0 1 0))))
+    (is v4:= (v4:normalize (v4:vec 2f0 0f0 0f0 0f0)) (v4:vec 1f0 0f0 0f0 0f0))
+    (is v4:= (v4:normalize (v4:vec 0f0 2f0 0f0 0f0)) (v4:vec 0f0 1f0 0f0 0f0))
+    (is v4:= (v4:normalize (v4:vec 0f0 0f0 2f0 0f0)) (v4:vec 0f0 0f0 1f0 0f0))))
 
 (define-test v4/round
   (let ((v (v4:vec -0.70498157 0.3615427 0.50702953 0.19508076))
-        (r (v4:vec -1 0 1 0))
+        (r (v4:vec -1f0 0f0 1f0 0f0))
         (o (v4:zero)))
     (is v4:= (v4:round! o v) r)
     (is v4:= o r)
@@ -179,7 +165,7 @@
 
 (define-test v4/zero-predicate
   (true (v4:zero-p v4:+zero+))
-  (true (v4:zero-p (v4:vec 0 0 0 0))))
+  (true (v4:zero-p (v4:vec 0f0 0f0 0f0 0f0))))
 
 (define-test v4/lerp
   (let ((v1 (v4:vec 0.74485755 0.092342734 0.2982279 0.093762994))
@@ -196,8 +182,8 @@
   (let ((v1 (v4:vec 0.34003425 -0.4920528 0.8754709 0.91501355))
         (v2 (v4:vec 0.6535034 -0.11586404 -0.47056317 0.91292254))
         (v3 (v4:vec 0.9715252 0.8300271 0.9858451 0.929777))
-        (v4 (v4:vec 1 2 3 4))
-        (v5 (v4:vec 2 3 4 5)))
+        (v4 (v4:vec 1f0 2f0 3f0 4f0))
+        (v5 (v4:vec 2f0 3f0 4f0 5f0)))
     (true (v4:< v2 v3))
     (true (v4:<= v4 v4))
     (true (v4:<= v4 v5))
@@ -208,7 +194,7 @@
 (define-test v4/min
   (let* ((v1 (v4:vec 0.98117805 0.06889212 0.32721102 0.93538976))
          (v2 (v4:vec 0.8774886 0.25179327 0.76311684 0.31522608))
-         (r (v4:vec (v4:x v2) (v4:y v1) (v4:z v1) (v4:w v2)))
+         (r (v4:vec (aref v2 0) (aref v1 1) (aref v1 2) (aref v2 3)))
          (o (v4:zero)))
     (is v4:= (v4:min! o v1 v2) r)
     (is v4:= o r)
@@ -217,7 +203,7 @@
 (define-test v4/max
   (let* ((v1 (v4:vec 0.64380646 0.38965714 0.2503655 0.45167792))
          (v2 (v4:vec 0.6341989 0.5274999 0.90044403 0.9411855))
-         (r (v4:vec (v4:x v1) (v4:y v2) (v4:z v2) (v4:w v2)))
+         (r (v4:vec (aref v1 0) (aref v2 1) (aref v2 2) (aref v2 3)))
          (o (v4:zero)))
     (is v4:= (v4:max! o v1 v2) r)
     (is v4:= o r)

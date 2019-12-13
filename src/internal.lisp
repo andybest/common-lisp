@@ -58,7 +58,8 @@
            (list (a:make-keyword arg) type)))
        keywords)))
 
-(defmacro define-op (op arg-spec (&key out (inline t)) &body body)
+(defmacro define-op (op arg-spec (&key out (inline t) (speed t))
+                      &body body)
   (u:mvlet* ((required rest keywords (split-arg-spec arg-spec))
              (args (generate-function-args required rest keywords))
              (types (generate-type-signature required rest keywords))
@@ -68,6 +69,8 @@
            `((declaim (inline ,op))))
        (declaim (ftype (function ,types ,out) ,op))
        (defun ,op ,args
+         ,@(when speed
+             '((declare (optimize speed))))
          ,@decls
          ,@(when doc
              `(,doc))

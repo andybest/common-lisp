@@ -1,25 +1,13 @@
 (in-package #:origin.test)
 
-(define-test q/accessors
-  (let ((q (q:quat 1 2 3 4)))
-    (is = (q:w q) 1)
-    (is = (q:x q) 2)
-    (is = (q:y q) 3)
-    (is = (q:z q) 4)
-    (psetf (q:w q) 10.0 (q:x q) 20.0 (q:y q) 30.0 (q:z q) 40.0)
-    (is = (q:w q) 10)
-    (is = (q:x q) 20)
-    (is = (q:y q) 30)
-    (is = (q:z q) 40)))
-
 (define-test q/identity
   (let ((q (q:id))
-        (r (q:quat 1 0 0 0)))
+        (r (q:quat 1f0 0f0 0f0 0f0)))
     (is q:= q r)
     (is q:= q:+id+ r)))
 
 (define-test q/equality
-  (let ((q1 (q:quat 0.25889468 -0.4580922 0.6231675 0.34003425))
+  (let ((q1 (q:quat 0.25889468f0 -0.4580922f0 0.6231675f0 0.34003425f0))
         (q2 (q:quat 1e-8 1e-8 1e-8 1e-8)))
     (true (q:= q1 q1))
     (true (q:~ (q:+ q1 q2) q1))
@@ -31,7 +19,7 @@
     (is q:= (q:copy! o q) q)
     (is q:= o q)
     (is q:= (q:copy q) q)
-    (isnt eq q (q:copy q))))
+    #++(isnt eq q (q:copy q))))
 
 (define-test q/add
   (let ((q1 (q:quat -0.11586404 -0.47056317 0.23266816 -0.6098385))
@@ -52,13 +40,15 @@
     (is q:= (q:- q1 q2) r)))
 
 (define-test q/multiply
-  (let ((q1 (q:quat 1 2 3 4))
-        (q2 (q:quat 10 20 30 40))
+  (let ((q1 (q:quat 1f0 2f0 3f0 4f0))
+        (q2 (q:quat 10f0 20f0 30f0 40f0))
         (q3 q:+id+)
-        (r (q:quat -280 40 60 80))
-        (rot-x (q:rotate-euler q:+id+ (v3:vec (/ pi 3) 0 0)))
-        (rot-y (q:rotate-euler q:+id+ (v3:vec 0 (/ pi 4) 0)))
-        (rot-xy (q:rotate-euler q:+id+ (v3:vec (/ pi 3) (/ pi 4) 0)))
+        (r (q:quat -280f0 40f0 60f0 80f0))
+        (rot-x (q:rotate-euler q:+id+ (v3:vec (float (/ pi 3) 1f0) 0f0 0f0)))
+        (rot-y (q:rotate-euler q:+id+ (v3:vec 0f0 (float (/ pi 4) 1f0) 0f0)))
+        (rot-xy (q:rotate-euler q:+id+ (v3:vec (float (/ pi 3) 1f0)
+                                               (float (/ pi 4) 1f0)
+                                               0f0)))
         (o (q:zero)))
     (is q:= (q:*! o q1 q2) r)
     (is q:= o r)
@@ -77,9 +67,9 @@
     (is q:= (q:scale q -0.4920528) r)))
 
 (define-test q/cross-product
-  (let ((q1 (q:quat 0.8660254 0.5 0 0))
-        (q2 (q:quat 0.8660254 0 0.5 0))
-        (r (q:quat 0.75 0 0.4330127 0.25))
+  (let ((q1 (q:quat 0.8660254f0 0.5f0 0f0 0f0))
+        (q2 (q:quat 0.8660254f0 0f0 0.5f0 0f0))
+        (r (q:quat 0.75 0f0 0.4330127 0.25))
         (o (q:zero)))
     (is q:= (q:cross! o q1 q2) r)
     (is q:= o r)
@@ -110,7 +100,7 @@
     (is q:= (q:normalize! o q) r)
     (is q:= o r)
     (is q:= (q:normalize q) r)
-    (is q:= (q:normalize (q:quat 2 0 0 0)) q:+id+)))
+    (is q:= (q:normalize (q:quat 2f0 0f0 0f0 0f0)) q:+id+)))
 
 (define-test q/negate
   (let ((q (q:quat 0.9858451 0.85955405 0.8707795 -0.36954784))
@@ -132,12 +122,12 @@
   (let ((oqx (q:id))
         (oqy (q:id))
         (oqz (q:id))
-        (rqx (q:quat 0.86602545 0.5 0 0))
-        (rqy (q:quat 0.86602545 0 0.5 0))
-        (rqz (q:quat 0.86602545 0 0 0.5))
-        (vx (v3:vec (/ pi 3) 0 0))
-        (vy (v3:vec 0 (/ pi 3) 0))
-        (vz (v3:vec 0 0 (/ pi 3))))
+        (rqx (q:quat 0.86602545f0 0.5f0 0f0 0f0))
+        (rqy (q:quat 0.86602545f0 0f0 0.5f0 0f0))
+        (rqz (q:quat 0.86602545f0 0f0 0f0 0.5f0))
+        (vx (v3:vec (float (/ pi 3) 1f0) 0f0 0f0))
+        (vy (v3:vec 0f0 (float (/ pi 3) 1f0) 0f0))
+        (vz (v3:vec 0f0 0f0 (float (/ pi 3) 1f0))))
     (true (q:~ (q:rotate-euler! oqx q:+id+ vx) rqx))
     (true (q:~ (q:rotate-euler! oqy q:+id+ vy) rqy))
     (true (q:~ (q:rotate-euler! oqz q:+id+ vz) rqz))
@@ -150,13 +140,13 @@
 
 (define-test q/vec3-convert
   (let* ((q (q:quat 0.3628688 0.9540863 0.017128706 0.32979298))
-         (r (v3:vec (q:x q) (q:y q) (q:z q)))
+         (r (v3:vec (aref q 1) (aref q 2) (aref q 3)))
          (o (v3:zero)))
     (is v3:= (q:to-vec3! o q) r)
     (is v3:= o r)
     (is v3:= (q:to-vec3 q) r))
   (let* ((v (v3:vec 0.2571392 0.19932675 -0.025900126))
-         (r (q:quat 0 (v3:x v) (v3:y v) (v3:z v)))
+         (r (q:quat 0f0 (aref v 0) (aref v 1) (aref v 2)))
          (o (q:zero)))
     (is q:= (q:from-vec3! o v) r)
     (is q:= o r)
@@ -164,22 +154,23 @@
 
 (define-test q/vec4-convert
   (let* ((q (q:quat 0.3628688 0.9540863 0.017128706 0.32979298))
-         (r (v4:vec (q:w q) (q:x q) (q:y q) (q:z q)))
+         (r (v4:vec (aref q 0) (aref q 1) (aref q 2) (aref q 3)))
          (o (v4:zero)))
     (is v4:= (q:to-vec4! o q) r)
     (is v4:= o r)
     (is v4:= (q:to-vec4 q) r))
   (let* ((v (v4:vec 0.2571392 0.19932675 -0.025900126 0.8267517))
-         (r (q:quat (v4:x v) (v4:y v) (v4:z v) (v4:w v)))
+         (r (q:quat (aref v 0) (aref v 1) (aref v 2) (aref v 3)))
          (o (q:zero)))
     (is q:= (q:from-vec4! o v) r)
     (is q:= o r)
     (is q:= (q:from-vec4 v) r)))
 
 (define-test q/mat4-convert
-  (let ((q (q:rotate-euler q:+id+ (v3:vec (/ pi 3) 0 0)))
+  (let ((q (q:rotate-euler q:+id+ (v3:vec (float (/ pi 3) 1f0) 0f0 0f0)))
         (qo (q:zero))
-        (r (m4:mat 1 0 0 0 0 0.5 -0.86602545 0 0 0.86602545 0.5 0 0 0 0 1))
+        (r (m4:mat 1f0 0f0 0f0 0f0 0f0 0.5f0 -0.86602545f0 0f0 0f0 0.86602545f0
+                   0.5f0 0f0 0f0 0f0 0f0 1f0))
         (mo (m4:id)))
     (true (m4:~ (q:to-mat4! mo q) r))
     (true (m4:~ mo r))

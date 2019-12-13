@@ -81,38 +81,21 @@
 
 (deftype mat () '(simple-array single-float (9)))
 
-(defstruct (matrix (:type (vector single-float))
-                   (:constructor %mat (m00 m01 m02
-                                       m10 m11 m12
-                                       m20 m21 m22))
-                   (:conc-name nil)
-                   (:predicate nil)
-                   (:copier nil))
-  (m00 0f0 :type single-float)
-  (m10 0f0 :type single-float)
-  (m20 0f0 :type single-float)
-  (m01 0f0 :type single-float)
-  (m11 0f0 :type single-float)
-  (m21 0f0 :type single-float)
-  (m02 0f0 :type single-float)
-  (m12 0f0 :type single-float)
-  (m22 0f0 :type single-float))
-
 (defmacro with-components (((prefix matrix) &rest rest) &body body)
-  `(with-accessors ((,prefix identity)
-                    (,(make-accessor-symbol prefix "00") m00)
-                    (,(make-accessor-symbol prefix "01") m01)
-                    (,(make-accessor-symbol prefix "02") m02)
-                    (,(make-accessor-symbol prefix "10") m10)
-                    (,(make-accessor-symbol prefix "11") m11)
-                    (,(make-accessor-symbol prefix "12") m12)
-                    (,(make-accessor-symbol prefix "20") m20)
-                    (,(make-accessor-symbol prefix "21") m21)
-                    (,(make-accessor-symbol prefix "22") m22))
-       ,matrix
-     ,(if rest
-          `(with-components ,rest ,@body)
-          `(progn ,@body))))
+  (a:once-only (matrix)
+    `(symbol-macrolet ((,prefix ,matrix)
+                       (,(make-accessor-symbol prefix "00") (aref ,matrix 0))
+                       (,(make-accessor-symbol prefix "10") (aref ,matrix 1))
+                       (,(make-accessor-symbol prefix "20") (aref ,matrix 2))
+                       (,(make-accessor-symbol prefix "01") (aref ,matrix 3))
+                       (,(make-accessor-symbol prefix "11") (aref ,matrix 4))
+                       (,(make-accessor-symbol prefix "21") (aref ,matrix 5))
+                       (,(make-accessor-symbol prefix "02") (aref ,matrix 6))
+                       (,(make-accessor-symbol prefix "12") (aref ,matrix 7))
+                       (,(make-accessor-symbol prefix "22") (aref ,matrix 8)))
+       ,(if rest
+            `(with-components ,rest ,@body)
+            `(progn ,@body)))))
 
 (defmacro with-elements (((prefix m00 m01 m02 m10 m11 m12 m20 m21 m22)
                           &rest rest)
@@ -145,12 +128,16 @@
                   :initial-contents '(1f0 0f0 0f0 0f0 1f0 0f0 0f0 0f0 1f0))
   :test #'equalp)
 
-(define-op mat ((m00 real) (m01 real) (m02 real) (m10 real) (m11 real)
-                (m12 real) (m20 real) (m21 real) (m22 real))
+(define-op mat ((m00 single-float) (m01 single-float) (m02 single-float)
+                (m10 single-float) (m11 single-float) (m12 single-float)
+                (m20 single-float) (m21 single-float) (m22 single-float))
     (:out mat)
-  (%mat (float m00 1f0) (float m01 1f0) (float m02 1f0)
-        (float m10 1f0) (float m11 1f0) (float m12 1f0)
-        (float m20 1f0) (float m21 1f0) (float m22 1f0)))
+  (let ((mat (make-array 9 :element-type 'single-float :initial-element 0f0)))
+    (with-components ((%m mat))
+      (psetf %m00 m00 %m01 m01 %m02 m02
+             %m10 m10 %m11 m11 %m12 m12
+             %m20 m20 %m21 m21 %m22 m22))
+    mat))
 
 (define-op zero! ((in mat)) (:out mat)
   (with-components ((m in))
@@ -160,7 +147,7 @@
   in)
 
 (define-op zero () (:out mat)
-  (%mat 0f0 0f0 0f0 0f0 0f0 0f0 0f0 0f0 0f0))
+  (mat 0f0 0f0 0f0 0f0 0f0 0f0 0f0 0f0 0f0))
 
 (define-op zero-p ((in mat)) (:out boolean)
   (with-components ((m in))
@@ -174,7 +161,7 @@
   in)
 
 (define-op id () (:out mat)
-  (%mat 1f0 0f0 0f0 0f0 1f0 0f0 0f0 0f0 1f0))
+  (mat 1f0 0f0 0f0 0f0 1f0 0f0 0f0 0f0 1f0))
 
 (define-op id-p ((in mat)) (:out boolean)
   (with-components ((m in))
@@ -200,7 +187,9 @@
          (cl:< (cl:abs (cl:- a21 b21)) tolerance)
          (cl:< (cl:abs (cl:- a22 b22)) tolerance))))
 
-(define-op random! ((out mat) &key (min real 0f0) (max real 1f0)) (:out mat)
+(define-op random! ((out mat)
+                    &key (min single-float 0f0) (max single-float 1f0))
+    (:out mat)
   (with-components ((o out))
     (psetf o00 (cl:+ min (cl:random (cl:- max min)))
            o01 (cl:+ min (cl:random (cl:- max min)))
@@ -213,7 +202,8 @@
            o22 (cl:+ min (cl:random (cl:- max min)))))
   out)
 
-(define-op random (&key (min real 0f0) (max real 1f0)) (:out mat)
+(define-op random (&key (min single-float 0f0) (max single-float 1f0))
+    (:out mat)
   (random! (zero) :min min :max max))
 
 (define-op copy! ((out mat) (in mat)) (:out mat)
@@ -230,7 +220,7 @@
                    &key
                    (min single-float most-negative-single-float)
                    (max single-float most-positive-single-float))
-    (:out mat :inline nil)
+    (:out mat)
   (with-components ((o out) (m in))
     (psetf o00 (a:clamp m00 min max)
            o01 (a:clamp m01 min max)
@@ -413,14 +403,13 @@
     (:out mat)
   (rotation-axis-from-vec2! (copy in) vec axis))
 
-(define-op rotate! ((out mat) (in mat) (angle float)
+(define-op rotate! ((out mat) (in mat) (angle single-float)
                     &key (space keyword :local))
     (:out mat)
   (m2:with-elements ((m 1f0 0f0 0f0 1f0))
     (with-components ((o out))
-      (let* ((angle (float angle 1f0))
-             (s (sin angle))
-             (c (cos angle)))
+      (let ((s (sin angle))
+            (c (cos angle)))
         (copy! out in)
         (psetf m00 c m01 (cl:- s) m10 s m11 c)
         (ecase space
@@ -500,12 +489,7 @@
 
 (define-op diagonal-p ((in mat)) (:out boolean)
   (with-components ((m in))
-    (and (zerop m10)
-         (zerop m20)
-         (zerop m01)
-         (zerop m21)
-         (zerop m02)
-         (zerop m12))))
+    (cl:= 0f0 m10 m20 m01 m21 m02 m12)))
 
 (define-op main-diagonal! ((out v3:vec) (in mat)) (:out v3:vec)
   (with-components ((m in))
