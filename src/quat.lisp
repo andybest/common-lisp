@@ -574,7 +574,7 @@
       (%from-axis-angle ow ox oy oz vx vy vz angle)))
   out)
 
-(define-op from-axis-angle ((axis v3:vec) (angle real)) (:out quat)
+(define-op from-axis-angle ((axis v3:vec) (angle single-float)) (:out quat)
   (from-axis-angle! (id) axis angle))
 
 (define-op orient! ((out quat) (space keyword)
