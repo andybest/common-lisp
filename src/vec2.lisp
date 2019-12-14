@@ -123,8 +123,14 @@
 (define-op x ((vec vec)) (:out single-float)
   (aref vec 0))
 
+(define-op (setf x) ((new-value single-float) (vec vec)) (:out single-float)
+  (setf (aref vec 0) new-value))
+
 (define-op y ((vec vec)) (:out single-float)
   (aref vec 1))
+
+(define-op (setf y) ((new-value single-float) (vec vec)) (:out single-float)
+  (setf (aref vec 1) new-value))
 
 (defmacro with-components (((prefix vec) &rest rest) &body body)
   (a:once-only (vec)

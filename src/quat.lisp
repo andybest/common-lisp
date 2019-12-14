@@ -92,14 +92,26 @@
 (define-op w ((quat quat)) (:out single-float)
   (aref quat 0))
 
+(define-op (setf w) ((new-value single-float) (quat quat)) (:out single-float)
+  (setf (aref quat 0) new-value))
+
 (define-op x ((quat quat)) (:out single-float)
   (aref quat 1))
+
+(define-op (setf x) ((new-value single-float) (quat quat)) (:out single-float)
+  (setf (aref quat 1) new-value))
 
 (define-op y ((quat quat)) (:out single-float)
   (aref quat 2))
 
+(define-op (setf y) ((new-value single-float) (quat quat)) (:out single-float)
+  (setf (aref quat 2) new-value))
+
 (define-op z ((quat quat)) (:out single-float)
   (aref quat 3))
+
+(define-op (setf z) ((new-value single-float) (quat quat)) (:out single-float)
+  (setf (aref quat 3) new-value))
 
 (defmacro with-components (((prefix quat) &rest rest) &body body)
   (a:once-only (quat)
