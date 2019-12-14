@@ -106,7 +106,7 @@
         (%y (make-accessor-symbol prefix "Y"))
         (%z (make-accessor-symbol prefix "Z")))
     `(let ((,%w ,w) (,%x ,x) (,%y ,y) (,%z ,z))
-       (declare (ignorable ,%w ,%x ,%y ,%x))
+       (declare (ignorable ,%w ,%x ,%y ,%z))
        ,(if rest
             `(with-elements ,rest ,@body)
             `(progn ,@body)))))
