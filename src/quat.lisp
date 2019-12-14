@@ -559,7 +559,7 @@
 
 (defmacro %from-axis-angle (qw qx qy qz vx vy vz angle)
   (a:with-gensyms (half-angle c s)
-    `(let* ((,half-angle (/ ,angle 2f0))
+    `(let* ((,half-angle (cl:* ,angle 0.5))
             (,c (float (cos ,half-angle) 1f0))
             (,s (float (sin ,half-angle) 1f0)))
        (psetf ,qw ,c
@@ -579,12 +579,14 @@
 
 (define-op orient! ((out quat) (space keyword)
                     &rest (axes/angles (or keyword v3:vec single-float)))
-    (:out quat :speed nil)
+    (:out quat)
+  (declare (ignorable space axes/angles))
   (with-components ((o out))
     (with-elements ((q 1f0 0f0 0f0 0f0))
       (v3:with-elements ((v 0f0 0f0 0f0))
         (id! out)
-        (loop :for (axis angle) :on axes/angles :by #'cddr
+        (loop :for (axis angle) :of-type ((or keyword v3:vec) single-float)
+                :on axes/angles :by #'cddr
               :do (v3:with-components ((a axis))
                     (case axis
                       (:x (psetf vx 1f0 vy 0f0 vz 0f0))
@@ -601,6 +603,6 @@
   out)
 
 (define-op orient ((space keyword)
-                   &rest (axes/angles (or keyword v3:vec real)))
+                   &rest (axes/angles (or keyword v3:vec single-float)))
     (:out quat)
   (apply #'orient! (id) space axes/angles))
