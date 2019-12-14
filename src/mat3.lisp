@@ -1,82 +1,3 @@
-(in-package #:cl-user)
-
-(defpackage #:origin.mat3
-  (:local-nicknames (#:a #:alexandria)
-                    (#:v2 #:origin.vec2)
-                    (#:v3 #:origin.vec3)
-                    (#:m2 #:origin.mat2))
-  (:use #:cl #:origin.internal)
-  (:shadow
-   #:=
-   #:+
-   #:-
-   #:*
-   #:random
-   #:trace)
-  (:export
-   #:mat
-   #:with-components
-   #:with-elements
-   #:+zero+
-   #:+id+
-   #:zero!
-   #:zero
-   #:zero-p
-   #:id!
-   #:id
-   #:id-p
-   #:=
-   #:~
-   #:random!
-   #:random
-   #:copy!
-   #:copy
-   #:clamp!
-   #:clamp
-   #:+!
-   #:+
-   #:-!
-   #:-
-   #:*!
-   #:*
-   #:get-column!
-   #:get-column
-   #:set-column!
-   #:set-column
-   #:get-translation!
-   #:get-translation
-   #:set-translation!
-   #:set-translation
-   #:translate!
-   #:translate
-   #:copy-rotation!
-   #:copy-rotation
-   #:normalize-rotation!
-   #:normalize-rotation
-   #:rotation-axis-to-vec2!
-   #:rotation-axis-to-vec2
-   #:rotation-axis-from-vec2!
-   #:rotation-axis-from-vec2
-   #:rotate!
-   #:rotate
-   #:get-scale!
-   #:get-scale
-   #:set-scale!
-   #:set-scale
-   #:scale!
-   #:scale
-   #:*v3!
-   #:*v3
-   #:transpose!
-   #:transpose
-   #:orthogonal-p
-   #:trace
-   #:diagonal-p
-   #:main-diagonal!
-   #:main-diagonal
-   #:anti-diagonal!
-   #:anti-diagonal))
-
 (in-package #:origin.mat3)
 
 (deftype mat () '(simple-array single-float (9)))
@@ -118,16 +39,6 @@
             `(with-elements ,rest ,@body)
             `(progn ,@body)))))
 
-(a:define-constant +zero+
-    (make-array 9 :element-type 'single-float
-                  :initial-contents '(0f0 0f0 0f0 0f0 0f0 0f0 0f0 0f0 0f0))
-  :test #'equalp)
-
-(a:define-constant +id+
-    (make-array 9 :element-type 'single-float
-                  :initial-contents '(1f0 0f0 0f0 0f0 1f0 0f0 0f0 0f0 1f0))
-  :test #'equalp)
-
 (define-op mat ((m00 single-float) (m01 single-float) (m02 single-float)
                 (m10 single-float) (m11 single-float) (m12 single-float)
                 (m20 single-float) (m21 single-float) (m22 single-float))
@@ -138,6 +49,12 @@
              %m10 m10 %m11 m11 %m12 m12
              %m20 m20 %m21 m21 %m22 m22))
     mat))
+
+(a:define-constant +zero+ (mat 0f0 0f0 0f0 0f0 0f0 0f0 0f0 0f0 0f0)
+  :test #'equalp)
+
+(a:define-constant +id+ (mat 1f0 0f0 0f0 0f0 1f0 0f0 0f0 0f0 1f0)
+  :test #'equalp)
 
 (define-op zero! ((in mat)) (:out mat)
   (with-components ((m in))

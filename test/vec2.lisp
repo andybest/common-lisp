@@ -161,9 +161,9 @@
 
 (define-test v2/angle
   (let ((angle (v2:angle (v2:vec 0f0 1f0) (v2:vec 1f0 0f0))))
-    (true (<= (abs (- angle (/ pi 2))) 1e-7)))
+    (true (<= (abs (- angle origin:pi/2)) 1e-7)))
   (let ((angle (v2:angle (v2:vec 1f0 0f0) (v2:vec 1f0 1f0))))
-    (true (<= (abs (- angle (/ pi 4))) 1e-7))))
+    (true (<= (abs (- angle origin:pi/4)) 1e-7))))
 
 (define-test v2/zero-predicate
   (true (v2:zero-p v2:+zero+))

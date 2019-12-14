@@ -1,90 +1,3 @@
-(in-package #:cl-user)
-
-(defpackage #:origin.quat
-  (:local-nicknames (#:a #:alexandria)
-                    (#:v3 #:origin.vec3)
-                    (#:v4 #:origin.vec4)
-                    (#:m3 #:origin.mat3)
-                    (#:m4 #:origin.mat4))
-  (:use #:cl #:origin.internal)
-  (:shadow
-   #:=
-   #:+
-   #:-
-   #:*
-   #:conjugate
-   #:length
-   #:random)
-  (:export
-   #:quat
-   #:with-components
-   #:with-elements
-   #:w
-   #:x
-   #:y
-   #:z
-   #:+zero+
-   #:+id+
-   #:id!
-   #:id
-   #:zero!
-   #:zero
-   #:=
-   #:~
-   #:random!
-   #:random
-   #:copy!
-   #:copy
-   #:+!
-   #:+
-   #:-!
-   #:-
-   #:*!
-   #:*
-   #:scale!
-   #:scale
-   #:conjugate!
-   #:conjugate
-   #:cross!
-   #:cross
-   #:length-squared
-   #:length
-   #:normalize!
-   #:normalize
-   #:negate!
-   #:negate
-   #:dot
-   #:inverse!
-   #:inverse
-   #:rotate-euler!
-   #:rotate-euler
-   #:rotate!
-   #:rotate
-   #:to-euler!
-   #:to-euler
-   #:to-vec3!
-   #:to-vec3
-   #:to-vec4!
-   #:to-vec4
-   #:from-vec3!
-   #:from-vec3
-   #:from-vec4!
-   #:from-vec4
-   #:to-mat3!
-   #:to-mat3
-   #:to-mat4!
-   #:to-mat4
-   #:from-mat3!
-   #:from-mat3
-   #:from-mat4!
-   #:from-mat4
-   #:slerp!
-   #:slerp
-   #:from-axis-angle!
-   #:from-axis-angle
-   #:orient!
-   #:orient))
-
 (in-package #:origin.quat)
 
 (deftype quat () '(simple-array single-float (4)))
@@ -135,16 +48,6 @@
             `(with-elements ,rest ,@body)
             `(progn ,@body)))))
 
-(a:define-constant +zero+
-    (make-array 4 :element-type 'single-float
-                  :initial-contents '(0f0 0f0 0f0 0f0))
-  :test #'equalp)
-
-(a:define-constant +id+
-    (make-array 4 :element-type 'single-float
-                  :initial-contents '(1f0 0f0 0f0 0f0))
-  :test #'equalp)
-
 (define-op quat ((w single-float) (x single-float) (y single-float)
                  (z single-float))
     (:out quat)
@@ -152,6 +55,10 @@
     (with-components ((q quat))
       (psetf qw w qx x qy y qz z))
     quat))
+
+(a:define-constant +zero+ (quat 0f0 0f0 0f0 0f0) :test #'equalp)
+
+(a:define-constant +id+ (quat 1f0 0f0 0f0 0f0) :test #'equalp)
 
 (define-op id! ((in quat)) (:out quat)
   (with-components ((q in))
@@ -364,7 +271,7 @@
            (roll (atan sinr-cosp cosr-cosp))
            (sinp (cl:* 2f0 (cl:- (cl:* qw qy) (cl:* qz qx))))
            (pitch (if (>= (abs sinp) 1f0)
-                      (float (cl:* (abs (cl:* pi 0.5f0)) (signum sinp)) 1f0)
+                      (cl:* origin:pi/2 (signum sinp))
                       (asin sinp)))
            (siny-cosp (cl:* 2f0 (cl:+ (cl:* qw qz) (cl:* qx qy))))
            (cosy-cosp (cl:- 1f0 (cl:* 2f0 (cl:+ (cl:* qy qy) (cl:* qz qz)))))

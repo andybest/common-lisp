@@ -63,11 +63,9 @@
         (m3 m4:+id+)
         (r (m4:mat 90f0 202f0 314f0 426f0 100f0 228f0 356f0 484f0 110f0 254f0
                    398f0 542f0 120f0 280f0 440f0 600f0))
-        (rot-x (m4:rotate m4:+id+ (v3:vec (float (/ pi 3) 1f0) 0f0 0f0)))
-        (rot-y (m4:rotate m4:+id+ (v3:vec 0f0 (float (/ pi 4) 1f0) 0f0)))
-        (rot-xy (m4:rotate m4:+id+ (v3:vec (float (/ pi 3) 1f0)
-                                           (float (/ pi 4) 1f0)
-                                           0f0)))
+        (rot-x (m4:rotate m4:+id+ (v3:vec origin:pi/3 0f0 0f0)))
+        (rot-y (m4:rotate m4:+id+ (v3:vec 0f0 origin:pi/4 0f0)))
+        (rot-xy (m4:rotate m4:+id+ (v3:vec origin:pi/3 origin:pi/4 0f0)))
         (tr1 (m4:translate m4:+id+ (v3:vec 5f0 10f0 15f0)))
         (tr2 (m4:translate m4:+id+ (v3:vec 10f0 20f0 30f0)))
         (o (m4:zero)))
@@ -99,7 +97,7 @@
     (is v3:= (m4:get-translation m) rv)))
 
 (define-test m4/translate
-  (let ((m (m4:rotate m4:+id+ (v3:vec (float (/ pi 3) 1f0) 0f0 0f0)))
+  (let ((m (m4:rotate m4:+id+ (v3:vec origin:pi/3 0f0 0f0)))
         (o (m4:id))
         (r (m4:mat 1f0 0f0 0f0 5f0 0f0 0.5f0 -0.86602545f0 10f0 0f0
                    0.86602545f0 0.5f0 15f0 0f0 0f0 0f0 1f0))
@@ -120,7 +118,7 @@
     (is m4:= (m4:copy-rotation m) r)))
 
 (define-test m4/rotation-convert
-  (let ((m (m4:rotate m4:+id+ (v3:vec (float (/ pi 3) 1f0) 0f0 0f0)))
+  (let ((m (m4:rotate m4:+id+ (v3:vec origin:pi/3 0f0 0f0)))
         (rmx m4:+id+)
         (rmy (m4:mat 1f0 0f0 0f0 0f0 0f0 0.5f0 0f0 0f0 0f0 0.86602545f0 1f0 0f0
                      0f0 0f0 0f0 1f0))
@@ -164,9 +162,9 @@
                      0f0 0.5f0 0f0 0f0 0f0 0f0 1f0))
         (rmz (m4:mat 0.5f0 -0.86602545f0 0f0 0f0 0.86602545f0 0.5f0 0f0 0f0 0f0
                      0f0 1f0 0f0 0f0 0f0 0f0 1f0))
-        (vx (v3:vec (float (/ pi 3) 1f0) 0f0 0f0))
-        (vy (v3:vec 0f0 (float (/ pi 3) 1f0) 0f0))
-        (vz (v3:vec 0f0 0f0 (float (/ pi 3) 1f0))))
+        (vx (v3:vec origin:pi/3 0f0 0f0))
+        (vy (v3:vec 0f0 origin:pi/3 0f0))
+        (vz (v3:vec 0f0 0f0 origin:pi/3)))
     (true (m4:~ (m4:rotate! omx m4:+id+ vx) rmx))
     (true (m4:~ (m4:rotate! omy m4:+id+ vy) rmy))
     (true (m4:~ (m4:rotate! omz m4:+id+ vz) rmz))
@@ -189,7 +187,7 @@
     (is v3:= (m4:get-scale (m4:scale m4:+id+ v)) v)))
 
 (define-test m4/vec4-multiply
-  (let ((m (m4:rotate m4:+id+ (v3:vec (float (/ pi 3) 1f0) 0f0 0f0)))
+  (let ((m (m4:rotate m4:+id+ (v3:vec origin:pi/3 0f0 0f0)))
         (v (v4:vec 1f0 2f0 3f0 4f0))
         (o (v4:zero))
         (rv (v4:vec 1f0 -1.5980763 3.232051 4f0)))
@@ -211,17 +209,11 @@
     (is m4:= (m4:transpose m4:+id+) m4:+id+)))
 
 (define-test m4/orthogonal-predicate
-  (true (m4:orthogonal-p (m4:rotate m4:+id+ (v3:vec (float pi 1f0) 0f0 0f0))))
-  (true (m4:orthogonal-p
-         (m4:rotate m4:+id+ (v3:vec (float (/ pi 2) 1f0) 0f0 0f0))))
-  (true (m4:orthogonal-p
-         (m4:rotate m4:+id+ (v3:vec (float (/ pi 3) 1f0) 0f0 0f0))))
-  (true (m4:orthogonal-p
-         (m4:rotate m4:+id+ (v3:vec (float (/ pi 4) 1f0) 0f0 0f0))))
-  (true (m4:orthogonal-p
-         (m4:rotate m4:+id+ (v3:vec (float (/ pi 5) 1f0) 0f0 0f0))))
-  (true (m4:orthogonal-p
-         (m4:rotate m4:+id+ (v3:vec (float (/ pi 6) 1f0) 0f0 0f0)))))
+  (true (m4:orthogonal-p (m4:rotate m4:+id+ (v3:vec origin:pi 0f0 0f0))))
+  (true (m4:orthogonal-p (m4:rotate m4:+id+ (v3:vec origin:pi/2 0f0 0f0))))
+  (true (m4:orthogonal-p (m4:rotate m4:+id+ (v3:vec origin:pi/3 0f0 0f0))))
+  (true (m4:orthogonal-p (m4:rotate m4:+id+ (v3:vec origin:pi/4 0f0 0f0))))
+  (true (m4:orthogonal-p (m4:rotate m4:+id+ (v3:vec origin:pi/6 0f0 0f0)))))
 
 (define-test m4/orthgonalize
   (let ((m (m4:mat 0f0 1f0 -0.12988785f0 1.0139829f0 0f0 0f0 0.3997815f0
@@ -259,15 +251,13 @@
   (is = (m4:determinant (m4:mat 1f0 5f0 9f0 13f0 2f0 6f0 10f0 14f0 3f0 7f0 11f0
                                 15f0 4f0 8f0 12f0 16f0)) 0)
   (is = (m4:determinant m4:+id+) 1)
-  (is = (m4:determinant
-         (m4:rotate m4:+id+ (v3:vec (float (/ pi 3) 1f0) 0f0 0f0)))
-      1)
+  (is = (m4:determinant (m4:rotate m4:+id+ (v3:vec origin:pi/3 0f0 0f0))) 1)
   (is = (m4:determinant (m4:mat 1f0 0f0 0f0 0f0 0f0 0f0 1f0 0f0 0f0 1f0 0f0 0f0
                                 0f0 0f0 0f0 1f0)) -1))
 
 (define-test m4/invert
-  (let ((m (m4:rotate m4:+id+ (v3:vec (float (/ pi 3) 1f0) 0f0 0f0)))
-        (r (m4:rotate m4:+id+ (v3:vec (float (/ pi -3) 1f0) 0f0 0f0)))
+  (let ((m (m4:rotate m4:+id+ (v3:vec origin:pi/3 0f0 0f0)))
+        (r (m4:rotate m4:+id+ (v3:vec (- origin:pi/3) 0f0 0f0)))
         (o (m4:id)))
     (is m4:= (m4:invert! o m) r)
     (is m4:= o r)
@@ -323,9 +313,8 @@
                    -1.002002f0 -2.002002f0 0f0 0f0 -1f0 0f0))
         (o (m4:id)))
     (is m4:= (m4:set-projection/perspective!
-              o (float (/ pi 3) 1f0) (float (/ 16 9) 1f0) 1.0 1000.0)
+              o origin:pi/3 (/ 16f0 9f0) 1.0 1000.0)
         r)
     (is m4:= o r)
-    (is m4:= (m4:set-projection/perspective
-              (float (/ pi 3) 1f0) (/ 16.0 9.0) 1.0 1000.0)
+    (is m4:= (m4:set-projection/perspective origin:pi/3 (/ 16.0 9.0) 1.0 1000.0)
         r)))

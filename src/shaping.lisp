@@ -1,43 +1,4 @@
-(in-package #:cl-user)
-
-(defpackage #:origin.shaping
-  (:use #:cl)
-  (:export
-   #:linear
-   #:sine-out
-   #:sine-in
-   #:sine-in-out
-   #:quadratic-out
-   #:quadratic-in
-   #:quadratic-in-out
-   #:cubic-out
-   #:cubic-in
-   #:cubic-in-out
-   #:quartic-out
-   #:quartic-in
-   #:quartic-in-out
-   #:quintic-out
-   #:quintic-in
-   #:quintic-in-out
-   #:exponential-out
-   #:exponential-in
-   #:exponential-in-out
-   #:circular-out
-   #:circular-in
-   #:circular-in-out
-   #:back-out
-   #:back-in
-   #:back-in-out
-   #:elastic-out
-   #:elastic-in
-   #:elastic-in-out
-   #:bounce-out
-   #:bounce-in
-   #:bounce-in-out
-   #:hermite-curve
-   #:quintic-curve))
-
-(in-package #:origin.shaping)
+(in-package #:origin)
 
 (defun linear (x)
   x)

@@ -64,7 +64,7 @@
              (args (generate-function-args required rest keywords))
              (types (generate-type-signature required rest keywords))
              (body decls doc (a:parse-body body :documentation t)))
-    `(progn
+    `(eval-when (:compile-toplevel :load-toplevel :execute)
        ,@(when inline
            `((declaim (inline ,op))))
        (declaim (ftype (function ,types ,out) ,op))

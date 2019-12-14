@@ -14,8 +14,10 @@
   :in-order-to ((asdf:test-op (asdf:test-op #:origin.test)))
   :components
   ((:file "internal")
+   (:file "package")
    (:file "common")
    (:file "swizzle")
+   (:file "math-constants")
    (:file "shaping")
    (:file "vec2")
    (:file "vec3")

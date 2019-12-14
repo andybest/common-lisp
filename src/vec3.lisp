@@ -1,126 +1,3 @@
-(in-package #:cl-user)
-
-(defpackage #:origin.vec3
-  (:local-nicknames (#:a #:alexandria))
-  (:use #:cl #:origin.internal)
-  (:shadow
-   #:=
-   #:+
-   #:-
-   #:*
-   #:/
-   #:random
-   #:length
-   #:round
-   #:abs
-   #:<
-   #:<=
-   #:>
-   #:>=
-   #:min
-   #:max
-   #:expt
-   #:sqrt
-   #:floor
-   #:ceiling
-   #:mod
-   #:sin
-   #:cos
-   #:tan
-   #:asin
-   #:acos
-   #:atan)
-  (:export
-   #:vec
-   #:x
-   #:y
-   #:z
-   #:with-components
-   #:with-elements
-   #:+zero+
-   #:zero!
-   #:zero
-   #:one!
-   #:one
-   #:zero-p
-   #:random!
-   #:random
-   #:copy!
-   #:copy
-   #:sign!
-   #:sign
-   #:fract!
-   #:fract
-   #:clamp!
-   #:clamp
-   #:=
-   #:~
-   #:+!
-   #:+
-   #:-!
-   #:-
-   #:*!
-   #:*
-   #:/!
-   #:/
-   #:scale!
-   #:scale
-   #:dot
-   #:length-squared
-   #:length
-   #:distance-squared
-   #:distance
-   #:normalize!
-   #:normalize
-   #:round!
-   #:round
-   #:abs!
-   #:abs
-   #:negate!
-   #:negate
-   #:cross!
-   #:cross
-   #:box
-   #:angle
-   #:direction=
-   #:parallel-p
-   #:lerp!
-   #:lerp
-   #:<
-   #:<=
-   #:>
-   #:>=
-   #:min!
-   #:min
-   #:max!
-   #:max
-   #:radians!
-   #:radians
-   #:degrees!
-   #:degrees
-   #:expt!
-   #:expt
-   #:sqrt!
-   #:sqrt
-   #:floor!
-   #:floor
-   #:ceiling!
-   #:ceiling
-   #:mod!
-   #:mod
-   #:sin!
-   #:sin
-   #:cos!
-   #:cos
-   #:tan!
-   #:tan
-   #:asin!
-   #:asin
-   #:acos!
-   #:acos
-   #:atan!
-   #:atan))
-
 (in-package #:origin.vec3)
 
 (deftype vec () '(simple-array single-float (3)))
@@ -163,15 +40,25 @@
             `(with-elements ,rest ,@body)
             `(progn ,@body)))))
 
-(a:define-constant +zero+
-    (make-array 3 :element-type 'single-float :initial-contents '(0f0 0f0 0f0))
-  :test #'equalp)
-
 (define-op vec ((x single-float) (y single-float) (z single-float)) (:out vec)
   (let ((vec (make-array 3 :element-type 'single-float :initial-element 0f0)))
     (with-components ((v vec))
       (psetf vx x vy y vz z))
     vec))
+
+(a:define-constant +zero+ (vec 0f0 0f0 0f0) :test #'equalp)
+
+(a:define-constant +up+ (vec 0f0 1f0 0f0) :test #'equalp)
+
+(a:define-constant +down+ (vec 0f0 -1f0 0f0) :test #'equalp)
+
+(a:define-constant +left+ (vec -1f0 0f0 0f0) :test #'equalp)
+
+(a:define-constant +right+ (vec 1f0 0f0 0f0) :test #'equalp)
+
+(a:define-constant +forward+ (vec 0f0 0f0 1f0) :test #'equalp)
+
+(a:define-constant +back+ (vec 0f0 0f0 -1f0) :test #'equalp)
 
 (define-op zero! ((in vec)) (:out vec)
   (with-components ((v in))
@@ -316,7 +203,7 @@
   out)
 
 (define-op scale ((in vec) (scalar single-float)) (:out vec)
-  (scale! (zero) in (float scalar 1f0)))
+  (scale! (zero) in scalar))
 
 (defmacro %dot (v1x v1y v1z v2x v2y v2z)
   `(cl:+ (cl:* ,v1x ,v2x) (cl:* ,v1y ,v2y) (cl:* ,v1z ,v2z)))
@@ -470,10 +357,9 @@
 
 (define-op radians! ((out vec) (in vec)) (:out vec)
   (with-components ((o out) (v in))
-    (let ((x (float (cl:/ pi 180) 1f0)))
-      (psetf ox (cl:* vx x)
-             oy (cl:* vy x)
-             oz (cl:* vz x)))
+    (psetf ox (cl:* vx origin:+deg+)
+           oy (cl:* vy origin:+deg+)
+           oz (cl:* vz origin:+deg+))
     out))
 
 (define-op radians ((in vec)) (:out vec)
@@ -481,10 +367,9 @@
 
 (define-op degrees! ((out vec) (in vec)) (:out vec)
   (with-components ((o out) (v in))
-    (let ((x (float (cl:/ 180 pi) 1f0)))
-      (psetf ox (cl:* vx x)
-             oy (cl:* vy x)
-             oz (cl:* vz x))))
+    (psetf ox (cl:* vx origin:+rad+)
+           oy (cl:* vy origin:+rad+)
+           oz (cl:* vz origin:+rad+)))
   out)
 
 (define-op degrees ((in vec)) (:out vec)

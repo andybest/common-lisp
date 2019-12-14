@@ -1,69 +1,3 @@
-(in-package #:cl-user)
-
-(defpackage #:origin.mat2
-  (:local-nicknames (#:a #:alexandria)
-                    (#:v2 #:origin.vec2))
-  (:use #:cl #:origin.internal)
-  (:shadow
-   #:=
-   #:+
-   #:-
-   #:*
-   #:random
-   #:trace)
-  (:export
-   #:mat
-   #:with-components
-   #:with-elements
-   #:+zero+
-   #:+id+
-   #:zero!
-   #:zero
-   #:zero-p
-   #:random
-   #:id!
-   #:id
-   #:id-p
-   #:=
-   #:~
-   #:copy!
-   #:copy
-   #:clamp!
-   #:clamp
-   #:+!
-   #:+
-   #:-!
-   #:-
-   #:*!
-   #:*
-   #:get-column!
-   #:get-column
-   #:set-column!
-   #:set-column
-   #:rotation-axis-to-vec2!
-   #:rotation-axis-to-vec2
-   #:rotation-axis-from-vec2!
-   #:rotation-axis-from-vec2
-   #:rotate!
-   #:rotate
-   #:get-scale!
-   #:get-scale
-   #:set-scale!
-   #:set-scale
-   #:scale!
-   #:scale
-   #:*v2!
-   #:*v2
-   #:transpose!
-   #:transpose
-   #:orthogonal-p
-   #:trace
-   #:diagonal-p
-   #:main-diagonal!
-   #:main-diagonal
-   #:anti-diagonal!
-   #:anti-diagonal))
-
 (in-package #:origin.mat2)
 
 (deftype mat () '(simple-array single-float (4)))
@@ -90,16 +24,6 @@
             `(with-elements ,rest ,@body)
             `(progn ,@body)))))
 
-(a:define-constant +zero+
-    (make-array 4 :element-type 'single-float
-                  :initial-contents '(0f0 0f0 0f0 0f0))
-  :test #'equalp)
-
-(a:define-constant +id+
-    (make-array 4 :element-type 'single-float
-                  :initial-contents '(1f0 0f0 0f0 1f0))
-  :test #'equalp)
-
 (define-op mat ((m00 single-float) (m01 single-float) (m10 single-float)
                 (m11 single-float))
     (:out mat)
@@ -107,6 +31,10 @@
     (with-components ((%m mat))
       (psetf %m00 m00 %m01 m01 %m10 m10 %m11 m11))
     mat))
+
+(a:define-constant +zero+ (mat 0f0 0f0 0f0 0f0) :test #'equalp)
+
+(a:define-constant +id+ (mat 1f0 0f0 0f0 1f0) :test #'equalp)
 
 (define-op zero! ((in mat)) (:out mat)
   (with-components ((m in))
@@ -279,9 +207,8 @@
   (with-components ((m (id)))
     (copy! out in)
     (when (cl:> (abs angle) 1e-7)
-      (let* ((angle (float angle 1f0))
-             (s (sin angle))
-             (c (cos angle)))
+      (let ((s (sin angle))
+            (c (cos angle)))
         (psetf m00 c m01 (cl:- s)
                m10 s m11 c)
         (ecase space
