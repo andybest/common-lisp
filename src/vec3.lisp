@@ -125,6 +125,15 @@
 
 (deftype vec () '(simple-array single-float (3)))
 
+(define-op x ((vec vec)) (:out single-float)
+  (aref vec 0))
+
+(define-op y ((vec vec)) (:out single-float)
+  (aref vec 1))
+
+(define-op z ((vec vec)) (:out single-float)
+  (aref vec 2))
+
 (defmacro with-components (((prefix vec) &rest rest) &body body)
   (a:once-only (vec)
     `(symbol-macrolet ((,prefix ,vec)

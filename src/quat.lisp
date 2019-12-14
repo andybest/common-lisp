@@ -89,6 +89,18 @@
 
 (deftype quat () '(simple-array single-float (4)))
 
+(define-op w ((quat quat)) (:out single-float)
+  (aref quat 0))
+
+(define-op x ((quat quat)) (:out single-float)
+  (aref quat 1))
+
+(define-op y ((quat quat)) (:out single-float)
+  (aref quat 2))
+
+(define-op z ((quat quat)) (:out single-float)
+  (aref quat 3))
+
 (defmacro with-components (((prefix quat) &rest rest) &body body)
   (a:once-only (quat)
     `(symbol-macrolet ((,prefix ,quat)
