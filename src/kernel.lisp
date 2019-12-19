@@ -139,9 +139,9 @@
     items))
 
 (defun process (stage layout filter processor &key items (generator #'identity))
-  (loop :with items = (or items (collect stage layout filter))
-        :while items
-        :for kernel = (funcall generator (pop items))
-        :when (funcall filter kernel)
-          :do (a:when-let ((new (funcall processor kernel)))
-                (push new items))))
+  (let ((items (or items (collect stage layout filter))))
+    (u:while items
+      (let ((kernel (funcall generator (pop items))))
+        (when (funcall filter kernel)
+          (a:when-let ((new (funcall processor kernel)))
+            (push new items)))))))
