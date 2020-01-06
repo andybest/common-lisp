@@ -10,6 +10,7 @@
 
 (in-package #:origin.internal)
 
+#+sbcl
 (setf sb-ext:*inline-expansion-limit*
       (max sb-ext:*inline-expansion-limit* 2048))
 
