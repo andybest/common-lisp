@@ -1,24 +1,22 @@
 (in-package #:origin)
 
-(define-op make-velocity! ((out v3:vec) (axis v3:vec)
-                           (radians-per-second single-float))
+(define-op make-velocity! ((out v3:vec) (axis v3:vec) (rate single-float))
     (:out v3:vec)
   "`AXIS` is a vec3 of any length or :X, :Y, :Z for each of the positive local
-axes. `RATE` is in radians/second. Returns a velocity vec3 following the right
+axes. `RATE` is in units/second. Returns a velocity vec3 following the right
 hand rule whose direction is parallel to `AXIS` and magnitude is `RATE`.
 Destructively modifies `OUT`."
   (v3:copy! out axis)
   (v3:normalize! out out)
-  (v3:scale! out out radians-per-second))
+  (v3:scale! out out rate))
 
-(define-op make-velocity ((axis (or v3:vec keyword))
-                          (radians-per-second single-float))
+(define-op make-velocity ((axis (or v3:vec keyword)) (rate single-float))
     (:out v3:vec)
   "`AXIS` is a vec3 of any length or :X, :Y, :Z for each of the positive local
-axes. `RATE` is in radians/second. Returns an angular velocity vec3 following
+axes. `RATE` is in units/second. Returns an angular velocity vec3 following
 the right hand rule whose direction is parallel to `AXIS` and magnitude is
 `RATE`. Allocates a fresh vec3."
-  (make-velocity! (v3:zero) axis radians-per-second))
+  (make-velocity! (v3:zero) axis rate))
 
 (define-op velocity->rotation! ((out q:quat) (velocity v3:vec)
                                 (delta single-float))
