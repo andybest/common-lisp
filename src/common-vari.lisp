@@ -152,7 +152,7 @@
 (v-def-glsl-template-fun mat3x4 (a) "mat3x4(~a)" (:mat4x4) :mat3x4 :pure t)
 (v-def-glsl-template-fun mat4x2 (a) "mat4x2(~a)" (:float) :mat4x2 :pure t)
 (v-def-glsl-template-fun mat4x2 (a b c d e f g h)
-                         "mat4x2(~a,~a,~a,~a,~a,~a,~a,~a,~a,~a,~a,~a)"
+                         "mat4x2(~a,~a,~a,~a,~a,~a,~a,~a)"
                          (:float :float :float :float :float :float :float
                                  :float)
                          :mat4x2 :pure t)
