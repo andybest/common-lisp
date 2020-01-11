@@ -733,6 +733,10 @@
    #:24pi/12
    #:+rad+
    #:+deg+)
+  ;; general
+  (:export
+   #:unproject!
+   #:unproject)
   ;; shaping
   (:export
    #:linear
