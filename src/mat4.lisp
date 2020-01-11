@@ -491,17 +491,24 @@
 (define-op scale ((in mat) (vec v3:vec)) (:out mat)
   (scale! (id) in vec))
 
+(defmacro %*v4! (ox oy oz ow
+                 m00 m01 m02 m03 m10 m11 m12 m13 m20 m21 m22 m23 m30 m31 m32 m33
+                 vx vy vz vw)
+  `(psetf ,ox (cl:+ (cl:* ,m00 ,vx) (cl:* ,m01 ,vy) (cl:* ,m02 ,vz)
+                    (cl:* ,m03 ,vw))
+          ,oy (cl:+ (cl:* ,m10 ,vx) (cl:* ,m11 ,vy) (cl:* ,m12 ,vz)
+                    (cl:* ,m13 ,vw))
+          ,oz (cl:+ (cl:* ,m20 ,vx) (cl:* ,m21 ,vy) (cl:* ,m22 ,vz)
+                    (cl:* ,m23 ,vw))
+          ,ow (cl:+ (cl:* ,m30 ,vx) (cl:* ,m31 ,vy) (cl:* ,m32 ,vz)
+                    (cl:* ,m33 ,vw))))
+
 (define-op *v4! ((out v4:vec) (in mat) (vec v4:vec)) (:out v4:vec)
   (v4:with-components ((v vec) (o out))
     (with-components ((m in))
-      (psetf ox (cl:+ (cl:* m00 vx) (cl:* m01 vy) (cl:* m02 vz)
-                      (cl:* m03 vw))
-             oy (cl:+ (cl:* m10 vx) (cl:* m11 vy) (cl:* m12 vz)
-                      (cl:* m13 vw))
-             oz (cl:+ (cl:* m20 vx) (cl:* m21 vy) (cl:* m22 vz)
-                      (cl:* m23 vw))
-             ow (cl:+ (cl:* m30 vx) (cl:* m31 vy) (cl:* m32 vz)
-                      (cl:* m33 vw)))))
+      (%*v4! ox oy oz ow
+             m00 m01 m02 m03 m10 m11 m12 m13 m20 m21 m22 m23 m30 m31 m32 m33
+             vx vy vz vw)))
   out)
 
 (define-op *v4 ((in mat) (vec v4:vec)) (:out v4:vec)
