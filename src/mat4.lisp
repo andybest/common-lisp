@@ -598,10 +598,10 @@
 (define-op invert-orthogonal ((in mat)) (:out mat)
   (invert-orthogonal! (id) in))
 
-(define-op invert! ((out mat) (in mat)) (:out mat :inline nil)
+(define-op invert! ((out mat) (in mat)) (:out (values mat boolean) :inline nil)
   (let ((determinant (determinant in)))
     (when (< (abs determinant) 1e-7)
-      (error "Cannot invert a matrix with a determinant of zero."))
+      (return-from invert! (values in nil)))
     (with-components ((o out) (m in))
       (psetf o00 (/ (cl:- (cl:+ (cl:* m11 m22 m33) (cl:* m12 m23 m31)
                                 (cl:* m13 m21 m32))
@@ -683,7 +683,7 @@
                           (cl:* m00 m12 m21) (cl:* m01 m10 m22)
                           (cl:* m02 m11 m20))
                     determinant))))
-  out)
+  (values out t))
 
 (define-op invert ((in mat)) (:out mat)
   (invert! (id) in))
