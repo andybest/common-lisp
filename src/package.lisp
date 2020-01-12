@@ -735,6 +735,11 @@
    #:+deg+)
   ;; general
   (:export
+   #:line-direction
+   #:line-plane-intersect
+   #:line-point-distance
+   #:line-segment-midpoint
+   #:translate-point
    #:unproject!
    #:unproject)
   ;; shaping

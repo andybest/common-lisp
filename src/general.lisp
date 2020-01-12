@@ -28,3 +28,32 @@
                       (viewport v4:vec))
     (:out v3:vec)
   (unproject! (v3:zero) point model projection viewport))
+
+(define-op translate-point ((point v3:vec) (direction v3:vec)
+                            (distance single-float))
+    (:out v3:vec)
+  (v3:+ point (v3:scale direction distance)))
+
+(define-op line-direction ((point1 v3:vec) (point2 v3:vec)) (:out v3:vec)
+  (v3:normalize (v3:- point2 point1)))
+
+(define-op line-segment-midpoint ((point1 v3:vec) (point2 v3:vec)) (:out v3:vec)
+  (v3:lerp point1 point2 0.5))
+
+(define-op line-plane-intersect ((line-point1 v3:vec) (line-point2 v3:vec)
+                                 (plane-point v3:vec) (plane-normal v3:vec))
+    (:out v3:vec)
+  (let* ((dir (line-direction line-point1 line-point2))
+         (dir-dot-plane (v3:dot dir plane-normal))
+         (plane-line (v3:- line-point1 plane-point)))
+    (if (zerop dir-dot-plane)
+        (v3:zero)
+        (let ((dist (/ (- (v3:dot plane-normal plane-line)) dir-dot-plane)))
+          (translate-point line-point1 dir dist)))))
+
+(define-op line-point-distance ((line-point1 v3:vec) (line-point2 v3:vec)
+                                (point v3:vec))
+    (:out single-float)
+  (let* ((dir (line-direction line-point1 line-point2))
+         (intersect (line-plane-intersect line-point1 line-point2 point dir)))
+    (v3:distance point intersect)))
