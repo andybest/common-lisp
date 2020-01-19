@@ -475,6 +475,8 @@
    #:translate
    #:copy-rotation!
    #:copy-rotation
+   #:rotation-to-mat2!
+   #:rotation-to-mat2
    #:normalize-rotation!
    #:normalize-rotation
    #:rotation-axis-to-vec2!
@@ -552,6 +554,8 @@
    #:translate
    #:copy-rotation!
    #:copy-rotation
+   #:rotation-to-mat3!
+   #:rotation-to-mat3
    #:normalize-rotation!
    #:normalize-rotation
    #:rotation-axis-to-vec3!

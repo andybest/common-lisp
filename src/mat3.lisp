@@ -221,6 +221,16 @@
 (define-op copy-rotation ((in mat)) (:out mat)
   (copy-rotation! (id) in))
 
+(define-op rotation-to-mat2! ((out m2:mat) (in mat)) (:out m2:mat)
+  (m2:with-components ((o out))
+    (with-components ((m in))
+      (psetf o00 m00 o01 m01
+             o10 m10 o11 m11)))
+  out)
+
+(define-op rotation-to-mat2 ((in mat)) (:out m2:mat)
+  (rotation-to-mat2! (m2:id) in))
+
 (define-op normalize-rotation! ((out mat) (in mat)) (:out mat)
   (with-components ((o out) (m in))
     (v2::%normalize o00 o10 m00 m10)
