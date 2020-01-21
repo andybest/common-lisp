@@ -460,9 +460,10 @@
   (rotate! (id) in vec))
 
 (define-op get-scale! ((out v3:vec) (in mat)) (:out v3:vec)
-  (with-components ((m in))
-    (v3:with-components ((o out))
-      (psetf ox m00 oy m11 oz m22)))
+  (v3:with-components ((o out))
+    (psetf ox (v3:length (rotation-axis-to-vec3 in :x))
+           oy (v3:length (rotation-axis-to-vec3 in :y))
+           oz (v3:length (rotation-axis-to-vec3 in :z))))
   out)
 
 (define-op get-scale ((in mat)) (:out v3:vec)
