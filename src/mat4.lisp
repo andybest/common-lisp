@@ -311,7 +311,7 @@
     (with-components ((m in))
       (psetf o00 m00 o01 m01 o02 m02
              o10 m10 o11 m11 o12 m12
-             o20 m20 m21 m21 o22 m22)))
+             o20 m20 o21 m21 o22 m22)))
   out)
 
 (define-op rotation-to-mat3 ((in mat)) (:out m3:mat)
