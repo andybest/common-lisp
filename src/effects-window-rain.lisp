@@ -79,15 +79,12 @@
                       &uniforms
                       (model :mat4)
                       (view :mat4)
-                      (proj :mat4)
-                      (frame-count :int)
-                      (frame-time :float))
+                      (proj :mat4))
   (with-slots (mesh/pos) mesh-attrs
-    (values (vec4 (.xy mesh/pos) 0 1)
-            (* frame-count frame-time))))
+    (vec4 (.xy mesh/pos) 0 1)))
 
-(defun window-rain/f ((time :float)
-                      &uniforms
+(defun window-rain/f (&uniforms
+                      (time :float)
                       (res :vec2)
                       (blur :float)
                       (speed :float)
@@ -113,4 +110,4 @@
 
 (define-shader window-rain ()
   (:vertex (window-rain/v mesh-attrs))
-  (:fragment (window-rain/f :float)))
+  (:fragment (window-rain/f)))
