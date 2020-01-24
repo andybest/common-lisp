@@ -27,7 +27,7 @@
 (define-op unproject ((point v3:vec) (model m4:mat) (projection m4:mat)
                       (viewport v4:vec))
     (:out v3:vec)
-  (unproject! (v3:zero) point model projection viewport))
+  (unproject! (v3:vec) point model projection viewport))
 
 (define-op translate-point ((point v3:vec) (direction v3:vec)
                             (distance single-float))
@@ -47,7 +47,7 @@
          (dir-dot-plane (v3:dot dir plane-normal))
          (plane-line (v3:- line-point1 plane-point)))
     (if (zerop dir-dot-plane)
-        (v3:zero)
+        (v3:vec)
         (let ((dist (/ (- (v3:dot plane-normal plane-line)) dir-dot-plane)))
           (translate-point line-point1 dir dist)))))
 

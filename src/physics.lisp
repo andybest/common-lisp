@@ -16,7 +16,7 @@ Destructively modifies `OUT`."
 axes. `RATE` is in units/second. Returns an angular velocity vec3 following
 the right hand rule whose direction is parallel to `AXIS` and magnitude is
 `RATE`. Allocates a fresh vec3."
-  (make-velocity! (v3:zero) axis rate))
+  (make-velocity! (v3:vec) axis rate))
 
 (define-op velocity->rotation! ((out q:quat) (velocity v3:vec)
                                 (delta single-float))
@@ -39,4 +39,4 @@ amount of time. Destructively modifies `OUT`."
 radians/second rotation about its vector. `DELTA` is an amount of time. Returns
 a normalized quaternion that represents the angular velocity rotation in `DELTA`
 amount of time. Allocates a fresh quaternion."
-  (velocity->rotation! (q:id) velocity delta))
+  (velocity->rotation! (q:quat 1) velocity delta))

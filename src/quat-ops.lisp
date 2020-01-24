@@ -9,26 +9,26 @@
 (define-op w ((quat quat)) (:out single-float)
   (aref quat 0))
 
-(define-op (setf w) ((new-value single-float) (quat quat)) (:out single-float)
-  (setf (aref quat 0) new-value))
+(define-op (setf w) ((value single-float) (quat quat)) (:out single-float)
+  (setf (aref quat 0) value))
 
 (define-op x ((quat quat)) (:out single-float)
   (aref quat 1))
 
-(define-op (setf x) ((new-value single-float) (quat quat)) (:out single-float)
-  (setf (aref quat 1) new-value))
+(define-op (setf x) ((value single-float) (quat quat)) (:out single-float)
+  (setf (aref quat 1) value))
 
 (define-op y ((quat quat)) (:out single-float)
   (aref quat 2))
 
-(define-op (setf y) ((new-value single-float) (quat quat)) (:out single-float)
-  (setf (aref quat 2) new-value))
+(define-op (setf y) ((value single-float) (quat quat)) (:out single-float)
+  (setf (aref quat 2) value))
 
 (define-op z ((quat quat)) (:out single-float)
   (aref quat 3))
 
-(define-op (setf z) ((new-value single-float) (quat quat)) (:out single-float)
-  (setf (aref quat 3) new-value))
+(define-op (setf z) ((value single-float) (quat quat)) (:out single-float)
+  (setf (aref quat 3) value))
 
 ;;; constructors
 
@@ -67,16 +67,15 @@
     (psetf qw 1f0 qx 0f0 qy 0f0 qz 0f0))
   in)
 
-(define-op id () (:out quat)
-  (id! (quat 0f0 0f0 0f0 0f0)))
+(define-op id-p ((in quat)) (:out boolean)
+  (with-components ((q in))
+    (and (cl:= qw 1f0)
+         (cl:= qx qy qz 0f0))))
 
 (define-op zero! ((in quat)) (:out quat)
   (with-components ((q in))
     (psetf qw 0f0 qx 0f0 qy 0f0 qz 0f0))
   in)
-
-(define-op zero () (:out quat)
-  (quat 0f0 0f0 0f0 0f0))
 
 (define-op = ((in1 quat) (in2 quat)) (:out boolean)
   (with-components ((q1 in1) (q2 in2))
@@ -105,7 +104,7 @@
 
 (define-op random (&key (min single-float 0f0) (max single-float 1f0))
     (:out quat)
-  (random! (zero) :min min :max max))
+  (random! (quat) :min min :max max))
 
 (define-op copy! ((out quat) (in quat)) (:out quat)
   (with-components ((o out) (q in))
@@ -113,7 +112,7 @@
   out)
 
 (define-op copy ((in quat)) (:out quat)
-  (copy! (id) in))
+  (copy! (quat 1) in))
 
 (define-op +! ((out quat) (in1 quat) (in2 quat)) (:out quat)
   (with-components ((o out) (q1 in1) (q2 in2))
@@ -124,7 +123,7 @@
   out)
 
 (define-op + ((in1 quat) (in2 quat)) (:out quat)
-  (+! (id) in1 in2))
+  (+! (quat 1) in1 in2))
 
 (define-op -! ((out quat) (in1 quat) (in2 quat)) (:out quat)
   (with-components ((o out) (q1 in1) (q2 in2))
@@ -135,7 +134,7 @@
   out)
 
 (define-op - ((in1 quat) (in2 quat)) (:out quat)
-  (-! (id) in1 in2))
+  (-! (quat 1) in1 in2))
 
 (defmacro %* (ow ox oy oz q1w q1x q1y q1z q2w q2x q2y q2z)
   `(psetf ,ow (cl:- (cl:* ,q1w ,q2w) (cl:* ,q1x ,q2x) (cl:* ,q1y ,q2y)
@@ -153,7 +152,7 @@
   out)
 
 (define-op * ((in1 quat) (in2 quat)) (:out quat)
-  (*! (id) in1 in2))
+  (*! (quat 1) in1 in2))
 
 (defmacro %scale (ow ox oy oz w x y z scalar)
   `(psetf ,ow (cl:* ,w ,scalar)
@@ -167,7 +166,7 @@
   out)
 
 (define-op scale ((in quat) (scalar float)) (:out quat)
-  (scale! (zero) in scalar))
+  (scale! (quat) in scalar))
 
 (define-op conjugate! ((out quat) (in quat)) (:out quat)
   (with-components ((o out) (q in))
@@ -178,13 +177,13 @@
   out)
 
 (define-op conjugate ((in quat)) (:out quat)
-  (conjugate! (id) in))
+  (conjugate! (quat 1) in))
 
 (define-op cross! ((out quat) (in1 quat) (in2 quat)) (:out quat)
   (scale! out (+ (* in2 (conjugate in1)) (* in1 in2)) 0.5f0))
 
 (define-op cross ((in1 quat) (in2 quat)) (:out quat)
-  (cross! (id) in1 in2))
+  (cross! (quat 1) in1 in2))
 
 (define-op length-squared ((in quat)) (:out single-float)
   (with-components ((q in))
@@ -200,13 +199,13 @@
   out)
 
 (define-op normalize ((in quat)) (:out quat)
-  (normalize! (id) in))
+  (normalize! (quat 1) in))
 
 (define-op negate! ((out quat) (in quat)) (:out quat)
   (scale! out in -1f0))
 
 (define-op negate ((in quat)) (:out quat)
-  (negate! (id) in))
+  (negate! (quat 1) in))
 
 (define-op dot ((in1 quat) (in2 quat)) (:out single-float)
   (with-components ((q1 in1) (q2 in2))
@@ -218,7 +217,7 @@
   out)
 
 (define-op inverse ((in quat)) (:out quat)
-  (inverse! (id) in))
+  (inverse! (quat 1) in))
 
 (define-op rotate-euler! ((out quat) (in quat) (vec v3:vec)
                           &key (space keyword :local))
@@ -250,7 +249,7 @@
 
 (define-op rotate-euler ((in quat) (vec v3:vec) &key (space keyword :local))
     (:out quat)
-  (rotate-euler! (id) in vec :space space))
+  (rotate-euler! (quat 1) in vec :space space))
 
 (define-op rotate! ((out quat) (in1 quat) (in2 quat)
                     &key (space keyword :local))
@@ -264,7 +263,7 @@
 
 (define-op rotate ((in1 quat) (in2 quat) &key (space keyword :local))
     (:out quat)
-  (rotate! (id) in1 in2 :space space))
+  (rotate! (quat 1) in1 in2 :space space))
 
 (define-op to-euler! ((out v3:vec) (in quat)) (:out v3:vec :speed nil)
   (with-components ((q in))
@@ -285,7 +284,7 @@
   out)
 
 (define-op to-euler ((in quat)) (:out v3:vec :speed nil)
-  (to-euler! (v3:zero) in))
+  (to-euler! (v3:vec) in))
 
 (define-op to-vec3! ((out v3:vec) (in quat)) (:out v3:vec)
   (v3:with-components ((v out))
@@ -294,7 +293,7 @@
   out)
 
 (define-op to-vec3 ((in quat)) (:out v3:vec)
-  (to-vec3! (v3:zero) in))
+  (to-vec3! (v3:vec) in))
 
 (define-op to-vec4! ((out v4:vec) (in quat)) (:out v4:vec)
   (v4:with-components ((v out))
@@ -303,7 +302,7 @@
   out)
 
 (define-op to-vec4 ((in quat)) (:out v4:vec)
-  (to-vec4! (v4:zero) in))
+  (to-vec4! (v4:vec) in))
 
 (define-op from-vec3! ((out quat) (in v3:vec)) (:out quat)
   (with-components ((q out))
@@ -312,7 +311,7 @@
   out)
 
 (define-op from-vec3 ((in v3:vec)) (:out quat)
-  (from-vec3! (zero) in))
+  (from-vec3! (quat) in))
 
 (define-op from-vec4! ((out quat) (in v4:vec)) (:out quat)
   (with-components ((q out))
@@ -321,7 +320,7 @@
   out)
 
 (define-op from-vec4 ((in v4:vec)) (:out quat)
-  (from-vec4! (zero) in))
+  (from-vec4! (quat) in))
 
 (define-op to-mat3! ((out m3:mat) (in quat)) (:out m3:mat)
   (let ((s (/ 2 (length-squared in))))
@@ -343,7 +342,7 @@
   out)
 
 (define-op to-mat3 ((in quat)) (:out m3:mat)
-  (to-mat3! (m3:id) in))
+  (to-mat3! (m3:mat 1) in))
 
 (define-op to-mat4! ((out m4:mat) (in quat)) (:out m4:mat)
   (let ((s (/ 2 (length-squared in))))
@@ -372,7 +371,7 @@
   out)
 
 (define-op to-mat4 ((in quat)) (:out m4:mat)
-  (to-mat4! (m4:id) in))
+  (to-mat4! (m4:mat 1) in))
 
 (define-op from-mat3! ((out quat) (in m3:mat))
     (:out quat :inline nil :speed nil)
@@ -417,7 +416,7 @@
   out)
 
 (define-op from-mat3 ((in m3:mat)) (:out quat)
-  (from-mat3! (id) in))
+  (from-mat3! (quat 1) in))
 
 (define-op from-mat4! ((out quat) (in m4:mat)) (:out quat :speed nil)
   (with-components ((o out))
@@ -461,7 +460,7 @@
     o))
 
 (define-op from-mat4 ((in m4:mat)) (:out quat :speed nil)
-  (from-mat4! (id) in))
+  (from-mat4! (quat 1) in))
 
 (define-op slerp! ((out quat) (in1 quat) (in2 quat) (factor single-float))
     (:out quat :inline nil)
@@ -488,7 +487,7 @@
   out)
 
 (define-op slerp ((in1 quat) (in2 quat) (factor float)) (:out quat)
-  (slerp! (id) in1 in2 factor))
+  (slerp! (quat 1) in1 in2 factor))
 
 (defmacro %from-axis-angle (qw qx qy qz vx vy vz angle)
   (a:with-gensyms (half-angle c s)
@@ -508,7 +507,7 @@
   out)
 
 (define-op from-axis-angle ((axis v3:vec) (angle single-float)) (:out quat)
-  (from-axis-angle! (id) axis angle))
+  (from-axis-angle! (quat 1) axis angle))
 
 (define-op orient! ((out quat) (space keyword)
                     &rest (axes/angles (or keyword v3:vec single-float)))
@@ -538,4 +537,4 @@
 (define-op orient ((space keyword)
                    &rest (axes/angles (or keyword v3:vec single-float)))
     (:out quat)
-  (apply #'orient! (id) space axes/angles))
+  (apply #'orient! (quat 1) space axes/angles))

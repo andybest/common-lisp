@@ -56,9 +56,6 @@
    #:with-elements
    #:+zero+
    #:zero!
-   #:zero
-   #:one!
-   #:one
    #:zero-p
    #:random!
    #:random
@@ -178,9 +175,6 @@
    #:+forward+
    #:+back+
    #:zero!
-   #:zero
-   #:one!
-   #:one
    #:zero-p
    #:random!
    #:random
@@ -299,9 +293,6 @@
    #:with-elements
    #:+zero+
    #:zero!
-   #:zero
-   #:one!
-   #:one
    #:zero-p
    #:random!
    #:random
@@ -392,11 +383,9 @@
    #:+zero+
    #:+id+
    #:zero!
-   #:zero
    #:zero-p
    #:random
    #:id!
-   #:id
    #:id-p
    #:=
    #:~
@@ -454,10 +443,8 @@
    #:+zero+
    #:+id+
    #:zero!
-   #:zero
    #:zero-p
    #:id!
-   #:id
    #:id-p
    #:=
    #:~
@@ -529,10 +516,8 @@
    #:+zero+
    #:+id+
    #:zero!
-   #:zero
    #:zero-p
    #:id!
-   #:id
    #:id-p
    #:=
    #:~
@@ -622,9 +607,8 @@
    #:+zero+
    #:+id+
    #:id!
-   #:id
+   #:id-p
    #:zero!
-   #:zero
    #:=
    #:~
    #:random!

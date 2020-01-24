@@ -5,20 +5,20 @@
 (define-op x ((vec vec)) (:out single-float)
   (aref vec 0))
 
-(define-op (setf x) ((new-value single-float) (vec vec)) (:out single-float)
-  (setf (aref vec 0) new-value))
+(define-op (setf x) ((value single-float) (vec vec)) (:out single-float)
+  (setf (aref vec 0) value))
 
 (define-op y ((vec vec)) (:out single-float)
   (aref vec 1))
 
-(define-op (setf y) ((new-value single-float) (vec vec)) (:out single-float)
-  (setf (aref vec 1) new-value))
+(define-op (setf y) ((value single-float) (vec vec)) (:out single-float)
+  (setf (aref vec 1) value))
 
 (define-op z ((vec vec)) (:out single-float)
   (aref vec 2))
 
-(define-op (setf z) ((new-value single-float) (vec vec)) (:out single-float)
-  (setf (aref vec 2) new-value))
+(define-op (setf z) ((value single-float) (vec vec)) (:out single-float)
+  (setf (aref vec 2) value))
 
 
 ;;; constructors
@@ -83,17 +83,6 @@
     (psetf vx 0f0 vy 0f0 vz 0f0))
   in)
 
-(define-op zero () (:out vec)
-  (vec 0f0 0f0 0f0))
-
-(define-op one! ((in vec)) (:out vec)
-  (with-components ((v in))
-    (psetf vx 1f0 vy 1f0 vz 1f0))
-  in)
-
-(define-op one () (:out vec)
-  (one! (zero)))
-
 (define-op zero-p ((in vec)) (:out boolean)
   (with-components ((v in))
     (cl:= 0f0 vx vy vz)))
@@ -109,7 +98,7 @@
 
 (define-op random (&key (min single-float 0f0) (max single-float 1f0))
     (:out vec)
-  (random! (zero) :min min :max max))
+  (random! (vec) :min min :max max))
 
 (define-op copy! ((out vec) (in vec)) (:out vec)
   (with-components ((o out) (v in))
@@ -117,7 +106,7 @@
   out)
 
 (define-op copy ((in vec)) (:out vec)
-  (copy! (zero) in))
+  (copy! (vec) in))
 
 (define-op sign! ((out vec) (in vec)) (:out vec)
   (with-components ((o out) (v in))
@@ -127,7 +116,7 @@
   out)
 
 (define-op sign ((in vec)) (:out vec)
-  (sign! (zero) in))
+  (sign! (vec) in))
 
 (define-op fract! ((out vec) (in vec)) (:out vec)
   (with-components ((o out) (v in))
@@ -137,7 +126,7 @@
   out)
 
 (define-op fract ((in vec)) (:out vec)
-  (fract! (zero) in))
+  (fract! (vec) in))
 
 (define-op clamp! ((out vec) (in vec)
                    &key
@@ -155,7 +144,7 @@
                   (min single-float most-negative-single-float)
                   (max single-float most-positive-single-float))
     (:out vec)
-  (clamp! (zero) in :min min :max max))
+  (clamp! (vec) in :min min :max max))
 
 (define-op = ((in1 vec) (in2 vec)) (:out boolean)
   (with-components ((v1 in1) (v2 in2))
@@ -178,7 +167,7 @@
   out)
 
 (define-op + ((in1 vec) (in2 vec)) (:out vec)
-  (+! (zero) in1 in2))
+  (+! (vec) in1 in2))
 
 (define-op -! ((out vec) (in1 vec) (in2 vec)) (:out vec)
   (with-components ((o out) (v1 in1) (v2 in2))
@@ -188,7 +177,7 @@
   out)
 
 (define-op - ((in1 vec) (in2 vec)) (:out vec)
-  (-! (zero) in1 in2))
+  (-! (vec) in1 in2))
 
 (define-op *! ((out vec) (in1 vec) (in2 vec)) (:out vec)
   (with-components ((o out) (v1 in1) (v2 in2))
@@ -198,7 +187,7 @@
   out)
 
 (define-op * ((in1 vec) (in2 vec)) (:out vec)
-  (*! (zero) in1 in2))
+  (*! (vec) in1 in2))
 
 (define-op /! ((out vec) (in1 vec) (in2 vec)) (:out vec)
   (with-components ((o out) (v1 in1) (v2 in2))
@@ -208,7 +197,7 @@
   out)
 
 (define-op / ((in1 vec) (in2 vec)) (:out vec)
-  (/! (zero) in1 in2))
+  (/! (vec) in1 in2))
 
 (defmacro %scale (ox oy oz x y z scalar)
   `(psetf ,ox (cl:* ,x ,scalar)
@@ -221,7 +210,7 @@
   out)
 
 (define-op scale ((in vec) (scalar single-float)) (:out vec)
-  (scale! (zero) in scalar))
+  (scale! (vec) in scalar))
 
 (defmacro %dot (v1x v1y v1z v2x v2y v2z)
   `(cl:+ (cl:* ,v1x ,v2x) (cl:* ,v1y ,v2y) (cl:* ,v1z ,v2z)))
@@ -266,7 +255,7 @@
   out)
 
 (define-op normalize ((in vec)) (:out vec)
-  (normalize! (zero) in))
+  (normalize! (vec) in))
 
 (define-op round! ((out vec) (in vec)) (:out vec)
   (with-components ((o out) (v in))
@@ -276,7 +265,7 @@
   out)
 
 (define-op round ((in vec)) (:out vec)
-  (round! (zero) in))
+  (round! (vec) in))
 
 (define-op abs! ((out vec) (in vec)) (:out vec)
   (with-components ((o out) (v in))
@@ -286,13 +275,13 @@
   out)
 
 (define-op abs ((in vec)) (:out vec)
-  (abs! (zero) in))
+  (abs! (vec) in))
 
 (define-op negate! ((out vec) (in vec)) (:out vec)
   (scale! out in -1f0))
 
 (define-op negate ((in vec)) (:out vec)
-  (negate! (zero) in))
+  (negate! (vec) in))
 
 (define-op cross! ((out vec) (in1 vec) (in2 vec)) (:out vec)
   (with-components ((o out) (v1 in1) (v2 in2))
@@ -302,7 +291,7 @@
   out)
 
 (define-op cross ((in1 vec) (in2 vec)) (:out vec)
-  (cross! (zero) in1 in2))
+  (cross! (vec) in1 in2))
 
 (define-op box ((in1 vec) (in2 vec) (in3 vec)) (:out single-float)
   (dot (cross in1 in2) in3))
@@ -327,7 +316,7 @@
   out)
 
 (define-op lerp ((in1 vec) (in2 vec) (factor single-float)) (:out vec)
-  (lerp! (zero) in1 in2 factor))
+  (lerp! (vec) in1 in2 factor))
 
 (define-op < ((in1 vec) (in2 vec)) (:out boolean)
   (with-components ((v1 in1) (v2 in2))
@@ -361,7 +350,7 @@
   out)
 
 (define-op min ((in1 vec) (in2 vec)) (:out vec)
-  (min! (zero) in1 in2))
+  (min! (vec) in1 in2))
 
 (define-op max! ((out vec) (in1 vec) (in2 vec)) (:out vec)
   (with-components ((o out) (v1 in1) (v2 in2))
@@ -371,7 +360,7 @@
   out)
 
 (define-op max ((in1 vec) (in2 vec)) (:out vec)
-  (max! (zero) in1 in2))
+  (max! (vec) in1 in2))
 
 (define-op radians! ((out vec) (in vec)) (:out vec)
   (with-components ((o out) (v in))
@@ -381,7 +370,7 @@
     out))
 
 (define-op radians ((in vec)) (:out vec)
-  (radians! (zero) in))
+  (radians! (vec) in))
 
 (define-op degrees! ((out vec) (in vec)) (:out vec)
   (with-components ((o out) (v in))
@@ -391,7 +380,7 @@
   out)
 
 (define-op degrees ((in vec)) (:out vec)
-  (degrees! (zero) in))
+  (degrees! (vec) in))
 
 (define-op expt! ((out vec) (in vec) (power real)) (:out vec :speed nil)
   (with-components ((o out) (v in))
@@ -401,7 +390,7 @@
   out)
 
 (define-op expt ((in vec) (power real)) (:out vec :speed nil)
-  (expt! (zero) in power))
+  (expt! (vec) in power))
 
 (define-op sqrt! ((out vec) (in vec)) (:out vec)
   (with-components ((o out) (v in))
@@ -414,7 +403,7 @@
   out)
 
 (define-op sqrt ((in vec)) (:out vec)
-  (sqrt! (zero) in))
+  (sqrt! (vec) in))
 
 (define-op floor! ((out vec) (in vec)) (:out vec)
   (with-components ((o out) (v in))
@@ -424,7 +413,7 @@
   out)
 
 (define-op floor ((in vec)) (:out vec)
-  (floor! (zero) in))
+  (floor! (vec) in))
 
 (define-op ceiling! ((out vec) (in vec)) (:out vec)
   (with-components ((o out) (v in))
@@ -434,7 +423,7 @@
   out)
 
 (define-op ceiling ((in vec)) (:out vec)
-  (ceiling! (zero) in))
+  (ceiling! (vec) in))
 
 (define-op mod! ((out vec) (in vec) (divisor real)) (:out vec :speed nil)
   (with-components ((o out) (v in))
@@ -444,7 +433,7 @@
   out)
 
 (define-op mod ((in vec) (divisor real)) (:out vec :speed nil)
-  (mod! (zero) in divisor))
+  (mod! (vec) in divisor))
 
 (define-op sin! ((out vec) (in vec)) (:out vec)
   (with-components ((o out) (v in))
@@ -454,7 +443,7 @@
   out)
 
 (define-op sin ((in vec)) (:out vec)
-  (sin! (zero) in))
+  (sin! (vec) in))
 
 (define-op cos! ((out vec) (in vec)) (:out vec)
   (with-components ((o out) (v in))
@@ -464,7 +453,7 @@
   out)
 
 (define-op cos ((in vec)) (:out vec)
-  (cos! (zero) in))
+  (cos! (vec) in))
 
 (define-op tan! ((out vec) (in vec)) (:out vec)
   (with-components ((o out) (v in))
@@ -474,7 +463,7 @@
   out)
 
 (define-op tan ((in vec)) (:out vec)
-  (tan! (zero) in))
+  (tan! (vec) in))
 
 (define-op asin! ((out vec) (in vec)) (:out vec :speed nil)
   (with-components ((o out) (v in))
@@ -484,7 +473,7 @@
   out)
 
 (define-op asin ((in vec)) (:out vec :speed nil)
-  (asin! (zero) in))
+  (asin! (vec) in))
 
 (define-op acos! ((out vec) (in vec)) (:out vec :speed nil)
   (with-components ((o out) (v in))
@@ -494,7 +483,7 @@
   out)
 
 (define-op acos ((in vec)) (:out vec :speed nil)
-  (acos! (zero) in))
+  (acos! (vec) in))
 
 (define-op atan! ((out vec) (in vec)) (:out vec)
   (with-components ((o out) (v in))
@@ -504,4 +493,4 @@
   out)
 
 (define-op atan ((in vec)) (:out vec)
-  (atan! (zero) in))
+  (atan! (vec) in))

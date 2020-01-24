@@ -18,30 +18,30 @@
 
 (defspecialization (mat :inline t) ((mat m2:mat)) mat
   (m2:with-components ((m mat))
-    (%mat m00 m10 0f0 0f0 m01 m11 0f0 0f0 0f0 0f0 1f0 0f0 0f0 0f0 0f0 1f0)))
+    (%mat m00 m01 0f0 0f0 m10 m11 0f0 0f0 0f0 0f0 1f0 0f0 0f0 0f0 0f0 1f0)))
 
 (defspecialization (mat :inline t) ((mat m3:mat)) mat
   (m3:with-components ((m mat))
-    (%mat m00 m10 m20 0f0 m01 m11 m21 0f0 m02 m12 m22 0f0 0f0 0f0 0f0 1f0)))
+    (%mat m00 m01 m02 0f0 m10 m11 m12 0f0 m20 m21 m22 0f0 0f0 0f0 0f0 1f0)))
 
 (defspecialization (mat :inline t) ((mat mat)) mat
   (with-components ((m mat))
-    (%mat m00 m10 m20 m30 m01 m11 m21 m31 m02 m12 m22 m32 m03 m13 m23 m33)))
+    (%mat m00 m01 m02 m03 m10 m11 m12 m13 m20 m21 m22 m23 m30 m31 m32 m33)))
 
 (defspecialization (mat :inline t) ((a v4:vec) (b v4:vec) (c v4:vec) (d v4:vec))
     mat
   (v4:with-components ((a a) (b b) (c c) (d d))
-    (%mat ax ay az aw bx by bz bw cx cy cz cw dx dy dz dw)))
+    (%mat ax bx cx dx ay by cy dy az bz cz dz aw bw cw dw)))
 
 (defspecialization (mat :inline t) ((m00 real) (m10 real) (m20 real) (m30 real)
                                     (m01 real) (m11 real) (m21 real) (m31 real)
                                     (m02 real) (m12 real) (m22 real) (m32 real)
                                     (m03 real) (m13 real) (m23 real) (m33 real))
     mat
-  (%mat (float m00 1f0) (float m10 1f0) (float m20 1f0) (float m30 1f0)
-        (float m01 1f0) (float m11 1f0) (float m21 1f0) (float m31 1f0)
-        (float m02 1f0) (float m12 1f0) (float m22 1f0) (float m32 1f0)
-        (float m03 1f0) (float m13 1f0) (float m23 1f0) (float m33 1f0)))
+  (%mat (float m00 1f0) (float m01 1f0) (float m02 1f0) (float m03 1f0)
+        (float m10 1f0) (float m11 1f0) (float m12 1f0) (float m13 1f0)
+        (float m20 1f0) (float m21 1f0) (float m22 1f0) (float m23 1f0)
+        (float m30 1f0) (float m31 1f0) (float m32 1f0) (float m33 1f0)))
 
 ;;; constants
 
@@ -63,9 +63,6 @@
            m30 0f0 m31 0f0 m32 0f0 m33 0f0))
   in)
 
-(define-op zero () (:out mat)
-  (mat 0f0 0f0 0f0 0f0 0f0 0f0 0f0 0f0 0f0 0f0 0f0 0f0 0f0 0f0 0f0 0f0))
-
 (define-op zero-p ((in mat)) (:out boolean)
   (with-components ((m in))
     (cl:= 0f0 m00 m01 m02 m03 m10 m11 m12 m13 m20 m21 m22 m23 m30 m31 m32 m33)))
@@ -77,9 +74,6 @@
            m20 0f0 m21 0f0 m22 1f0 m23 0f0
            m30 0f0 m31 0f0 m32 0f0 m33 1f0))
   in)
-
-(define-op id () (:out mat)
-  (mat 1f0 0f0 0f0 0f0 0f0 1f0 0f0 0f0 0f0 0f0 1f0 0f0 0f0 0f0 0f0 1f0))
 
 (define-op id-p ((in mat)) (:out boolean)
   (with-components ((m in))
@@ -137,7 +131,7 @@
 
 (define-op random (&key (min single-float 0f0) (max single-float 1f0))
     (:out mat)
-  (random! (zero) :min min :max max))
+  (random! (mat) :min min :max max))
 
 (define-op copy! ((out mat) (in mat)) (:out mat)
   (with-components ((o out) (m in))
@@ -148,7 +142,7 @@
   out)
 
 (define-op copy ((in mat)) (:out mat)
-  (copy! (zero) in))
+  (copy! (mat) in))
 
 (define-op clamp! ((out mat) (in mat)
                    &key
@@ -179,7 +173,7 @@
                   (min single-float most-negative-single-float)
                   (max single-float most-positive-single-float))
     (:out mat)
-  (clamp! (zero) in :min min :max max))
+  (clamp! (mat) in :min min :max max))
 
 (define-op +! ((out mat) (in1 mat) (in2 mat)) (:out mat)
   (with-components ((o out) (a in1) (b in2))
@@ -202,7 +196,7 @@
   out)
 
 (define-op + ((in1 mat) (in2 mat)) (:out mat)
-  (+! (zero) in1 in2))
+  (+! (mat) in1 in2))
 
 (define-op -! ((out mat) (in1 mat) (in2 mat)) (:out mat)
   (with-components ((o out) (a in1) (b in2))
@@ -225,7 +219,7 @@
   out)
 
 (define-op - ((in1 mat) (in2 mat)) (:out mat)
-  (-! (zero) in1 in2))
+  (-! (mat) in1 in2))
 
 (defmacro %* (o00 o01 o02 o03 o10 o11 o12 o13 o20 o21 o22 o23 o30 o31 o32 o33
               a00 a01 a02 a03 a10 a11 a12 a13 a20 a21 a22 a23 a30 a31 a32 a33
@@ -271,7 +265,7 @@
   out)
 
 (define-op * ((in1 mat) (in2 mat)) (:out mat)
-  (*! (zero) in1 in2))
+  (*! (mat) in1 in2))
 
 (define-op copy-rotation! ((out mat) (in mat)) (:out mat)
   (with-components ((o out) (m in))
@@ -281,7 +275,7 @@
   out)
 
 (define-op copy-rotation ((in mat)) (:out mat)
-  (copy-rotation! (id) in))
+  (copy-rotation! (mat 1) in))
 
 (define-op rotation-to-mat3! ((out m3:mat) (in mat)) (:out m3:mat)
   (m3:with-components ((o out))
@@ -292,7 +286,7 @@
   out)
 
 (define-op rotation-to-mat3 ((in mat)) (:out m3:mat)
-  (rotation-to-mat3! (m3:id) in))
+  (rotation-to-mat3! (m3:mat 1) in))
 
 (define-op normalize-rotation! ((out mat) (in mat)) (:out mat)
   (with-components ((o out) (m in))
@@ -316,7 +310,7 @@
   out)
 
 (define-op get-column ((in mat) (index (integer 0 3))) (:out v4:vec)
-  (get-column! (v4:zero) in index))
+  (get-column! (v4:vec) in index))
 
 (define-op set-column! ((out mat) (in mat) (vec v4:vec) (index (integer 0 3)))
     (:out mat)
@@ -331,7 +325,7 @@
   out)
 
 (define-op set-column ((in mat) (vec v4:vec) (index (integer 0 3))) (:out mat)
-  (set-column! (id) in vec index))
+  (set-column! (mat 1) in vec index))
 
 (define-op get-translation! ((out v3:vec) (in mat)) (:out v3:vec)
   (with-components ((m in))
@@ -340,7 +334,7 @@
   out)
 
 (define-op get-translation ((in mat)) (:out v3:vec)
-  (get-translation! (v3:zero) in))
+  (get-translation! (v3:vec) in))
 
 (define-op set-translation! ((out mat) (in mat) (vec v3:vec)) (:out mat)
   (with-components ((o out) (m in))
@@ -375,7 +369,7 @@
   out)
 
 (define-op translate ((in mat) (vec v3:vec)) (:out mat)
-  (translate! (id) in vec))
+  (translate! (mat 1) in vec))
 
 (define-op rotation-axis-to-vec3! ((out v3:vec) (in mat) (axis keyword))
     (:out v3:vec)
@@ -388,7 +382,7 @@
   out)
 
 (define-op rotation-axis-to-vec3 ((in mat) (axis keyword)) (:out v3:vec)
-  (rotation-axis-to-vec3! (v3:zero) in axis))
+  (rotation-axis-to-vec3! (v3:vec) in axis))
 
 (define-op rotation-axis-from-vec3! ((in mat) (vec v3:vec) (axis keyword))
     (:out mat)
@@ -434,7 +428,7 @@
   out)
 
 (define-op rotate ((in mat) (vec v3:vec)) (:out mat)
-  (rotate! (id) in vec))
+  (rotate! (mat 1) in vec))
 
 (define-op get-scale! ((out v3:vec) (in mat)) (:out v3:vec)
   (v3:with-components ((o out))
@@ -444,7 +438,7 @@
   out)
 
 (define-op get-scale ((in mat)) (:out v3:vec)
-  (get-scale! (v3:zero) in))
+  (get-scale! (v3:vec) in))
 
 (define-op set-scale! ((out mat) (in mat) (vec v3:vec)) (:out mat)
   (with-components ((o out))
@@ -478,7 +472,7 @@
   out)
 
 (define-op scale ((in mat) (vec v3:vec)) (:out mat)
-  (scale! (id) in vec))
+  (scale! (mat 1) in vec))
 
 (defmacro %*v4! (ox oy oz ow
                  m00 m01 m02 m03 m10 m11 m12 m13 m20 m21 m22 m23 m30 m31 m32 m33
@@ -501,7 +495,7 @@
   out)
 
 (define-op *v4 ((in mat) (vec v4:vec)) (:out v4:vec)
-  (*v4! (v4:zero) in vec))
+  (*v4! (v4:vec) in vec))
 
 (define-op transpose! ((out mat) (in mat)) (:out mat)
   (with-components ((o (copy! out in)))
@@ -514,7 +508,7 @@
   out)
 
 (define-op transpose ((in mat)) (:out mat)
-  (transpose! (id) in))
+  (transpose! (mat 1) in))
 
 (define-op orthogonal-p ((in mat)) (:out boolean :inline nil)
   (~ (* in (transpose in)) +id+))
@@ -532,7 +526,7 @@
   out)
 
 (define-op orthonormalize ((in mat)) (:out mat)
-  (orthonormalize! (id) in))
+  (orthonormalize! (mat 1) in))
 
 (defmacro %trace (m00 m11 m22 m33)
   `(cl:+ ,m00 ,m11 ,m22 ,m33))
@@ -552,7 +546,7 @@
   out)
 
 (define-op main-diagonal ((in mat)) (:out v4:vec)
-  (main-diagonal! (v4:zero) in))
+  (main-diagonal! (v4:vec) in))
 
 (define-op anti-diagonal! ((out v4:vec) (in mat)) (:out v4:vec)
   (with-components ((m in))
@@ -561,7 +555,7 @@
   out)
 
 (define-op anti-diagonal ((in mat)) (:out v4:vec)
-  (anti-diagonal! (v4:zero) in))
+  (anti-diagonal! (v4:vec) in))
 
 (define-op determinant ((in mat)) (:out single-float)
   (with-components ((m in))
@@ -592,7 +586,7 @@
   out)
 
 (define-op invert-orthogonal ((in mat)) (:out mat)
-  (invert-orthogonal! (id) in))
+  (invert-orthogonal! (mat 1) in))
 
 (define-op invert! ((out mat) (in mat)) (:out (values mat boolean) :inline nil)
   (let ((determinant (determinant in)))
@@ -682,7 +676,7 @@
   (values out t))
 
 (define-op invert ((in mat)) (:out mat)
-  (invert! (id) in))
+  (invert! (mat 1) in))
 
 (define-op set-view! ((out mat) (eye v3:vec) (target v3:vec) (up v3:vec))
     (:out mat :inline nil)
@@ -721,7 +715,7 @@
   out)
 
 (define-op set-view ((eye v3:vec) (target v3:vec) (up v3:vec)) (:out mat)
-  (set-view! (id) eye target up))
+  (set-view! (mat 1) eye target up))
 
 (define-op set-projection/orthographic! ((out mat) (left single-float)
                                          (right single-float)
@@ -747,7 +741,7 @@
                                         (top single-float) (near single-float)
                                         (far single-float))
     (:out mat)
-  (set-projection/orthographic! (id) left right bottom top near far))
+  (set-projection/orthographic! (mat 1) left right bottom top near far))
 
 (define-op set-projection/perspective! ((out mat) (fov single-float)
                                         (aspect single-float)
@@ -766,4 +760,4 @@
 (define-op set-projection/perspective ((fov single-float) (aspect single-float)
                                        (near single-float) (far single-float))
     (:out mat)
-  (set-projection/perspective! (id) fov aspect near far))
+  (set-projection/perspective! (mat 1) fov aspect near far))

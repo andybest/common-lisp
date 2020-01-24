@@ -1,16 +1,16 @@
 (in-package #:origin.test)
 
 (define-test m4/identity
-  (let ((m (m4:id))
+  (let ((m (m4:mat))
         (r (m4:mat 1f0 0f0 0f0 0f0 0f0 1f0 0f0 0f0 0f0 0f0 1f0 0f0 0f0 0f0 0f0
                    1f0)))
-    (is m4:= m r)
     (is m4:= m4:+id+ r)
-    (true (m4:id-p (m4:id)))))
+    (true (m4:id-p (m4:mat 1)))
+    (true (m4:id-p (m4:id! m)))))
 
 (define-test m4/copy
   (let ((m m4:+id+)
-        (o (m4:zero)))
+        (o (m4:mat)))
     (is m4:= (m4:copy! o m) m4:+id+)
     (is m4:= o m4:+id+)
     (is m4:= (m4:copy m) m4:+id+)
@@ -19,7 +19,7 @@
 (define-test m4/clamp
   (let ((m (m4:mat 1f0 -2f0 3f0 -4f0 5f0 -6f0 7f0 -8f0 9f0 -10f0 11f0 -12f0
                    13f0 -14f0 15f0 -16f0))
-        (o (m4:zero))
+        (o (m4:mat))
         (r (m4:mat 1f0 -1f0 1f0 -1f0 1f0 -1f0 1f0 -1f0 1f0 -1f0 1f0 -1f0 1f0
                    -1f0 1f0 -1f0)))
     (is m4:= (m4:clamp! o m :min -1.0 :max 1.0) r)
@@ -32,7 +32,7 @@
                     8f0))
         (m2 (m4:mat 8f0 6f0 6f0 1f0 9f0 3f0 8f0 4f0 7f0 0f0 1f0 1f0 8f0 3f0 6f0
                     7f0))
-        (o (m4:zero))
+        (o (m4:mat))
         (r (m4:mat 16f0 8f0 15f0 2f0 9f0 7f0 16f0 8f0 15f0 3f0 1f0 2f0 9f0 11f0
                    9f0 15f0)))
     (is m4:= (m4:+! o m1 m2) r)
@@ -46,7 +46,7 @@
                     8f0))
         (m2 (m4:mat 8f0 6f0 6f0 1f0 9f0 3f0 8f0 4f0 7f0 0f0 1f0 1f0 8f0 3f0 6f0
                     7f0))
-        (o (m4:zero))
+        (o (m4:mat))
         (r (m4:mat 0f0 -4f0 3f0 0f0 -9f0 1f0 0f0 0f0 1f0 3f0 -1f0 0f0 -7f0 5f0
                    -3f0 1f0)))
     (is m4:= (m4:-! o m1 m2) r)
@@ -68,7 +68,7 @@
         (rot-xy (m4:rotate m4:+id+ (v3:vec origin:pi/3 origin:pi/4 0f0)))
         (tr1 (m4:translate m4:+id+ (v3:vec 5f0 10f0 15f0)))
         (tr2 (m4:translate m4:+id+ (v3:vec 10f0 20f0 30f0)))
-        (o (m4:zero)))
+        (o (m4:mat)))
     (is m4:= (m4:*! o m1 m1) r)
     (is m4:= o r)
     (is m4:= (m4:* m1 m3) m1)
@@ -85,10 +85,10 @@
                    12f0 16f0))
         (rm (m4:mat 1f0 0f0 0f0 5f0 0f0 1f0 0f0 10f0 0f0 0f0 1f0 15f0 0f0 0f0
                     0f0 1f0))
-        (om (m4:id))
+        (om (m4:mat 1))
         (v (v3:vec 5f0 10f0 15f0))
         (rv (v3:vec 13f0 14f0 15f0))
-        (ov (v3:zero)))
+        (ov (v3:vec)))
     (is m4:= (m4:set-translation! om om v) rm)
     (is m4:= om rm)
     (is m4:= (m4:set-translation om v) rm)
@@ -98,7 +98,7 @@
 
 (define-test m4/translate
   (let ((m (m4:rotate m4:+id+ (v3:vec origin:pi/3 0f0 0f0)))
-        (o (m4:id))
+        (o (m4:mat 1))
         (r (m4:mat 1f0 0f0 0f0 5f0 0f0 0.5f0 -0.86602545f0 10f0 0f0
                    0.86602545f0 0.5f0 15f0 0f0 0f0 0f0 1f0))
         (v (v3:vec 5f0 10f0 15f0)))
@@ -112,7 +112,7 @@
                    12f0 16f0))
         (r (m4:mat 1f0 5f0 9f0 0f0 2f0 6f0 10f0 0f0 3f0 7f0 11f0 0f0 0f0 0f0
                    0f0 1f0))
-        (o (m4:id)))
+        (o (m4:mat 1)))
     (is m4:= (m4:copy-rotation! o m) r)
     (is m4:= o r)
     (is m4:= (m4:copy-rotation m) r)))
@@ -124,15 +124,15 @@
                      0f0 0f0 0f0 1f0))
         (rmz (m4:mat 1f0 0f0 0f0 0f0 0f0 1f0 -0.86602545f0 0f0 0f0 0f0 0.5f0 0f0
                      0f0 0f0 0f0 1f0))
-        (omx (m4:id))
-        (omy (m4:id))
-        (omz (m4:id))
+        (omx (m4:mat 1))
+        (omy (m4:mat 1))
+        (omz (m4:mat 1))
         (rvx (v3:vec 1f0 0f0 0f0))
         (rvy (v3:vec 0f0 0.5 0.86602545))
         (rvz (v3:vec 0f0 -0.86602545 0.5))
-        (ovx (v3:zero))
-        (ovy (v3:zero))
-        (ovz (v3:zero)))
+        (ovx (v3:vec))
+        (ovy (v3:vec))
+        (ovz (v3:vec)))
     (true (v3:= (m4:rotation-axis-to-vec3! ovx m :x) rvx))
     (true (v3:~ (m4:rotation-axis-to-vec3! ovy m :y) rvy))
     (true (v3:~ (m4:rotation-axis-to-vec3! ovz m :z) rvz))
@@ -153,9 +153,9 @@
     (true (m4:~ (m4:rotation-axis-from-vec3 m4:+id+ rvz :z) rmz))))
 
 (define-test m4/rotation
-  (let ((omx (m4:id))
-        (omy (m4:id))
-        (omz (m4:id))
+  (let ((omx (m4:mat 1))
+        (omy (m4:mat 1))
+        (omz (m4:mat 1))
         (rmx (m4:mat 1f0 0f0 0f0 0f0 0f0 0.5f0 -0.86602545f0 0f0 0f0
                      0.86602545f0 0.5f0 0f0 0f0 0f0 0f0 1f0))
         (rmy (m4:mat 0.5f0 0f0 0.86602545f0 0f0 0f0 1f0 0f0 0f0 -0.86602545f0
@@ -178,7 +178,7 @@
 (define-test m4/scale
   (let ((m (m4:mat 10f0 0f0 0f0 0f0 0f0 20f0 0f0 0f0 0f0 0f0 30f0 0f0 0f0 0f0
                    0f0 2f0))
-        (o (m4:id))
+        (o (m4:mat 1))
         (s (m4:mat 10f0 0f0 0f0 0f0 0f0 40f0 0f0 0f0 0f0 0f0 90f0 0f0 0f0 0f0
                    0f0 2f0))
         (v (v3:vec 1f0 2f0 3f0)))
@@ -189,7 +189,7 @@
 (define-test m4/vec4-multiply
   (let ((m (m4:rotate m4:+id+ (v3:vec origin:pi/3 0f0 0f0)))
         (v (v4:vec 1f0 2f0 3f0 4f0))
-        (o (v4:zero))
+        (o (v4:vec))
         (rv (v4:vec 1f0 -1.5980763 3.232051 4f0)))
     (is v4:= (m4:*v4! o m v) rv)
     (is v4:= o rv)
@@ -202,7 +202,7 @@
                    12f0 16f0))
         (r (m4:mat 1f0 2f0 3f0 4f0 5f0 6f0 7f0 8f0 9f0 10f0 11f0 12f0 13f0 14f0
                    15f0 16f0))
-        (o (m4:id)))
+        (o (m4:mat 1)))
     (is m4:= (m4:transpose! o m) r)
     (is m4:= o r)
     (is m4:= (m4:transpose m) r)
@@ -219,7 +219,7 @@
   (let ((m (m4:mat 0f0 1f0 -0.12988785f0 1.0139829f0 0f0 0f0 0.3997815f0
                    -0.027215311f0 1f0 0f0 0.5468181f0 0.18567966f0 0f0 0f0 0f0
                    0f0))
-        (o (m4:id))
+        (o (m4:mat 1))
         (r (m4:mat 0f0 1f0 0f0 0f0 0f0 0f0 1f0 0f0 1f0 0f0 0f0 0f0 0f0 0f0 0f0
                    1f0)))
     (is m4:= (m4:orthonormalize! o m) r)
@@ -227,7 +227,7 @@
     (is m4:= (m4:orthonormalize m) r)))
 
 (define-test m4/trace
-  (is = (m4:trace (m4:zero)) 0)
+  (is = (m4:trace (m4:mat)) 0)
   (is = (m4:trace m4:+id+) 4)
   (is = (m4:trace (m4:mat 1f0 2f0 3f0 4f0 5f0 6f0 7f0 8f0 9f0 10f0 11f0 12f0
                           13f0 14f0 15f0 16f0)) 34))
@@ -237,8 +237,8 @@
                    15f0 16f0))
         (r1 (v4:vec 1f0 6f0 11f0 16f0))
         (r2 (v4:vec 4f0 7f0 10f0 13f0))
-        (o (v4:zero)))
-    (true (m4:diagonal-p (m4:id)))
+        (o (v4:vec)))
+    (true (m4:diagonal-p (m4:mat 1)))
     (true (not (m4:diagonal-p m)))
     (is v4:= (m4:main-diagonal! o m) r1)
     (is v4:= o r1)
@@ -258,7 +258,7 @@
 (define-test m4/invert
   (let ((m (m4:rotate m4:+id+ (v3:vec origin:pi/3 0f0 0f0)))
         (r (m4:rotate m4:+id+ (v3:vec (- origin:pi/3) 0f0 0f0)))
-        (o (m4:id)))
+        (o (m4:mat 1)))
     (is m4:= (m4:invert! o m) r)
     (is m4:= o r)
     (is m4:= (m4:invert m) r)
@@ -270,10 +270,10 @@
               nil))))
 
 (define-test m4/set-view
-  (let ((o (m4:id))
+  (let ((o (m4:mat 1))
         (r (m4:mat -0.7071068f0 0f0 -0.7071068f0 0.7071068f0 0f0 1f0 0f0 0f0
                    0.7071068f0 0f0 -0.7071068f0 -0.7071068f0 0f0 0f0 0f0 1f0))
-        (o2 (m4:id))
+        (o2 (m4:mat 1))
         (r2 (m4:mat 0.9622504 -0.19245008 -0.19245008 -2.3841858e-7
                     0.05143445 0.8229512 -0.5657789 -9.536743e-7
                     0.26726124 0.5345225 0.80178374 -18.708286
@@ -302,7 +302,7 @@
 (define-test m4/set-projection/orthographic
   (let ((r (m4:mat 0.05f0 0f0 0f0 0f0 0f0 0.1f0 0f0 0f0 0f0 0f0 -0.002f0 -1f0
                    0f0 0f0 0f0 1f0))
-        (o (m4:id)))
+        (o (m4:mat 1)))
     (is m4:= (m4:set-projection/orthographic!
               o -20.0 20.0 -10.0 10.0 0.0 1000.0)
         r)
@@ -313,7 +313,7 @@
 (define-test m4/set-projection/perspective
   (let ((r (m4:mat 0.9742786f0 0f0 0f0 0f0 0f0 1.7320509f0 0f0 0f0 0f0 0f0
                    -1.002002f0 -2.002002f0 0f0 0f0 -1f0 0f0))
-        (o (m4:id)))
+        (o (m4:mat 1)))
     (is m4:= (m4:set-projection/perspective!
               o origin:pi/3 (/ 16f0 9f0) 1.0 1000.0)
         r)
