@@ -1,13 +1,3 @@
-(in-package #:cl-user)
-
-(defpackage #:origin.internal
-  (:local-nicknames (#:a #:alexandria)
-                    (#:u #:golden-utils))
-  (:use #:cl)
-  (:export
-   #:make-accessor-symbol
-   #:define-op))
-
 (in-package #:origin.internal)
 
 #+sbcl

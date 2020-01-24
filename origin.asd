@@ -8,13 +8,14 @@
   :bug-tracker "https://github.com/mfiano/origin/issues"
   :encoding :utf-8
   :depends-on (#:golden-utils
-               #:alexandria)
+               #:alexandria
+               #:specialization-store)
   :pathname "src"
   :serial t
   :in-order-to ((asdf:test-op (asdf:test-op #:origin.test)))
   :components
-  ((:file "internal")
-   (:file "package")
+  ((:file "package")
+   (:file "internal")
    (:file "common")
    (:file "swizzle")
    (:file "math-constants")
@@ -26,5 +27,12 @@
    (:file "mat3")
    (:file "mat4")
    (:file "quat")
+   (:file "vec2-ops")
+   (:file "vec3-ops")
+   (:file "vec4-ops")
+   (:file "mat2-ops")
+   (:file "mat3-ops")
+   (:file "mat4-ops")
+   (:file "quat-ops")
    (:file "general")
    (:file "physics")))

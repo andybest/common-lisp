@@ -1,7 +1,25 @@
 (in-package #:cl-user)
 
+(defpackage #:origin.internal
+  (:local-nicknames (#:a #:alexandria)
+                    (#:u #:golden-utils))
+  (:use #:cl)
+  (:import-from
+   #+sbcl #:sb-ext
+   #+ccl #:ccl
+   #+(or ecl abcl clasp) #:ext
+   #+lispworks #:hcl
+   #+allegro #:excl
+   #:add-package-local-nickname)
+  (:import-from #:specialization-store #:defstore #:defspecialization)
+  (:export
+   #:add-package-local-nickname
+   #:make-accessor-symbol
+   #:define-op
+   #:defstore
+   #:defspecialization))
+
 (defpackage #:origin.vec2
-  (:local-nicknames (#:a #:alexandria))
   (:use #:cl #:origin.internal)
   (:shadow
    #:=
@@ -117,7 +135,6 @@
    #:atan))
 
 (defpackage #:origin.vec3
-  (:local-nicknames (#:a #:alexandria))
   (:use #:cl #:origin.internal)
   (:shadow
    #:=
@@ -244,7 +261,6 @@
    #:atan))
 
 (defpackage #:origin.vec4
-  (:local-nicknames (#:a #:alexandria))
   (:use #:cl #:origin.internal)
   (:shadow
    #:=
@@ -361,8 +377,6 @@
    #:atan))
 
 (defpackage #:origin.mat2
-  (:local-nicknames (#:a #:alexandria)
-                    (#:v2 #:origin.vec2))
   (:use #:cl #:origin.internal)
   (:shadow
    #:=
@@ -425,10 +439,6 @@
    #:anti-diagonal))
 
 (defpackage #:origin.mat3
-  (:local-nicknames (#:a #:alexandria)
-                    (#:v2 #:origin.vec2)
-                    (#:v3 #:origin.vec3)
-                    (#:m2 #:origin.mat2))
   (:use #:cl #:origin.internal)
   (:shadow
    #:=
@@ -504,10 +514,6 @@
    #:anti-diagonal))
 
 (defpackage #:origin.mat4
-  (:local-nicknames (#:a #:alexandria)
-                    (#:v3 #:origin.vec3)
-                    (#:v4 #:origin.vec4)
-                    (#:m3 #:origin.mat3))
   (:use #:cl #:origin.internal)
   (:shadow
    #:=
@@ -596,11 +602,6 @@
    #:set-projection/perspective))
 
 (defpackage #:origin.quat
-  (:local-nicknames (#:a #:alexandria)
-                    (#:v3 #:origin.vec3)
-                    (#:v4 #:origin.vec4)
-                    (#:m3 #:origin.mat3)
-                    (#:m4 #:origin.mat4))
   (:use #:cl #:origin.internal)
   (:shadow
    #:=
@@ -681,15 +682,6 @@
    #:orient))
 
 (defpackage #:origin
-  (:local-nicknames (#:a #:alexandria)
-                    (#:u #:golden-utils)
-                    (#:v2 #:origin.vec2)
-                    (#:v3 #:origin.vec3)
-                    (#:v4 #:origin.vec4)
-                    (#:m2 #:origin.mat2)
-                    (#:m3 #:origin.mat3)
-                    (#:m4 #:origin.mat4)
-                    (#:q #:origin.quat))
   (:use #:cl #:origin.internal)
   ;; math constants
   (:shadow
@@ -787,3 +779,50 @@
    #:make-velocity
    #:velocity->rotation!
    #:velocity->rotation))
+
+(origin.internal:add-package-local-nickname :a :alexandria :origin.vec2)
+(origin.internal:add-package-local-nickname :v3 :origin.vec3 :origin.vec2)
+(origin.internal:add-package-local-nickname :v4 :origin.vec4 :origin.vec2)
+
+(origin.internal:add-package-local-nickname :a :alexandria :origin.vec3)
+(origin.internal:add-package-local-nickname :v2 :origin.vec2 :origin.vec3)
+(origin.internal:add-package-local-nickname :v4 :origin.vec4 :origin.vec3)
+(origin.internal:add-package-local-nickname :q :origin.quat :origin.vec3)
+
+(origin.internal:add-package-local-nickname :a :alexandria :origin.vec4)
+(origin.internal:add-package-local-nickname :v2 :origin.vec2 :origin.vec4)
+(origin.internal:add-package-local-nickname :v3 :origin.vec3 :origin.vec4)
+(origin.internal:add-package-local-nickname :q :origin.quat :origin.vec4)
+
+(origin.internal:add-package-local-nickname :a :alexandria :origin.mat2)
+(origin.internal:add-package-local-nickname :v2 :origin.vec2 :origin.mat2)
+(origin.internal:add-package-local-nickname :m3 :origin.mat3 :origin.mat2)
+(origin.internal:add-package-local-nickname :m4 :origin.mat4 :origin.mat2)
+
+(origin.internal:add-package-local-nickname :a :alexandria :origin.mat3)
+(origin.internal:add-package-local-nickname :v2 :origin.vec2 :origin.mat3)
+(origin.internal:add-package-local-nickname :v3 :origin.vec3 :origin.mat3)
+(origin.internal:add-package-local-nickname :m2 :origin.mat2 :origin.mat3)
+(origin.internal:add-package-local-nickname :m4 :origin.mat4 :origin.mat3)
+
+(origin.internal:add-package-local-nickname :a :alexandria :origin.mat4)
+(origin.internal:add-package-local-nickname :v3 :origin.vec3 :origin.mat4)
+(origin.internal:add-package-local-nickname :v4 :origin.vec4 :origin.mat4)
+(origin.internal:add-package-local-nickname :m2 :origin.mat2 :origin.mat4)
+(origin.internal:add-package-local-nickname :m3 :origin.mat3 :origin.mat4)
+
+(origin.internal:add-package-local-nickname :a :alexandria :origin.quat)
+(origin.internal:add-package-local-nickname :v3 :origin.vec3 :origin.quat)
+(origin.internal:add-package-local-nickname :v4 :origin.vec4 :origin.quat)
+(origin.internal:add-package-local-nickname :m3 :origin.mat3 :origin.quat)
+(origin.internal:add-package-local-nickname :m4 :origin.mat4 :origin.quat)
+
+(origin.internal:add-package-local-nickname :a :alexandria :origin)
+(origin.internal:add-package-local-nickname :u :golden-utils :origin)
+(origin.internal:add-package-local-nickname :v2 :origin.vec2 :origin)
+(origin.internal:add-package-local-nickname :v3 :origin.vec3 :origin)
+(origin.internal:add-package-local-nickname :v4 :origin.vec4 :origin)
+(origin.internal:add-package-local-nickname :m2 :origin.mat2 :origin)
+(origin.internal:add-package-local-nickname :m3 :origin.mat3 :origin)
+(origin.internal:add-package-local-nickname :m4 :origin.mat4 :origin)
+(origin.internal:add-package-local-nickname :q :origin.quat :origin)
