@@ -62,19 +62,19 @@
 
 ;;; constants
 
-(a:define-constant +zero+ (vec 0f0 0f0 0f0) :test #'equalp)
+(a:define-constant +zero+ (%vec 0f0 0f0 0f0) :test #'equalp)
 
-(a:define-constant +up+ (vec 0f0 1f0 0f0) :test #'equalp)
+(a:define-constant +up+ (%vec 0f0 1f0 0f0) :test #'equalp)
 
-(a:define-constant +down+ (vec 0f0 -1f0 0f0) :test #'equalp)
+(a:define-constant +down+ (%vec 0f0 -1f0 0f0) :test #'equalp)
 
-(a:define-constant +left+ (vec -1f0 0f0 0f0) :test #'equalp)
+(a:define-constant +left+ (%vec -1f0 0f0 0f0) :test #'equalp)
 
-(a:define-constant +right+ (vec 1f0 0f0 0f0) :test #'equalp)
+(a:define-constant +right+ (%vec 1f0 0f0 0f0) :test #'equalp)
 
-(a:define-constant +forward+ (vec 0f0 0f0 1f0) :test #'equalp)
+(a:define-constant +forward+ (%vec 0f0 0f0 1f0) :test #'equalp)
 
-(a:define-constant +back+ (vec 0f0 0f0 -1f0) :test #'equalp)
+(a:define-constant +back+ (%vec 0f0 0f0 -1f0) :test #'equalp)
 
 ;;; operators
 

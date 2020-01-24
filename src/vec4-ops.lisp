@@ -99,7 +99,7 @@
 
 ;;; constants
 
-(a:define-constant +zero+ (vec 0f0 0f0 0f0 0f0) :test #'equalp)
+(a:define-constant +zero+ (%vec 0f0 0f0 0f0 0f0) :test #'equalp)
 
 ;;; operators
 

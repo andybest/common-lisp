@@ -56,9 +56,9 @@
 
 ;;; constants
 
-(a:define-constant +zero+ (quat 0f0 0f0 0f0 0f0) :test #'equalp)
+(a:define-constant +zero+ (%quat 0f0 0f0 0f0 0f0) :test #'equalp)
 
-(a:define-constant +id+ (quat 1f0 0f0 0f0 0f0) :test #'equalp)
+(a:define-constant +id+ (%quat 1f0 0f0 0f0 0f0) :test #'equalp)
 
 ;;; operators
 

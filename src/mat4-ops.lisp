@@ -31,7 +31,7 @@
 (defspecialization (mat :inline t) ((a v4:vec) (b v4:vec) (c v4:vec) (d v4:vec))
     mat
   (v4:with-components ((a a) (b b) (c c) (d d))
-    (%mat ax bx cx dx ay by cy dy az bz cz dz aw bw cw dw)))
+    (%mat ax ay az aw bx by bz bw cx cy cz cw dx dy dz dw)))
 
 (defspecialization (mat :inline t) ((m00 real) (m10 real) (m20 real) (m30 real)
                                     (m01 real) (m11 real) (m21 real) (m31 real)
@@ -46,11 +46,11 @@
 ;;; constants
 
 (a:define-constant +zero+
-    (mat 0f0 0f0 0f0 0f0 0f0 0f0 0f0 0f0 0f0 0f0 0f0 0f0 0f0 0f0 0f0 0f0)
+    (%mat 0f0 0f0 0f0 0f0 0f0 0f0 0f0 0f0 0f0 0f0 0f0 0f0 0f0 0f0 0f0 0f0)
   :test #'equalp)
 
 (a:define-constant +id+
-    (mat 1f0 0f0 0f0 0f0 0f0 1f0 0f0 0f0 0f0 0f0 1f0 0f0 0f0 0f0 0f0 1f0)
+    (%mat 1f0 0f0 0f0 0f0 0f0 1f0 0f0 0f0 0f0 0f0 1f0 0f0 0f0 0f0 0f0 1f0)
   :test #'equalp)
 
 ;;; operators
