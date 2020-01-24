@@ -1,7 +1,7 @@
 (in-package #:origin.test)
 
 (define-test v2/copy
-  (let ((v (v2:vec 1f0 2f0))
+  (let ((v (v2:vec 1 2))
         (o (v2:vec)))
     (is v2:= (v2:copy! o v) v)
     (is v2:= o v)
@@ -11,14 +11,14 @@
 (define-test v2/sign
   (let ((o (v2:vec)))
     (is v2:= (v2:sign (v2:vec)) (v2:vec))
-    (is v2:= (v2:sign (v2:vec 10f0 10f0)) (v2:vec 1f0 1f0))
-    (is v2:= (v2:sign (v2:vec -10f0 -10f0)) (v2:vec -1f0 -1f0))
+    (is v2:= (v2:sign (v2:vec 10 10)) (v2:vec 1 1))
+    (is v2:= (v2:sign (v2:vec -10 -10)) (v2:vec -1 -1))
     (v2:sign! o (v2:vec))
     (is v2:= o (v2:vec))
-    (v2:sign! o (v2:vec 10f0 10f0))
-    (is v2:= o (v2:vec 1f0 1f0))
-    (v2:sign! o (v2:vec -10f0 -10f0))
-    (is v2:= o (v2:vec -1f0 -1f0))))
+    (v2:sign! o (v2:vec 10 10))
+    (is v2:= o (v2:vec 1 1))
+    (v2:sign! o (v2:vec -10 -10))
+    (is v2:= o (v2:vec -1 -1))))
 
 (define-test v2/fract
   (let ((o (v2:vec))
@@ -33,7 +33,7 @@
 
 (define-test v2/clamp
   (let ((v (v2:vec -1.5185602 0.3374052))
-        (r (v2:vec -1f0 0.3374052))
+        (r (v2:vec -1 0.3374052))
         (o (v2:vec)))
     (is v2:= (v2:clamp! o v :min -1.0 :max 1.0) r)
     (is v2:= o r)
@@ -107,13 +107,13 @@
   (is = (v2:dot (v2:vec -0.21361923 0.39387107)
                 (v2:vec -0.13104868 0.399935))
       0.18551734)
-  (is = (v2:dot (v2:vec 1f0 0f0) (v2:vec 0f0 1f0)) 0)
-  (is = (v2:dot (v2:vec 1f0 0f0) (v2:vec 1f0 0f0)) 1)
-  (is = (v2:dot (v2:vec 1f0 0f0) (v2:vec -1f0 0f0)) -1))
+  (is = (v2:dot (v2:vec 1 0) (v2:vec 0 1)) 0)
+  (is = (v2:dot (v2:vec 1 0) (v2:vec 1 0)) 1)
+  (is = (v2:dot (v2:vec 1 0) (v2:vec -1 0)) -1))
 
 (define-test v2/length
   (is = (v2:length v2:+zero+) 0)
-  (is = (v2:length (v2:vec 1f0 0f0)) 1)
+  (is = (v2:length (v2:vec 1 0)) 1)
   (is = (v2:length (v2:vec 0.32979298 0.2571392)) 0.4181913))
 
 (define-test v2/normalize
@@ -123,13 +123,13 @@
     (is v2:= (v2:normalize! o v) r)
     (is v2:= o r)
     (is v2:= (v2:normalize v) r)
-    (is v2:= (v2:normalize (v2:vec 2f0 0f0)) (v2:vec 1f0 0f0))
-    (is v2:= (v2:normalize (v2:vec 0f0 2f0)) (v2:vec 0f0 1f0))
-    (is v2:= (v2:normalize (v2:vec 0f0 0f0)) (v2:vec 0f0 0f0))))
+    (is v2:= (v2:normalize (v2:vec 2 0)) (v2:vec 1 0))
+    (is v2:= (v2:normalize (v2:vec 0 2)) (v2:vec 0 1))
+    (is v2:= (v2:normalize (v2:vec 0 0)) (v2:vec 0 0))))
 
 (define-test v2/round
   (let ((v (v2:vec -0.70498157 0.3615427))
-        (r (v2:vec -1f0 0f0))
+        (r (v2:vec -1 0))
         (o (v2:vec)))
     (is v2:= (v2:round! o v) r)
     (is v2:= o r)
@@ -152,18 +152,18 @@
     (is v2:= (v2:negate v) r)))
 
 (define-test v2/angle
-  (let ((angle (v2:angle (v2:vec 0f0 1f0) (v2:vec 1f0 0f0))))
+  (let ((angle (v2:angle (v2:vec 0 1) (v2:vec 1 0))))
     (true (<= (abs (- angle origin:pi/2)) 1e-7)))
-  (let ((angle (v2:angle (v2:vec 1f0 0f0) (v2:vec 1f0 1f0))))
+  (let ((angle (v2:angle (v2:vec 1 0) (v2:vec 1 1))))
     (true (<= (abs (- angle origin:pi/4)) 1e-7))))
 
 (define-test v2/zero-predicate
   (true (v2:zero-p v2:+zero+))
-  (true (v2:zero-p (v2:vec 0f0 0f0))))
+  (true (v2:zero-p (v2:vec 0 0))))
 
 (define-test v2/direction-equality
-  (true (v2:direction= (v2:vec 0.0073252916 0f0) (v2:vec 0.31148136 0f0)))
-  (true (v2:direction= (v2:vec 0f0 0.6982585) (v2:vec 0f0 0.72258794))))
+  (true (v2:direction= (v2:vec 0.0073252916 0) (v2:vec 0.31148136 0)))
+  (true (v2:direction= (v2:vec 0 0.6982585) (v2:vec 0 0.72258794))))
 
 (define-test v2/lerp
   (let ((v1 (v2:vec 0.74485755 0.092342734))
@@ -180,8 +180,8 @@
   (let ((v1 (v2:vec 0.34003425 -0.4920528))
         (v2 (v2:vec 0.6535034 -0.11586404))
         (v3 (v2:vec 0.9715252 0.8300271))
-        (v4 (v2:vec 1f0 2f0))
-        (v5 (v2:vec 3f0 4f0)))
+        (v4 (v2:vec 1 2))
+        (v5 (v2:vec 3 4)))
     (true (v2:< v2 v3))
     (true (v2:<= v4 v4))
     (true (v2:<= v4 v5))
