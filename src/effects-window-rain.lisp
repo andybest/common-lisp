@@ -81,7 +81,7 @@
                       (view :mat4)
                       (proj :mat4))
   (with-slots (mesh/pos) mesh-attrs
-    (vec4 (.xy mesh/pos) 0 1)))
+    (vec4 (* (.xy mesh/pos) 2) 0 1)))
 
 (defun window-rain/f (&uniforms
                       (time :float)
