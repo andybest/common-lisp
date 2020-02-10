@@ -95,7 +95,15 @@
 
 (defun unbind-block (block-alias)
   "Unbind a block with the alias BLOCK-ALIAS."
-  (bind-block block-alias 0))
+  (let* ((bindings (meta :block-bindings))
+         (block (find-block block-alias))
+         (binding-point (binding-point block))
+         (table (u:href bindings (block-type block))))
+    (a:deletef (u:href table binding-point) block)
+    (unless (u:href table binding-point)
+      (remhash binding-point table))
+    (%bind-block (block-type block) block 0)
+    (setf (slot-value block '%binding-point) 0)))
 
 (defun rebind-blocks (programs)
   "Rebind all blocks that are members of PROGRAMS."
