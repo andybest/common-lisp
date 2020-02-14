@@ -38,5 +38,4 @@
    (:file "noise-value")
    (:file "noise-misc")
    (:file "sdf-2d")
-   (:file "sprite")
-   (:file "effects-window-rain")))
+   (:file "sprite")))
