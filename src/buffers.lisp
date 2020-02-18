@@ -42,7 +42,8 @@ PROGRAM-NAME."
       (with-slots (%id %layout) buffer
         (%gl:bind-buffer target %id)
         (%gl:buffer-data target (size %layout) (cffi:null-pointer) :static-draw)
-        (setf (u:href buffer-table buffer-name) buffer)))
+        (setf (u:href buffer-table buffer-name) buffer)
+        (id buffer)))
     (error "Cannot find the block with alias ~s when attempting to create a ~
             buffer."
            block-alias)))
@@ -64,7 +65,8 @@ PROGRAM-NAME."
   (let ((buffer (find-buffer buffer-name)))
     (unbind-buffer buffer-name)
     (gl:delete-buffers (list (id buffer)))
-    (remhash buffer-name (meta :buffers))))
+    (remhash buffer-name (meta :buffers))
+    (id buffer)))
 
 (defun %write-buffer-member (target member value)
   (with-slots (%element-type %offset %element-stride %byte-stride) member
