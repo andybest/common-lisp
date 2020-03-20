@@ -66,8 +66,8 @@
     (is v2:= (m3:get-translation (m3:* tr2 tr1)) (v2:vec 15 30))))
 
 (define-test m3/translation-convert
-  (let ((m (m3:mat 1 5 9 2 6 10 3 7 11))
-        (rm (m3:mat 1 0 9 0 1 10 0 0 1))
+  (let ((m (m3:mat 1 2 3 5 6 7 9 10 11))
+        (rm (m3:mat 1 0 0 0 1 0 9 10 1))
         (om (m3:mat 1))
         (v (v2:vec 9 10))
         (rv (v2:vec 9 10))
@@ -103,7 +103,7 @@
 
 (define-test m3/rotate
   (let ((omz (m3:mat 1))
-        (rmz (m3:mat 0.5 -0.86602545 0 0.86602545 0.5 0 0 0 1)))
+        (rmz (m3:mat 0.5 0.86602545 0 -0.86602545 0.5 0 0 0 1)))
     (true (m3:~ (m3:rotate! omz m3:+id+ origin:pi/3) rmz))
     (true (m3:~ omz rmz))
     (true (m3:~ (m3:rotate m3:+id+ origin:pi/3) rmz))))
@@ -150,7 +150,7 @@
 (define-test m3/diagonal
   (let ((m (m3:mat 1 2 3 4 5 6 7 8 9))
         (r1 (v3:vec 1 5 9))
-        (r2 (v3:vec 3 5 7))
+        (r2 (v3:vec 7 5 3))
         (o (v3:vec)))
     (true (m3:diagonal-p (m3:mat 1)))
     (true (not (m3:diagonal-p m)))

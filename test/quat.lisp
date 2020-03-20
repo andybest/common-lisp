@@ -168,7 +168,7 @@
 (define-test q/mat4-convert
   (let ((q (q:rotate-euler q:+id+ (v3:vec origin:pi/3 0 0)))
         (qo (q:quat))
-        (r (m4:mat 1 0 0 0 0 0.5 -0.86602545 0 0 0.86602545 0.5 0 0 0 0 1))
+        (r (m4:mat 1 0 0 0 0 0.5 0.86602545 0 0 -0.86602545 0.5 0 0 0 0 1))
         (mo (m4:mat 1)))
     (true (m4:~ (q:to-mat4! mo q) r))
     (true (m4:~ mo r))

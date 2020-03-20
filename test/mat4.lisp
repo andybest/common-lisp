@@ -69,9 +69,11 @@
     (is v3:= (m4:get-translation (m4:* tr1 tr2)) (v3:vec 15 30 45))
     (is v3:= (m4:get-translation (m4:* tr2 tr1)) (v3:vec 15 30 45))))
 
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16
+
 (define-test m4/translation-convert
-  (let ((m (m4:mat 1 5 9 13 2 6 10 14 3 7 11 15 4 8 12 16))
-        (rm (m4:mat 1 0 0 5 0 1 0 10 0 0 1 15 0 0 0 1))
+  (let ((m (m4:mat 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16))
+        (rm (m4:mat 1 0 0 0 0 1 0 0 0 0 1 0 5 10 15 1))
         (om (m4:mat 1))
         (v (v3:vec 5 10 15))
         (rv (v3:vec 13 14 15))
@@ -86,7 +88,7 @@
 (define-test m4/translate
   (let ((m (m4:rotate m4:+id+ (v3:vec origin:pi/3 0 0)))
         (o (m4:mat 1))
-        (r (m4:mat 1 0 0 5 0 0.5 -0.86602545 10 0 0.86602545 0.5 15 0 0 0 1))
+        (r (m4:mat 1 0 0 0 0 0.5 0.86602545 0 0 -0.86602545 0.5 0 5 10 15 1))
         (v (v3:vec 5 10 15)))
     (true (m4:~ (m4:translate! o m v) r))
     (true (m4:~ o r))
@@ -94,8 +96,8 @@
     (is v3:= (m4:get-translation (m4:translate m v)) v)))
 
 (define-test m4/rotation-copy
-  (let ((m (m4:mat 1 5 9 13 2 6 10 14 3 7 11 15 4 8 12 16))
-        (r (m4:mat 1 5 9 0 2 6 10 0 3 7 11 0 0 0 0 1))
+  (let ((m (m4:mat 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16))
+        (r (m4:mat 1 2 3 0 5 6 7 0 9 10 11 0 0 0 0 1))
         (o (m4:mat 1)))
     (is m4:= (m4:copy-rotation! o m) r)
     (is m4:= o r)
@@ -104,8 +106,8 @@
 (define-test m4/rotation-convert
   (let ((m (m4:rotate m4:+id+ (v3:vec origin:pi/3 0 0)))
         (rmx m4:+id+)
-        (rmy (m4:mat 1 0 0 0 0 0.5 0 0 0 0.86602545 1 0 0 0 0 1))
-        (rmz (m4:mat 1 0 0 0 0 1 -0.86602545 0 0 0 0.5 0 0 0 0 1))
+        (rmy (m4:mat 1 0 0 0 0 0.5 0.86602545 0 0 0 1 0 0 0 0 1))
+        (rmz (m4:mat 1 0 0 0 0 1 0 0 0 -0.86602545 0.5 0 0 0 0 1))
         (omx (m4:mat 1))
         (omy (m4:mat 1))
         (omz (m4:mat 1))
@@ -138,9 +140,9 @@
   (let ((omx (m4:mat 1))
         (omy (m4:mat 1))
         (omz (m4:mat 1))
-        (rmx (m4:mat 1 0 0 0 0 0.5 -0.86602545 0 0 0.86602545 0.5 0 0 0 0 1))
-        (rmy (m4:mat 0.5 0 0.86602545 0 0 1 0 0 -0.86602545 0 0.5 0 0 0 0 1))
-        (rmz (m4:mat 0.5 -0.86602545 0 0 0.86602545 0.5 0 0 0 0 1 0 0 0 0 1))
+        (rmx (m4:mat 1 0 0 0 0 0.5 0.86602545 0 0 -0.86602545 0.5 0 0 0 0 1))
+        (rmy (m4:mat 0.5 0 -0.86602545 0 0 1 0 0 0.86602545 0 0.5 0 0 0 0 1))
+        (rmz (m4:mat 0.5 0.86602545 0 0 -0.86602545 0.5 0 0 0 0 1 0 0 0 0 1))
         (vx (v3:vec origin:pi/3 0 0))
         (vy (v3:vec 0 origin:pi/3 0))
         (vz (v3:vec 0 0 origin:pi/3)))
@@ -191,10 +193,10 @@
   (true (m4:orthogonal-p (m4:rotate m4:+id+ (v3:vec origin:pi/6 0 0)))))
 
 (define-test m4/orthgonalize
-  (let ((m (m4:mat 0 1 -0.12988785 1.0139829 0 0 0.3997815 -0.027215311 1 0
-                   0.5468181 0.18567966 0 0 0 0))
+  (let ((m (m4:mat 0 0 1 0 1 0 0 0 -0.12988785 0.3997815 0.5468181 0 1.0139829
+                   -0.027215311 0.18567966 0))
         (o (m4:mat 1))
-        (r (m4:mat 0 1 0 0 0 0 1 0 1 0 0 0 0 0 0 1)))
+        (r (m4:mat 0 0 1 0 1 0 0 0 0 1 0 0 0 0 0 1)))
     (is m4:= (m4:orthonormalize! o m) r)
     (is m4:= o r)
     (is m4:= (m4:orthonormalize m) r)))
@@ -207,7 +209,7 @@
 (define-test m4/diagonal
   (let ((m (m4:mat 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16))
         (r1 (v4:vec 1 6 11 16))
-        (r2 (v4:vec 4 7 10 13))
+        (r2 (v4:vec 13 10 7 4))
         (o (v4:vec)))
     (true (m4:diagonal-p (m4:mat 1)))
     (true (not (m4:diagonal-p m)))
@@ -238,13 +240,12 @@
 
 (define-test m4/set-view
   (let ((o (m4:mat 1))
-        (r (m4:mat -0.7071068 0 -0.7071068 0.7071068 0 1 0 0 0.7071068 0
-                   -0.7071068 -0.7071068 0 0 0 1))
+        (r (m4:mat -0.7071068 0 0.7071068 0 0 1 0 0 -0.7071068 0 -0.7071068 0
+                   0.7071068 0 -0.7071068 1))
         (o2 (m4:mat 1))
-        (r2 (m4:mat 0.9622504 -0.19245008 -0.19245008 -2.3841858e-7
-                    0.05143445 0.8229512 -0.5657789 -9.536743e-7
-                    0.26726124 0.5345225 0.80178374 -18.708286
-                    0.0 0.0 0.0 1.0)))
+        (r2 (m4:mat 0.9622504 0.05143445 0.26726124 0 -0.19245008 0.8229512
+                    0.5345225 0 -0.19245008 -0.5657789 0.80178374 0
+                    -2.3841858e-7 -9.536743e-7 -18.708286 1)))
     (true (m4:~ (m4:set-view! o
                               (v3:vec 1 0 0)
                               (v3:vec 0 0 1)
@@ -267,7 +268,7 @@
                 r2))))
 
 (define-test m4/set-projection/orthographic
-  (let ((r (m4:mat 0.05 0 0 0 0 0.1 0 0 0 0 -0.002 -1 0 0 0 1))
+  (let ((r (m4:mat 0.05 0 0 0 0 0.1 0 0 0 0 -0.002 0 0 0 -1 1))
         (o (m4:mat 1)))
     (is m4:= (m4:set-projection/orthographic!
               o -20.0 20.0 -10.0 10.0 0.0 1000.0)
@@ -277,8 +278,8 @@
         r)))
 
 (define-test m4/set-projection/perspective
-  (let ((r (m4:mat 0.9742786 0 0 0 0 1.7320509 0 0 0 0 -1.002002 -2.002002 0 0
-                   -1 0))
+  (let ((r (m4:mat 0.9742786 0 0 0 0 1.7320509 0 0 0 0 -1.002002 -1 0 0
+                   -2.002002 0))
         (o (m4:mat 1)))
     (is m4:= (m4:set-projection/perspective!
               o origin:pi/3 (float (/ 16 9) 1f0) 1.0 1000.0)

@@ -33,10 +33,10 @@
   (v4:with-components ((a a) (b b) (c c) (d d))
     (%mat ax ay az aw bx by bz bw cx cy cz cw dx dy dz dw)))
 
-(defspecialization (mat :inline t) ((a real) (e real) (i real) (m real)
-                                    (b real) (f real) (j real) (n real)
-                                    (c real) (g real) (k real) (o real)
-                                    (d real) (h real) (l real) (p real))
+(defspecialization (mat :inline t) ((a real) (b real) (c real) (d real)
+                                    (e real) (f real) (g real) (h real)
+                                    (i real) (j real) (k real) (l real)
+                                    (m real) (n real) (o real) (p real))
     mat
   (%mat (float a 1f0) (float b 1f0) (float c 1f0) (float d 1f0)
         (float e 1f0) (float f 1f0) (float g 1f0) (float h 1f0)
