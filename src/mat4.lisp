@@ -54,3 +54,11 @@
        ,(if rest
             `(with-elements ,rest ,@body)
             `(progn ,@body)))))
+
+(defun pretty-print (matrix &optional (stream *standard-output*))
+  (with-components ((m matrix))
+    (format stream "[~,6f, ~,6f, ~,6f, ~,6f~% ~
+                     ~,6f, ~,6f, ~,6f, ~,6f~% ~
+                     ~,6f, ~,6f, ~,6f, ~,6f~% ~
+                     ~,6f, ~,6f, ~,6f, ~,6f]"
+            m00 m10 m20 m30 m01 m11 m21 m31 m02 m12 m22 m32 m03 m13 m23 m33)))

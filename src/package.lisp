@@ -380,6 +380,7 @@
    #:mat
    #:with-components
    #:with-elements
+   #:pretty-print
    #:+zero+
    #:+id+
    #:zero!
@@ -440,6 +441,7 @@
    #:mat
    #:with-components
    #:with-elements
+   #:pretty-print
    #:+zero+
    #:+id+
    #:zero!
@@ -513,6 +515,7 @@
    #:mat
    #:with-components
    #:with-elements
+   #:pretty-print
    #:+zero+
    #:+id+
    #:zero!
