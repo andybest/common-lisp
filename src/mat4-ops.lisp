@@ -38,10 +38,10 @@
                                     (c real) (g real) (k real) (o real)
                                     (d real) (h real) (l real) (p real))
     mat
-  (%mat (float a 1f0) (float e 1f0) (float i 1f0) (float m 1f0)
-        (float b 1f0) (float f 1f0) (float j 1f0) (float n 1f0)
-        (float c 1f0) (float g 1f0) (float k 1f0) (float o 1f0)
-        (float d 1f0) (float h 1f0) (float l 1f0) (float p 1f0)))
+  (%mat (float a 1f0) (float b 1f0) (float c 1f0) (float d 1f0)
+        (float e 1f0) (float f 1f0) (float g 1f0) (float h 1f0)
+        (float i 1f0) (float j 1f0) (float k 1f0) (float l 1f0)
+        (float m 1f0) (float n 1f0) (float o 1f0) (float p 1f0)))
 
 ;;; constants
 

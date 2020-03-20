@@ -68,7 +68,7 @@
 
 (define-test m2/rotation
   (let ((omz (m2:mat 1))
-        (rmz (m2:mat 0.5 -0.86602545 0.86602545 0.5)))
+        (rmz (m2:mat 0.5 0.86602545 -0.86602545 0.5)))
     (true (m2:~ (m2:rotate! omz m2:+id+ origin:pi/3) rmz))
     (true (m2:~ omz rmz))
     (true (m2:~ (m2:rotate m2:+id+ origin:pi/3) rmz))))
@@ -115,7 +115,7 @@
 (define-test m2/diagonal
   (let ((m (m2:mat 1 2 3 4))
         (r1 (v2:vec 1 4))
-        (r2 (v2:vec 2 3))
+        (r2 (v2:vec 3 2))
         (o (v2:vec)))
     (true (m2:diagonal-p (m2:mat 1)))
     (true (not (m2:diagonal-p m)))

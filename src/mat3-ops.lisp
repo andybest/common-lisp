@@ -35,9 +35,9 @@
                                     (b real) (e real) (h real)
                                     (c real) (f real) (i real))
     mat
-  (%mat (float a 1f0) (float d 1f0) (float g 1f0)
-        (float b 1f0) (float e 1f0) (float h 1f0)
-        (float c 1f0) (float f 1f0) (float i 1f0)))
+  (%mat (float a 1f0) (float b 1f0) (float c 1f0)
+        (float d 1f0) (float e 1f0) (float f 1f0)
+        (float g 1f0) (float h 1f0) (float i 1f0)))
 
 ;;; constants
 
