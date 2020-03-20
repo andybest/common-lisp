@@ -6,8 +6,8 @@
   (a:once-only (matrix)
     `(symbol-macrolet ((,prefix ,matrix)
                        (,(make-accessor-symbol prefix "00") (aref ,matrix 0))
-                       (,(make-accessor-symbol prefix "10") (aref ,matrix 1))
-                       (,(make-accessor-symbol prefix "01") (aref ,matrix 2))
+                       (,(make-accessor-symbol prefix "01") (aref ,matrix 1))
+                       (,(make-accessor-symbol prefix "10") (aref ,matrix 2))
                        (,(make-accessor-symbol prefix "11") (aref ,matrix 3)))
        ,(if rest
             `(with-components ,rest ,@body)

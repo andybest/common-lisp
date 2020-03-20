@@ -29,9 +29,8 @@
   (v2:with-components ((a a) (b b))
     (%mat ax ay bx by)))
 
-(defspecialization (mat :inline t) ((m00 real) (m10 real) (m01 real) (m11 real))
-    mat
-  (%mat (float m00 1f0) (float m01 1f0) (float m10 1f0) (float m11 1f0)))
+(defspecialization (mat :inline t) ((a real) (b real) (c real) (d real)) mat
+  (%mat (float a 1f0) (float b 1f0) (float c 1f0) (float d 1f0)))
 
 ;;; constants
 

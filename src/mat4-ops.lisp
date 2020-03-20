@@ -33,15 +33,15 @@
   (v4:with-components ((a a) (b b) (c c) (d d))
     (%mat ax ay az aw bx by bz bw cx cy cz cw dx dy dz dw)))
 
-(defspecialization (mat :inline t) ((m00 real) (m10 real) (m20 real) (m30 real)
-                                    (m01 real) (m11 real) (m21 real) (m31 real)
-                                    (m02 real) (m12 real) (m22 real) (m32 real)
-                                    (m03 real) (m13 real) (m23 real) (m33 real))
+(defspecialization (mat :inline t) ((a real) (e real) (i real) (m real)
+                                    (b real) (f real) (j real) (n real)
+                                    (c real) (g real) (k real) (o real)
+                                    (d real) (h real) (l real) (p real))
     mat
-  (%mat (float m00 1f0) (float m01 1f0) (float m02 1f0) (float m03 1f0)
-        (float m10 1f0) (float m11 1f0) (float m12 1f0) (float m13 1f0)
-        (float m20 1f0) (float m21 1f0) (float m22 1f0) (float m23 1f0)
-        (float m30 1f0) (float m31 1f0) (float m32 1f0) (float m33 1f0)))
+  (%mat (float a 1f0) (float e 1f0) (float i 1f0) (float m 1f0)
+        (float b 1f0) (float f 1f0) (float j 1f0) (float n 1f0)
+        (float c 1f0) (float g 1f0) (float k 1f0) (float o 1f0)
+        (float d 1f0) (float h 1f0) (float l 1f0) (float p 1f0)))
 
 ;;; constants
 
