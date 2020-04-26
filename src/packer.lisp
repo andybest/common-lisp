@@ -131,8 +131,8 @@ given filesystem path.
                :auto-size-granularity-y auto-size-granularity-y
                :optimize-pack optimize-pack))
         :with atlas = (opticl:make-8-bit-rgba-image
-                       (if (numberp width) width packed-width)
-                       (if (numberp height) height packed-height))
+                       (if (numberp height) height packed-height)
+                       (if (numberp width) width packed-width))
         :for rect :in (remove-padding packed padding)
         :for sprite = (opticl:read-png-file (file rect))
         :for coords = (make-coords rect packed-width packed-height
