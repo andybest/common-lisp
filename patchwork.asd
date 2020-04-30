@@ -7,9 +7,10 @@
   :source-control (:git "https://github.com/mfiano/patchwork.git")
   :bug-tracker "https://github.com/mfiano/patchwork/issues"
   :encoding :utf-8
-  :depends-on (#:pngload
+  :depends-on (#:binpack
                #:opticl
-               #:binpack)
+               #:pngload
+               #:uiop)
   :pathname "src"
   :serial t
   :components
