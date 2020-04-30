@@ -10,13 +10,22 @@
 (defun rect (file id x y w h)
   (make-instance 'rect :file file :id id :x x :y y :w w :h h))
 
-
 (defun make-id (root file)
-  (namestring
-   (make-pathname
-    :defaults
-    (uiop/pathname:enough-pathname file (uiop/pathname:ensure-directory-pathname root))
-    :type nil)))
+  (flet ((replace-tilde (path)
+           (let ((namestring (namestring path)))
+             (if (char= (char namestring 0) #\~)
+                 (uiop:merge-pathnames*
+                  (uiop:relativize-pathname-directory
+                   (subseq namestring 1))
+                  (user-homedir-pathname))
+                 (values (parse-namestring path))))))
+    (namestring
+     (make-pathname
+      :defaults
+      (uiop/pathname:enough-pathname
+       (replace-tilde file)
+       (uiop/pathname:ensure-directory-pathname (replace-tilde root)))
+      :type nil))))
 
 (defun map-files (path effect &key (filter (constantly t)) (recursive t))
   (labels ((maybe-affect (file)
@@ -103,23 +112,27 @@
 
 OUT-FILE: A pathname specifying where to write the image file.
 
-WIDTH: The width in pixels of the spritesheet. :AUTO to calculate width automatically.
+WIDTH: The width in pixels of the spritesheet. :AUTO to calculate width
+automatically.
 
-HEIGHT: The height in pixels of the spritesheet. :AUTO to calculate height automatically.
+HEIGHT: The height in pixels of the spritesheet. :AUTO to calculate height
+automatically.
 
-NORMALIZE: Boolean specifying whether to map the metadata's coordinates to the [0..1] range.
+NORMALIZE: Boolean specifying whether to map the metadata's coordinates to the
+[0..1] range.
 
 FLIP-Y: Boolean specifying whether to flip the Y axis when writing the metadata.
 
 PADDING: The padding in pixels to use around each sprite in the spritesheet.
 
-OPTIMIZE-PACK: Calculate size automatically, and try multiple sizes to find a better size. (ignores WIDTH, HEIGHT if set)
+OPTIMIZE-PACK: Calculate size automatically, and try multiple sizes to find a
+better size. (ignores WIDTH, HEIGHT if set)
 
-AUTO-SIZE-GRANULARITY-X,
-AUTO-SIZE-GRANULARITY-Y: Automatically generated sizes will be multiples of these.
+AUTO-SIZE-GRANULARITY-X, AUTO-SIZE-GRANULARITY-Y: Automatically generated sizes
+will be multiples of these.
 
-See MAKE-ATLAS-FROM-DIRECTORY if you want to automatically generate FILE-SPEC from the files under a
-given filesystem path.
+See MAKE-ATLAS-FROM-DIRECTORY if you want to automatically generate FILE-SPEC
+from the files under a given filesystem path.
 "
   (loop :with rects = (add-padding (make-rects file-spec) padding)
         :with (packed packed-width packed-height)
@@ -156,9 +169,11 @@ RECURSIVE: Boolean specifying whether to scan recursively for files.
 
 OUT-FILE: A pathname specifying where to write the image file.
 
-WIDTH: The width in pixels of the spritesheet. :AUTO to calculate width automatically.
+WIDTH: The width in pixels of the spritesheet. :AUTO to calculate width
+automatically.
 
-HEIGHT: The height in pixels of the spritesheet. :AUTO to calculate height automatically.
+HEIGHT: The height in pixels of the spritesheet. :AUTO to calculate height
+automatically.
 
 NORMALIZE: Boolean specifying whether to normalize the metadata's coordinates in the [0..1] range.
 
@@ -166,13 +181,15 @@ FLIP-Y: Boolean specifying whether to flip the Y axis when writing the metadata.
 
 PADDING: The padding in pixels to use around each sprite in the spritesheet.
 
-OPTIMIZE-PACK: Calculate size automatically, and try multiple sizes to find a better size. (ignores WIDTH, HEIGHT if set)
+OPTIMIZE-PACK: Calculate size automatically, and try multiple sizes to find a
+better size. (ignores WIDTH, HEIGHT if set)
 
-AUTO-SIZE-GRANULARITY-X,
-AUTO-SIZE-GRANULARITY-Y: Automatically generated sizes will be multiples of these.
+AUTO-SIZE-GRANULARITY-X, AUTO-SIZE-GRANULARITY-Y: Automatically generated sizes
+will be multiples of these.
 
-See MAKE-ATLAS if you want to manually specify a file-spec, in case you want to be in control of the
-names chosen to identify the sprites written to the metadata file.
+See MAKE-ATLAS if you want to manually specify a file-spec, in case you want to
+be in control of the names chosen to identify the sprites written to the
+metadata file.
 "
   (let ((file-spec (collect-files path :recursive recursive)))
     (make-atlas file-spec
