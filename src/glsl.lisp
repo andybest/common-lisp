@@ -26,11 +26,19 @@
 
 (cl:defmacro defstruct (name &body slots)
   "Define a GPU structure."
-  `(varjo:define-vari-struct ,name () ,@slots))
+  `(progn
+     (varjo:define-vari-struct ,name () ,@slots)
+     (export ',name)
+     ,@(mapcar
+        (lambda (x)
+          `(export ',(cadr (member :accessor x))))
+        slots)))
 
 (cl:defmacro defmacro (name lambda-list &body body)
   "Define a GPU macro."
-  `(varjo:define-vari-macro ,name ,lambda-list ,@body))
+  `(progn
+     (varjo:define-vari-macro ,name ,lambda-list ,@body)
+     (export ',name)))
 
 (cl:defmacro define-shader (name (&key (version :430) (primitive :triangles))
                             &body body)
