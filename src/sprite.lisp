@@ -10,12 +10,12 @@
 
 (defun make-vertex-data ((sprite sprite-data)
                          (spritesheet spritesheet-data))
-  (let* ((tsize (vec4 (.xyxy (texture-size (sampler sprite) 0))))
-         (spos (aref (pos spritesheet) (index sprite)))
-         (ssize (aref (size spritesheet) (index sprite)))
-         (zpos (+ spos ssize))
-         (vertpos (vec4 (* ssize 0.5) (* ssize -0.5)))
-         (uv (/ (+ (vec4 0.5 0.5 -0.5 -0.5) (vec4 spos zpos)) tsize)))
+  (let* ((tex-size (.xyxy (texture-size (sampler sprite) 0)))
+         (size (aref (size spritesheet) (index sprite)))
+         (a (aref (pos spritesheet) (index sprite)))
+         (b (+ a size))
+         (vertpos (vec4 (* size 0.5) (* size -0.5)))
+         (uv (/ (vec4 a b) tex-size)))
     (case gl-vertex-id
       (0 (values (.xy vertpos) (.zw uv)))
       (1 (values (.zy vertpos) (.xw uv)))
