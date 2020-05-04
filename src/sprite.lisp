@@ -5,22 +5,22 @@
   (index :int :accessor index))
 
 (defstruct spritesheet-data
-  (pos (:vec2 2048) :accessor pos)
-  (size (:vec2 2048) :accessor size))
+  (pos (:ivec2 2048) :accessor pos)
+  (size (:ivec2 2048) :accessor size))
 
 (defun make-vertex-data ((sprite sprite-data)
                          (spritesheet spritesheet-data))
-  (let* ((size (.xyxy (texture-size (sampler sprite) 0)))
-         (extents (vec4 (aref (pos spritesheet) (index sprite))
-                        (aref (size spritesheet) (index sprite))))
-         (offsets (* size (vec4 (* (.zw extents) 0.5)
-                                (* (.zw extents) -0.5)))))
-    (incf (.zw extents) (.xy extents))
+  (let* ((tsize (vec4 (.xyxy (texture-size (sampler sprite) 0))))
+         (spos (aref (pos spritesheet) (index sprite)))
+         (ssize (+ (vec2 1 1) (aref (size spritesheet) (index sprite))))
+         (zpos (+ spos ssize))
+         (vertpos (vec4 (* ssize 0.5) (* ssize -0.5)))
+         (uv (/ (+ (vec4 -0.5 -0.5 0.5 0.5) (vec4 spos zpos)) tsize)))
     (case gl-vertex-id
-      (0 (values (.xy offsets) (.zw extents)))
-      (1 (values (.zy offsets) (.xw extents)))
-      (2 (values (.xw offsets) (.zy extents)))
-      (otherwise (values (.zw offsets) (.xy extents))))))
+      (0 (values (.xy vertpos) (.zw uv)))
+      (1 (values (.zy vertpos) (.xw uv)))
+      (2 (values (.xw vertpos) (.zy uv)))
+      (otherwise (values (.zw vertpos) (.xy uv))))))
 
 (defun sprite/v (&uniforms
                  (model :mat4)
