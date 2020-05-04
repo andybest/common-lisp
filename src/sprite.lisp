@@ -12,10 +12,10 @@
                          (spritesheet spritesheet-data))
   (let* ((tsize (vec4 (.xyxy (texture-size (sampler sprite) 0))))
          (spos (aref (pos spritesheet) (index sprite)))
-         (ssize (+ (vec2 1 1) (aref (size spritesheet) (index sprite))))
+         (ssize (aref (size spritesheet) (index sprite)))
          (zpos (+ spos ssize))
          (vertpos (vec4 (* ssize 0.5) (* ssize -0.5)))
-         (uv (/ (+ (vec4 -0.5 -0.5 0.5 0.5) (vec4 spos zpos)) tsize)))
+         (uv (/ (+ (vec4 0.5 0.5 -0.5 -0.5) (vec4 spos zpos)) tsize)))
     (case gl-vertex-id
       (0 (values (.xy vertpos) (.zw uv)))
       (1 (values (.zy vertpos) (.xw uv)))
