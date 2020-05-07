@@ -5,48 +5,50 @@
                     (#:u #:golden-utils))
   (:use #:cl)
   (:export
-   #:defun
-   #:defstruct
-   #:defmacro
+   #:bind-block
+   #:bind-buffer
+   #:buffer-name
+   #:clear-buffer
+   #:create-block-alias
+   #:create-buffer
    #:define-shader
-   #:load-shaders
-   #:unload-shaders
-   #:recompile-shaders
-   #:with-shader
-   #:view-source
+   #:defmacro
+   #:defstruct
+   #:defun
+   #:delete-buffer
+   #:find-block
+   #:find-buffer
    #:find-program
    #:get-program-id
-   #:create-block-alias
-   #:find-block
-   #:bind-block
-   #:unbind-block
-   #:buffer-name
-   #:find-buffer
-   #:create-buffer
-   #:bind-buffer
-   #:unbind-buffer
-   #:delete-buffer
+   #:load-shaders
    #:read-buffer-path
-   #:write-buffer-path
+   #:recompile-shaders
+   #:unbind-block
+   #:unbind-buffer
+   #:unload-shaders
    #:uniforms
    #:uniform-bool
    #:uniform-bool-array
-   #:uniform-int
-   #:uniform-int-array
    #:uniform-float
    #:uniform-float-array
+   #:uniform-int
+   #:uniform-int-array
+   #:uniform-mat2
+   #:uniform-mat2-array
+   #:uniform-mat3
+   #:uniform-mat3-array
+   #:uniform-mat4
+   #:uniform-mat4-array
    #:uniform-vec2
    #:uniform-vec2-array
    #:uniform-vec3
    #:uniform-vec3-array
    #:uniform-vec4
    #:uniform-vec4-array
-   #:uniform-mat2
-   #:uniform-mat2-array
-   #:uniform-mat3
-   #:uniform-mat3-array
-   #:uniform-mat4
-   #:uniform-mat4-array))
+   #:view-source
+   #:with-shader
+   #:write-buffer-path
+   ))
 
 (defpackage #:shadow.glsl
   (:local-nicknames (#:a #:alexandria)

@@ -60,13 +60,22 @@ PROGRAM-NAME."
   "Unbind a buffer with name BUFFER-NAME."
   (bind-buffer buffer-name 0))
 
+(defun clear-buffer (buffer-name)
+  (with-slots (%id %target) (find-buffer buffer-name)
+    (gl:bind-buffer %target %id)
+    (%gl:clear-buffer-data
+     %target :r8 :red :unsigned-byte (cffi:null-pointer))
+    (unbind-buffer buffer-name)))
+
 (defun delete-buffer (buffer-name)
   "Delete the buffer having a name of BUFFER-NAME."
   (let ((buffer (find-buffer buffer-name)))
-    (unbind-buffer buffer-name)
-    (gl:delete-buffers (list (id buffer)))
-    (remhash buffer-name (meta :buffers))
-    (id buffer)))
+    (with-slots (%id) buffer
+      (clear-buffer buffer-name)
+      (unbind-buffer buffer-name)
+      (gl:delete-buffers (list %id))
+      (remhash buffer-name (meta :buffers))
+      %id)))
 
 (defun %write-buffer-member (target member value)
   (with-slots (%element-type %offset %element-stride %byte-stride) member
