@@ -43,4 +43,4 @@
 (defun pretty-print (matrix &optional (stream *standard-output*))
   (with-components ((m matrix))
     (format stream "[~,6f, ~,6f, ~,6f~% ~,6f, ~,6f, ~,6f~% ~,6f, ~,6f, ~,6f]"
-            m00 m10 m20 m01 m11 m21 m02 m12 m22)))
+            m00 m01 m02 m10 m11 m12 m20 m21 m22)))
