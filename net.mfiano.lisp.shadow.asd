@@ -1,17 +1,15 @@
-(asdf:defsystem #:shadow
-  :description "A lightweight system to help with defining and managing OpenGL shader programs."
-  :author "Michael Fiano <mail@michaelfiano.com>"
-  :maintainer "Michael Fiano <mail@michaelfiano.com>"
+(asdf:defsystem #:net.mfiano.lisp.shadow
+  :description "A management system for OpenGL shader programs and associated buffer objects."
+  :author "Michael Fiano <mail@mfiano.net>"
   :license "MIT"
-  :homepage "https://www.michaelfiano.com/projects/shadow"
-  :source-control (:git "git@github.com:mfiano/shadow.git")
+  :homepage "https://mfiano.net/projects/shadow"
+  :source-control (:git "https://github.com/mfiano/shadow")
   :bug-tracker "https://github.com/mfiano/shadow/issues"
   :encoding :utf-8
-  :depends-on (#:alexandria
-               #:cl-opengl
+  :depends-on (#:cl-opengl
                #:glsl-packing
-               #:golden-utils
-               #:origin
+               #:net.mfiano.lisp.golden-utils
+               #:net.mfiano.lisp.origin
                #:static-vectors
                #:varjo)
   :pathname "src"

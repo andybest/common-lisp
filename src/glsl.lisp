@@ -1,26 +1,26 @@
-(in-package #:shadow.glsl)
+(in-package #:net.mfiano.lisp.shadow.glsl)
 
 (cl:defmacro defun (name args &body body)
   "Define a GPU function."
-  (a:with-gensyms (split-details deps fn spec)
+  (u:with-gensyms (split-details deps fn spec)
     (let ((split-args (varjo.utils:split-arguments args '(&uniforms &context))))
       (destructuring-bind (in-args uniforms context) split-args
         `(varjo:with-constant-inject-hook
-             #'shadow::lisp-constant->glsl-constant
+             #'s::lisp-constant->glsl-constant
            (varjo:with-stemcell-infer-hook
-               #'shadow::lisp-symbol->glsl-type
+               #'s::lisp-symbol->glsl-type
              (let* ((,fn (varjo:add-external-function
                           ',name ',in-args ',uniforms ',body))
-                    (,spec (shadow::get-function-spec ,fn)))
-               (when (shadow::meta :track-dependencies-p)
+                    (,spec (s::get-function-spec ,fn)))
+               (when (s::meta :track-dependencies-p)
                  (let* ((,split-details
                           (varjo:test-translate-function-split-details
                            ',name ',in-args ',uniforms ',context ',body))
                         (,deps (varjo:used-external-functions
                                 (first ,split-details))))
-                   (shadow::store-function-dependencies ,spec ,deps)
-                   (funcall (shadow::meta :modify-hook)
-                            (shadow::compute-outdated-programs ,spec))))
+                   (s::store-function-dependencies ,spec ,deps)
+                   (funcall (s::meta :modify-hook)
+                            (s::compute-outdated-programs ,spec))))
                ,fn))
            (export ',name))))))
 
@@ -47,7 +47,7 @@ VERSION: The default version shader stages use, and can be overridden on a
 per-function basis.
 PRIMITIVE: The drawing primitive to use for the vertex stage."
   `(u:eval-always
-     (setf (u:href (shadow::meta :shader-definitions) ',name)
+     (setf (u:href (s::meta :shader-definitions) ',name)
            (lambda ()
-             (shadow::%make-shader-program ',name ,version ,primitive ',body)))
+             (s::%make-shader-program ',name ,version ,primitive ',body)))
      (export ',name)))

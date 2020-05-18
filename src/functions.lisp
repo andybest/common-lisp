@@ -1,4 +1,4 @@
-(in-package #:shadow)
+(in-package #:net.mfiano.lisp.shadow)
 
 (defun find-gpu-function (func-spec)
   (destructuring-bind (name . types) func-spec

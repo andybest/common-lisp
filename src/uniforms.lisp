@@ -1,4 +1,4 @@
-(in-package #:shadow)
+(in-package #:net.mfiano.lisp.shadow)
 
 (defgeneric get-uniform-data (type parts)
   (:method (type parts)
@@ -60,7 +60,7 @@
   (u:href (uniforms (find-program program-name)) uniform :location))
 
 (defmacro %uniform-array (location func component-count element-type sequence)
-  (a:with-gensyms (count sv)
+  (u:with-gensyms (count sv)
     `(let ((,count (length ,sequence)))
        (static-vectors:with-static-vector
            (,sv (* ,count ,component-count)

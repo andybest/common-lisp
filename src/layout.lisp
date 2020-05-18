@@ -1,4 +1,4 @@
-(in-package #:shadow)
+(in-package #:net.mfiano.lisp.shadow)
 
 (defclass layout ()
   ((%type :reader layout-type
@@ -62,9 +62,9 @@
   (dolist (part (getf data :members))
     (destructuring-bind (&key type name offset size stride &allow-other-keys)
         part
-      (a:when-let ((unpacked-type (unpack-type (layout-type layout) type))
+      (u:when-let ((unpacked-type (unpack-type (layout-type layout) type))
                    (path (ensure-keyword
-                          (format nil "~{~a~^.~}" (a:ensure-list name)))))
+                          (format nil "~{~a~^.~}" (u:ensure-list name)))))
         (setf (u:href (members layout) path)
               (apply #'make-instance 'layout-member
                      :offset offset

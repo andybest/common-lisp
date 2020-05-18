@@ -18,7 +18,7 @@ managing OpenGL shader programs and associated buffers.
 ## Install
 
 ``` lisp
-(ql:quickload :shadow)
+(ql:quickload :net.mfiano.lisp.shadow)
 ```
 
 ## Usage
@@ -371,6 +371,6 @@ To disassociate a buffer from a binding point, use `UNBIND-BUFFER`:
 
 ## License
 
-Copyright © 2018 [Michael Fiano](mailto:mail@michaelfiano.com).
+Copyright © 2018-2020 Michael Fiano <mail@mfiano.net>.
 
 Licensed under the MIT License.

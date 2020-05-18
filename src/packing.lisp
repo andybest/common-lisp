@@ -1,4 +1,4 @@
-(in-package #:shadow)
+(in-package #:net.mfiano.lisp.shadow)
 
 (defun pack-container (type)
   (etypecase type

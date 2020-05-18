@@ -1,8 +1,8 @@
 (in-package #:cl-user)
 
-(defpackage #:shadow
-  (:local-nicknames (#:a #:alexandria)
-                    (#:u #:golden-utils))
+(defpackage #:net.mfiano.lisp.shadow
+  (:local-nicknames
+   (#:u #:net.mfiano.lisp.golden-utils))
   (:use #:cl)
   (:export
    #:bind-block
@@ -47,12 +47,12 @@
    #:uniform-vec4-array
    #:view-source
    #:with-shader
-   #:write-buffer-path
-   ))
+   #:write-buffer-path))
 
-(defpackage #:shadow.glsl
-  (:local-nicknames (#:a #:alexandria)
-                    (#:u #:golden-utils))
+(defpackage #:net.mfiano.lisp.shadow.glsl
+  (:local-nicknames
+   (#:s #:net.mfiano.lisp.shadow)
+   (#:u #:net.mfiano.lisp.golden-utils))
   (:use #:cl #:vari)
   (:shadow
    #:defun

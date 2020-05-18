@@ -1,4 +1,4 @@
-(in-package #:shadow)
+(in-package #:net.mfiano.lisp.shadow)
 
 (defclass shader-buffer ()
   ((%id :reader id
@@ -34,7 +34,7 @@
 (defun create-buffer (buffer-name block-alias)
   "Create a buffer of the given TYPE and NAME, using the block BLOCK-ID of
 PROGRAM-NAME."
-  (a:if-let ((block (find-block block-alias)))
+  (u:if-let ((block (find-block block-alias)))
     (let* ((buffer-table (meta :buffers))
            (type (block-type->buffer-type (block-type block)))
            (target (buffer-type->target type))
@@ -50,7 +50,7 @@ PROGRAM-NAME."
 
 (defun bind-buffer (buffer-name binding-point)
   "Bind a buffer with name BUFFER-NAME to BINDING-POINT."
-  (a:if-let ((buffer (find-buffer buffer-name)))
+  (u:if-let ((buffer (find-buffer buffer-name)))
     (with-slots (%target %id) buffer
       (%gl:bind-buffer-base %target binding-point %id)
       (%gl:bind-buffer %target 0))
@@ -146,7 +146,9 @@ have a simple \"path-based\" buffer writing interface."
 (defun %read-buffer-member/vector (member data count)
   (with-slots (%dimensions %element-stride) member
     (let* ((size (car %dimensions))
-           (func (intern "VEC" (a:format-symbol :keyword "ORIGIN.VEC~d" size))))
+           (func (intern "VEC" (u:format-symbol :keyword
+                                                "NET.MFIANO.LISP.ORIGIN.VEC~d"
+                                                size))))
       (flet ((make-vector (data index size)
                (let ((args (loop :for i :below size
                                  :collect (aref data (+ index i)))))
@@ -161,7 +163,9 @@ have a simple \"path-based\" buffer writing interface."
   (with-slots (%dimensions %element-stride) member
     (destructuring-bind (columns rows) %dimensions
       (let ((func (intern "MAT"
-                          (a:format-symbol :keyword "ORIGIN.MAT~d" columns))))
+                          (u:format-symbol :keyword
+                                           "NET.MFIANO.LISP.ORIGIN.MAT~d"
+                                           columns))))
         (flet ((make-matrix (data index)
                  (let ((args (loop :repeat columns
                                    :for i :from index :by %element-stride

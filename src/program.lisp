@@ -1,4 +1,4 @@
-(in-package #:shadow)
+(in-package #:net.mfiano.lisp.shadow)
 
 (defclass program ()
   ((%id :reader id
@@ -29,7 +29,7 @@
   (id (find-program program-name)))
 
 (defun view-source (program-name stage)
-  (a:when-let ((program (find-program program-name)))
+  (u:when-let ((program (find-program program-name)))
     (format t "~a" (u:href (source program) stage))))
 
 (defun compile-stages (program)
@@ -80,7 +80,7 @@ See MAKE-SHADER-PROGRAM"
   "Compile all shader programs defined with MAKE-SHADER-PROGRAM.
 See MAKE-SHADER-PROGRAM"
   (let ((programs (meta :programs)))
-    (a:maphash-keys #'build-shader-program programs)
+    (u:maphash-keys #'build-shader-program programs)
     programs))
 
 (defun store-stage-program-dependencies (program)

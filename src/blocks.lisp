@@ -1,4 +1,4 @@
-(in-package #:shadow)
+(in-package #:net.mfiano.lisp.shadow)
 
 (defclass shader-block ()
   ((%id :reader id
@@ -55,7 +55,7 @@
 
 (defun %find-block (program-name block-type block-id)
   (if (keywordp block-id)
-      (a:when-let ((program (find-program program-name)))
+      (u:when-let ((program (find-program program-name)))
         (u:href (blocks program) (cons block-type block-id)))
       (error "Block ID must be a keyword symbol: ~a" block-id)))
 
@@ -99,7 +99,7 @@
          (block (find-block block-alias))
          (binding-point (binding-point block))
          (table (u:href bindings (block-type block))))
-    (a:deletef (u:href table binding-point) block)
+    (u:deletef (u:href table binding-point) block)
     (unless (u:href table binding-point)
       (remhash binding-point table))
     (%bind-block (block-type block) block 0)

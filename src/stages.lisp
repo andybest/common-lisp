@@ -1,4 +1,4 @@
-(in-package #:shadow)
+(in-package #:net.mfiano.lisp.shadow)
 
 (defun stage-type (stage)
   (varjo:stage-kind stage))
@@ -14,7 +14,7 @@
 
 (defun make-stage (version primitive stage-spec)
   (destructuring-bind (stage-type func-spec) stage-spec
-    (a:if-let ((func (find-gpu-function func-spec)))
+    (u:if-let ((func (find-gpu-function func-spec)))
       (varjo:make-stage
        stage-type
        (varjo.internals:in-args func)
