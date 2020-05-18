@@ -1,4 +1,4 @@
-(in-package #:dungen)
+(in-package #:net.mfiano.lisp.dungen)
 
 (defun filter-carvable (kernel)
   (not (kernel-detect kernel #'carved-p)))
@@ -12,7 +12,7 @@
 (defun choose-corridor-direction (kernel)
   (let (results)
     (dolist (dir '((0 1) (0 -1) (1 0) (-1 0)))
-      (a:when-let ((cell1 (apply #'select kernel dir))
+      (u:when-let ((cell1 (apply #'select kernel dir))
                    (cell2 (apply #'select kernel (mapcar #'+ dir dir))))
         (unless (carved-p cell2)
           (push (list cell1 cell2) results))))
@@ -20,7 +20,7 @@
 
 (defun carve-direction (kernel cells)
   (let ((origin (select kernel 0 0)))
-    (a:if-let ((choice (choose-corridor-direction kernel)))
+    (u:if-let ((choice (choose-corridor-direction kernel)))
       (loop :for cell :in choice
             :do (carve cell :corridor)
             :finally (return (push cell cells)))

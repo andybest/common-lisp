@@ -2,22 +2,14 @@
 
 A procedural dungeon generator.
 
-## Overview
-
-TODO
-
 ## Install
 
 ```lisp
-(ql:quickload :dungen)
+(ql:quickload :net.mfiano.lisp.dungen)
 ```
-
-## Usage
-
-TODO
 
 ## License
 
-Copyright © Michael Fiano <mail@michaelfiano.com>.
+Copyright © 2016-2020 Michael Fiano <mail@mfiano.net>.
 
 Licensed under the MIT License.

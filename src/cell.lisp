@@ -1,4 +1,4 @@
-(in-package #:dungen)
+(in-package #:net.mfiano.lisp.dungen)
 
 (defstruct (cell (:constructor %make-cell)
                  (:copier nil)
@@ -20,7 +20,7 @@
   (pushnew feature (cell-features cell)))
 
 (defun remove-feature (cell feature)
-  (a:deletef (cell-features cell) feature))
+  (u:deletef (cell-features cell) feature))
 
 (defun feature-intersect (cell &rest features)
   (intersection features (cell-features cell)))

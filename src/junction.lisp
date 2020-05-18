@@ -1,4 +1,4 @@
-(in-package #:dungen)
+(in-package #:net.mfiano.lisp.dungen)
 
 (defun filter-connectable (kernel)
   (and (not (carved-p (select kernel 0 0)))
@@ -22,7 +22,7 @@
 
 (defun make-graph ()
   (graph:populate (make-instance 'graph:graph)
-                  :nodes (a:iota (hash-table-count (state-regions *state*))
+                  :nodes (u:iota (hash-table-count (state-regions *state*))
                                  :start 1)
                   :edges-w-values (connectable-edges)))
 

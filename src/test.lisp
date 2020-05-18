@@ -1,4 +1,4 @@
-(in-package #:dungen)
+(in-package #:net.mfiano.lisp.dungen)
 
 (defun test (&rest attrs)
   (let ((stage (apply #'make-stage attrs)))

@@ -1,20 +1,21 @@
 (in-package #:cl-user)
 
-(defpackage #:dungen
-  (:local-nicknames (#:a #:alexandria)
-                    (#:u #:golden-utils))
+(defpackage #:net.mfiano.lisp.dungen
+  (:local-nicknames
+   (#:u #:net.mfiano.lisp.golden-utils))
   (:use #:cl)
-  (:export #:make-stage
-           #:make-seed
-           #:stage-width
-           #:stage-height
-           #:stage-seed
-           #:stage-grid
-           #:x
-           #:y
-           #:get-cell
-           #:region
-           #:carved-p
-           #:features
-           #:has-feature-p
-           #:feature-intersect))
+  (:export
+   #:carved-p
+   #:feature-intersect
+   #:features
+   #:get-cell
+   #:has-feature-p
+   #:make-seed
+   #:make-stage
+   #:region
+   #:stage-grid
+   #:stage-height
+   #:stage-seed
+   #:stage-width
+   #:x
+   #:y))

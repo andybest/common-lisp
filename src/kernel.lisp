@@ -1,4 +1,4 @@
-(in-package #:dungen)
+(in-package #:net.mfiano.lisp.dungen)
 
 (defstruct (extent (:copier nil)
                    (:predicate nil))
@@ -42,7 +42,7 @@
   (block nil
     (kernel-map kernel
                 (lambda (cell)
-                  (a:when-let ((value (funcall func cell)))
+                  (u:when-let ((value (funcall func cell)))
                     (return value))))
     nil))
 
@@ -143,5 +143,5 @@
     (u:while items
       (let ((kernel (funcall generator (pop items))))
         (when (funcall filter kernel)
-          (a:when-let ((new (funcall processor kernel)))
+          (u:when-let ((new (funcall processor kernel)))
             (push new items)))))))

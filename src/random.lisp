@@ -1,9 +1,9 @@
-(in-package #:dungen)
+(in-package #:net.mfiano.lisp.dungen)
 
 (defun make-seed ()
   (values
    (parse-integer
-    (a:shuffle
+    (u:shuffle
      (format nil "~d~d"
              (get-universal-time)
              (get-internal-real-time))))))
