@@ -1,16 +1,15 @@
-(asdf:defsystem #:parsley
+(asdf:defsystem #:net.mfiano.lisp.parsley
   :description "A toolset for parsing binary data formats."
-  :author ("Michael Fiano <mail@michaelfiano.com>")
-  :maintainer "Michael Fiano <mail@michaelfiano.com>"
+  :author ("Michael Fiano <mail@mfiano.net>")
   :license "MIT"
-  :homepage "https://www.michaelfiano.com/projects/parsley"
-  :source-control (:git "https://github.com/mfiano/parsley.git")
+  :homepage "https://mfiano.net/projects/parsley"
+  :source-control (:git "https://github.com/mfiano/parsley")
   :bug-tracker "https://github.com/mfiano/parsley/issues"
   :encoding :utf-8
-  :depends-on (#:fast-io
+  :depends-on (#:babel
                #:bitio
                #:chipz
-               #:babel)
+               #:fast-io)
   :pathname "src"
   :serial t
   :components
