@@ -1,8 +1,9 @@
 (in-package #:cl-user)
 
-(defpackage #:patchwork
+(defpackage #:net.mfiano.lisp.patchwork
+  (:local-nicknames
+   (#:bin #:binpack))
   (:use #:cl)
-  (:import-from #:binpack #:id #:x #:y #:w #:h)
   (:export
    #:make-atlas
    #:make-atlas-from-directory

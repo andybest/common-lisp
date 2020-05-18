@@ -1,6 +1,6 @@
-(in-package #:patchwork)
+(in-package #:net.mfiano.lisp.patchwork)
 
-(defclass rect (binpack:rect)
+(defclass rect (bin:rect)
   ((file :reader file
          :initarg :file)))
 
@@ -55,42 +55,42 @@
 (defun add-padding (rects padding)
   (when (and padding (plusp padding))
     (dolist (rect rects)
-      (incf (w rect) padding)
-      (incf (h rect) padding)))
+      (incf (bin:w rect) padding)
+      (incf (bin:h rect) padding)))
   rects)
 
 (defun remove-padding (rects padding)
   (when (and padding (plusp padding))
     (loop :with padding/2 = (floor padding 2)
           :for rect :in rects
-          :do (incf (x rect) padding/2)
-              (incf (y rect) padding/2)
-              (decf (w rect) padding)
-              (decf (h rect) padding)))
+          :do (incf (bin:x rect) padding/2)
+              (incf (bin:y rect) padding/2)
+              (decf (bin:w rect) padding)
+              (decf (bin:h rect) padding)))
   rects)
 
 (defgeneric make-coords (rect width height normalize flip-y)
   (:method (rect width height normalize flip-y)
-    (let ((y (if flip-y (- height (y rect) (h rect)) (y rect))))
-      (list :x (x rect)
+    (let ((y (if flip-y (- height (bin:y rect) (bin:h rect)) (bin:y rect))))
+      (list :x (bin:x rect)
             :y y
-            :w (w rect)
-            :h (h rect)
+            :w (bin:w rect)
+            :h (bin:h rect)
             :normalized nil
             :y-inverted flip-y)))
   (:method (rect width height (normalize (eql t)) flip-y)
-    (let ((y (if flip-y (- height (y rect) (h rect)) (y rect))))
-      (list :x (float (/ (x rect) width))
+    (let ((y (if flip-y (- height (bin:y rect) (bin:h rect)) (bin:y rect))))
+      (list :x (float (/ (bin:x rect) width))
             :y (float (/ y height))
-            :w (float (/ (w rect) width))
-            :h (float (/ (h rect) height))
+            :w (float (/ (bin:w rect) width))
+            :h (float (/ (bin:h rect) height))
             :normalized t
             :y-inverted flip-y))))
 
 (defun write-atlas (atlas sprite rect)
   (let ((sprite (opticl:coerce-image sprite 'opticl:rgba-image)))
     (opticl:do-pixels (i j) sprite
-      (setf (opticl:pixel atlas (+ i (y rect)) (+ j (x rect)))
+      (setf (opticl:pixel atlas (+ i (bin:y rect)) (+ j (bin:x rect)))
             (opticl:pixel sprite i j)))))
 
 (defun write-metadata (data out-file)
@@ -136,13 +136,13 @@ from the files under a given filesystem path.
 "
   (loop :with rects = (add-padding (make-rects file-spec) padding)
         :with (packed packed-width packed-height)
-          := (multiple-value-list
-              (binpack:auto-pack
-               rects
-               :width width :height height
-               :auto-size-granularity-x auto-size-granularity-x
-               :auto-size-granularity-y auto-size-granularity-y
-               :optimize-pack optimize-pack))
+          = (multiple-value-list
+             (binpack:auto-pack
+              rects
+              :width width :height height
+              :auto-size-granularity-x auto-size-granularity-x
+              :auto-size-granularity-y auto-size-granularity-y
+              :optimize-pack optimize-pack))
         :with atlas = (opticl:make-8-bit-rgba-image
                        (if (numberp height) height packed-height)
                        (if (numberp width) width packed-width))
@@ -151,7 +151,7 @@ from the files under a given filesystem path.
         :for coords = (make-coords rect packed-width packed-height
                                    normalize flip-y)
         :do (write-atlas atlas sprite rect)
-        :collect `(:id ,(id rect) ,@coords) :into data
+        :collect `(:id ,(bin:id rect) ,@coords) :into data
         :finally (return
                    (values (write-metadata data out-file)
                            (opticl:write-image-file out-file atlas)))))
@@ -175,7 +175,8 @@ automatically.
 HEIGHT: The height in pixels of the spritesheet. :AUTO to calculate height
 automatically.
 
-NORMALIZE: Boolean specifying whether to normalize the metadata's coordinates in the [0..1] range.
+NORMALIZE: Boolean specifying whether to normalize the metadata's coordinates in
+the [0..1] range.
 
 FLIP-Y: Boolean specifying whether to flip the Y axis when writing the metadata.
 

@@ -11,7 +11,7 @@ game development. It uses the 'maxrects' algorithm as described
 ## Install
 
 ```lisp
-(ql:quickload :patchwork)
+(ql:quickload :net.mfiano.lisp.patchwork)
 ```
 
 ## Usage
@@ -120,6 +120,6 @@ This will unpack all the sprites in `/tmp/spritesheet.png` to the directory
 
 ## License
 
-Copyright © 2017 [Michael Fiano](mailto:mail@michaelfiano.com).
+Copyright © 2017-2020 Michael Fiano <mail@mfiano.net>.
 
 Licensed under the MIT License.

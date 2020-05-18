@@ -1,4 +1,4 @@
-(in-package #:patchwork)
+(in-package #:net.mfiano.lisp.patchwork)
 
 (defun make-sprite-path (directory id)
   (uiop/pathname:merge-pathnames*
@@ -27,7 +27,7 @@
                     :w (round (* atlas-width w))
                     :h (round (* atlas-height h)))))
         (when y-inverted
-          (setf (y rect) (- atlas-height (y rect) (h rect))))
+          (setf (bin:y rect) (- atlas-height (bin:y rect) (bin:h rect))))
         rect))))
 
 (defun make-atlas-coords (atlas data)

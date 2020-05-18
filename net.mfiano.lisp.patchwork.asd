@@ -1,10 +1,9 @@
-(asdf:defsystem #:patchwork
+(asdf:defsystem #:net.mfiano.lisp.patchwork
   :description "A spritesheet packer for games."
-  :author "Michael Fiano <mail@michaelfiano.com>"
-  :maintainer "Michael Fiano <mail@michaelfiano.com>"
+  :author "Michael Fiano <mail@mfiano.net>"
   :license "MIT"
-  :homepage "https://www.michaelfiano.com/projects/patchwork"
-  :source-control (:git "https://github.com/mfiano/patchwork.git")
+  :homepage "https://mfiano.net/projects/patchwork"
+  :source-control (:git "https://github.com/mfiano/patchwork")
   :bug-tracker "https://github.com/mfiano/patchwork/issues"
   :encoding :utf-8
   :depends-on (#:binpack
