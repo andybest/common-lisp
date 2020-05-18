@@ -1,4 +1,4 @@
-(in-package #:flac-metadata)
+(in-package #:net.mfiano.lisp.flac-metadata)
 
 (defclass datastream ()
   ((%marker :reader marker)
@@ -18,8 +18,8 @@
     datastream))
 
 (defun parse-marker ()
-  (with-buffer-read (:sequence (read-bytes 4))
-    (let ((marker (read-string)))
+  (parse:with-buffer-read (:sequence (parse:read-bytes 4))
+    (let ((marker (parse:read-string)))
       (if (string= marker "fLaC")
           marker
           (error "Invalid FLAC.")))))

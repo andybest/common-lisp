@@ -4,22 +4,23 @@ A utility for reading metadata embedded in FLAC audio files.
 
 ## Overview
 
-This utility was created as an alternative to [flac-parser](https://github.com/mfiano/flac-parser).
-They both do the same thing, but flac-metadata is faster, more concise, and I decided to abandon
+This utility was created as an alternative to
+[flac-parser](https://github.com/mfiano/flac-parser). They both do the same
+thing, but flac-metadata is faster, more concise, and I decided to abandon
 flac-parser.
 
 ## Install
 
 ```lisp
-(ql:quickload :flac-metadata)
+(ql:quickload :net.mfiano.lisp.flac-metadata)
 ```
 
 ## Usage
 
 You can read metadata from a FLAC audio file in one of two ways.
 
-The following will return an object, representing the concrete syntax tree of the FLAC
-specification. With it, you can access the metadata you wish:
+The following will return an object, representing the concrete syntax tree of
+the FLAC specification. With it, you can access the metadata you wish:
 
 ```lisp
 (load-file #p"/path/to/file.flac") ; => #<FLAC-METADATA::FLAC {100490C5F3}>
@@ -166,6 +167,6 @@ File                                    /path/to/file.flac
 
 ## License
 
-Copyright © 2017-2018 [Michael Fiano](mailto:mail@michaelfiano.com).
+Copyright © 2017-2020 [Michael Fiano] <mail@mfiano.net>.
 
 Licensed under the MIT License.

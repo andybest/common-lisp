@@ -1,14 +1,13 @@
-(asdf:defsystem #:flac-metadata
+(asdf:defsystem #:net.mfiano.lisp.flac-metadata
   :description "A utility for reading metadata embedded in FLAC audio files."
-  :author ("Michael Fiano <mail@michaelfiano.com>")
-  :maintainer "Michael Fiano <mail@michaelfiano.com>"
+  :author ("Michael Fiano <mail@mfiano.net>")
   :license "MIT"
-  :homepage "https://www.michaelfiano.com/projects/flac-metadata"
+  :homepage "https://mfiano.net/projects/flac-metadata"
+  :source-control (:git "https://github.com/mfiano/flac-metadata")
   :bug-tracker "https://github.com/mfiano/flac-metadata/issues"
-  :source-control (:git "https://github.com/mfiano/flac-metadata.git")
   :encoding :utf-8
-  :depends-on (#:alexandria
-               #:parsley)
+  :depends-on (#:net.mfiano.lisp.golden-utils
+               #:net.mfiano.lisp.parsley)
   :pathname "src"
   :serial t
   :components

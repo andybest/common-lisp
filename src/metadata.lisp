@@ -1,4 +1,4 @@
-(in-package #:flac-metadata)
+(in-package #:net.mfiano.lisp.flac-metadata)
 
 (defvar *metadata-block*)
 
@@ -12,10 +12,9 @@
    (%type :reader %metadata-type)
    (%length :reader %metadata-size)))
 
-(defmethod print-object ((object metadata-block) stream)
-  (print-unreadable-object (object stream :type t)
-    (let ((*metadata-block* object))
-      (format stream "~S" (metadata-type)))))
+(u:define-printer (metadata-block stream)
+  (let ((*metadata-block* metadata-block))
+    (format stream "~S" (metadata-type))))
 
 (defun metadata-type ()
   (case (%metadata-type (header *metadata-block*))
@@ -39,8 +38,8 @@
   (let ((*metadata-block* (make-instance 'metadata-block)))
     (with-slots (%header %data) *metadata-block*
       (with-slots (%last-flag %type %length) %header
-        (setf %last-flag (read-bits 1)
-              %type (read-bits 7)
-              %length (read-uint-be 3)
+        (setf %last-flag (parse:read-bits 1)
+              %type (parse:read-bits 7)
+              %length (parse:read-uint-be 3)
               %data (parse-metadata (metadata-type)))))
     *metadata-block*))

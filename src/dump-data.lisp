@@ -1,4 +1,4 @@
-(in-package #:flac-metadata)
+(in-package #:net.mfiano.lisp.flac-metadata)
 
 (defvar *dump-spec* '(:streaminfo :application :seektable :vorbis-comment
                       :cuesheet :picture))
@@ -92,7 +92,7 @@ to control which types of metadata are dumped, or NIL for all types:
     (print-line (+ level 2) "Vendor" vendor)
     (print-line (+ level 2) "Comments count"
                 (format nil "~:d" user-comments-count))
-    (dolist (comment (sort (hash-table-alist user-comments)
+    (dolist (comment (sort (u:hash->alist user-comments)
                            #'string< :key #'car))
       (destructuring-bind (key . value) comment
         (print-line (+ level 4) key (if (zerop (length value))

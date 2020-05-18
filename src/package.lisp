@@ -1,13 +1,11 @@
 (in-package #:cl-user)
 
-(defpackage #:flac-metadata
-  (:use #:cl
-        #:parsley)
-  (:import-from #:alexandria
-                #:with-gensyms
-                #:symbolicate
-                #:make-keyword
-                #:hash-table-alist)
-  (:export #:load-file
-           #:dump-file
-           #:parse-tree))
+(defpackage #:net.mfiano.lisp.flac-metadata
+  (:local-nicknames
+   (#:parse #:net.mfiano.lisp.parsley)
+   (#:u #:net.mfiano.lisp.golden-utils))
+  (:use #:cl)
+  (:export
+   #:load-file
+   #:dump-file
+   #:parse-tree))
