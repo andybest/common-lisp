@@ -1,4 +1,4 @@
-(in-package #:origin.test)
+(in-package #:net.mfiano.lisp.origin.test)
 
 (define-test v3/sign
   (let ((o (v3:vec)))
@@ -167,12 +167,12 @@
     (is v3:= (v3:negate v) r)))
 
 (define-test v3/angle
-  (let ((angle (v3:angle (v3:vec 0 1 0) (v3:vec 1 0 1))))
-    (true (<= (abs (- angle origin:pi/2)) 1e-5)))
+    (let ((angle (v3:angle (v3:vec 0 1 0) (v3:vec 1 0 1))))
+      (true (<= (abs (- angle const:pi/2)) 1e-5)))
   (let ((angle (v3:angle (v3:vec 1 1 0) (v3:vec 1 0 1))))
-    (true (<= (abs (- angle origin:pi/3)) 1e-5)))
+    (true (<= (abs (- angle const:pi/3)) 1e-5)))
   (let ((angle (v3:angle (v3:vec 1 0 0) (v3:vec 1 1 0))))
-    (true (<= (abs (- angle origin:pi/4)) 1e-5))))
+    (true (<= (abs (- angle const:pi/4)) 1e-5))))
 
 (define-test v3/zero-predicate
   (true (v3:zero-p v3:+zero+))

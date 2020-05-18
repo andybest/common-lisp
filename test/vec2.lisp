@@ -1,4 +1,4 @@
-(in-package #:origin.test)
+(in-package #:net.mfiano.lisp.origin.test)
 
 (define-test v2/copy
   (let ((v (v2:vec 1 2))
@@ -152,10 +152,10 @@
     (is v2:= (v2:negate v) r)))
 
 (define-test v2/angle
-  (let ((angle (v2:angle (v2:vec 0 1) (v2:vec 1 0))))
-    (true (<= (abs (- angle origin:pi/2)) 1e-7)))
+    (let ((angle (v2:angle (v2:vec 0 1) (v2:vec 1 0))))
+      (true (<= (abs (- angle const:pi/2)) 1e-7)))
   (let ((angle (v2:angle (v2:vec 1 0) (v2:vec 1 1))))
-    (true (<= (abs (- angle origin:pi/4)) 1e-7))))
+    (true (<= (abs (- angle const:pi/4)) 1e-7))))
 
 (define-test v2/zero-predicate
   (true (v2:zero-p v2:+zero+))

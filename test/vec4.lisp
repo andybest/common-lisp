@@ -1,4 +1,4 @@
-(in-package #:origin.test)
+(in-package #:net.mfiano.lisp.origin.test)
 
 (define-test v4/copy
   (let ((v (v4:vec 1 2 3 4))

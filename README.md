@@ -1,6 +1,7 @@
 # Origin
 
-A native Lisp graphics math library with an emphasis on performance and correctness
+A native Lisp graphics math library with an emphasis on performance and
+correctness
 
 ## Overview
 
@@ -23,7 +24,7 @@ of writing, this currently includes: ABCL, SBCL, CCL, ECL, and Clasp.
 ## Install
 
 ``` lisp
-(ql:quickload :origin)
+(ql:quickload :net.mfiano.lisp.origin)
 ```
 
 ## Contributors
@@ -33,6 +34,6 @@ of writing, this currently includes: ABCL, SBCL, CCL, ECL, and Clasp.
 
 ## License
 
-Copyright © 2014-2018 [Michael Fiano](mailto:mail@michaelfiano.com).
+Copyright © 2014-2018 Michael Fiano <mail@mfiano.net>.
 
 Licensed under the MIT License.

@@ -1,70 +1,72 @@
-(in-package #:origin.mat2)
+(in-package #:net.mfiano.lisp.origin.mat2)
 
 ;;; constructors
 
-(define-op %mat (&rest (args single-float)) (:inline t :out mat)
+(int:define-op %mat (&rest (args single-float)) (:inline t :out mat)
   (make-array 4 :element-type 'single-float :initial-contents args))
 
-(defstore mat (&rest args))
+(ss:defstore mat (&rest args))
 
-(defspecialization (mat :inline t) () mat
+(ss:defspecialization (mat :inline t) () mat
   (%mat 0f0 0f0 0f0 0f0))
 
-(defspecialization (mat :inline t) ((x real)) mat
+(ss:defspecialization (mat :inline t) ((x real)) mat
   (%mat (float x 1f0) 0f0 0f0 (float x 1f0)))
 
-(defspecialization (mat :inline t) ((mat mat)) mat
+(ss:defspecialization (mat :inline t) ((mat mat)) mat
   (with-components ((m mat))
     (%mat m00 m01 m10 m11)))
 
-(defspecialization (mat :inline t) ((mat m3:mat)) mat
-  (m3:with-components ((m mat))
+(ss:defspecialization (mat :inline t) ((mat net.mfiano.lisp.origin.mat3:mat))
+    mat
+  (net.mfiano.lisp.origin.mat3:with-components ((m mat))
     (%mat m00 m01 m10 m11)))
 
-(defspecialization (mat :inline t) ((mat m4:mat)) mat
-  (m4:with-components ((m mat))
+(ss:defspecialization (mat :inline t) ((mat net.mfiano.lisp.origin.mat4:mat))
+    mat
+  (net.mfiano.lisp.origin.mat4:with-components ((m mat))
     (%mat m00 m01 m10 m11)))
 
-(defspecialization (mat :inline t) ((a v2:vec) (b v2:vec)) mat
+(ss:defspecialization (mat :inline t) ((a v2:vec) (b v2:vec)) mat
   (v2:with-components ((a a) (b b))
     (%mat ax ay bx by)))
 
-(defspecialization (mat :inline t) ((a real) (b real) (c real) (d real)) mat
+(ss:defspecialization (mat :inline t) ((a real) (b real) (c real) (d real)) mat
   (%mat (float a 1f0) (float b 1f0) (float c 1f0) (float d 1f0)))
 
 ;;; constants
 
-(a:define-constant +zero+ (%mat 0f0 0f0 0f0 0f0) :test #'equalp)
+(u:define-constant +zero+ (%mat 0f0 0f0 0f0 0f0) :test #'equalp)
 
-(a:define-constant +id+ (%mat 1f0 0f0 0f0 1f0) :test #'equalp)
+(u:define-constant +id+ (%mat 1f0 0f0 0f0 1f0) :test #'equalp)
 
 ;;; operators
 
-(define-op zero! ((in mat)) (:out mat)
+(int:define-op zero! ((in mat)) (:out mat)
   (with-components ((m in))
     (psetf m00 0f0 m01 0f0 m10 0f0 m11 0f0))
   in)
 
-(define-op zero-p ((in mat)) (:out boolean)
+(int:define-op zero-p ((in mat)) (:out boolean)
   (with-components ((m in))
     (cl:= 0f0 m00 m01 m10 m11)))
 
-(define-op id! ((in mat)) (:out mat)
+(int:define-op id! ((in mat)) (:out mat)
   (with-components ((m in))
     (psetf m00 1f0 m01 0f0 m10 0f0 m11 1f0))
   in)
 
-(define-op id-p ((in mat)) (:out boolean)
+(int:define-op id-p ((in mat)) (:out boolean)
   (with-components ((m in))
     (and (cl:= 0f0 m10 m01)
          (cl:= 1f0 m00 m11))))
 
-(define-op = ((in1 mat) (in2 mat)) (:out boolean)
+(int:define-op = ((in1 mat) (in2 mat)) (:out boolean)
   (with-components ((a in1) (b in2))
     (and (cl:= a00 b00) (cl:= a01 b01)
          (cl:= a10 b10) (cl:= a11 b11))))
 
-(define-op ~ ((in1 mat) (in2 mat) &key (tolerance single-float 1e-7))
+(int:define-op ~ ((in1 mat) (in2 mat) &key (tolerance single-float 1e-7))
     (:out boolean)
   (with-components ((a in1) (b in2))
     (and (cl:< (cl:abs (cl:- a00 b00)) tolerance)
@@ -72,8 +74,8 @@
          (cl:< (cl:abs (cl:- a10 b10)) tolerance)
          (cl:< (cl:abs (cl:- a11 b11)) tolerance))))
 
-(define-op random! ((out mat)
-                    &key (min single-float 0f0) (max single-float 1f0))
+(int:define-op random! ((out mat)
+                        &key (min single-float 0f0) (max single-float 1f0))
     (:out mat)
   (with-components ((o out))
     (psetf o00 (cl:+ min (cl:random (cl:- max min)))
@@ -82,38 +84,38 @@
            o11 (cl:+ min (cl:random (cl:- max min)))))
   out)
 
-(define-op random (&key (min single-float 0f0) (max single-float 1f0))
+(int:define-op random (&key (min single-float 0f0) (max single-float 1f0))
     (:out mat)
   (random! (mat) :min min :max max))
 
-(define-op copy! ((out mat) (in mat)) (:out mat)
+(int:define-op copy! ((out mat) (in mat)) (:out mat)
   (with-components ((o out) (m in))
     (psetf o00 m00 o01 m01 o10 m10 o11 m11))
   out)
 
-(define-op copy ((in mat)) (:out mat)
+(int:define-op copy ((in mat)) (:out mat)
   (copy! (mat) in))
 
-(define-op clamp! ((out mat) (in mat)
+(int:define-op clamp! ((out mat) (in mat)
                    &key
                    (min single-float most-negative-single-float)
                    (max single-float most-positive-single-float))
     (:out mat)
   (with-components ((o out) (m in))
-    (psetf o00 (a:clamp m00 min max)
-           o01 (a:clamp m01 min max)
-           o10 (a:clamp m10 min max)
-           o11 (a:clamp m11 min max)))
+    (psetf o00 (u:clamp m00 min max)
+           o01 (u:clamp m01 min max)
+           o10 (u:clamp m10 min max)
+           o11 (u:clamp m11 min max)))
   out)
 
-(define-op clamp ((in mat)
+(int:define-op clamp ((in mat)
                   &key
                   (min single-float most-negative-single-float)
                   (max single-float most-positive-single-float))
     (:out mat)
   (clamp! (mat) in :min min :max max))
 
-(define-op +! ((out mat) (in1 mat) (in2 mat)) (:out mat)
+(int:define-op +! ((out mat) (in1 mat) (in2 mat)) (:out mat)
   (with-components ((o out) (a in1) (b in2))
     (psetf o00 (cl:+ a00 b00)
            o10 (cl:+ a10 b10)
@@ -121,10 +123,10 @@
            o11 (cl:+ a11 b11)))
   out)
 
-(define-op + ((in1 mat) (in2 mat)) (:out mat)
+(int:define-op + ((in1 mat) (in2 mat)) (:out mat)
   (+! (mat) in1 in2))
 
-(define-op -! ((out mat) (in1 mat) (in2 mat)) (:out mat)
+(int:define-op -! ((out mat) (in1 mat) (in2 mat)) (:out mat)
   (with-components ((o out) (a in1) (b in2))
     (psetf o00 (cl:- a00 b00)
            o10 (cl:- a10 b10)
@@ -132,7 +134,7 @@
            o11 (cl:- a11 b11)))
   out)
 
-(define-op - ((in1 mat) (in2 mat)) (:out mat)
+(int:define-op - ((in1 mat) (in2 mat)) (:out mat)
   (-! (mat) in1 in2))
 
 (defmacro %* (o00 o01 o10 o11 a00 a01 a10 a11 b00 b01 b10 b11)
@@ -141,15 +143,15 @@
           ,o01 (cl:+ (cl:* ,a00 ,b01) (cl:* ,a01 ,b11))
           ,o11 (cl:+ (cl:* ,a10 ,b01) (cl:* ,a11 ,b11))))
 
-(define-op *! ((out mat) (in1 mat) (in2 mat)) (:out mat)
+(int:define-op *! ((out mat) (in1 mat) (in2 mat)) (:out mat)
   (with-components ((o out) (a in1) (b in2))
     (%* o00 o01 o10 o11 a00 a01 a10 a11 b00 b01 b10 b11))
   out)
 
-(define-op * ((in1 mat) (in2 mat)) (:out mat)
+(int:define-op * ((in1 mat) (in2 mat)) (:out mat)
   (*! (mat) in1 in2))
 
-(define-op get-column! ((out v2:vec) (in mat) (index (integer 0 1)))
+(int:define-op get-column! ((out v2:vec) (in mat) (index (integer 0 1)))
     (:out v2:vec)
   (with-components ((m in))
     (v2:with-components ((o out))
@@ -158,10 +160,11 @@
         (1 (psetf ox m01 oy m11)))))
   out)
 
-(define-op get-column ((in mat) (index (integer 0 1))) (:out v2:vec)
+(int:define-op get-column ((in mat) (index (integer 0 1))) (:out v2:vec)
   (get-column! (v2:vec) in index))
 
-(define-op set-column! ((out mat) (in mat) (vec v2:vec) (index (integer 0 1)))
+(int:define-op set-column! ((out mat) (in mat) (vec v2:vec)
+                            (index (integer 0 1)))
     (:out mat)
   (with-components ((o out))
     (v2:with-components ((v vec))
@@ -171,10 +174,11 @@
         (1 (psetf o01 vx o11 vy)))))
   out)
 
-(define-op set-column ((in mat) (vec v2:vec) (index (integer 0 1))) (:out mat)
+(int:define-op set-column ((in mat) (vec v2:vec) (index (integer 0 1)))
+    (:out mat)
   (set-column! (mat 1) in vec index))
 
-(define-op rotation-axis-to-vec2! ((out v2:vec) (in mat) (axis keyword))
+(int:define-op rotation-axis-to-vec2! ((out v2:vec) (in mat) (axis keyword))
     (:out v2:vec)
   (v2:with-components ((v out))
     (with-components ((m in))
@@ -183,10 +187,10 @@
         (:y (psetf vx m01 vy m11)))))
   out)
 
-(define-op rotation-axis-to-vec2 ((in mat) (axis keyword)) (:out v2:vec)
+(int:define-op rotation-axis-to-vec2 ((in mat) (axis keyword)) (:out v2:vec)
   (rotation-axis-to-vec2! (v2:vec) in axis))
 
-(define-op rotation-axis-from-vec2! ((in mat) (vec v2:vec) (axis keyword))
+(int:define-op rotation-axis-from-vec2! ((in mat) (vec v2:vec) (axis keyword))
     (:out mat)
   (with-components ((m in))
     (v2:with-components ((v vec))
@@ -195,11 +199,11 @@
         (:y (psetf m01 vx m11 vy)))))
   in)
 
-(define-op rotation-axis-from-vec2 ((in mat) (vec v2:vec) (axis keyword))
+(int:define-op rotation-axis-from-vec2 ((in mat) (vec v2:vec) (axis keyword))
     (:out mat)
   (rotation-axis-from-vec2! (copy in) vec axis))
 
-(define-op rotate! ((out mat) (in mat) (angle single-float)
+(int:define-op rotate! ((out mat) (in mat) (angle single-float)
                     &key (space keyword :local))
     (:out mat :inline nil)
   (with-components ((m (mat 1)))
@@ -214,77 +218,77 @@
           (:world (*! out m out))))))
   out)
 
-(define-op rotate ((in mat) (angle float)) (:out mat)
+(int:define-op rotate ((in mat) (angle float)) (:out mat)
   (rotate! (mat 1) in angle))
 
-(define-op get-scale! ((out v2:vec) (in mat)) (:out v2:vec)
+(int:define-op get-scale! ((out v2:vec) (in mat)) (:out v2:vec)
   (with-components ((m in))
     (v2:with-components ((o out))
       (psetf ox m00 oy m11)))
   out)
 
-(define-op get-scale ((in mat)) (:out v2:vec)
+(int:define-op get-scale ((in mat)) (:out v2:vec)
   (get-scale! (v2:vec) in))
 
-(define-op set-scale! ((out mat) (in mat) (vec v2:vec)) (:out mat)
+(int:define-op set-scale! ((out mat) (in mat) (vec v2:vec)) (:out mat)
   (with-components ((o out))
     (v2:with-components ((v vec))
       (copy! out in)
       (psetf o00 vx o11 vy)))
   out)
 
-(define-op set-scale ((in mat) (vec v2:vec)) (:out mat)
+(int:define-op set-scale ((in mat) (vec v2:vec)) (:out mat)
   (set-scale! (copy in) in vec))
 
-(define-op scale! ((out mat) (in mat) (vec v2:vec)) (:out mat)
+(int:define-op scale! ((out mat) (in mat) (vec v2:vec)) (:out mat)
   (*! out (set-scale (mat 1) vec) in))
 
-(define-op scale ((in mat) (vec v2:vec)) (:out mat)
+(int:define-op scale ((in mat) (vec v2:vec)) (:out mat)
   (scale! (mat 1) in vec))
 
-(define-op *v2! ((out v2:vec) (in mat) (vec v2:vec)) (:out v2:vec)
+(int:define-op *v2! ((out v2:vec) (in mat) (vec v2:vec)) (:out v2:vec)
   (v2:with-components ((v vec) (o out))
     (with-components ((m in))
       (psetf ox (cl:+ (cl:* m00 vx) (cl:* m01 vy))
              oy (cl:+ (cl:* m10 vx) (cl:* m11 vy)))))
   out)
 
-(define-op *v2 ((in mat) (vec v2:vec)) (:out v2:vec)
+(int:define-op *v2 ((in mat) (vec v2:vec)) (:out v2:vec)
   (*v2! (v2:vec) in vec))
 
-(define-op transpose! ((out mat) (in mat)) (:out mat)
+(int:define-op transpose! ((out mat) (in mat)) (:out mat)
   (with-components ((o (copy! out in)))
     (rotatef o01 o10))
   out)
 
-(define-op transpose ((in mat)) (:out mat)
+(int:define-op transpose ((in mat)) (:out mat)
   (transpose! (mat 1) in))
 
-(define-op orthogonal-p ((in mat)) (:out boolean :inline nil)
+(int:define-op orthogonal-p ((in mat)) (:out boolean :inline nil)
   (~ (* in (transpose in)) +id+))
 
-(define-op trace ((in mat)) (:out single-float)
+(int:define-op trace ((in mat)) (:out single-float)
   (with-components ((m in))
     (cl:+ m00 m11)))
 
-(define-op diagonal-p ((in mat)) (:out boolean)
+(int:define-op diagonal-p ((in mat)) (:out boolean)
   (with-components ((m in))
     (cl:= 0f0 m10 m01)))
 
-(define-op main-diagonal! ((out v2:vec) (in mat)) (:out v2:vec)
+(int:define-op main-diagonal! ((out v2:vec) (in mat)) (:out v2:vec)
   (with-components ((m in))
     (v2:with-components ((v out))
       (psetf vx m00 vy m11)))
   out)
 
-(define-op main-diagonal ((in mat)) (:out v2:vec)
+(int:define-op main-diagonal ((in mat)) (:out v2:vec)
   (main-diagonal! (v2:vec) in))
 
-(define-op anti-diagonal! ((out v2:vec) (in mat)) (:out v2:vec)
+(int:define-op anti-diagonal! ((out v2:vec) (in mat)) (:out v2:vec)
   (with-components ((m in))
     (v2:with-components ((v out))
       (psetf vx m01 vy m10)))
   out)
 
-(define-op anti-diagonal ((in mat)) (:out v2:vec)
+(int:define-op anti-diagonal ((in mat)) (:out v2:vec)
   (anti-diagonal! (v2:vec) in))

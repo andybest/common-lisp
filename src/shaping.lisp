@@ -1,16 +1,16 @@
-(in-package #:origin)
+(in-package #:net.mfiano.lisp.origin)
 
 (defun linear (x)
   x)
 
 (defun sine-out (x)
-  (sin (* pi 0.5 x)))
+  (sin (* const:pi 0.5 x)))
 
 (defun sine-in (x)
-  (1+ (sin (* (1- x) 0.5 pi))))
+  (1+ (sin (* (1- x) 0.5 const:pi))))
 
 (defun sine-in-out (x)
-  (* 0.5 (- 1 (cos (* x pi)))))
+  (* 0.5 (- 1 (cos (* x const:pi)))))
 
 (defun quadratic-out (x)
   (- (* x (- x 2))))
@@ -89,30 +89,30 @@
 
 (defun back-out (x)
   (let ((v (- 1 x)))
-    (- 1 (- (expt v 3) (* v (sin (* v pi)))))))
+    (- 1 (- (expt v 3) (* v (sin (* v const:pi)))))))
 
 (defun back-in (x)
-  (- (expt x 2) (* x (sin (* x pi)))))
+  (- (expt x 2) (* x (sin (* x const:pi)))))
 
 (defun back-in-out (x)
   (if (< x 0.5)
       (let ((v (* x 2)))
-        (* 0.5 (- (expt v 3) (* v (sin (* v pi))))))
+        (* 0.5 (- (expt v 3) (* v (sin (* v const:pi))))))
       (let ((v (- 2 (* x 2))))
-        (+ (* 0.5 (- 1 (- (expt v 3) (* v (sin (* v pi)))))) 0.5))))
+        (+ (* 0.5 (- 1 (- (expt v 3) (* v (sin (* v const:pi)))))) 0.5))))
 
 (defun elastic-out (x)
-  (1+ (* (sin (* -13 pi 0.5 (1+ x))) (expt 2 (* -10 x)))))
+  (1+ (* (sin (* -13 const:pi 0.5 (1+ x))) (expt 2 (* -10 x)))))
 
 (defun elastic-in (x)
-  (* (sin (* 13 pi 0.5 x)) (expt 2 (* 10 (1- x)))))
+  (* (sin (* 13 const:pi 0.5 x)) (expt 2 (* 10 (1- x)))))
 
 (defun elastic-in-out (x)
   (if (< x 0.5)
       (let ((v (* x 2)))
-        (* 0.5 (sin (* 13 pi 0.5 v)) (expt 2 (* 10 (1- v)))))
+        (* 0.5 (sin (* 13 const:pi 0.5 v)) (expt 2 (* 10 (1- v)))))
       (let ((v (1- (* x 2))))
-        (* 0.5 (+ (* (sin (* -13 pi 0.5 (1+ v))) (expt 2 (* -10 v))) 2)))))
+        (* 0.5 (+ (* (sin (* -13 const:pi 0.5 (1+ v))) (expt 2 (* -10 v))) 2)))))
 
 (defun bounce-out (x)
   (cond

@@ -1,25 +1,22 @@
-(in-package #:origin)
+(in-package #:net.mfiano.lisp.origin)
 
-(define-op make-velocity! ((out v3:vec) (axis v3:vec) (rate single-float))
+(int:define-op make-velocity! ((out v3:vec) (axis v3:vec) (rate single-float))
     (:out v3:vec)
-  "`AXIS` is a vec3 of any length or :X, :Y, :Z for each of the positive local
-axes. `RATE` is in units/second. Returns a velocity vec3 following the right
-hand rule whose direction is parallel to `AXIS` and magnitude is `RATE`.
-Destructively modifies `OUT`."
+  "`AXIS` is a vec3 of any length. `RATE` is in units/second. Returns a velocity
+vec3 following the right hand rule whose direction is parallel to `AXIS` and
+magnitude is `RATE`. Destructively modifies `OUT`."
   (v3:copy! out axis)
   (v3:normalize! out out)
   (v3:scale! out out rate))
 
-(define-op make-velocity ((axis (or v3:vec keyword)) (rate single-float))
-    (:out v3:vec)
-  "`AXIS` is a vec3 of any length or :X, :Y, :Z for each of the positive local
-axes. `RATE` is in units/second. Returns an angular velocity vec3 following
-the right hand rule whose direction is parallel to `AXIS` and magnitude is
-`RATE`. Allocates a fresh vec3."
+(int:define-op make-velocity ((axis v3:vec) (rate single-float)) (:out v3:vec)
+  "`AXIS` is a vec3 of any length. `RATE` is in units/second. Returns a velocity
+vec3 following the right hand rule whose direction is parallel to `AXIS` and
+magnitude is `RATE`. Allocates a fresh vec3."
   (make-velocity! (v3:vec) axis rate))
 
-(define-op velocity->rotation! ((out q:quat) (velocity v3:vec)
-                                (delta single-float))
+(int:define-op velocity->rotation! ((out q:quat) (velocity v3:vec)
+                                    (delta single-float))
     (:out q:quat)
   "`VELOCITY` is a vec3 angular velocity whose magnitude represents
 radians/second rotation about its vector. `DELTA` is an amount of time. Returns
@@ -33,7 +30,7 @@ amount of time. Destructively modifies `OUT`."
                              (* (v3:length velocity) delta))
         (q:normalize! out out)))))
 
-(define-op velocity->rotation ((velocity v3:vec) (delta single-float))
+(int:define-op velocity->rotation ((velocity v3:vec) (delta single-float))
     (:out q:quat)
   "`VELOCITY` is a vec3 angular velocity whose magnitude represents
 radians/second rotation about its vector. `DELTA` is an amount of time. Returns

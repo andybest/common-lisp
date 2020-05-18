@@ -1,4 +1,4 @@
-(in-package #:origin.test)
+(in-package #:net.mfiano.lisp.origin.test)
 
 (define-test m3/identity
   (let ((m (m3:mat))
@@ -47,23 +47,23 @@
     (is m3:= (m3:- m2 m3:+zero+) m2)))
 
 (define-test m3/multiply
-  (let ((m1 (m3:mat 1 5 9 2 6 10 3 7 11))
-        (m2 (m3:mat 10 50 90 20 60 100 30 70 110))
-        (m3 m3:+id+)
-        (r (m3:mat 38 98 158 44 116 188 50 134 218))
-        (rot-z (m3:rotate m3:+id+ origin:pi/3))
-        (tr1 (m3:translate m3:+id+ (v2:vec 5 10)))
-        (tr2 (m3:translate m3:+id+ (v2:vec 10 20)))
-        (o (m3:mat)))
-    (is m3:= (m3:*! o m1 m1) r)
-    (is m3:= o r)
-    (is m3:= (m3:* m1 m3) m1)
-    (is m3:= (m3:* m3 m1) m1)
-    (is m3:= (m3:* m1 m2) (m3:* m2 m1))
-    (isnt m3:= (m3:* m1 rot-z) (m3:* rot-z m1))
-    (is v2:= (m3:get-translation (m3:* tr1 rot-z)) (m3:get-translation tr1))
-    (is v2:= (m3:get-translation (m3:* tr1 tr2)) (v2:vec 15 30))
-    (is v2:= (m3:get-translation (m3:* tr2 tr1)) (v2:vec 15 30))))
+    (let ((m1 (m3:mat 1 5 9 2 6 10 3 7 11))
+          (m2 (m3:mat 10 50 90 20 60 100 30 70 110))
+          (m3 m3:+id+)
+          (r (m3:mat 38 98 158 44 116 188 50 134 218))
+          (rot-z (m3:rotate m3:+id+ const:pi/3))
+          (tr1 (m3:translate m3:+id+ (v2:vec 5 10)))
+          (tr2 (m3:translate m3:+id+ (v2:vec 10 20)))
+          (o (m3:mat)))
+      (is m3:= (m3:*! o m1 m1) r)
+      (is m3:= o r)
+      (is m3:= (m3:* m1 m3) m1)
+      (is m3:= (m3:* m3 m1) m1)
+      (is m3:= (m3:* m1 m2) (m3:* m2 m1))
+      (isnt m3:= (m3:* m1 rot-z) (m3:* rot-z m1))
+      (is v2:= (m3:get-translation (m3:* tr1 rot-z)) (m3:get-translation tr1))
+      (is v2:= (m3:get-translation (m3:* tr1 tr2)) (v2:vec 15 30))
+      (is v2:= (m3:get-translation (m3:* tr2 tr1)) (v2:vec 15 30))))
 
 (define-test m3/translation-convert
   (let ((m (m3:mat 1 2 3 5 6 7 9 10 11))
@@ -80,10 +80,10 @@
     (is v2:= (m3:get-translation m) rv)))
 
 (define-test m3/translate
-  (let ((m (m3:rotate m3:+id+ origin:pi/3))
-        (v (v2:vec 5 10)))
-    (is v2:= (m3:get-translation (m3:translate m3:+id+ v)) v)
-    (is v2:= (m3:get-translation (m3:translate m v)) v)))
+    (let ((m (m3:rotate m3:+id+ const:pi/3))
+          (v (v2:vec 5 10)))
+      (is v2:= (m3:get-translation (m3:translate m3:+id+ v)) v)
+      (is v2:= (m3:get-translation (m3:translate m v)) v)))
 
 (define-test m3/rotation-copy
   (let ((m (m3:mat 1 5 0 2 6 0 0 0 1))
@@ -102,11 +102,11 @@
     (is m3:= (m3:rotation-axis-from-vec2 m3:+id+ rvx :x) rmx)))
 
 (define-test m3/rotate
-  (let ((omz (m3:mat 1))
-        (rmz (m3:mat 0.5 0.86602545 0 -0.86602545 0.5 0 0 0 1)))
-    (true (m3:~ (m3:rotate! omz m3:+id+ origin:pi/3) rmz))
-    (true (m3:~ omz rmz))
-    (true (m3:~ (m3:rotate m3:+id+ origin:pi/3) rmz))))
+    (let ((omz (m3:mat 1))
+          (rmz (m3:mat 0.5 0.86602545 0 -0.86602545 0.5 0 0 0 1)))
+      (true (m3:~ (m3:rotate! omz m3:+id+ const:pi/3) rmz))
+      (true (m3:~ omz rmz))
+      (true (m3:~ (m3:rotate m3:+id+ const:pi/3) rmz))))
 
 (define-test m3/scale
   (let ((m (m3:mat 10 0 0 0 20 0 0 0 2))
@@ -118,15 +118,15 @@
     (is v2:= (m3:get-scale (m3:scale m3:+id+ v)) v)))
 
 (define-test m3/vec3-multiply
-  (let ((m (m3:rotate m3:+id+ origin:pi/3))
-        (v (v3:vec 1 2 3))
-        (o (v3:vec))
-        (rv (v3:vec -1.2320509 1.8660254 3)))
-    (is v3:= (m3:*v3! o m v) rv)
-    (is v3:= o rv)
-    (is v3:= (m3:*v3 m v) rv)
-    (is v3:= (m3:*v3 m3:+id+ v) v)
-    (is v3:= (m3:*v3 m3:+id+ v3:+zero+) v3:+zero+)))
+    (let ((m (m3:rotate m3:+id+ const:pi/3))
+          (v (v3:vec 1 2 3))
+          (o (v3:vec))
+          (rv (v3:vec -1.2320509 1.8660254 3)))
+      (is v3:= (m3:*v3! o m v) rv)
+      (is v3:= o rv)
+      (is v3:= (m3:*v3 m v) rv)
+      (is v3:= (m3:*v3 m3:+id+ v) v)
+      (is v3:= (m3:*v3 m3:+id+ v3:+zero+) v3:+zero+)))
 
 (define-test m3/transpose
   (let ((m (m3:mat 1 5 9 2 6 10 3 7 11))
@@ -138,9 +138,9 @@
     (is m3:= (m3:transpose m3:+id+) m3:+id+)))
 
 (define-test m3/orthogonal-predicate
-  (true (m3:orthogonal-p (m3:rotate m3:+id+ origin:pi)))
-  (true (m3:orthogonal-p (m3:rotate m3:+id+ origin:pi/2)))
-  (true (m3:orthogonal-p (m3:rotate m3:+id+ origin:pi/3))))
+    (true (m3:orthogonal-p (m3:rotate m3:+id+ const:pi)))
+  (true (m3:orthogonal-p (m3:rotate m3:+id+ const:pi/2)))
+  (true (m3:orthogonal-p (m3:rotate m3:+id+ const:pi/3))))
 
 (define-test m3/trace
   (is = (m3:trace (m3:mat)) 0)

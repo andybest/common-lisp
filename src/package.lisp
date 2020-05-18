@@ -1,26 +1,70 @@
 (in-package #:cl-user)
 
-(defpackage #:origin.internal
-  (:local-nicknames (#:a #:alexandria)
-                    (#:u #:golden-utils))
+(defpackage #:net.mfiano.lisp.origin.internal
+  (:local-nicknames
+   (#:u #:net.mfiano.lisp.golden-utils))
   (:use #:cl)
-  (:import-from
-   #+sbcl #:sb-ext
-   #+ccl #:ccl
-   #+(or ecl abcl clasp) #:ext
-   #+lispworks #:hcl
-   #+allegro #:excl
-   #:add-package-local-nickname)
-  (:import-from #:specialization-store #:defstore #:defspecialization)
   (:export
-   #:add-package-local-nickname
    #:make-accessor-symbol
-   #:define-op
-   #:defstore
-   #:defspecialization))
+   #:define-op))
 
-(defpackage #:origin.vec2
-  (:use #:cl #:origin.internal)
+(defpackage #:net.mfiano.lisp.origin.constants
+  (:local-nicknames
+   (#:u #:net.mfiano.lisp.golden-utils))
+  (:use #:cl)
+  (:shadow
+   #:pi)
+  (:export
+   #:+rad+
+   #:+deg+
+   #:2pi
+   #:2pi/3
+   #:2pi/12
+   #:3pi/2
+   #:3pi/4
+   #:3pi/12
+   #:4pi/3
+   #:4pi/12
+   #:5pi/3
+   #:5pi/4
+   #:5pi/6
+   #:5pi/12
+   #:6pi/12
+   #:7pi/4
+   #:7pi/6
+   #:7pi/12
+   #:8pi/12
+   #:9pi/12
+   #:10pi/12
+   #:11pi/6
+   #:11pi/12
+   #:12pi/12
+   #:13pi/12
+   #:14pi/12
+   #:15pi/12
+   #:16pi/12
+   #:17pi/12
+   #:18pi/12
+   #:19pi/12
+   #:20pi/12
+   #:21pi/12
+   #:22pi/12
+   #:23pi/12
+   #:24pi/12
+   #:pi
+   #:pi/2
+   #:pi/3
+   #:pi/4
+   #:pi/6
+   #:pi/12))
+
+(defpackage #:net.mfiano.lisp.origin.vec2
+  (:local-nicknames
+   (#:const #:net.mfiano.lisp.origin.constants)
+   (#:int #:net.mfiano.lisp.origin.internal)
+   (#:ss #:specialization-store)
+   (#:u #:net.mfiano.lisp.golden-utils))
+  (:use #:cl)
   (:shadow
    #:=
    #:+
@@ -131,8 +175,14 @@
    #:atan!
    #:atan))
 
-(defpackage #:origin.vec3
-  (:use #:cl #:origin.internal)
+(defpackage #:net.mfiano.lisp.origin.vec3
+  (:local-nicknames
+   (#:const #:net.mfiano.lisp.origin.constants)
+   (#:int #:net.mfiano.lisp.origin.internal)
+   (#:ss #:specialization-store)
+   (#:u #:net.mfiano.lisp.golden-utils)
+   (#:v2 #:net.mfiano.lisp.origin.vec2))
+  (:use #:cl)
   (:shadow
    #:=
    #:+
@@ -254,8 +304,15 @@
    #:atan!
    #:atan))
 
-(defpackage #:origin.vec4
-  (:use #:cl #:origin.internal)
+(defpackage #:net.mfiano.lisp.origin.vec4
+  (:local-nicknames
+   (#:const #:net.mfiano.lisp.origin.constants)
+   (#:int #:net.mfiano.lisp.origin.internal)
+   (#:ss #:specialization-store)
+   (#:u #:net.mfiano.lisp.golden-utils)
+   (#:v2 #:net.mfiano.lisp.origin.vec2)
+   (#:v3 #:net.mfiano.lisp.origin.vec3))
+  (:use #:cl)
   (:shadow
    #:=
    #:+
@@ -367,8 +424,14 @@
    #:atan!
    #:atan))
 
-(defpackage #:origin.mat2
-  (:use #:cl #:origin.internal)
+(defpackage #:net.mfiano.lisp.origin.mat2
+  (:local-nicknames
+   (#:const #:net.mfiano.lisp.origin.constants)
+   (#:int #:net.mfiano.lisp.origin.internal)
+   (#:ss #:specialization-store)
+   (#:u #:net.mfiano.lisp.golden-utils)
+   (#:v2 #:net.mfiano.lisp.origin.vec2))
+  (:use #:cl)
   (:shadow
    #:=
    #:+
@@ -428,8 +491,16 @@
    #:anti-diagonal!
    #:anti-diagonal))
 
-(defpackage #:origin.mat3
-  (:use #:cl #:origin.internal)
+(defpackage #:net.mfiano.lisp.origin.mat3
+  (:local-nicknames
+   (#:const #:net.mfiano.lisp.origin.constants)
+   (#:int #:net.mfiano.lisp.origin.internal)
+   (#:m2 #:net.mfiano.lisp.origin.mat2)
+   (#:ss #:specialization-store)
+   (#:u #:net.mfiano.lisp.golden-utils)
+   (#:v2 #:net.mfiano.lisp.origin.vec2)
+   (#:v3 #:net.mfiano.lisp.origin.vec3))
+  (:use #:cl)
   (:shadow
    #:=
    #:+
@@ -502,8 +573,17 @@
    #:anti-diagonal!
    #:anti-diagonal))
 
-(defpackage #:origin.mat4
-  (:use #:cl #:origin.internal)
+(defpackage #:net.mfiano.lisp.origin.mat4
+  (:local-nicknames
+   (#:const #:net.mfiano.lisp.origin.constants)
+   (#:int #:net.mfiano.lisp.origin.internal)
+   (#:m2 #:net.mfiano.lisp.origin.mat2)
+   (#:m3 #:net.mfiano.lisp.origin.mat3)
+   (#:ss #:specialization-store)
+   (#:u #:net.mfiano.lisp.golden-utils)
+   (#:v3 #:net.mfiano.lisp.origin.vec3)
+   (#:v4 #:net.mfiano.lisp.origin.vec4))
+  (:use #:cl)
   (:shadow
    #:=
    #:+
@@ -589,8 +669,17 @@
    #:set-projection/perspective!
    #:set-projection/perspective))
 
-(defpackage #:origin.quat
-  (:use #:cl #:origin.internal)
+(defpackage #:net.mfiano.lisp.origin.quat
+  (:local-nicknames
+   (#:const #:net.mfiano.lisp.origin.constants)
+   (#:int #:net.mfiano.lisp.origin.internal)
+   (#:m3 #:net.mfiano.lisp.origin.mat3)
+   (#:m4 #:net.mfiano.lisp.origin.mat4)
+   (#:ss #:specialization-store)
+   (#:u #:net.mfiano.lisp.golden-utils)
+   (#:v3 #:net.mfiano.lisp.origin.vec3)
+   (#:v4 #:net.mfiano.lisp.origin.vec4))
+  (:use #:cl)
   (:shadow
    #:=
    #:+
@@ -668,54 +757,104 @@
    #:orient!
    #:orient))
 
-(defpackage #:origin
-  (:use #:cl #:origin.internal)
-  ;; math constants
-  (:shadow
-   #:pi)
-  (:export
-   #:pi/12
-   #:pi/6
-   #:2pi/12
-   #:pi/4
-   #:3pi/12
-   #:pi/3
-   #:4pi/12
-   #:5pi/12
-   #:pi/2
-   #:6pi/12
-   #:7pi/12
+(defpackage #:net.mfiano.lisp.origin
+  (:local-nicknames
+   (#:const #:net.mfiano.lisp.origin.constants)
+   (#:int #:net.mfiano.lisp.origin.internal)
+   (#:m4 #:net.mfiano.lisp.origin.mat4)
+   (#:q #:net.mfiano.lisp.origin.quat)
+   (#:u #:net.mfiano.lisp.golden-utils)
+   (#:v3 #:net.mfiano.lisp.origin.vec3)
+   (#:v4 #:net.mfiano.lisp.origin.vec4))
+  (:use #:cl)
+  (:shadowing-import-from
+   #:net.mfiano.lisp.origin.constants
+   #:+rad+
+   #:+deg+
+   #:2pi
    #:2pi/3
-   #:8pi/12
+   #:2pi/12
+   #:3pi/2
    #:3pi/4
-   #:9pi/12
+   #:3pi/12
+   #:4pi/3
+   #:4pi/12
+   #:5pi/3
+   #:5pi/4
    #:5pi/6
+   #:5pi/12
+   #:6pi/12
+   #:7pi/4
+   #:7pi/6
+   #:7pi/12
+   #:8pi/12
+   #:9pi/12
    #:10pi/12
+   #:11pi/6
    #:11pi/12
-   #:pi
    #:12pi/12
    #:13pi/12
-   #:7pi/6
    #:14pi/12
-   #:5pi/4
    #:15pi/12
-   #:4pi/3
    #:16pi/12
    #:17pi/12
-   #:3pi/2
    #:18pi/12
    #:19pi/12
-   #:5pi/3
    #:20pi/12
-   #:7pi/4
    #:21pi/12
-   #:11pi/6
    #:22pi/12
    #:23pi/12
-   #:2pi
    #:24pi/12
+   #:pi
+   #:pi/2
+   #:pi/3
+   #:pi/4
+   #:pi/6
+   #:pi/12)
+  ;; constants
+  (:export
    #:+rad+
-   #:+deg+)
+   #:+deg+
+   #:2pi
+   #:2pi/3
+   #:2pi/12
+   #:3pi/2
+   #:3pi/4
+   #:3pi/12
+   #:4pi/3
+   #:4pi/12
+   #:5pi/3
+   #:5pi/4
+   #:5pi/6
+   #:5pi/12
+   #:6pi/12
+   #:7pi/4
+   #:7pi/6
+   #:7pi/12
+   #:8pi/12
+   #:9pi/12
+   #:10pi/12
+   #:11pi/6
+   #:11pi/12
+   #:12pi/12
+   #:13pi/12
+   #:14pi/12
+   #:15pi/12
+   #:16pi/12
+   #:17pi/12
+   #:18pi/12
+   #:19pi/12
+   #:20pi/12
+   #:21pi/12
+   #:22pi/12
+   #:23pi/12
+   #:24pi/12
+   #:pi
+   #:pi/2
+   #:pi/3
+   #:pi/4
+   #:pi/6
+   #:pi/12)
   ;; general
   (:export
    #:line-direction
@@ -766,50 +905,3 @@
    #:make-velocity
    #:velocity->rotation!
    #:velocity->rotation))
-
-(origin.internal:add-package-local-nickname :a :alexandria :origin.vec2)
-(origin.internal:add-package-local-nickname :v3 :origin.vec3 :origin.vec2)
-(origin.internal:add-package-local-nickname :v4 :origin.vec4 :origin.vec2)
-
-(origin.internal:add-package-local-nickname :a :alexandria :origin.vec3)
-(origin.internal:add-package-local-nickname :v2 :origin.vec2 :origin.vec3)
-(origin.internal:add-package-local-nickname :v4 :origin.vec4 :origin.vec3)
-(origin.internal:add-package-local-nickname :q :origin.quat :origin.vec3)
-
-(origin.internal:add-package-local-nickname :a :alexandria :origin.vec4)
-(origin.internal:add-package-local-nickname :v2 :origin.vec2 :origin.vec4)
-(origin.internal:add-package-local-nickname :v3 :origin.vec3 :origin.vec4)
-(origin.internal:add-package-local-nickname :q :origin.quat :origin.vec4)
-
-(origin.internal:add-package-local-nickname :a :alexandria :origin.mat2)
-(origin.internal:add-package-local-nickname :v2 :origin.vec2 :origin.mat2)
-(origin.internal:add-package-local-nickname :m3 :origin.mat3 :origin.mat2)
-(origin.internal:add-package-local-nickname :m4 :origin.mat4 :origin.mat2)
-
-(origin.internal:add-package-local-nickname :a :alexandria :origin.mat3)
-(origin.internal:add-package-local-nickname :v2 :origin.vec2 :origin.mat3)
-(origin.internal:add-package-local-nickname :v3 :origin.vec3 :origin.mat3)
-(origin.internal:add-package-local-nickname :m2 :origin.mat2 :origin.mat3)
-(origin.internal:add-package-local-nickname :m4 :origin.mat4 :origin.mat3)
-
-(origin.internal:add-package-local-nickname :a :alexandria :origin.mat4)
-(origin.internal:add-package-local-nickname :v3 :origin.vec3 :origin.mat4)
-(origin.internal:add-package-local-nickname :v4 :origin.vec4 :origin.mat4)
-(origin.internal:add-package-local-nickname :m2 :origin.mat2 :origin.mat4)
-(origin.internal:add-package-local-nickname :m3 :origin.mat3 :origin.mat4)
-
-(origin.internal:add-package-local-nickname :a :alexandria :origin.quat)
-(origin.internal:add-package-local-nickname :v3 :origin.vec3 :origin.quat)
-(origin.internal:add-package-local-nickname :v4 :origin.vec4 :origin.quat)
-(origin.internal:add-package-local-nickname :m3 :origin.mat3 :origin.quat)
-(origin.internal:add-package-local-nickname :m4 :origin.mat4 :origin.quat)
-
-(origin.internal:add-package-local-nickname :a :alexandria :origin)
-(origin.internal:add-package-local-nickname :u :golden-utils :origin)
-(origin.internal:add-package-local-nickname :v2 :origin.vec2 :origin)
-(origin.internal:add-package-local-nickname :v3 :origin.vec3 :origin)
-(origin.internal:add-package-local-nickname :v4 :origin.vec4 :origin)
-(origin.internal:add-package-local-nickname :m2 :origin.mat2 :origin)
-(origin.internal:add-package-local-nickname :m3 :origin.mat3 :origin)
-(origin.internal:add-package-local-nickname :m4 :origin.mat4 :origin)
-(origin.internal:add-package-local-nickname :q :origin.quat :origin)

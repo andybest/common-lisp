@@ -1,22 +1,19 @@
-(asdf:defsystem #:origin
+(asdf:defsystem #:net.mfiano.lisp.origin
   :description "A native Lisp graphics math library with an emphasis on performance and correctness."
-  :author "Michael Fiano <mail@michaelfiano.com>"
-  :maintainer "Michael Fiano <mail@michaelfiano.com>"
+  :author "Michael Fiano <mail@mfiano.net>"
   :license "MIT"
-  :homepage "https://github.com/mfiano/origin"
-  :source-control (:git "git@github.com:mfiano/origin.git")
+  :homepage "https://mfiano.net/projects/origin"
+  :source-control (:git "https://github.com/mfiano/origin")
   :bug-tracker "https://github.com/mfiano/origin/issues"
   :encoding :utf-8
-  :depends-on (#:golden-utils
-               #:alexandria
+  :depends-on (#:net.mfiano.lisp.golden-utils
                #:specialization-store)
   :pathname "src"
   :serial t
-  :in-order-to ((asdf:test-op (asdf:test-op #:origin.test)))
+  :in-order-to ((asdf:test-op (asdf:test-op #:net.mfiano.lisp.origin.test)))
   :components
   ((:file "package")
    (:file "internal")
-   (:file "common")
    (:file "swizzle")
    (:file "math-constants")
    (:file "shaping")
