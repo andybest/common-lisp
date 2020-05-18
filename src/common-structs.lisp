@@ -1,4 +1,4 @@
-(in-package #:umbra.common)
+(in-package #:net.mfiano.lisp.umbra.common)
 
 (defstruct mesh-attrs
   (mesh/pos :vec3)

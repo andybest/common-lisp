@@ -1,4 +1,4 @@
-(in-package #:umbra.noise)
+(in-package #:net.mfiano.lisp.umbra.noise)
 
 ;;;; Perlin noise
 ;;;; Original implementation by Ken Perlin
@@ -13,7 +13,7 @@
            (hash-x hash-y (funcall hash-fn origin))
            (grad-x (- hash-x 0.5 +epsilon+))
            (grad-y (- hash-y 0.5 +epsilon+))
-           (blend (umbra.shaping:quintic-curve (.xy vecs)))
+           (blend (shape:quintic-curve (.xy vecs)))
            (blend (vec4 blend (- 1 blend)))
            (out (dot (* (inversesqrt (+ (* grad-x grad-x) (* grad-y grad-y)))
                         (+ (* grad-x (.xzxz vecs)) (* grad-y (.yyww vecs)))
@@ -22,7 +22,7 @@
     (map-domain out -1 1 0 1)))
 
 (defun perlin ((point :vec2))
-  (perlin point (lambda ((x :vec2)) (umbra.hashing:fast32/2-per-corner x))))
+  (perlin point (lambda ((x :vec2)) (hash:fast32/2-per-corner x))))
 
 ;;; 2D Perlin noise with derivatives
 
@@ -44,7 +44,7 @@
            (k0-gk0 (- dotval1-grad1 dotval0-grad0))
            (k1-gk1 (- dotval2-grad2 dotval0-grad0))
            (k2-gk2 (- dotval3-grad3 dotval2-grad2 k0-gk0))
-           (blend (umbra.shaping:quintic-curve/interpolate-derivative
+           (blend (shape:quintic-curve/interpolate-derivative
                    (.xy vecs)))
            (out (+ dotval0-grad0
                    (* (.x blend) k0-gk0)
@@ -59,7 +59,7 @@
 (defun perlin/derivs ((point :vec2))
   (perlin/derivs point
                  (lambda ((x :vec2))
-                   (umbra.hashing:fast32/2-per-corner x))))
+                   (hash:fast32/2-per-corner x))))
 
 ;;; 2D Perlin Surflet noise
 ;;; http://briansharpe.wordpress.com/2012/03/09/modifications-to-classic-perlin-noise/
@@ -73,7 +73,7 @@
            (grad-y (- hash-y 0.5 +epsilon+))
            (vecs-squared (* vecs vecs))
            (vecs-squared (+ (.xzxz vecs-squared) (.yyww vecs-squared)))
-           (out (dot (umbra.shaping:falloff-squared-c2
+           (out (dot (shape:falloff-squared-c2
                       (min (vec4 1) vecs-squared))
                      (* (inversesqrt (+ (* grad-x grad-x) (* grad-y grad-y)))
                         (+ (* grad-x (.xzxz vecs)) (* grad-y (.yyww vecs)))
@@ -83,7 +83,7 @@
 (defun perlin-surflet ((point :vec2))
   (perlin-surflet point
                   (lambda ((x :vec2))
-                    (umbra.hashing:fast32/2-per-corner x))))
+                    (hash:fast32/2-per-corner x))))
 
 ;;; 2D Perlin Surflet noise with derivatives
 
@@ -114,7 +114,7 @@
 (defun perlin-surflet/derivs ((point :vec2))
   (perlin-surflet/derivs point
                          (lambda ((x :vec2))
-                           (umbra.hashing:fast32/2-per-corner x))))
+                           (hash:fast32/2-per-corner x))))
 
 ;;; 2D Perlin noise improved
 ;;; Ken Perlin's improved version
@@ -124,7 +124,7 @@
   (let* ((cell (floor point))
          (vecs (- (.xyxy point) (vec4 cell (1+ cell))))
          (hash (- (funcall hash-fn cell) 0.5))
-         (blend (umbra.shaping:quintic-curve (.xy vecs)))
+         (blend (shape:quintic-curve (.xy vecs)))
          (blend (vec4 blend (- 1 blend)))
          (out (dot (+ (* (.xzxz vecs) (sign hash))
                       (* (.yyww vecs) (sign (- (abs hash) 0.25))))
@@ -132,7 +132,7 @@
     (map-domain out -1 1 0 1)))
 
 (defun perlin-improved ((point :vec2))
-  (perlin-improved point (lambda ((x :vec2)) (umbra.hashing:fast32 x))))
+  (perlin-improved point (lambda ((x :vec2)) (hash:fast32 x))))
 
 ;;; 3D Perlin noise
 
@@ -161,14 +161,14 @@
                      (+ (* (.xyxy (vec2 (.x vec) (.x vec-1))) grad-x1)
                         (* (.xxyy (vec2 (.y vec) (.y vec-1))) grad-y1)
                         (* (.z vec-1) grad-z1))))
-           (blend (umbra.shaping:quintic-curve vec))
+           (blend (shape:quintic-curve vec))
            (out (mix temp1 temp2 (.z blend)))
            (blend (vec4 (.xy blend) (- 1 (.xy blend))))
            (out (* (dot out (* (.zxzx blend) (.wwyy blend))) 1.1547005)))
     (map-domain out -1 1 0 1)))
 
 (defun perlin ((point :vec3))
-  (perlin point (lambda ((x :vec3)) (umbra.hashing:fast32/3-per-corner x))))
+  (perlin point (lambda ((x :vec3)) (hash:fast32/3-per-corner x))))
 
 ;;; 3D Perlin noise with derivatives
 
@@ -220,8 +220,8 @@
            (k5-gk5 (- dot6-grad6 dot4-grad4 k1-gk1))
            (k6-gk6 (- (- dot7-grad7 dot6-grad6) (- dot5-grad5 dot4-grad4)
                       k3-gk3))
-           (blend (umbra.shaping:quintic-curve vec))
-           (blend-deriv (umbra.shaping:quintic-curve/derivative vec))
+           (blend (shape:quintic-curve vec))
+           (blend-deriv (shape:quintic-curve/derivative vec))
            (out (+ dot0-grad0
                    (* (.x blend) (+ k0-gk0 (* (.y blend) k3-gk3)))
                    (* (.y blend) (+ k1-gk1 (* (.z blend) k5-gk5)))
@@ -256,7 +256,7 @@
 (defun perlin/derivs ((point :vec3))
   (perlin/derivs point
                  (lambda ((x :vec3))
-                   (umbra.hashing:fast32/3-per-corner x))))
+                   (hash:fast32/3-per-corner x))))
 
 ;;; 3D Perlin Surflet noise
 ;;; http://briansharpe.wordpress.com/2012/03/09/modifications-to-classic-perlin-noise/
@@ -291,10 +291,10 @@
            (vec-1 (* vec-1 vec-1))
            (vecs-squared (+ (vec4 (.x vec) (.x vec-1) (.x vec) (.x vec-1))
                             (vec4 (.yy vec) (.yy vec-1))))
-           (out (* (+ (dot (umbra.shaping:falloff-squared-c2
+           (out (* (+ (dot (shape:falloff-squared-c2
                             (min (vec4 1) (+ vecs-squared (.z vec))))
                            temp1)
-                      (dot (umbra.shaping:falloff-squared-c2
+                      (dot (shape:falloff-squared-c2
                             (min (vec4 1) (+ vecs-squared (.z vec-1))))
                            temp2))
                    2.3703704)))
@@ -303,7 +303,7 @@
 (defun perlin-surflet ((point :vec3))
   (perlin-surflet point
                   (lambda ((x :vec3))
-                    (umbra.hashing:fast32/3-per-corner x))))
+                    (hash:fast32/3-per-corner x))))
 
 ;;; 3D Perlin Surflet noise with derivatives
 
@@ -371,7 +371,7 @@
 (defun perlin-surflet/derivs ((point :vec3))
   (perlin-surflet/derivs point
                          (lambda ((x :vec3))
-                           (umbra.hashing:fast32/3-per-corner x))))
+                           (hash:fast32/3-per-corner x))))
 
 ;;; 3D Perlin noise improved
 ;;; Ken Perlin's modified version
@@ -394,14 +394,14 @@
            (grad-12 (* (.z vec-1) (sign (- (abs hash-high-z) 0.125))))
            (grad-0 (+ grad-00 grad-01 grad-02))
            (grad-1 (+ grad-10 grad-11 grad-12))
-           (blend (umbra.shaping:quintic-curve vec))
+           (blend (shape:quintic-curve vec))
            (out (mix grad-0 grad-1 (.z blend)))
            (blend (vec4 (.xy blend) (- 1 (.xy blend))))
            (out (* (dot out (* (.zxzx blend) (.wwyy blend))) (/ 2 3.0))))
     (map-domain out -1 1 0 1)))
 
 (defun perlin-improved ((point :vec3))
-  (perlin-improved point (lambda ((x :vec3)) (umbra.hashing:fast32 x))))
+  (perlin-improved point (lambda ((x :vec3)) (hash:fast32 x))))
 
 ;;; 4D Perlin noise
 
@@ -453,7 +453,7 @@
                          (* (.xxyy (vec2 (.y vec) (.y vec-1))) d1)
                          (* (.z vec-1) d2)
                          (* (.w vec-1) d3))))
-           (blend (umbra.shaping:quintic-curve vec))
+           (blend (shape:quintic-curve vec))
            (temp (+ temp-a (* (- temp-c temp-a) (.w blend))))
            (temp (+ temp (* (- (+ temp-b (* (- temp-d temp-b) (.w blend))) temp)
                             (.z blend))))
@@ -461,4 +461,4 @@
     (map-domain (dot temp (* (.zxzx blend) (.wwyy blend))) -1 1 0 1)))
 
 (defun perlin ((point :vec4))
-  (perlin point (lambda ((x :vec4)) (umbra.hashing:fast32-2/4-per-corner x))))
+  (perlin point (lambda ((x :vec4)) (hash:fast32-2/4-per-corner x))))

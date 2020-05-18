@@ -1,4 +1,4 @@
-(in-package #:umbra.hashing)
+(in-package #:net.mfiano.lisp.umbra.hashing)
 
 ;;;; Hashing functions
 ;;;; FAST32

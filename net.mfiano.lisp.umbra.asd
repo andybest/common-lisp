@@ -1,14 +1,13 @@
-(asdf:defsystem #:umbra
+(asdf:defsystem #:net.mfiano.lisp.umbra
   :description "A library of reusable GPU shader functions."
-  :author ("Michael Fiano <mail@michaelfiano.com>")
-  :maintainer "Michael Fiano <mail@michaelfiano.com>"
+  :author ("Michael Fiano <mail@mfiano.net>")
   :license "MIT"
-  :homepage "https://www.michaelfiano.com/projects/umbra"
-  :source-control (:git "https://github.com/mfiano/umbra.git")
+  :homepage "https://mfiano.net/projects/umbra"
+  :source-control (:git "https://github.com/mfiano/umbra")
   :bug-tracker "https://github.com/mfiano/umbra/issues"
   :encoding :utf-8
-  :depends-on (#:alexandria
-               #:shadow
+  :depends-on (#:net.mfiano.lisp.golden-utils
+               #:net.mfiano.lisp.shadow
                #:varjo)
   :pathname "src"
   :serial t

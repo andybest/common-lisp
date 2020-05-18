@@ -1,6 +1,6 @@
-(in-package #:umbra.common)
+(in-package #:net.mfiano.lisp.umbra.common)
 
-(eval-when (:compile-toplevel :load-toplevel :execute)
+(u:eval-always
   (cl:defun %swizzle/combinations (n items)
     (if (= n 1)
         (mapcar #'list items)
@@ -28,7 +28,7 @@
 
   (cl:defmacro define-vari-swizzle-macros ()
     (flet ((map-swizzle (mask)
-             (alexandria:make-keyword
+             (u:make-keyword
               (map 'string
                    (lambda (x)
                      (elt "XYZW"
@@ -36,7 +36,7 @@
                    mask))))
       `(progn
          ,@(loop :for mask :in (%swizzle/component-groups 4)
-                 :for op = (alexandria:symbolicate "." mask)
+                 :for op = (u:symbolicate "." mask)
                  :collect `(export ',op)
                  :collect `(v-defmacro ,op (vector)
                              `(swizzle ,vector ,,(map-swizzle mask))))))))

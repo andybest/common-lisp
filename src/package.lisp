@@ -1,7 +1,9 @@
 (in-package #:cl-user)
 
-(defpackage #:umbra.common
-  (:use #:shadow.glsl)
+(defpackage #:net.mfiano.lisp.umbra.common
+  (:local-nicknames
+   (#:u #:net.mfiano.lisp.golden-utils))
+  (:use #:net.mfiano.lisp.shadow.glsl)
   ;; structs
   (:export
    #:mesh-attrs
@@ -25,111 +27,10 @@
    #:saturate
    #:map-domain))
 
-(defpackage #:umbra.color
-  (:use #:shadow.glsl #:umbra.common)
-  ;; color space conversion
-  (:export
-   #:rgb->grayscale
-   #:hue->rgb
-   #:rgb->hcv
-   #:rgb->hsv
-   #:hsv->rgb
-   #:rgb->hcy
-   #:hcy->rgb
-   #:rgb->hsl
-   #:hsl-rgb
-   #:rgb->srgb-approx
-   #:rgb->srgb
-   #:srgb->rgb-approx
-   #:srgb->rgb
-   #:rgb->xyz
-   #:xyz->rgb
-   #:xyy->xyz
-   #:xyz->xyy
-   #:rgb->xyy
-   #:xyy->rgb)
-  ;; color grading
-  (:export
-   #:set-exposure
-   #:set-saturation
-   #:set-contrast
-   #:set-brightness
-   #:set-gamma
-   #:color-filter
-   #:tone-map/linear
-   #:tone-map/reinhard
-   #:tone-map/haarm-peter-duiker
-   #:tone-map/hejl-burgess-dawson
-   #:tone-map/uncharted2
-   #:tone-map/aces))
-
-(defpackage #:umbra.effects
-  (:use #:shadow.glsl #:umbra.common)
-  (:export
-   #:window-rain))
-
-(defpackage #:umbra.graphing
-  (:use #:shadow.glsl #:umbra.common)
-  (:export
-   #:graph))
-
-(defpackage #:umbra.hashing
-  (:use #:shadow.glsl #:umbra.common)
-  (:export
-   #:blum-blum-shub
-   #:blum-blum-shub/hq
-   #:sgpp
-   #:sgpp/2-per-corner
-   #:sgpp/3-per-corner
-   #:fast32
-   #:fast32/2-per-corner
-   #:fast32/3-per-corner
-   #:fast32/4-per-corner
-   #:fast32/cell
-   #:fast32-2
-   #:fast32-2/4-per-corner))
-
-(defpackage #:umbra.noise
-  (:use #:shadow.glsl #:umbra.common)
-  (:export
-   #:perlin
-   #:perlin/derivs
-   #:perlin-surflet
-   #:perlin-surflet/derivs
-   #:perlin-improved
-   #:cellular
-   #:cellular/derivs
-   #:cellular-fast
-   #:polkadot
-   #:polkadot-box
-   #:hermite
-   #:hermite/derivs
-   #:simplex-perlin
-   #:simplex-perlin/derivs
-   #:simplex-cellular
-   #:simplex-polkadot
-   #:value
-   #:value/derivs
-   #:value-perlin
-   #:value-hermite
-   #:cubist
-   #:stars))
-
-(defpackage #:umbra.sdf
-  (:use #:shadow.glsl #:umbra.common)
-  (:export
-   #:dist/box
-   #:dist/circle
-   #:dist/line
-   #:dist/pie
-   #:dist/semi-circle
-   #:dist/triangle
-   #:mask/fill
-   #:mask/inner-border
-   #:mask/outer-border))
-
-(defpackage #:umbra.shaping
-  (:use #:shadow.glsl #:umbra.common)
+(defpackage #:net.mfiano.lisp.umbra.shaping
+  (:use
+   #:net.mfiano.lisp.shadow.glsl
+   #:net.mfiano.lisp.umbra.common)
   ;; penner
   (:export
    #:linear
@@ -200,7 +101,127 @@
    #:falloff-squared-c1
    #:falloff-squared-c2))
 
-(defpackage #:umbra.sprite
-  (:use #:shadow.glsl #:umbra.common)
+(defpackage #:net.mfiano.lisp.umbra.color
+  (:use
+   #:net.mfiano.lisp.shadow.glsl
+   #:net.mfiano.lisp.umbra.common)
+  ;; color space conversion
+  (:export
+   #:rgb->grayscale
+   #:hue->rgb
+   #:rgb->hcv
+   #:rgb->hsv
+   #:hsv->rgb
+   #:rgb->hcy
+   #:hcy->rgb
+   #:rgb->hsl
+   #:hsl-rgb
+   #:rgb->srgb-approx
+   #:rgb->srgb
+   #:srgb->rgb-approx
+   #:srgb->rgb
+   #:rgb->xyz
+   #:xyz->rgb
+   #:xyy->xyz
+   #:xyz->xyy
+   #:rgb->xyy
+   #:xyy->rgb)
+  ;; color grading
+  (:export
+   #:set-exposure
+   #:set-saturation
+   #:set-contrast
+   #:set-brightness
+   #:set-gamma
+   #:color-filter
+   #:tone-map/linear
+   #:tone-map/reinhard
+   #:tone-map/haarm-peter-duiker
+   #:tone-map/hejl-burgess-dawson
+   #:tone-map/uncharted2
+   #:tone-map/aces))
+
+(defpackage #:net.mfiano.lisp.umbra.effects
+  (:use #:net.mfiano.lisp.shadow.glsl
+        #:net.mfiano.lisp.umbra.common)
+  (:export
+   #:window-rain))
+
+(defpackage #:net.mfiano.lisp.umbra.graphing
+  (:use
+   #:net.mfiano.lisp.shadow.glsl
+   #:net.mfiano.lisp.umbra.common)
+  (:export
+   #:graph))
+
+(defpackage #:net.mfiano.lisp.umbra.hashing
+  (:use
+   #:net.mfiano.lisp.shadow.glsl
+   #:net.mfiano.lisp.umbra.common)
+  (:export
+   #:blum-blum-shub
+   #:blum-blum-shub/hq
+   #:sgpp
+   #:sgpp/2-per-corner
+   #:sgpp/3-per-corner
+   #:fast32
+   #:fast32/2-per-corner
+   #:fast32/3-per-corner
+   #:fast32/4-per-corner
+   #:fast32/cell
+   #:fast32-2
+   #:fast32-2/4-per-corner))
+
+(defpackage #:net.mfiano.lisp.umbra.noise
+  (:local-nicknames
+   (#:hash #:net.mfiano.lisp.umbra.hashing)
+   (#:shape #:net.mfiano.lisp.umbra.shaping)
+   )
+  (:use
+   #:net.mfiano.lisp.shadow.glsl
+   #:net.mfiano.lisp.umbra.common)
+  (:export
+   #:perlin
+   #:perlin/derivs
+   #:perlin-surflet
+   #:perlin-surflet/derivs
+   #:perlin-improved
+   #:cellular
+   #:cellular/derivs
+   #:cellular-fast
+   #:polkadot
+   #:polkadot-box
+   #:hermite
+   #:hermite/derivs
+   #:simplex-perlin
+   #:simplex-perlin/derivs
+   #:simplex-cellular
+   #:simplex-polkadot
+   #:value
+   #:value/derivs
+   #:value-perlin
+   #:value-hermite
+   #:cubist
+   #:stars))
+
+(defpackage #:net.mfiano.lisp.umbra.sdf
+  (:use
+   #:net.mfiano.lisp.shadow.glsl
+   #:net.mfiano.lisp.umbra.common)
+  (:export
+   #:dist/box
+   #:dist/circle
+   #:dist/line
+   #:dist/pie
+   #:dist/semi-circle
+   #:dist/triangle
+   #:mask/fill
+   #:mask/inner-border
+   #:mask/outer-border))
+
+(defpackage #:net.mfiano.lisp.umbra.sprite
+  (:use
+   #:net.mfiano.lisp.shadow.glsl
+   #:net.mfiano.lisp.umbra.common)
   (:export
    #:sprite))

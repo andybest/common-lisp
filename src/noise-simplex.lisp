@@ -1,4 +1,4 @@
-(in-package #:umbra.noise)
+(in-package #:net.mfiano.lisp.umbra.noise)
 
 ;;;; Simplex noise
 
@@ -91,8 +91,7 @@
     (map-domain out -1 1 0 1)))
 
 (defun simplex-perlin ((point :vec2))
-  (simplex-perlin point (lambda ((x :vec2))
-                          (umbra.hashing:fast32/2-per-corner x))))
+  (simplex-perlin point (lambda ((x :vec2)) (hash:fast32/2-per-corner x))))
 
 ;;; 2D Simplex Perlin noise with derivatives
 
@@ -144,7 +143,7 @@
 (defun simplex-perlin/derivs ((point :vec2))
   (simplex-perlin/derivs point
                          (lambda ((x :vec2))
-                           (umbra.hashing:fast32/2-per-corner x))))
+                           (hash:fast32/2-per-corner x))))
 
 ;;; 3D Simplex Perlin noise
 
@@ -171,7 +170,7 @@
 
 (defun simplex-perlin ((point :vec3))
   (simplex-perlin point (lambda ((x :vec3) (y :vec3) (z :vec3))
-                          (umbra.hashing:fast32/3-per-corner x y z))))
+                          (hash:fast32/3-per-corner x y z))))
 
 ;;; 3D Simplex Perlin noise with derivatives
 
@@ -211,7 +210,7 @@
 
 (defun simplex-perlin/derivs ((point :vec3))
   (simplex-perlin/derivs point (lambda ((x :vec3) (y :vec3) (z :vec3))
-                                 (umbra.hashing:fast32/3-per-corner x y z))))
+                                 (hash:fast32/3-per-corner x y z))))
 
 ;;; 2D Simplex Cellular noise
 
@@ -240,7 +239,7 @@
 (defun simplex-cellular ((point :vec2))
   (simplex-cellular point
                     (lambda ((x :vec2))
-                      (umbra.hashing:fast32/2-per-corner x))))
+                      (hash:fast32/2-per-corner x))))
 
 ;;; 3D Simplex Cellular noise
 
@@ -270,7 +269,7 @@
 (defun simplex-cellular ((point :vec3))
   (simplex-cellular point
                     (lambda ((x :vec3) (y :vec3) (z :vec3))
-                      (umbra.hashing:fast32/3-per-corner x y z))))
+                      (hash:fast32/3-per-corner x y z))))
 
 ;;; 2D Simplex Polka-dot noise
 
@@ -296,7 +295,7 @@
                          (radius :float)
                          (max-dimness :float))
   (simplex-polkadot point radius max-dimness (lambda ((x :vec2))
-                                               (umbra.hashing:fast32 x))))
+                                               (hash:fast32 x))))
 
 ;;; 3D Simplex Polka-dot noise
 
@@ -324,4 +323,4 @@
                          (max-dimness :float))
   (simplex-polkadot point radius max-dimness
                     (lambda ((x :vec3) (y :vec3) (z :vec3))
-                      (umbra.hashing:fast32 x y z))))
+                      (hash:fast32 x y z))))

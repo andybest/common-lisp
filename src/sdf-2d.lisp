@@ -1,4 +1,4 @@
-(in-package #:umbra.sdf)
+(in-package #:net.mfiano.lisp.umbra.sdf)
 
 ;;;; 2D signed distance field functions
 ;;;; Credits: https://www.shadertoy.com/view/4dfXDn

@@ -1,4 +1,4 @@
-(in-package #:umbra.noise)
+(in-package #:net.mfiano.lisp.umbra.noise)
 
 ;;;; Cellular noise
 ;;;; Brian Sharpe https://github.com/BrianSharpe/GPU-Noise-Lib
@@ -26,7 +26,7 @@
     (* (min (.x d) (.y d)) (/ 1.125))))
 
 (defun cellular ((point :vec2))
-  (cellular point (lambda ((x :vec2)) (umbra.hashing:fast32/2-per-corner x))))
+  (cellular point (lambda ((x :vec2)) (hash:fast32/2-per-corner x))))
 
 ;;; 2D Cellular noise with derivatives
 
@@ -56,7 +56,7 @@
 (defun cellular/derivs ((point :vec2))
   (cellular/derivs point
                    (lambda ((x :vec2))
-                     (umbra.hashing:fast32/2-per-corner x))))
+                     (hash:fast32/2-per-corner x))))
 
 ;;; 2D Cellular noise (fast version)
 
@@ -77,7 +77,7 @@
 (defun cellular-fast ((point :vec2))
   (cellular-fast point
                  (lambda ((x :vec2))
-                   (umbra.hashing:fast32/2-per-corner x))))
+                   (hash:fast32/2-per-corner x))))
 
 ;;; 3D Cellular noise
 
@@ -112,7 +112,7 @@
     (* (min (.x d1) (.y d1)) 0.75)))
 
 (defun cellular ((point :vec3))
-  (cellular point (lambda ((x :vec3)) (umbra.hashing:fast32/3-per-corner x))))
+  (cellular point (lambda ((x :vec3)) (hash:fast32/3-per-corner x))))
 
 ;;; 3D Cellular noise with derivatives
 
@@ -167,7 +167,7 @@
 (defun cellular/derivs ((point :vec3))
   (cellular/derivs point
                    (lambda ((x :vec3))
-                     (umbra.hashing:fast32/3-per-corner x))))
+                     (hash:fast32/3-per-corner x))))
 
 ;;; 3D Cellular noise (fast version)
 
@@ -201,4 +201,4 @@
 (defun cellular-fast ((point :vec3))
   (cellular-fast point
                  (lambda ((x :vec3))
-                   (umbra.hashing:fast32/3-per-corner x))))
+                   (hash:fast32/3-per-corner x))))
