@@ -63,7 +63,7 @@
                       (width :float)
                       (height :float))
   (let ((n (normalize (vec2 height (/ width 2)))))
-    (max (+ (* (.x (abs p) (.x n)))
+    (max (+ (* (.x (abs p)) (.x n))
             (- (* (.y p) (.y n))
                (* height (.y n))))
          (- (.y p)))))
@@ -74,7 +74,7 @@
                          (width :float))
   (let* ((width (/ width 2))
          (radius (- radius width)))
-    (subtract (pie p angle)
+    (subtract (dist/pie p angle)
               (- (abs (dist/circle p radius))
                  width))))
 
