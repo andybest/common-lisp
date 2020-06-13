@@ -12,15 +12,14 @@
              (let* ((,fn (varjo:add-external-function
                           ',name ',in-args ',uniforms ',body))
                     (,spec (s::get-function-spec ,fn)))
-               (when (s::meta :track-dependencies-p)
-                 (let* ((,split-details
-                          (varjo:test-translate-function-split-details
-                           ',name ',in-args ',uniforms ',context ',body))
-                        (,deps (varjo:used-external-functions
-                                (first ,split-details))))
-                   (s::store-function-dependencies ,spec ,deps)
-                   (funcall (s::meta :modify-hook)
-                            (s::compute-outdated-programs ,spec))))
+               (let* ((,split-details
+                        (varjo:test-translate-function-split-details
+                         ',name ',in-args ',uniforms ',context ',body))
+                      (,deps (varjo:used-external-functions
+                              (first ,split-details))))
+                 (s::store-function-dependencies ,spec ,deps)
+                 (funcall (s::meta :modify-hook)
+                          (s::compute-outdated-programs ,spec)))
                ,fn))
            (export ',name))))))
 
