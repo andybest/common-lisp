@@ -36,5 +36,6 @@
    (:file "noise-simplex")
    (:file "noise-value")
    (:file "noise-misc")
+   (:file "noise-utils")
    (:file "sdf-2d")
    (:file "sprite")))
