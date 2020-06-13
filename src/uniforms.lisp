@@ -43,7 +43,8 @@
       (dolist (uniform uniforms)
         (destructuring-bind (id name type) uniform
           (setf (u:href (uniforms program) id)
-                (u:dict :name name
+                (u:dict #'eq
+                        :name name
                         :type type))))
       (u:do-hash-keys (k (uniforms program))
         (unless (find k uniforms :key #'car)

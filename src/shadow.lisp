@@ -1,6 +1,6 @@
 (in-package #:net.mfiano.lisp.shadow)
 
-(defvar *metadata* (u:dict))
+(defvar *metadata* (u:dict #'eq))
 
 (defun meta (key)
   (u:href *metadata* key))
@@ -9,8 +9,10 @@
   (setf (u:href *metadata* key) value))
 
 (defun reset-program-state ()
-  (setf (meta :programs) (u:dict)
-        (meta :block-bindings) (u:dict :uniform (u:dict) :buffer (u:dict))
+  (setf (meta :programs) (u:dict #'eq)
+        (meta :block-bindings) (u:dict #'eq
+                                       :uniform (u:dict #'eq)
+                                       :buffer (u:dict #'eq))
         (meta :block-aliases) (u:dict #'equalp)
         (meta :buffers) (u:dict #'equalp)))
 
@@ -50,6 +52,6 @@
       (meta :dep->fns) (u:dict #'equal)
       (meta :stage-fn->programs) (u:dict #'equal)
       (meta :modify-hook) (constantly nil)
-      (meta :shader-definitions) (u:dict))
+      (meta :shader-definitions) (u:dict #'eq))
 
 (reset-program-state)
