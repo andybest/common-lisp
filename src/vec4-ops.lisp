@@ -250,6 +250,17 @@
 (int:define-op scale ((in vec) (scalar single-float)) (:out vec)
   (scale! (vec) in scalar))
 
+(int:define-op invert! ((out vec) (in vec)) (:out vec)
+  (with-components ((o out) (v in))
+    (psetf ox (cl:/ vx)
+           oy (cl:/ vy)
+           oz (cl:/ vz)
+           ow (cl:/ vw))
+    out))
+
+(int:define-op invert ((in vec)) (:out vec)
+  (invert! (vec) in))
+
 (defmacro %dot (v1x v1y v1z v1w v2x v2y v2z v2w)
   `(cl:+ (cl:* ,v1x ,v2x) (cl:* ,v1y ,v2y) (cl:* ,v1z ,v2z) (cl:* ,v1w ,v2w)))
 

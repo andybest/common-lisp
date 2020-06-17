@@ -123,6 +123,8 @@
    #:/
    #:scale!
    #:scale
+   #:invert!
+   #:invert
    #:dot
    #:length-squared
    #:length
@@ -248,6 +250,8 @@
    #:/
    #:scale!
    #:scale
+   #:invert!
+   #:invert
    #:dot
    #:length-squared
    #:length
@@ -373,6 +377,8 @@
    #:/
    #:scale!
    #:scale
+   #:invert!
+   #:invert
    #:dot
    #:length-squared
    #:length
