@@ -3,6 +3,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:420 :430 :440 :450 :460)
   :vulkan t)
  (bool
@@ -10,6 +11,7 @@
   :opaque nil
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:110 :120 :130 :140 :150 :330 :400 :410 :420 :430 :440 :450 :460)
   :vulkan t)
  (bvec2
@@ -17,6 +19,7 @@
   :opaque nil
   :composite bool
   :aliases nil
+  :dimensions 2
   :versions (:110 :120 :130 :140 :150 :330 :400 :410 :420 :430 :440 :450 :460)
   :vulkan t)
  (bvec3
@@ -24,6 +27,7 @@
   :opaque nil
   :composite bool
   :aliases nil
+  :dimensions 3
   :versions (:110 :120 :130 :140 :150 :330 :400 :410 :420 :430 :440 :450 :460)
   :vulkan t)
  (bvec4
@@ -31,6 +35,7 @@
   :opaque nil
   :composite bool
   :aliases nil
+  :dimensions 4
   :versions (:110 :120 :130 :140 :150 :330 :400 :410 :420 :430 :440 :450 :460)
   :vulkan t)
  (dmat2
@@ -38,6 +43,7 @@
   :opaque nil
   :composite double
   :aliases (dmat2x2)
+  :dimensions (2 2)
   :versions (:400 :410 :420 :430 :440 :450 :460)
   :vulkan t)
  (dmat2x2
@@ -45,6 +51,7 @@
   :opaque nil
   :composite double
   :aliases (dmat2)
+  :dimensions (2 2)
   :versions (:400 :410 :420 :430 :440 :450 :460)
   :vulkan t)
  (dmat2x3
@@ -52,6 +59,7 @@
   :opaque nil
   :composite double
   :aliases nil
+  :dimensions (2 3)
   :versions (:400 :410 :420 :430 :440 :450 :460)
   :vulkan t)
  (dmat2x4
@@ -59,6 +67,7 @@
   :opaque nil
   :composite double
   :aliases nil
+  :dimensions (2 4)
   :versions (:400 :410 :420 :430 :440 :450 :460)
   :vulkan t)
  (dmat3
@@ -66,6 +75,7 @@
   :opaque nil
   :composite double
   :aliases (dmat3x3)
+  :dimensions (3 3)
   :versions (:400 :410 :420 :430 :440 :450 :460)
   :vulkan t)
  (dmat3x2
@@ -73,6 +83,7 @@
   :opaque nil
   :composite double
   :aliases nil
+  :dimensions (3 2)
   :versions (:400 :410 :420 :430 :440 :450 :460)
   :vulkan t)
  (dmat3x3
@@ -80,6 +91,7 @@
   :opaque nil
   :composite double
   :aliases (dmat3)
+  :dimensions (3 3)
   :versions (:400 :410 :420 :430 :440 :450 :460)
   :vulkan t)
  (dmat3x4
@@ -87,6 +99,7 @@
   :opaque nil
   :composite double
   :aliases nil
+  :dimensions (3 4)
   :versions (:400 :410 :420 :430 :440 :450 :460)
   :vulkan t)
  (dmat4
@@ -94,6 +107,7 @@
   :opaque nil
   :composite double
   :aliases (dmat4x4)
+  :dimensions (4 4)
   :versions (:400 :410 :420 :430 :440 :450 :460)
   :vulkan t)
  (dmat4x2
@@ -101,6 +115,7 @@
   :opaque nil
   :composite double
   :aliases nil
+  :dimensions (4 2)
   :versions (:400 :410 :420 :430 :440 :450 :460)
   :vulkan t)
  (dmat4x3
@@ -108,6 +123,7 @@
   :opaque nil
   :composite double
   :aliases nil
+  :dimensions (4 3)
   :versions (:400 :410 :420 :430 :440 :450 :460)
   :vulkan t)
  (dmat4x4
@@ -115,6 +131,7 @@
   :opaque nil
   :composite double
   :aliases (dmat4)
+  :dimensions (4 4)
   :versions (:400 :410 :420 :430 :440 :450 :460)
   :vulkan t)
  (double
@@ -122,6 +139,7 @@
   :opaque nil
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:400 :410 :420 :430 :440 :450 :460)
   :vulkan t)
  (dvec2
@@ -129,6 +147,7 @@
   :opaque nil
   :composite double
   :aliases nil
+  :dimensions 2
   :versions (:400 :410 :420 :430 :440 :450 :460)
   :vulkan t)
  (dvec3
@@ -136,6 +155,7 @@
   :opaque nil
   :composite double
   :aliases nil
+  :dimensions 3
   :versions (:400 :410 :420 :430 :440 :450 :460)
   :vulkan t)
  (dvec4
@@ -143,6 +163,7 @@
   :opaque nil
   :composite double
   :aliases nil
+  :dimensions 4
   :versions (:400 :410 :420 :430 :440 :450 :460)
   :vulkan t)
  (float
@@ -150,6 +171,7 @@
   :opaque nil
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:110 :120 :130 :140 :150 :330 :400 :410 :420 :430 :440 :450 :460)
   :vulkan t)
  (iimage-1d
@@ -157,6 +179,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:420 :430 :440 :450 :460)
   :vulkan t)
  (iimage-1d-array
@@ -164,6 +187,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:420 :430 :440 :450 :460)
   :vulkan t)
  (iimage-2d
@@ -171,6 +195,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:420 :430 :440 :450 :460)
   :vulkan t)
  (iimage-2d-array
@@ -178,6 +203,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:420 :430 :440 :450 :460)
   :vulkan t)
  (iimage-2d-ms
@@ -185,6 +211,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:420 :430 :440 :450 :460)
   :vulkan t)
  (iimage-2d-ms-array
@@ -192,6 +219,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:420 :430 :440 :450 :460)
   :vulkan t)
  (iimage-2d-rect
@@ -199,6 +227,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:420 :430 :440 :450 :460)
   :vulkan t)
  (iimage-3d
@@ -206,6 +235,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:420 :430 :440 :450 :460)
   :vulkan t)
  (iimage-buffer
@@ -213,6 +243,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:420 :430 :440 :450 :460)
   :vulkan t)
  (iimage-cube
@@ -220,6 +251,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:420 :430 :440 :450 :460)
   :vulkan t)
  (iimage-cube-array
@@ -227,6 +259,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:420 :430 :440 :450 :460)
   :vulkan t)
  (image-1d
@@ -234,6 +267,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:420 :430 :440 :450 :460)
   :vulkan t)
  (image-1d-array
@@ -241,6 +275,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:420 :430 :440 :450 :460)
   :vulkan t)
  (image-2d
@@ -248,6 +283,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:420 :430 :440 :450 :460)
   :vulkan t)
  (image-2d-array
@@ -255,6 +291,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:420 :430 :440 :450 :460)
   :vulkan t)
  (image-2d-ms
@@ -262,6 +299,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:420 :430 :440 :450 :460)
   :vulkan t)
  (image-2d-ms-array
@@ -269,6 +307,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:420 :430 :440 :450 :460)
   :vulkan t)
  (image-2d-rect
@@ -276,6 +315,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:420 :430 :440 :450 :460)
   :vulkan t)
  (image-3d
@@ -283,6 +323,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:420 :430 :440 :450 :460)
   :vulkan t)
  (image-buffer
@@ -290,6 +331,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:420 :430 :440 :450 :460)
   :vulkan t)
  (image-cube
@@ -297,6 +339,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:420 :430 :440 :450 :460)
   :vulkan t)
  (image-cube-array
@@ -304,6 +347,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:420 :430 :440 :450 :460)
   :vulkan t)
  (int
@@ -311,6 +355,7 @@
   :opaque nil
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:110 :120 :130 :140 :150 :330 :400 :410 :420 :430 :440 :450 :460)
   :vulkan t)
  (isampler-1d
@@ -318,6 +363,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:130 :140 :150 :330 :400 :410 :420 :430 :440 :450 :460)
   :vulkan t)
  (isampler-1d-array
@@ -325,6 +371,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:130 :140 :150 :330 :400 :410 :420 :430 :440 :450 :460)
   :vulkan t)
  (isampler-2d
@@ -332,6 +379,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:130 :140 :150 :330 :400 :410 :420 :430 :440 :450 :460)
   :vulkan t)
  (isampler-2d-array
@@ -339,6 +387,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:130 :140 :150 :330 :400 :410 :420 :430 :440 :450 :460)
   :vulkan t)
  (isampler-2d-ms
@@ -346,6 +395,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:150 :330 :400 :410 :420 :430 :440 :450 :460)
   :vulkan t)
  (isampler-2d-ms-array
@@ -353,6 +403,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:150 :330 :400 :410 :420 :430 :440 :450 :460)
   :vulkan t)
  (isampler-2d-rect
@@ -360,6 +411,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:140 :150 :330 :400 :410 :420 :430 :440 :450 :460)
   :vulkan t)
  (isampler-3d
@@ -367,6 +419,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:130 :140 :150 :330 :400 :410 :420 :430 :440 :450 :460)
   :vulkan t)
  (isampler-buffer
@@ -374,6 +427,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:140 :150 :330 :400 :410 :420 :430 :440 :450 :460)
   :vulkan t)
  (isampler-cube
@@ -381,6 +435,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:130 :140 :150 :330 :400 :410 :420 :430 :440 :450 :460)
   :vulkan t)
  (isampler-cube-array
@@ -388,6 +443,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:400 :410 :420 :430 :440 :450 :460)
   :vulkan t)
  (isubpass-input
@@ -395,6 +451,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:460)
   :vulkan only)
  (isubpass-input-ms
@@ -402,6 +459,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:460)
   :vulkan only)
  (itexture-1d
@@ -409,6 +467,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:460)
   :vulkan t)
  (itexture-1d-array
@@ -416,6 +475,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:460)
   :vulkan t)
  (itexture-2d
@@ -423,6 +483,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:460)
   :vulkan t)
  (itexture-2d-array
@@ -430,6 +491,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:460)
   :vulkan t)
  (itexture-2d-ms
@@ -437,6 +499,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:460)
   :vulkan t)
  (itexture-2d-ms-array
@@ -444,6 +507,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:460)
   :vulkan t)
  (itexture-2d-rect
@@ -451,6 +515,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:460)
   :vulkan t)
  (itexture-3d
@@ -458,6 +523,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:460)
   :vulkan t)
  (itexture-buffer
@@ -465,6 +531,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:460)
   :vulkan t)
  (itexture-cube
@@ -472,6 +539,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:460)
   :vulkan t)
  (itexture-cube-array
@@ -479,6 +547,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:460)
   :vulkan t)
  (ivec2
@@ -486,6 +555,7 @@
   :opaque nil
   :composite int
   :aliases nil
+  :dimensions 2
   :versions (:110 :120 :130 :140 :150 :330 :400 :410 :420 :430 :440 :450 :460)
   :vulkan t)
  (ivec3
@@ -493,6 +563,7 @@
   :opaque nil
   :composite int
   :aliases nil
+  :dimensions 3
   :versions (:110 :120 :130 :140 :150 :330 :400 :410 :420 :430 :440 :450 :460)
   :vulkan t)
  (ivec4
@@ -500,6 +571,7 @@
   :opaque nil
   :composite int
   :aliases nil
+  :dimensions 4
   :versions (:110 :120 :130 :140 :150 :330 :400 :410 :420 :430 :440 :450 :460)
   :vulkan t)
  (mat2
@@ -507,6 +579,7 @@
   :opaque nil
   :composite float
   :aliases (mat2x2)
+  :dimensions (2 2)
   :versions (:110 :120 :130 :140 :150 :330 :400 :410 :420 :430 :440 :450 :460)
   :vulkan t)
  (mat2x2
@@ -514,6 +587,7 @@
   :opaque nil
   :composite float
   :aliases (mat2)
+  :dimensions (2 2)
   :versions (:120 :130 :140 :150 :330 :400 :410 :420 :430 :440 :450 :460)
   :vulkan t)
  (mat2x3
@@ -521,6 +595,7 @@
   :opaque nil
   :composite float
   :aliases nil
+  :dimensions (2 3)
   :versions (:120 :130 :140 :150 :330 :400 :410 :420 :430 :440 :450 :460)
   :vulkan t)
  (mat2x4
@@ -528,6 +603,7 @@
   :opaque nil
   :composite float
   :aliases nil
+  :dimensions (2 4)
   :versions (:120 :130 :140 :150 :330 :400 :410 :420 :430 :440 :450 :460)
   :vulkan t)
  (mat3
@@ -535,6 +611,7 @@
   :opaque nil
   :composite float
   :aliases (mat3x3)
+  :dimensions (3 3)
   :versions (:110 :120 :130 :140 :150 :330 :400 :410 :420 :430 :440 :450 :460)
   :vulkan t)
  (mat3x2
@@ -542,6 +619,7 @@
   :opaque nil
   :composite float
   :aliases nil
+  :dimensions (3 2)
   :versions (:120 :130 :140 :150 :330 :400 :410 :420 :430 :440 :450 :460)
   :vulkan t)
  (mat3x3
@@ -549,6 +627,7 @@
   :opaque nil
   :composite float
   :aliases (mat3)
+  :dimensions (3 3)
   :versions (:120 :130 :140 :150 :330 :400 :410 :420 :430 :440 :450 :460)
   :vulkan t)
  (mat3x4
@@ -556,6 +635,7 @@
   :opaque nil
   :composite float
   :aliases nil
+  :dimensions (3 4)
   :versions (:110 :120 :130 :140 :150 :330 :400 :410 :420 :430 :440 :450 :460)
   :vulkan t)
  (mat4
@@ -563,6 +643,7 @@
   :opaque nil
   :composite float
   :aliases (mat4x4)
+  :dimensions (4 4)
   :versions (:120 :130 :140 :150 :330 :400 :410 :420 :430 :440 :450 :460)
   :vulkan t)
  (mat4x2
@@ -570,6 +651,7 @@
   :opaque nil
   :composite float
   :aliases nil
+  :dimensions (4 2)
   :versions (:120 :130 :140 :150 :330 :400 :410 :420 :430 :440 :450 :460)
   :vulkan t)
  (mat4x3
@@ -577,6 +659,7 @@
   :opaque nil
   :composite float
   :aliases nil
+  :dimensions (4 3)
   :versions (:120 :130 :140 :150 :330 :400 :410 :420 :430 :440 :450 :460)
   :vulkan t)
  (mat4x4
@@ -584,6 +667,7 @@
   :opaque nil
   :composite float
   :aliases (mat4)
+  :dimensions (4 4)
   :versions (:120 :130 :140 :150 :330 :400 :410 :420 :430 :440 :450 :460)
   :vulkan t)
  (sampler
@@ -591,6 +675,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:460)
   :vulkan t)
  (sampler-1d
@@ -598,6 +683,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:110 :120 :130 :140 :150 :330 :400 :410 :420 :430 :440 :450 :460)
   :vulkan t)
  (sampler-1d-array
@@ -605,6 +691,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:130 :140 :150 :330 :400 :410 :420 :430 :440 :450 :460)
   :vulkan t)
  (sampler-1d-array-shadow
@@ -612,6 +699,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:130 :140 :150 :330 :400 :410 :420 :430 :440 :450 :460)
   :vulkan t)
  (sampler-1d-shadow
@@ -619,6 +707,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:110 :120 :130 :140 :150 :330 :400 :410 :420 :430 :440 :450 :460)
   :vulkan t)
  (sampler-2d
@@ -626,6 +715,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:110 :120 :130 :140 :150 :330 :400 :410 :420 :430 :440 :450 :460)
   :vulkan t)
  (sampler-2d-array
@@ -633,6 +723,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:130 :140 :150 :330 :400 :410 :420 :430 :440 :450 :460)
   :vulkan t)
  (sampler-2d-array-shadow
@@ -640,6 +731,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:130 :140 :150 :330 :400 :410 :420 :430 :440 :450 :460)
   :vulkan t)
  (sampler-2d-ms
@@ -647,6 +739,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:150 :330 :400 :410 :420 :430 :440 :450 :460)
   :vulkan t)
  (sampler-2d-ms-array
@@ -654,6 +747,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:150 :330 :400 :410 :420 :430 :440 :450 :460)
   :vulkan t)
  (sampler-2d-rect
@@ -661,6 +755,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:140 :150 :330 :400 :410 :420 :430 :440 :450 :460)
   :vulkan t)
  (sampler-2d-rect-shadow
@@ -668,6 +763,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:140 :150 :330 :400 :410 :420 :430 :440 :450 :460)
   :vulkan t)
  (sampler-2d-shadow
@@ -675,6 +771,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:110 :120 :130 :140 :150 :330 :400 :410 :420 :430 :440 :450 :460)
   :vulkan t)
  (sampler-3d
@@ -682,6 +779,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:110 :120 :130 :140 :150 :330 :400 :410 :420 :430 :440 :450 :460)
   :vulkan t)
  (sampler-buffer
@@ -689,6 +787,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:140 :150 :330 :400 :410 :420 :430 :440 :450 :460)
   :vulkan t)
  (sampler-cube
@@ -696,6 +795,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:110 :120 :130 :140 :150 :330 :400 :410 :420 :430 :440 :450 :460)
   :vulkan t)
  (sampler-cube-array
@@ -703,6 +803,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:400 :410 :420 :430 :440 :450 :460)
   :vulkan t)
  (sampler-cube-array-shadow
@@ -710,6 +811,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:400 :410 :420 :430 :440 :450 :460)
   :vulkan t)
  (sampler-cube-shadow
@@ -717,6 +819,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:400 :410 :420 :430 :440 :450 :460)
   :vulkan t)
  (sampler-shadow
@@ -724,6 +827,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:460)
   :vulkan t)
  (subpass-input
@@ -731,6 +835,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:460)
   :vulkan only)
  (subpass-input-ms
@@ -738,6 +843,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:460)
   :vulkan only)
  (texture-1d
@@ -745,6 +851,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:460)
   :vulkan t)
  (texture-1d-array
@@ -752,6 +859,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:460)
   :vulkan t)
  (texture-2d
@@ -759,6 +867,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:460)
   :vulkan t)
  (texture-2d-array
@@ -766,6 +875,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:460)
   :vulkan t)
  (texture-2d-ms
@@ -773,6 +883,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:460)
   :vulkan t)
  (texture-2d-ms-array
@@ -780,6 +891,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:460)
   :vulkan t)
  (texture-2d-rect
@@ -787,6 +899,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:460)
   :vulkan t)
  (texture-3d
@@ -794,6 +907,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:460)
   :vulkan t)
  (texture-buffer
@@ -801,6 +915,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:460)
   :vulkan t)
  (texture-cube
@@ -808,6 +923,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:460)
   :vulkan t)
  (texture-cube-array
@@ -815,6 +931,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:460)
   :vulkan t)
  (uimage-1d
@@ -822,6 +939,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:420 :430 :440 :450 :460)
   :vulkan t)
  (uimage-1d-array
@@ -829,6 +947,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:420 :430 :440 :450 :460)
   :vulkan t)
  (uimage-2d
@@ -836,6 +955,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:420 :430 :440 :450 :460)
   :vulkan t)
  (uimage-2d-array
@@ -843,6 +963,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:420 :430 :440 :450 :460)
   :vulkan t)
  (uimage-2d-ms
@@ -850,6 +971,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:420 :430 :440 :450 :460)
   :vulkan t)
  (uimage-2d-ms-array
@@ -857,6 +979,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:420 :430 :440 :450 :460)
   :vulkan t)
  (uimage-2d-rect
@@ -864,6 +987,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:420 :430 :440 :450 :460)
   :vulkan t)
  (uimage-3d
@@ -871,6 +995,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:420 :430 :440 :450 :460)
   :vulkan t)
  (uimage-buffer
@@ -878,6 +1003,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:420 :430 :440 :450 :460)
   :vulkan t)
  (uimage-cube
@@ -885,6 +1011,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:420 :430 :440 :450 :460)
   :vulkan t)
  (uimage-cube-array
@@ -892,6 +1019,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:420 :430 :440 :450 :460)
   :vulkan t)
  (uint
@@ -899,6 +1027,7 @@
   :opaque nil
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:130 :140 :150 :330 :400 :410 :420 :430 :440 :450 :460)
   :vulkan t)
  (usampler-1d
@@ -906,6 +1035,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:130 :140 :150 :330 :400 :410 :420 :430 :440 :450 :460)
   :vulkan t)
  (usampler-1d-array
@@ -913,6 +1043,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:130 :140 :150 :330 :400 :410 :420 :430 :440 :450 :460)
   :vulkan t)
  (usampler-2d
@@ -920,6 +1051,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:130 :140 :150 :330 :400 :410 :420 :430 :440 :450 :460)
   :vulkan t)
  (usampler-2d-array
@@ -927,6 +1059,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:130 :140 :150 :330 :400 :410 :420 :430 :440 :450 :460)
   :vulkan t)
  (usampler-2d-ms
@@ -934,6 +1067,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:150 :330 :400 :410 :420 :430 :440 :450 :460)
   :vulkan t)
  (usampler-2d-ms-array
@@ -941,6 +1075,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:150 :330 :400 :410 :420 :430 :440 :450 :460)
   :vulkan t)
  (usampler-2d-rect
@@ -948,6 +1083,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:140 :150 :330 :400 :410 :420 :430 :440 :450 :460)
   :vulkan t)
  (usampler-3d
@@ -955,6 +1091,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:130 :140 :150 :330 :400 :410 :420 :430 :440 :450 :460)
   :vulkan t)
  (usampler-buffer
@@ -962,6 +1099,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:140 :150 :330 :400 :410 :420 :430 :440 :450 :460)
   :vulkan t)
  (usampler-cube
@@ -969,6 +1107,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:130 :140 :150 :330 :400 :410 :420 :430 :440 :450 :460)
   :vulkan t)
  (usampler-cube-array
@@ -976,6 +1115,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:400 :410 :420 :430 :440 :450 :460)
   :vulkan t)
  (usubpass-input
@@ -983,6 +1123,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:460)
   :vulkan only)
  (usubpass-input-ms
@@ -990,6 +1131,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:460)
   :vulkan only)
  (utexture-1d
@@ -997,6 +1139,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:460)
   :vulkan t)
  (utexture-1d-array
@@ -1004,6 +1147,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:460)
   :vulkan t)
  (utexture-2d
@@ -1011,6 +1155,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:460)
   :vulkan t)
  (utexture-2d-array
@@ -1018,6 +1163,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:460)
   :vulkan t)
  (utexture-2d-ms
@@ -1025,6 +1171,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:460)
   :vulkan t)
  (utexture-2d-ms-array
@@ -1032,6 +1179,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:460)
   :vulkan t)
  (utexture-2d-rect
@@ -1039,6 +1187,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:460)
   :vulkan t)
  (utexture-3d
@@ -1046,6 +1195,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:460)
   :vulkan t)
  (utexture-buffer
@@ -1053,6 +1203,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:460)
   :vulkan t)
  (utexture-cube
@@ -1060,6 +1211,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:460)
   :vulkan t)
  (utexture-cube-array
@@ -1067,6 +1219,7 @@
   :opaque t
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:460)
   :vulkan t)
  (uvec2
@@ -1074,6 +1227,7 @@
   :opaque nil
   :composite uint
   :aliases nil
+  :dimensions 2
   :versions (:130 :140 :150 :330 :400 :410 :420 :430 :440 :450 :460)
   :vulkan t)
  (uvec3
@@ -1081,6 +1235,7 @@
   :opaque nil
   :composite uint
   :aliases nil
+  :dimensions 3
   :versions (:130 :140 :150 :330 :400 :410 :420 :430 :440 :450 :460)
   :vulkan t)
  (uvec4
@@ -1088,6 +1243,7 @@
   :opaque nil
   :composite uint
   :aliases nil
+  :dimensions 4
   :versions (:130 :140 :150 :330 :400 :410 :420 :430 :440 :450 :460)
   :vulkan t)
  (vec2
@@ -1095,6 +1251,7 @@
   :opaque nil
   :composite float
   :aliases nil
+  :dimensions 2
   :versions (:110 :120 :130 :140 :150 :330 :400 :410 :420 :430 :440 :450 :460)
   :vulkan t)
  (vec3
@@ -1102,6 +1259,7 @@
   :opaque nil
   :composite float
   :aliases nil
+  :dimensions 3
   :versions (:110 :120 :130 :140 :150 :330 :400 :410 :420 :430 :440 :450 :460)
   :vulkan t)
  (vec4
@@ -1109,6 +1267,7 @@
   :opaque nil
   :composite float
   :aliases nil
+  :dimensions 4
   :versions (:110 :120 :130 :140 :150 :330 :400 :410 :420 :430 :440 :450 :460)
   :vulkan t)
  (void
@@ -1116,5 +1275,6 @@
   :opaque nil
   :composite nil
   :aliases nil
+  :dimensions 1
   :versions (:110 :120 :130 :140 :150 :330 :400 :410 :420 :430 :440 :450 :460)
   :vulkan t))
