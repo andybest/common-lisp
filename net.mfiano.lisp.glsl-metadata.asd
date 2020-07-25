@@ -6,8 +6,11 @@
   :source-control (:git "https://github.com/mfiano/glsl-metadata.git")
   :bug-tracker "https://github.com/mfiano/glsl-metadata/issues"
   :encoding :utf-8
-  :depends-on ()
+  :depends-on (#:net.mfiano.lisp.golden-utils
+               #:uiop)
   :pathname "src"
   :serial t
   :components
-  ((:file "package")))
+  ((:file "package")
+   (:file "spec")
+   (:file "test")))
