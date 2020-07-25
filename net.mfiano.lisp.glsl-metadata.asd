@@ -11,6 +11,4 @@
   :pathname "src"
   :serial t
   :components
-  ((:file "package")
-   (:file "spec")
-   (:file "test")))
+  ((:file "package")))
