@@ -30,11 +30,17 @@
   (set-modify-hook modify-hook)
   (build-shader-dictionary))
 
+(defun maybe-load-shaders (programs-list)
+  (dolist (program-name programs-list)
+    (unless (find-program program-name)
+      (funcall (u:href (meta :shader-definitions) program-name)))))
+
 (defun unload-shaders ()
   (set-modify-hook (constantly nil)))
 
 (defun recompile-shaders (programs-list)
   (when programs-list
+    (maybe-load-shaders programs-list)
     (translate-shader-programs programs-list)
     (build-shader-programs programs-list)
     (rebind-blocks programs-list)))
