@@ -20,24 +20,15 @@
                  (s::store-function-dependencies ,spec ,deps)
                  (funcall (s::meta :modify-hook)
                           (s::compute-outdated-programs ,spec)))
-               ,fn))
-           (export ',name))))))
+               ,fn)))))))
 
 (cl:defmacro defstruct (name &body slots)
   "Define a GPU structure."
-  `(progn
-     (varjo:define-vari-struct ,name () ,@slots)
-     (export ',name)
-     ,@(mapcar
-        (lambda (x)
-          `(export ',(cadr (member :accessor x))))
-        slots)))
+  `(varjo:define-vari-struct ,name () ,@slots))
 
 (cl:defmacro defmacro (name lambda-list &body body)
   "Define a GPU macro."
-  `(progn
-     (varjo:define-vari-macro ,name ,lambda-list ,@body)
-     (export ',name)))
+  `(varjo:define-vari-macro ,name ,lambda-list ,@body))
 
 (cl:defmacro define-shader (name (&key (version :430) (primitive :triangles))
                             &body body)
@@ -48,5 +39,4 @@ PRIMITIVE: The drawing primitive to use for the vertex stage."
   `(u:eval-always
      (setf (u:href (s::meta :shader-definitions) ',name)
            (lambda ()
-             (s::%make-shader-program ',name ,version ,primitive ',body)))
-     (export ',name)))
+             (s::%make-shader-program ',name ,version ,primitive ',body)))))
