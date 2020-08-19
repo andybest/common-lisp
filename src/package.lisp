@@ -175,8 +175,7 @@
 (defpackage #:net.mfiano.lisp.umbra.noise
   (:local-nicknames
    (#:hash #:net.mfiano.lisp.umbra.hashing)
-   (#:shape #:net.mfiano.lisp.umbra.shaping)
-   )
+   (#:shape #:net.mfiano.lisp.umbra.shaping))
   (:use
    #:net.mfiano.lisp.shadow.glsl
    #:net.mfiano.lisp.umbra.common)
@@ -209,15 +208,38 @@
    #:net.mfiano.lisp.shadow.glsl
    #:net.mfiano.lisp.umbra.common)
   (:export
+   #:difference
+   #:difference/smooth
+   #:dist/arc
    #:dist/box
    #:dist/circle
+   #:dist/cross
+   #:dist/egg
+   #:dist/hexagon
    #:dist/line
+   #:dist/parabola
+   #:dist/pentagon
    #:dist/pie
+   #:dist/rhombus
+   #:dist/rounded-x
+   #:dist/segment
    #:dist/semi-circle
+   #:dist/star
+   #:dist/star5
+   #:dist/star6
+   #:dist/trapezoid
    #:dist/triangle
+   #:dist/uneven-capsule
+   #:dist/vesica
+   #:intersect
+   #:intersect/smooth
    #:mask/fill
    #:mask/inner-border
-   #:mask/outer-border))
+   #:mask/outer-border
+   #:shadow
+   #:onion
+   #:union
+   #:union/smooth))
 
 (defpackage #:net.mfiano.lisp.umbra.sprite
   (:use
