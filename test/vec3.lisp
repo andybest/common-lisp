@@ -167,8 +167,8 @@
     (is v3:= (v3:negate v) r)))
 
 (define-test v3/angle
-    (let ((angle (v3:angle (v3:vec 0 1 0) (v3:vec 1 0 1))))
-      (true (<= (abs (- angle const:pi/2)) 1e-5)))
+  (let ((angle (v3:angle (v3:vec 0 1 0) (v3:vec 1 0 1))))
+    (true (<= (abs (- angle const:pi/2)) 1e-5)))
   (let ((angle (v3:angle (v3:vec 1 1 0) (v3:vec 1 0 1))))
     (true (<= (abs (- angle const:pi/3)) 1e-5)))
   (let ((angle (v3:angle (v3:vec 1 0 0) (v3:vec 1 1 0))))

@@ -52,7 +52,7 @@
           (translate-point line-point1 dir dist)))))
 
 (int:define-op line-point-distance ((line-point1 v3:vec) (line-point2 v3:vec)
-                                (point v3:vec))
+                                    (point v3:vec))
     (:out single-float)
   (let* ((dir (line-direction line-point1 line-point2))
          (intersect (line-plane-intersect line-point1 line-point2 point dir)))

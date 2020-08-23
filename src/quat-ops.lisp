@@ -93,7 +93,7 @@
          (cl:< (cl:abs (cl:- q1z q2z)) tolerance))))
 
 (int:define-op random! ((out quat)
-                    &key (min single-float 0f0) (max single-float 1f0))
+                        &key (min single-float 0f0) (max single-float 1f0))
     (:out quat)
   (with-components ((o out))
     (psetf ow (cl:+ min (cl:random (cl:- max min)))
@@ -220,7 +220,7 @@
   (inverse! (quat 1) in))
 
 (int:define-op rotate-euler! ((out quat) (in quat) (vec v3:vec)
-                          &key (space keyword :local))
+                              &key (space keyword :local))
     (:out quat :inline nil)
   (with-components ((o out) (q in))
     (v3:with-components ((v vec))
@@ -239,8 +239,8 @@
                         (q2 0f0 0f0 0f0 0f0))
           (ecase space
             (:local
-              (psetf q1w qw q1x qx q1y qy q1z qz
-                     q2w rw q2x rx q2y ry q2z rz))
+             (psetf q1w qw q1x qx q1y qy q1z qz
+                    q2w rw q2x rx q2y ry q2z rz))
             (:world
              (psetf q1w rw q1x rx q1y ry q1z rz
                     q2w qw q2x qx q2y qy q2z qz)))
@@ -252,11 +252,11 @@
   (rotate-euler! (quat 1) in vec :space space))
 
 (int:define-op rotate! ((out quat) (in1 quat) (in2 quat)
-                    &key (space keyword :local))
+                        &key (space keyword :local))
     (:out quat :inline nil)
   (ecase space
     (:local
-      (*! out in1 in2))
+     (*! out in1 in2))
     (:world
      (*! out in2 in1)))
   (normalize! out out))
@@ -510,7 +510,7 @@
   (from-axis-angle! (quat 1) axis angle))
 
 (int:define-op orient! ((out quat) (space keyword)
-                    &rest (axes/angles (or keyword v3:vec single-float)))
+                        &rest (axes/angles (or keyword v3:vec single-float)))
     (:out quat)
   (declare (ignorable space axes/angles))
   (with-components ((o out))
@@ -535,6 +535,6 @@
   out)
 
 (int:define-op orient ((space keyword)
-                   &rest (axes/angles (or keyword v3:vec single-float)))
+                       &rest (axes/angles (or keyword v3:vec single-float)))
     (:out quat)
   (apply #'orient! (quat 1) space axes/angles))

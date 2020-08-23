@@ -114,7 +114,7 @@
     (cl:= 0f0 vx vy vz)))
 
 (int:define-op random! ((out vec)
-                    &key (min single-float 0f0) (max single-float 1f0))
+                        &key (min single-float 0f0) (max single-float 1f0))
     (:out vec)
   (with-components ((o out))
     (psetf ox (cl:+ min (cl:random (cl:- max min)))
@@ -158,9 +158,9 @@
   (fract! (vec) in))
 
 (int:define-op clamp! ((out vec) (in vec)
-                   &key
-                   (min single-float most-negative-single-float)
-                   (max single-float most-positive-single-float))
+                       &key
+                       (min single-float most-negative-single-float)
+                       (max single-float most-positive-single-float))
     (:out vec)
   (with-components ((o out) (v in))
     (psetf ox (u:clamp vx min max)
@@ -170,9 +170,9 @@
   out)
 
 (int:define-op clamp ((in vec)
-                  &key
-                  (min single-float most-negative-single-float)
-                  (max single-float most-positive-single-float))
+                      &key
+                      (min single-float most-negative-single-float)
+                      (max single-float most-positive-single-float))
     (:out vec)
   (clamp! (vec) in :min min :max max))
 

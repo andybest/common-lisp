@@ -145,9 +145,9 @@
   (copy! (mat) in))
 
 (int:define-op clamp! ((out mat) (in mat)
-                   &key
-                   (min single-float most-negative-single-float)
-                   (max single-float most-positive-single-float))
+                       &key
+                       (min single-float most-negative-single-float)
+                       (max single-float most-positive-single-float))
     (:out mat)
   (with-components ((o out) (m in))
     (psetf o00 (u:clamp m00 min max)
@@ -169,9 +169,9 @@
   out)
 
 (int:define-op clamp ((in mat)
-                  &key
-                  (min single-float most-negative-single-float)
-                  (max single-float most-positive-single-float))
+                      &key
+                      (min single-float most-negative-single-float)
+                      (max single-float most-positive-single-float))
     (:out mat)
   (clamp! (mat) in :min min :max max))
 
@@ -722,10 +722,10 @@
   (set-view! (mat 1) eye target up))
 
 (int:define-op set-projection/orthographic! ((out mat) (left single-float)
-                                         (right single-float)
-                                         (bottom single-float)
-                                         (top single-float) (near single-float)
-                                         (far single-float))
+                                             (right single-float)
+                                             (bottom single-float)
+                                             (top single-float) (near single-float)
+                                             (far single-float))
     (:out mat :inline nil)
   (let ((right-left (cl:- right left))
         (top-bottom (cl:- top bottom))
@@ -740,16 +740,16 @@
     out))
 
 (int:define-op set-projection/orthographic ((left single-float)
-                                        (right single-float)
-                                        (bottom single-float)
-                                        (top single-float) (near single-float)
-                                        (far single-float))
+                                            (right single-float)
+                                            (bottom single-float)
+                                            (top single-float) (near single-float)
+                                            (far single-float))
     (:out mat)
   (set-projection/orthographic! (mat 1) left right bottom top near far))
 
 (int:define-op set-projection/perspective! ((out mat) (fov single-float)
-                                        (aspect single-float)
-                                        (near single-float) (far single-float))
+                                            (aspect single-float)
+                                            (near single-float) (far single-float))
     (:out mat)
   (let ((f (/ (tan (/ fov 2f0))))
         (z (cl:- near far)))

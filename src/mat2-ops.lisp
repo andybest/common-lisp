@@ -97,9 +97,9 @@
   (copy! (mat) in))
 
 (int:define-op clamp! ((out mat) (in mat)
-                   &key
-                   (min single-float most-negative-single-float)
-                   (max single-float most-positive-single-float))
+                       &key
+                       (min single-float most-negative-single-float)
+                       (max single-float most-positive-single-float))
     (:out mat)
   (with-components ((o out) (m in))
     (psetf o00 (u:clamp m00 min max)
@@ -109,9 +109,9 @@
   out)
 
 (int:define-op clamp ((in mat)
-                  &key
-                  (min single-float most-negative-single-float)
-                  (max single-float most-positive-single-float))
+                      &key
+                      (min single-float most-negative-single-float)
+                      (max single-float most-positive-single-float))
     (:out mat)
   (clamp! (mat) in :min min :max max))
 
@@ -204,7 +204,7 @@
   (rotation-axis-from-vec2! (copy in) vec axis))
 
 (int:define-op rotate! ((out mat) (in mat) (angle single-float)
-                    &key (space keyword :local))
+                        &key (space keyword :local))
     (:out mat :inline nil)
   (with-components ((m (mat 1)))
     (copy! out in)

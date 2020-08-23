@@ -98,9 +98,9 @@
   (fract! (vec) in))
 
 (int:define-op clamp! ((out vec) (in vec)
-                   &key
-                   (min single-float most-negative-single-float)
-                   (max single-float most-positive-single-float))
+                       &key
+                       (min single-float most-negative-single-float)
+                       (max single-float most-positive-single-float))
     (:out vec)
   (with-components ((o out) (v in))
     (psetf ox (u:clamp vx min max)
@@ -108,9 +108,9 @@
   out)
 
 (int:define-op clamp ((in vec)
-                  &key
-                  (min single-float most-negative-single-float)
-                  (max single-float most-positive-single-float))
+                      &key
+                      (min single-float most-negative-single-float)
+                      (max single-float most-positive-single-float))
     (:out vec)
   (clamp! (vec) in :min min :max max))
 
