@@ -16,6 +16,12 @@
         (meta :block-aliases) (u:dict #'equalp)
         (meta :buffers) (u:dict #'equalp)))
 
+(defun enable-dependency-tracking ()
+  (setf (meta :track-dependencies-p) t))
+
+(defun disable-dependency-tracking ()
+  (setf (meta :track-dependencies-p) nil))
+
 (defun store-source (program stage)
   (let ((source (varjo:glsl-code stage)))
     (setf (u:href (source program) (stage-type stage))
@@ -27,6 +33,7 @@
   (reset-program-state)
   (u:do-hash-values (shader-factory (meta :shader-definitions))
     (funcall shader-factory))
+  (enable-dependency-tracking)
   (set-modify-hook modify-hook)
   (build-shader-dictionary))
 
@@ -36,7 +43,8 @@
       (funcall (u:href (meta :shader-definitions) program-name)))))
 
 (defun unload-shaders ()
-  (set-modify-hook (constantly nil)))
+  (set-modify-hook (constantly nil))
+  (disable-dependency-tracking))
 
 (defun recompile-shaders (programs-list)
   (when programs-list
@@ -50,5 +58,10 @@
       (meta :stage-fn->programs) (u:dict #'equal)
       (meta :modify-hook) (constantly nil)
       (meta :shader-definitions) (u:dict #'eq))
+
+#+net.mfiano.lisp.shadow-track-dependencies-at-load
+(setf (meta :track-dependencies-p) t)
+#-net.mfiano.lisp.shadow-track-dependencies-at-load
+(setf (meta :track-dependencies-p) nil)
 
 (reset-program-state)

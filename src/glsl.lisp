@@ -10,16 +10,17 @@
            (varjo:with-stemcell-infer-hook
                #'s::lisp-symbol->glsl-type
              (let* ((,fn (varjo:add-external-function
-                          ',name ',in-args ',uniforms ',body))
-                    (,spec (s::get-function-spec ,fn)))
-               (let* ((,split-details
-                        (varjo:test-translate-function-split-details
-                         ',name ',in-args ',uniforms ',context ',body))
-                      (,deps (varjo:used-external-functions
-                              (first ,split-details))))
-                 (s::store-function-dependencies ,spec ,deps)
-                 (funcall (s::meta :modify-hook)
-                          (s::compute-outdated-programs ,spec)))
+                          ',name ',in-args ',uniforms ',body)))
+               (when (s::meta :track-dependencies-p)
+                 (let* ((,spec (s::get-function-spec ,fn))
+                        (,split-details
+                          (varjo:test-translate-function-split-details
+                           ',name ',in-args ',uniforms ',context ',body))
+                        (,deps (varjo:used-external-functions
+                                (first ,split-details))))
+                   (s::store-function-dependencies ,spec ,deps)
+                   (funcall (s::meta :modify-hook)
+                            (s::compute-outdated-programs ,spec))))
                ,fn)))))))
 
 (cl:defmacro defstruct (name &body slots)
