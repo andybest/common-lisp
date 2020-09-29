@@ -16,7 +16,9 @@
    #:pi)
   (:export
    #:+rad+
+   #:+rad/double+
    #:+deg+
+   #:+deg/double+
    #:2pi
    #:2pi/3
    #:2pi/12
@@ -64,6 +66,126 @@
    (#:int #:net.mfiano.lisp.origin.internal)
    (#:ss #:specialization-store)
    (#:u #:net.mfiano.lisp.golden-utils))
+  (:use #:cl)
+  (:shadow
+   #:=
+   #:+
+   #:-
+   #:*
+   #:/
+   #:random
+   #:length
+   #:round
+   #:abs
+   #:<
+   #:<=
+   #:>
+   #:>=
+   #:min
+   #:max
+   #:expt
+   #:sqrt
+   #:floor
+   #:ceiling
+   #:mod
+   #:sin
+   #:cos
+   #:tan
+   #:asin
+   #:acos
+   #:atan)
+  (:export
+   #:vec
+   #:x
+   #:y
+   #:with-components
+   #:with-elements
+   #:+zero+
+   #:zero!
+   #:zero-p
+   #:random!
+   #:random
+   #:copy!
+   #:copy
+   #:sign!
+   #:sign
+   #:fract!
+   #:fract
+   #:clamp!
+   #:clamp
+   #:=
+   #:~
+   #:+!
+   #:+
+   #:-!
+   #:-
+   #:*!
+   #:*
+   #:/!
+   #:/
+   #:scale!
+   #:scale
+   #:invert!
+   #:invert
+   #:dot
+   #:length-squared
+   #:length
+   #:distance-squared
+   #:distance
+   #:normalize!
+   #:normalize
+   #:round!
+   #:round
+   #:abs!
+   #:abs
+   #:negate!
+   #:negate
+   #:angle
+   #:direction=
+   #:lerp!
+   #:lerp
+   #:<
+   #:<=
+   #:>
+   #:>=
+   #:min!
+   #:min
+   #:max!
+   #:max
+   #:radians!
+   #:radians
+   #:degrees!
+   #:degrees
+   #:expt!
+   #:expt
+   #:sqrt!
+   #:sqrt
+   #:floor!
+   #:floor
+   #:ceiling!
+   #:ceiling
+   #:mod!
+   #:mod
+   #:sin!
+   #:sin
+   #:cos!
+   #:cos
+   #:tan!
+   #:tan
+   #:asin!
+   #:asin
+   #:acos!
+   #:acos
+   #:atan!
+   #:atan))
+
+(defpackage #:net.mfiano.lisp.origin.dvec2
+  (:local-nicknames
+   (#:const #:net.mfiano.lisp.origin.constants)
+   (#:int #:net.mfiano.lisp.origin.internal)
+   (#:ss #:specialization-store)
+   (#:u #:net.mfiano.lisp.golden-utils)
+   (#:v2 #:net.mfiano.lisp.origin.vec2))
   (:use #:cl)
   (:shadow
    #:=
@@ -306,7 +428,143 @@
    #:acos!
    #:acos
    #:atan!
-   #:atan))
+   #:atan
+   #:make-velocity!
+   #:make-velocity))
+
+(defpackage #:net.mfiano.lisp.origin.dvec3
+  (:local-nicknames
+   (#:const #:net.mfiano.lisp.origin.constants)
+   (#:dv2 #:net.mfiano.lisp.origin.dvec2)
+   (#:int #:net.mfiano.lisp.origin.internal)
+   (#:ss #:specialization-store)
+   (#:u #:net.mfiano.lisp.golden-utils)
+   (#:v3 #:net.mfiano.lisp.origin.vec3))
+  (:use #:cl)
+  (:shadow
+   #:=
+   #:+
+   #:-
+   #:*
+   #:/
+   #:random
+   #:length
+   #:round
+   #:abs
+   #:<
+   #:<=
+   #:>
+   #:>=
+   #:min
+   #:max
+   #:expt
+   #:sqrt
+   #:floor
+   #:ceiling
+   #:mod
+   #:sin
+   #:cos
+   #:tan
+   #:asin
+   #:acos
+   #:atan)
+  (:export
+   #:vec
+   #:x
+   #:y
+   #:z
+   #:with-components
+   #:with-elements
+   #:+zero+
+   #:+up+
+   #:+down+
+   #:+left+
+   #:+right+
+   #:+forward+
+   #:+back+
+   #:zero!
+   #:zero-p
+   #:random!
+   #:random
+   #:copy!
+   #:copy
+   #:sign!
+   #:sign
+   #:fract!
+   #:fract
+   #:clamp!
+   #:clamp
+   #:=
+   #:~
+   #:+!
+   #:+
+   #:-!
+   #:-
+   #:*!
+   #:*
+   #:/!
+   #:/
+   #:scale!
+   #:scale
+   #:invert!
+   #:invert
+   #:dot
+   #:length-squared
+   #:length
+   #:distance-squared
+   #:distance
+   #:normalize!
+   #:normalize
+   #:round!
+   #:round
+   #:abs!
+   #:abs
+   #:negate!
+   #:negate
+   #:cross!
+   #:cross
+   #:box
+   #:angle
+   #:direction=
+   #:parallel-p
+   #:lerp!
+   #:lerp
+   #:<
+   #:<=
+   #:>
+   #:>=
+   #:min!
+   #:min
+   #:max!
+   #:max
+   #:radians!
+   #:radians
+   #:degrees!
+   #:degrees
+   #:expt!
+   #:expt
+   #:sqrt!
+   #:sqrt
+   #:floor!
+   #:floor
+   #:ceiling!
+   #:ceiling
+   #:mod!
+   #:mod
+   #:sin!
+   #:sin
+   #:cos!
+   #:cos
+   #:tan!
+   #:tan
+   #:asin!
+   #:asin
+   #:acos!
+   #:acos
+   #:atan!
+   #:atan
+   #:make-velocity!
+   #:make-velocity))
 
 (defpackage #:net.mfiano.lisp.origin.vec4
   (:local-nicknames
@@ -316,6 +574,129 @@
    (#:u #:net.mfiano.lisp.golden-utils)
    (#:v2 #:net.mfiano.lisp.origin.vec2)
    (#:v3 #:net.mfiano.lisp.origin.vec3))
+  (:use #:cl)
+  (:shadow
+   #:=
+   #:+
+   #:-
+   #:*
+   #:/
+   #:random
+   #:length
+   #:round
+   #:abs
+   #:<
+   #:<=
+   #:>
+   #:>=
+   #:min
+   #:max
+   #:expt
+   #:sqrt
+   #:floor
+   #:ceiling
+   #:mod
+   #:sin
+   #:cos
+   #:tan
+   #:asin
+   #:acos
+   #:atan)
+  (:export
+   #:vec
+   #:x
+   #:y
+   #:z
+   #:w
+   #:with-components
+   #:with-elements
+   #:+zero+
+   #:zero!
+   #:zero-p
+   #:random!
+   #:random
+   #:copy!
+   #:copy
+   #:sign!
+   #:sign
+   #:fract!
+   #:fract
+   #:clamp!
+   #:clamp
+   #:=
+   #:~
+   #:+!
+   #:+
+   #:-!
+   #:-
+   #:*!
+   #:*
+   #:/!
+   #:/
+   #:scale!
+   #:scale
+   #:invert!
+   #:invert
+   #:dot
+   #:length-squared
+   #:length
+   #:distance-squared
+   #:distance
+   #:normalize!
+   #:normalize
+   #:round!
+   #:round
+   #:abs!
+   #:abs
+   #:negate!
+   #:negate
+   #:angle
+   #:lerp!
+   #:lerp
+   #:<
+   #:<=
+   #:>
+   #:>=
+   #:min!
+   #:min
+   #:max!
+   #:max
+   #:radians!
+   #:radians
+   #:degrees!
+   #:degrees
+   #:expt!
+   #:expt
+   #:sqrt!
+   #:sqrt
+   #:floor!
+   #:floor
+   #:ceiling!
+   #:ceiling
+   #:mod!
+   #:mod
+   #:sin!
+   #:sin
+   #:cos!
+   #:cos
+   #:tan!
+   #:tan
+   #:asin!
+   #:asin
+   #:acos!
+   #:acos
+   #:atan!
+   #:atan))
+
+(defpackage #:net.mfiano.lisp.origin.dvec4
+  (:local-nicknames
+   (#:const #:net.mfiano.lisp.origin.constants)
+   (#:dv2 #:net.mfiano.lisp.origin.dvec2)
+   (#:dv3 #:net.mfiano.lisp.origin.dvec3)
+   (#:int #:net.mfiano.lisp.origin.internal)
+   (#:ss #:specialization-store)
+   (#:u #:net.mfiano.lisp.golden-utils)
+   (#:v4 #:net.mfiano.lisp.origin.vec4))
   (:use #:cl)
   (:shadow
    #:=
@@ -497,6 +878,74 @@
    #:anti-diagonal!
    #:anti-diagonal))
 
+(defpackage #:net.mfiano.lisp.origin.dmat2
+  (:local-nicknames
+   (#:const #:net.mfiano.lisp.origin.constants)
+   (#:dv2 #:net.mfiano.lisp.origin.dvec2)
+   (#:int #:net.mfiano.lisp.origin.internal)
+   (#:m2 #:net.mfiano.lisp.origin.mat2)
+   (#:ss #:specialization-store)
+   (#:u #:net.mfiano.lisp.golden-utils))
+  (:use #:cl)
+  (:shadow
+   #:=
+   #:+
+   #:-
+   #:*
+   #:random
+   #:trace)
+  (:export
+   #:mat
+   #:with-components
+   #:with-elements
+   #:pretty-print
+   #:+zero+
+   #:+id+
+   #:zero!
+   #:zero-p
+   #:random
+   #:id!
+   #:id-p
+   #:=
+   #:~
+   #:copy!
+   #:copy
+   #:clamp!
+   #:clamp
+   #:+!
+   #:+
+   #:-!
+   #:-
+   #:*!
+   #:*
+   #:get-column!
+   #:get-column
+   #:set-column!
+   #:set-column
+   #:rotation-axis-to-vec2!
+   #:rotation-axis-to-vec2
+   #:rotation-axis-from-vec2!
+   #:rotation-axis-from-vec2
+   #:rotate!
+   #:rotate
+   #:get-scale!
+   #:get-scale
+   #:set-scale!
+   #:set-scale
+   #:scale!
+   #:scale
+   #:*v2!
+   #:*v2
+   #:transpose!
+   #:transpose
+   #:orthogonal-p
+   #:trace
+   #:diagonal-p
+   #:main-diagonal!
+   #:main-diagonal
+   #:anti-diagonal!
+   #:anti-diagonal))
+
 (defpackage #:net.mfiano.lisp.origin.mat3
   (:local-nicknames
    (#:const #:net.mfiano.lisp.origin.constants)
@@ -506,6 +955,89 @@
    (#:u #:net.mfiano.lisp.golden-utils)
    (#:v2 #:net.mfiano.lisp.origin.vec2)
    (#:v3 #:net.mfiano.lisp.origin.vec3))
+  (:use #:cl)
+  (:shadow
+   #:=
+   #:+
+   #:-
+   #:*
+   #:random
+   #:trace)
+  (:export
+   #:mat
+   #:with-components
+   #:with-elements
+   #:pretty-print
+   #:+zero+
+   #:+id+
+   #:zero!
+   #:zero-p
+   #:id!
+   #:id-p
+   #:=
+   #:~
+   #:random!
+   #:random
+   #:copy!
+   #:copy
+   #:clamp!
+   #:clamp
+   #:+!
+   #:+
+   #:-!
+   #:-
+   #:*!
+   #:*
+   #:get-column!
+   #:get-column
+   #:set-column!
+   #:set-column
+   #:get-translation!
+   #:get-translation
+   #:set-translation!
+   #:set-translation
+   #:translate!
+   #:translate
+   #:copy-rotation!
+   #:copy-rotation
+   #:rotation-to-mat2!
+   #:rotation-to-mat2
+   #:normalize-rotation!
+   #:normalize-rotation
+   #:rotation-axis-to-vec2!
+   #:rotation-axis-to-vec2
+   #:rotation-axis-from-vec2!
+   #:rotation-axis-from-vec2
+   #:rotate!
+   #:rotate
+   #:get-scale!
+   #:get-scale
+   #:set-scale!
+   #:set-scale
+   #:scale!
+   #:scale
+   #:*v3!
+   #:*v3
+   #:transpose!
+   #:transpose
+   #:orthogonal-p
+   #:trace
+   #:diagonal-p
+   #:main-diagonal!
+   #:main-diagonal
+   #:anti-diagonal!
+   #:anti-diagonal))
+
+(defpackage #:net.mfiano.lisp.origin.dmat3
+  (:local-nicknames
+   (#:const #:net.mfiano.lisp.origin.constants)
+   (#:int #:net.mfiano.lisp.origin.internal)
+   (#:dm2 #:net.mfiano.lisp.origin.dmat2)
+   (#:dv2 #:net.mfiano.lisp.origin.dvec2)
+   (#:dv3 #:net.mfiano.lisp.origin.dvec3)
+   (#:m3 #:net.mfiano.lisp.origin.mat3)
+   (#:ss #:specialization-store)
+   (#:u #:net.mfiano.lisp.golden-utils))
   (:use #:cl)
   (:shadow
    #:=
@@ -589,6 +1121,103 @@
    (#:u #:net.mfiano.lisp.golden-utils)
    (#:v3 #:net.mfiano.lisp.origin.vec3)
    (#:v4 #:net.mfiano.lisp.origin.vec4))
+  (:use #:cl)
+  (:shadow
+   #:=
+   #:+
+   #:-
+   #:*
+   #:random
+   #:trace)
+  (:export
+   #:mat
+   #:with-components
+   #:with-elements
+   #:pretty-print
+   #:+zero+
+   #:+id+
+   #:zero!
+   #:zero-p
+   #:id!
+   #:id-p
+   #:=
+   #:~
+   #:random!
+   #:random
+   #:copy!
+   #:copy
+   #:clamp!
+   #:clamp
+   #:+!
+   #:+
+   #:-!
+   #:-
+   #:*!
+   #:*
+   #:get-column!
+   #:get-column
+   #:set-column!
+   #:set-column
+   #:get-translation!
+   #:get-translation
+   #:set-translation!
+   #:set-translation
+   #:translate!
+   #:translate
+   #:copy-rotation!
+   #:copy-rotation
+   #:rotation-to-mat3!
+   #:rotation-to-mat3
+   #:normalize-rotation!
+   #:normalize-rotation
+   #:rotation-axis-to-vec3!
+   #:rotation-axis-to-vec3
+   #:rotation-axis-from-vec3!
+   #:rotation-axis-from-vec3
+   #:rotate!
+   #:rotate
+   #:get-scale!
+   #:get-scale
+   #:set-scale!
+   #:set-scale
+   #:scale!
+   #:scale
+   #:*v4!
+   #:*v4
+   #:transpose!
+   #:transpose
+   #:orthogonal-p
+   #:orthonormalize!
+   #:orthonormalize
+   #:trace
+   #:diagonal-p
+   #:main-diagonal!
+   #:main-diagonal
+   #:anti-diagonal!
+   #:anti-diagonal
+   #:determinant
+   #:invert-orthogonal!
+   #:invert-orthogonal
+   #:invert!
+   #:invert
+   #:set-view!
+   #:set-view
+   #:set-projection/orthographic!
+   #:set-projection/orthographic
+   #:set-projection/perspective!
+   #:set-projection/perspective))
+
+(defpackage #:net.mfiano.lisp.origin.dmat4
+  (:local-nicknames
+   (#:const #:net.mfiano.lisp.origin.constants)
+   (#:int #:net.mfiano.lisp.origin.internal)
+   (#:dm2 #:net.mfiano.lisp.origin.dmat2)
+   (#:dm3 #:net.mfiano.lisp.origin.dmat3)
+   (#:dv3 #:net.mfiano.lisp.origin.dvec3)
+   (#:dv4 #:net.mfiano.lisp.origin.dvec4)
+   (#:m4 #:net.mfiano.lisp.origin.mat4)
+   (#:ss #:specialization-store)
+   (#:u #:net.mfiano.lisp.golden-utils))
   (:use #:cl)
   (:shadow
    #:=
@@ -761,7 +1390,100 @@
    #:from-axis-angle!
    #:from-axis-angle
    #:orient!
-   #:orient))
+   #:orient
+   #:from-velocity!
+   #:from-velocity))
+
+(defpackage #:net.mfiano.lisp.origin.dquat
+  (:local-nicknames
+   (#:const #:net.mfiano.lisp.origin.constants)
+   (#:int #:net.mfiano.lisp.origin.internal)
+   (#:dm3 #:net.mfiano.lisp.origin.dmat3)
+   (#:dm4 #:net.mfiano.lisp.origin.dmat4)
+   (#:dv3 #:net.mfiano.lisp.origin.dvec3)
+   (#:dv4 #:net.mfiano.lisp.origin.dvec4)
+   (#:q #:net.mfiano.lisp.origin.quat)
+   (#:ss #:specialization-store)
+   (#:u #:net.mfiano.lisp.golden-utils))
+  (:use #:cl)
+  (:shadow
+   #:=
+   #:+
+   #:-
+   #:*
+   #:conjugate
+   #:length
+   #:random)
+  (:export
+   #:quat
+   #:with-components
+   #:with-elements
+   #:w
+   #:x
+   #:y
+   #:z
+   #:+zero+
+   #:+id+
+   #:id!
+   #:id-p
+   #:zero!
+   #:=
+   #:~
+   #:random!
+   #:random
+   #:copy!
+   #:copy
+   #:+!
+   #:+
+   #:-!
+   #:-
+   #:*!
+   #:*
+   #:scale!
+   #:scale
+   #:conjugate!
+   #:conjugate
+   #:cross!
+   #:cross
+   #:length-squared
+   #:length
+   #:normalize!
+   #:normalize
+   #:negate!
+   #:negate
+   #:dot
+   #:inverse!
+   #:inverse
+   #:rotate-euler!
+   #:rotate-euler
+   #:rotate!
+   #:rotate
+   #:to-euler!
+   #:to-euler
+   #:to-vec3!
+   #:to-vec3
+   #:to-vec4!
+   #:to-vec4
+   #:from-vec3!
+   #:from-vec3
+   #:from-vec4!
+   #:from-vec4
+   #:to-mat3!
+   #:to-mat3
+   #:to-mat4!
+   #:to-mat4
+   #:from-mat3!
+   #:from-mat3
+   #:from-mat4!
+   #:from-mat4
+   #:slerp!
+   #:slerp
+   #:from-axis-angle!
+   #:from-axis-angle
+   #:orient!
+   #:orient
+   #:from-velocity!
+   #:from-velocity))
 
 (defpackage #:net.mfiano.lisp.origin
   (:local-nicknames
@@ -776,7 +1498,9 @@
   (:shadowing-import-from
    #:net.mfiano.lisp.origin.constants
    #:+rad+
+   #:+rad/double+
    #:+deg+
+   #:+deg/double+
    #:2pi
    #:2pi/3
    #:2pi/12
@@ -904,10 +1628,4 @@
    #:bounce-in
    #:bounce-in-out
    #:hermite-curve
-   #:quintic-curve)
-  ;; physics
-  (:export
-   #:make-velocity!
-   #:make-velocity
-   #:velocity->rotation!
-   #:velocity->rotation))
+   #:quintic-curve))

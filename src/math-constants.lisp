@@ -82,4 +82,8 @@
 
 (u:define-constant +rad+ (float (/ 180 cl:pi) 1f0))
 
+(u:define-constant +rad/double+ (/ 180 cl:pi))
+
 (u:define-constant +deg+ (float (/ cl:pi 180) 1f0))
+
+(u:define-constant +deg/double+ (/ cl:pi 180))
