@@ -17,16 +17,16 @@
 
 (ss:defspecialization (mat :inline t) ((mat dm2:mat)) mat
   (dm2:with-components ((m mat))
-    (%mat m00 m01 0d0 m10 m11 0d0 0d0 0d0 1d0)))
+    (%mat m00 m10 0d0 m01 m11 0d0 0d0 0d0 1d0)))
 
 (ss:defspecialization (mat :inline t) ((mat mat)) mat
   (with-components ((m mat))
-    (%mat m00 m01 m02 m10 m11 m12 m20 m21 m22)))
+    (%mat m00 m10 m20 m01 m11 m21 m02 m12 m22)))
 
 (ss:defspecialization (mat :inline t) ((mat net.mfiano.lisp.origin.dmat4:mat))
     mat
   (net.mfiano.lisp.origin.dmat4:with-components ((m mat))
-    (%mat m00 m01 m02 m10 m11 m12 m20 m21 m22)))
+    (%mat m00 m10 m20 m01 m11 m21 m02 m12 m22)))
 
 (ss:defspecialization (mat :inline t) ((a dv3:vec) (b dv3:vec) (c dv3:vec)) mat
   (dv3:with-components ((a a) (b b) (c c))
@@ -43,9 +43,9 @@
 (ss:defspecialization (mat :inline t) ((mat m3:mat))
     mat
   (m3:with-components ((m mat))
-    (%mat (float m00 1d0) (float m01 1d0) (float m02 1d0)
-          (float m10 1d0) (float m11 1d0) (float m12 1d0)
-          (float m20 1d0) (float m21 1d0) (float m22 1d0))))
+    (%mat (float m00 1d0) (float m10 1d0) (float m20 1d0)
+          (float m01 1d0) (float m11 1d0) (float m21 1d0)
+          (float m02 1d0) (float m12 1d0) (float m22 1d0))))
 
 ;;; constants
 

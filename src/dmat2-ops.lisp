@@ -34,10 +34,9 @@
 (ss:defspecialization (mat :inline t) ((a real) (b real) (c real) (d real)) mat
   (%mat (float a 1d0) (float b 1d0) (float c 1d0) (float d 1d0)))
 
-(ss:defspecialization (mat :inline t) ((mat m2:mat))
-    mat
+(ss:defspecialization (mat :inline t) ((mat m2:mat)) mat
   (m2:with-components ((m mat))
-    (%mat (float m00 1d0) (float m01 1d0) (float m10 1d0) (float m11 1d0))))
+    (%mat (float m00 1d0) (float m10 1d0) (float m01 1d0) (float m11 1d0))))
 
 ;;; constants
 

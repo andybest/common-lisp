@@ -15,7 +15,7 @@
 
 (ss:defspecialization (mat :inline t) ((mat mat)) mat
   (with-components ((m mat))
-    (%mat m00 m01 m10 m11)))
+    (%mat m00 m10 m01 m11)))
 
 (ss:defspecialization (mat :inline t) ((mat net.mfiano.lisp.origin.mat3:mat))
     mat
@@ -37,7 +37,7 @@
 (ss:defspecialization (mat :inline t) ((mat net.mfiano.lisp.origin.dmat2:mat))
     mat
   (net.mfiano.lisp.origin.dmat2:with-components ((m mat))
-    (%mat (float m00 1f0) (float m01 1f0) (float m10 1f0) (float m11 1f0))))
+    (%mat (float m00 1f0) (float m10 1f0) (float m01 1f0) (float m11 1f0))))
 
 ;;; constants
 
