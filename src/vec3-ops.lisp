@@ -219,9 +219,9 @@
 
 (int:define-op invert! ((out vec) (in vec)) (:out vec)
   (with-components ((o out) (v in))
-    (psetf ox (cl:/ vx)
-           oy (cl:/ vy)
-           oz (cl:/ vz))
+    (psetf ox (if (zerop vx) 0f0 (cl:/ vx))
+           oy (if (zerop vy) 0f0 (cl:/ vy))
+           oz (if (zerop vz) 0f0 (cl:/ vz)))
     out))
 
 (int:define-op invert ((in vec)) (:out vec)
