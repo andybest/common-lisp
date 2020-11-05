@@ -2,7 +2,13 @@
 
 (defpackage #:net.mfiano.lisp.shadow
   (:local-nicknames
-   (#:u #:net.mfiano.lisp.golden-utils))
+   (#:u #:net.mfiano.lisp.golden-utils)
+   (#:m2 #:net.mfiano.lisp.origin.mat2)
+   (#:m3 #:net.mfiano.lisp.origin.mat3)
+   (#:m4 #:net.mfiano.lisp.origin.mat4)
+   (#:v2 #:net.mfiano.lisp.origin.vec2)
+   (#:v3 #:net.mfiano.lisp.origin.vec3)
+   (#:v4 #:net.mfiano.lisp.origin.vec4))
   (:use #:cl)
   (:export
    #:bind-block

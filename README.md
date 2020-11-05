@@ -213,7 +213,7 @@ program to do your rendering. This is done by issuing calls to the various
 
 ```lisp
 (with-shader 'example-program
-  (uniform-mat4 :mvp *matrix*))
+  (uniform-mat4 program :mvp *matrix*))
 ```
 
 Here, we specify that we want to use `EXAMPLE-PROGRAM` during rendering,
@@ -221,8 +221,8 @@ modifying a single 4x4 matrix uniform value. Here `*matrix*` refers to an
 imaginary matrix that you should have created for the object you wish to render.
 There are quite a few `UNIFORM-*` functions, and the full list can be viewed in
 the [package's exported symbols](src/package.lisp). Note that each uniform
-function takes the name of a uniform variable as a keyword symbol, followed by
-the value to modify it with.
+function takes a program object, the name of a uniform variable as a keyword
+symbol, followed by the value to modify it with.
 
 ### UBO/SSBO Support
 

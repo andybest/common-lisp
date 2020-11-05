@@ -57,8 +57,9 @@
       (setf (u:href v :location) (gl:get-uniform-location id (u:href v :name))))
     (gl:use-program 0)))
 
-(defun get-uniform-location (program-name uniform)
-  (u:href (uniforms (find-program program-name)) uniform :location))
+(u:defun-inline get-uniform-location (program uniform)
+  (declare (optimize speed))
+  (u:href (uniforms program) uniform :location))
 
 (defmacro %uniform-array (location func component-count element-type sequence)
   (u:with-gensyms (count sv)
@@ -76,95 +77,111 @@
                       ,sequence)))
          (,func ,location ,count (static-vectors:static-vector-pointer ,sv))))))
 
-(defun uniform-bool (program-name uniform value)
-  (let ((location (get-uniform-location program-name uniform)))
+(defun uniform-bool (program uniform value)
+  (declare (optimize speed)
+           (fixnum value))
+  (let ((location (get-uniform-location program uniform)))
     (%gl:uniform-1i location (if (or (null value)
                                      (and (realp value)
                                           (zerop value)))
                                  0
                                  1))))
 
-(defun uniform-bool-array (program-name uniform value)
-  (let ((location (get-uniform-location program-name uniform)))
-    (%uniform-array location %gl:uniform-1iv 1 (unsigned-byte 32) value)))
+(defun uniform-bool-array (program uniform value)
+  (let ((location (get-uniform-location program uniform)))
+    (%uniform-array location %gl:uniform-1iv 1 u:ub32 value)))
 
-(defun uniform-int (program-name uniform value)
+(defun uniform-int (program uniform value)
   "Specify an integer as the VALUE for the uniform variable, UNIFORM."
-  (let ((location (get-uniform-location program-name uniform)))
+  (declare (optimize speed))
+  (let ((location (get-uniform-location program uniform)))
     (%gl:uniform-1i location value)))
 
-(defun uniform-int-array (program-name uniform value)
+(defun uniform-int-array (program uniform value)
   "Specify an array of integers as the VALUE for the uniform variable, UNIFORM."
-  (let ((location (get-uniform-location program-name uniform)))
-    (%uniform-array location %gl:uniform-1iv 1 (unsigned-byte 32) value)))
+  (let ((location (get-uniform-location program uniform)))
+    (%uniform-array location %gl:uniform-1iv 1 u:ub32 value)))
 
-(defun uniform-float (program-name uniform value)
+(defun uniform-float (program uniform value)
   "Specify a float as the VALUE for the uniform variable, UNIFORM."
-  (let ((location (get-uniform-location program-name uniform)))
+  (declare (optimize speed))
+  (let ((location (get-uniform-location program uniform)))
     (%gl:uniform-1f location value)))
 
-(defun uniform-float-array (program-name uniform value)
+(defun uniform-float-array (program uniform value)
   "Specify an array of floats as the VALUE for the uniform variable, UNIFORM."
-  (let ((location (get-uniform-location program-name uniform)))
+  (let ((location (get-uniform-location program uniform)))
     (%uniform-array location %gl:uniform-1fv 1 single-float value)))
 
-(defun uniform-vec2 (program-name uniform value)
+(defun uniform-vec2 (program uniform value)
   "Specify a vec2 as the VALUE for the uniform variable, UNIFORM."
-  (let ((location (get-uniform-location program-name uniform)))
+  (declare (optimize speed)
+           (v2:vec value))
+  (let ((location (get-uniform-location program uniform)))
     (%gl:uniform-2f location (aref value 0) (aref value 1))))
 
-(defun uniform-vec2-array (program-name uniform value)
+(defun uniform-vec2-array (program uniform value)
   "Specify an array of vec2's as the VALUE for the uniform variable, UNIFORM."
-  (let ((location (get-uniform-location program-name uniform)))
+  (let ((location (get-uniform-location program uniform)))
     (%uniform-array location %gl:uniform-2fv 2 single-float value)))
 
-(defun uniform-vec3 (program-name uniform value)
+(defun uniform-vec3 (program uniform value)
   "Specify a vec3 as the VALUE for the uniform variable, UNIFORM."
-  (let ((location (get-uniform-location program-name uniform)))
+  (declare (optimize speed)
+           (v3:vec value))
+  (let ((location (get-uniform-location program uniform)))
     (%gl:uniform-3f location (aref value 0) (aref value 1) (aref value 2))))
 
-(defun uniform-vec3-array (program-name uniform value)
+(defun uniform-vec3-array (program uniform value)
   "Specify an array of vec3's as the VALUE for the uniform variable, UNIFORM."
-  (let ((location (get-uniform-location program-name uniform)))
+  (let ((location (get-uniform-location program uniform)))
     (%uniform-array location %gl:uniform-3fv 3 single-float value)))
 
-(defun uniform-vec4 (program-name uniform value)
+(defun uniform-vec4 (program uniform value)
   "Specify a vec4 as the VALUE for the uniform variable, UNIFORM."
-  (let ((location (get-uniform-location program-name uniform)))
+  (declare (optimize speed)
+           (v4:vec value))
+  (let ((location (get-uniform-location program uniform)))
     (%gl:uniform-4f
      location (aref value 0) (aref value 1) (aref value 2) (aref value 3))))
 
-(defun uniform-vec4-array (program-name uniform value)
+(defun uniform-vec4-array (program uniform value)
   "Specify an array of vec4's as the VALUE for the uniform variable, UNIFORM."
-  (let ((location (get-uniform-location program-name uniform)))
+  (let ((location (get-uniform-location program uniform)))
     (%uniform-array location %gl:uniform-4fv 4 single-float value)))
 
-(defun uniform-mat2 (program-name uniform value)
+(defun uniform-mat2 (program uniform value)
   "Specify a mat2 as the VALUE for the uniform variable, UNIFORM."
-  (let ((location (get-uniform-location program-name uniform)))
+  (declare (optimize speed)
+           (m2:mat value))
+  (let ((location (get-uniform-location program uniform)))
     (gl:uniform-matrix-2fv location value nil)))
 
-(defun uniform-mat2-array (program-name uniform value)
+(defun uniform-mat2-array (program uniform value)
   "Specify an array of mat2's as the VALUE for the uniform variable, UNIFORM."
-  (let ((location (get-uniform-location program-name uniform)))
+  (let ((location (get-uniform-location program uniform)))
     (gl:uniform-matrix location 2 value nil)))
 
-(defun uniform-mat3 (program-name uniform value)
+(defun uniform-mat3 (program uniform value)
   "Specify a mat3 as the VALUE for the uniform variable, UNIFORM."
-  (let ((location (get-uniform-location program-name uniform)))
+  (declare (optimize speed)
+           (m3:mat value))
+  (let ((location (get-uniform-location program uniform)))
     (gl:uniform-matrix-3fv location value nil)))
 
-(defun uniform-mat3-array (program-name uniform value)
+(defun uniform-mat3-array (program uniform value)
   "Specify an array of mat3's as the VALUE for the uniform variable, UNIFORM."
-  (let ((location (get-uniform-location program-name uniform)))
+  (let ((location (get-uniform-location program uniform)))
     (gl:uniform-matrix location 3 value nil)))
 
-(defun uniform-mat4 (program-name uniform value)
+(defun uniform-mat4 (program uniform value)
   "Specify a mat4 as the VALUE for the uniform variable, UNIFORM."
-  (let ((location (get-uniform-location program-name uniform)))
+  (declare (optimize speed)
+           (m4:mat value))
+  (let ((location (get-uniform-location program uniform)))
     (gl:uniform-matrix-4fv location value nil)))
 
-(defun uniform-mat4-array (program-name uniform value)
+(defun uniform-mat4-array (program uniform value)
   "Specify an array of mat4's as the VALUE for the uniform variable, UNIFORM."
-  (let ((location (get-uniform-location program-name uniform)))
+  (let ((location (get-uniform-location program uniform)))
     (gl:uniform-matrix location 4 value nil)))
