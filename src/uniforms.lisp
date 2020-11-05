@@ -79,7 +79,7 @@
 
 (defun uniform-bool (program uniform value)
   (declare (optimize speed)
-           (fixnum value))
+           ((or boolean fixnum) value))
   (let ((location (get-uniform-location program uniform)))
     (%gl:uniform-1i location (if (or (null value)
                                      (and (realp value)
