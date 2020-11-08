@@ -96,6 +96,7 @@
    #:atan)
   (:export
    #:vec
+   #:vec!
    #:x
    #:y
    #:with-components
@@ -216,6 +217,7 @@
    #:atan)
   (:export
    #:vec
+   #:vec!
    #:x
    #:y
    #:with-components
@@ -336,6 +338,7 @@
    #:atan)
   (:export
    #:vec
+   #:vec!
    #:x
    #:y
    #:z
@@ -470,6 +473,7 @@
    #:atan)
   (:export
    #:vec
+   #:vec!
    #:x
    #:y
    #:z
@@ -604,6 +608,7 @@
    #:atan)
   (:export
    #:vec
+   #:vec!
    #:x
    #:y
    #:z
@@ -727,6 +732,7 @@
    #:atan)
   (:export
    #:vec
+   #:vec!
    #:x
    #:y
    #:z
@@ -828,6 +834,7 @@
    #:trace)
   (:export
    #:mat
+   #:mat!
    #:with-components
    #:with-elements
    #:pretty-print
@@ -896,6 +903,7 @@
    #:trace)
   (:export
    #:mat
+   #:mat!
    #:with-components
    #:with-elements
    #:pretty-print
@@ -965,6 +973,7 @@
    #:trace)
   (:export
    #:mat
+   #:mat!
    #:with-components
    #:with-elements
    #:pretty-print
@@ -1048,6 +1057,7 @@
    #:trace)
   (:export
    #:mat
+   #:mat!
    #:with-components
    #:with-elements
    #:pretty-print
@@ -1131,6 +1141,7 @@
    #:trace)
   (:export
    #:mat
+   #:mat!
    #:with-components
    #:with-elements
    #:pretty-print
@@ -1228,6 +1239,7 @@
    #:trace)
   (:export
    #:mat
+   #:mat!
    #:with-components
    #:with-elements
    #:pretty-print
@@ -1325,6 +1337,7 @@
    #:random)
   (:export
    #:quat
+   #:quat!
    #:with-components
    #:with-elements
    #:w
@@ -1416,6 +1429,7 @@
    #:random)
   (:export
    #:quat
+   #:quat!
    #:with-components
    #:with-elements
    #:w
