@@ -6,38 +6,100 @@
   (make-array 4 :element-type 'single-float :initial-contents args))
 
 (ss:defstore mat (&rest args))
+(ss:defstore mat! (&rest args))
 
 (ss:defspecialization (mat :inline t) () mat
   (%mat 0f0 0f0 0f0 0f0))
 
+(ss:defspecialization (mat! :inline t) ((out mat)) mat
+  (with-components ((o out))
+    (psetf o00 0f0 o01 0f0 o10 0f0 o11 0f0))
+  out)
+
 (ss:defspecialization (mat :inline t) ((x real)) mat
   (%mat (float x 1f0) 0f0 0f0 (float x 1f0)))
+
+(ss:defspecialization (mat! :inline t) ((out mat) (x real)) mat
+  (with-components ((o out))
+    (psetf o00 (float x 1f0)
+           o01 0f0
+           o10 0f0
+           o11 (float x 1f0)))
+  out)
 
 (ss:defspecialization (mat :inline t) ((mat mat)) mat
   (with-components ((m mat))
     (%mat m00 m10 m01 m11)))
+
+(ss:defspecialization (mat! :inline t) ((out mat) (mat mat)) mat
+  (with-components ((o out) (m mat))
+    (psetf o00 m00 o10 m10 o01 m01 o11 m11))
+  out)
 
 (ss:defspecialization (mat :inline t) ((mat net.mfiano.lisp.origin.mat3:mat))
     mat
   (net.mfiano.lisp.origin.mat3:with-components ((m mat))
     (%mat m00 m01 m10 m11)))
 
+(ss:defspecialization (mat! :inline t) ((out mat)
+                                        (mat net.mfiano.lisp.origin.mat3:mat))
+    mat
+  (with-components ((o out))
+    (net.mfiano.lisp.origin.mat3:with-components ((m mat))
+      (psetf o00 m00 o01 m01 o10 m10 o11 m11)))
+  out)
+
 (ss:defspecialization (mat :inline t) ((mat net.mfiano.lisp.origin.mat4:mat))
     mat
   (net.mfiano.lisp.origin.mat4:with-components ((m mat))
     (%mat m00 m01 m10 m11)))
 
+(ss:defspecialization (mat! :inline t) ((out mat)
+                                        (mat net.mfiano.lisp.origin.mat4:mat))
+    mat
+  (with-components ((o out))
+    (net.mfiano.lisp.origin.mat4:with-components ((m mat))
+      (psetf o00 m00 o01 m01 o10 m10 o11 m11)))
+  out)
+
 (ss:defspecialization (mat :inline t) ((a v2:vec) (b v2:vec)) mat
   (v2:with-components ((a a) (b b))
     (%mat ax ay bx by)))
 
+(ss:defspecialization (mat! :inline t) ((out mat) (a v2:vec) (b v2:vec)) mat
+  (with-components ((o out))
+    (v2:with-components ((a a) (b b))
+      (psetf o00 ax o10 ay o01 bx o11 by)))
+  out)
+
 (ss:defspecialization (mat :inline t) ((a real) (b real) (c real) (d real)) mat
   (%mat (float a 1f0) (float b 1f0) (float c 1f0) (float d 1f0)))
+
+(ss:defspecialization (mat! :inline t) ((out mat) (a real) (b real) (c real)
+                                        (d real))
+    mat
+  (with-components ((o out))
+    (psetf o00 (float a 1f0)
+           o10 (float b 1f0)
+           o01 (float c 1f0)
+           o11 (float d 1f0)))
+  out)
 
 (ss:defspecialization (mat :inline t) ((mat net.mfiano.lisp.origin.dmat2:mat))
     mat
   (net.mfiano.lisp.origin.dmat2:with-components ((m mat))
     (%mat (float m00 1f0) (float m10 1f0) (float m01 1f0) (float m11 1f0))))
+
+(ss:defspecialization (mat! :inline t) ((out mat)
+                                        (mat net.mfiano.lisp.origin.dmat2:mat))
+    mat
+  (with-components ((o out))
+    (net.mfiano.lisp.origin.dmat2:with-components ((m mat))
+      (psetf o00 (float m00 1f0)
+             o10 (float m10 1f0)
+             o01 (float m01 1f0)
+             o11 (float m11 1f0))))
+  out)
 
 ;;; constants
 

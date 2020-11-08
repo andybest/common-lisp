@@ -36,30 +36,71 @@
   (make-array 4 :element-type 'single-float :initial-contents args))
 
 (ss:defstore quat (&rest args))
+(ss:defstore quat! (&rest args))
 
 (ss:defspecialization (quat :inline t) () quat
   (%quat 0f0 0f0 0f0 0f0))
 
+(ss:defspecialization (quat! :inline t) ((out quat)) quat
+  (with-components ((o out))
+    (psetf ow 0f0 ox 0f0 oy 0f0 oz 0f0))
+  out)
+
 (ss:defspecialization (quat :inline t) ((w real)) quat
   (%quat (float w 1f0) 0f0 0f0 0f0))
+
+(ss:defspecialization (quat! :inline t) ((out quat) (w real)) quat
+  (with-components ((o out))
+    (psetf ow (float w 1f0) ox 0f0 oy 0f0 oz 0f0))
+  out)
 
 (ss:defspecialization (quat :inline t) ((w real) (x real) (y real) (z real))
     quat
   (%quat (float w 1f0) (float x 1f0) (float y 1f0) (float z 1f0)))
 
+(ss:defspecialization (quat! :inline t) ((out quat)
+                                         (w real) (x real) (y real) (z real))
+    quat
+  (with-components ((o out))
+    (psetf ow (float w 1f0) ox (float x 1f0) oy (float y 1f0) oz (float z 1f0)))
+  out)
+
 (ss:defspecialization (quat :inline t) ((xyz v3:vec)) quat
   (v3:with-components ((v xyz))
     (%quat 0f0 vx vy vz)))
 
+(ss:defspecialization (quat! :inline t) ((out quat) (xyz v3:vec)) quat
+  (with-components ((o out))
+    (v3:with-components ((v xyz))
+      (psetf ow 0f0 ox vx oy vy oz vz)))
+  out)
+
 (ss:defspecialization (quat :inline t) ((xyzw v4:vec)) quat
   (v4:with-components ((v xyzw))
     (%quat vx vy vz vw)))
+
+(ss:defspecialization (quat! :inline t) ((out quat) (xyzw v4:vec)) quat
+  (with-components ((o out))
+    (v4:with-components ((v xyzw))
+      (psetf ow vx ox vy oy vz oz vw)))
+  out)
 
 (ss:defspecialization (quat :inline t)
     ((quat net.mfiano.lisp.origin.dquat:quat))
     quat
   (net.mfiano.lisp.origin.dquat:with-components ((q quat))
     (%quat (float qw 1f0) (float qx 1f0) (float qy 1f0) (float qz 1f0))))
+
+(ss:defspecialization (quat! :inline t)
+    ((out quat) (quat net.mfiano.lisp.origin.dquat:quat))
+    quat
+  (with-components ((o out))
+    (net.mfiano.lisp.origin.dquat:with-components ((q quat))
+      (psetf ow (float qw 1f0)
+             ox (float qx 1f0)
+             oy (float qy 1f0)
+             oz (float qz 1f0))))
+  out)
 
 ;;; constants
 

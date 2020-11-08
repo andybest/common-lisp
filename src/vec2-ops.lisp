@@ -20,39 +20,90 @@
   (make-array 2 :element-type 'single-float :initial-contents args))
 
 (ss:defstore vec (&rest args))
+(ss:defstore vec! (&rest args))
 
 (ss:defspecialization (vec :inline t) () vec
   (%vec 0f0 0f0))
 
+(ss:defspecialization (vec! :inline t) ((out vec)) vec
+  (with-components ((o out))
+    (psetf ox 0f0
+           oy 0f0))
+  out)
+
 (ss:defspecialization (vec :inline t) ((x real)) vec
   (%vec (float x 1f0) (float x 1f0)))
+
+(ss:defspecialization (vec! :inline t) ((out vec) (x real)) vec
+  (with-components ((o out))
+    (psetf ox (float x 1f0)
+           oy (float x 1f0)))
+  out)
 
 (ss:defspecialization (vec :inline t) ((xy vec)) vec
   (with-components ((v xy))
     (%vec vx vy)))
+
+(ss:defspecialization (vec! :inline t) ((out vec) (xy vec)) vec
+  (with-components ((o out) (v xy))
+    (psetf ox vx
+           oy vy))
+  out)
 
 (ss:defspecialization (vec :inline t) ((xyz net.mfiano.lisp.origin.vec3:vec))
     vec
   (net.mfiano.lisp.origin.vec3:with-components ((v xyz))
     (%vec vx vy)))
 
+(ss:defspecialization (vec! :inline t) ((out vec)
+                                        (xyz net.mfiano.lisp.origin.vec3:vec))
+    vec
+  (with-components ((o out))
+    (net.mfiano.lisp.origin.vec3:with-components ((v xyz))
+      (psetf ox vx
+             oy vy)))
+  out)
+
 (ss:defspecialization (vec :inline t) ((xyzw net.mfiano.lisp.origin.vec4:vec))
     vec
   (net.mfiano.lisp.origin.vec4:with-components ((v xyzw))
     (%vec vx vy)))
 
+(ss:defspecialization (vec! :inline t) ((out vec)
+                                        (xyzw net.mfiano.lisp.origin.vec4:vec))
+    vec
+  (with-components ((o out))
+    (net.mfiano.lisp.origin.vec4:with-components ((v xyzw))
+      (psetf ox vx
+             oy vy)))
+  out)
+
 (ss:defspecialization (vec :inline t) ((x real) (y real)) vec
   (%vec (float x 1f0) (float y 1f0)))
+
+(ss:defspecialization (vec! :inline t) ((out vec) (x real) (y real)) vec
+  (with-components ((o out))
+    (psetf ox (float x 1f0)
+           oy (float y 1f0)))
+  out)
 
 (ss:defspecialization (vec :inline t) ((xy net.mfiano.lisp.origin.dvec2:vec))
     vec
   (net.mfiano.lisp.origin.dvec2:with-components ((v xy))
     (%vec (float vx 1f0) (float vy 1f0))))
 
+(ss:defspecialization (vec! :inline t) ((out vec)
+                                        (xy net.mfiano.lisp.origin.dvec2:vec))
+    vec
+  (with-components ((o out))
+    (net.mfiano.lisp.origin.dvec2:with-components ((v xy))
+      (psetf ox (float vx 1f0)
+             oy (float vy 1f0))))
+  out)
+
 ;;; constants
 
 (u:define-constant +zero+ (%vec 0f0 0f0) :test #'equalp)
-
 ;;; operators
 
 (int:define-op zero! ((in vec)) (:out vec)
