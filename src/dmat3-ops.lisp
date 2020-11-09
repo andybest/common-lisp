@@ -6,81 +6,31 @@
   (make-array 9 :element-type 'double-float :initial-contents args))
 
 (ss:defstore mat (&rest args))
-(ss:defstore mat! (&rest args))
 
 (ss:defspecialization (mat :inline t) () mat
   (%mat 0d0 0d0 0d0 0d0 0d0 0d0 0d0 0d0 0d0))
-
-(ss:defspecialization (mat! :inline t) ((out mat)) mat
-  (with-components ((o out))
-    (psetf o00 0d0 o01 0d0 o02 0d0
-           o10 0d0 o11 0d0 o12 0d0
-           o20 0d0 o21 0d0 o22 0d0))
-  out)
 
 (ss:defspecialization (mat :inline t) ((x real)) mat
   (%mat (float x 1d0) 0d0 0d0
         0d0 (float x 1d0) 0d0
         0d0 0d0 (float x 1d0)))
 
-(ss:defspecialization (mat! :inline t) ((out mat) (x real)) mat
-  (with-components ((o out))
-    (psetf o00 (float x 1d0) o01 0d0 o02 0d0
-           o10 0d0 o11 (float x 1d0) o12 0d0
-           o20 0d0 o21 0d0 o22 (float x 1d0)))
-  out)
-
 (ss:defspecialization (mat :inline t) ((mat dm2:mat)) mat
   (dm2:with-components ((m mat))
     (%mat m00 m10 0d0 m01 m11 0d0 0d0 0d0 1d0)))
 
-(ss:defspecialization (mat! :inline t) ((out mat) (mat dm2:mat)) mat
-  (with-components ((o out))
-    (dm2:with-components ((m mat))
-      (psetf o00 m00 o10 m10 o20 0d0
-             o01 m01 o11 m11 o21 0d0
-             o02 0d0 o12 0d0 o22 1d0)))
-  out)
-
 (ss:defspecialization (mat :inline t) ((mat mat)) mat
   (with-components ((m mat))
     (%mat m00 m10 m20 m01 m11 m21 m02 m12 m22)))
-
-(ss:defspecialization (mat! :inline t) ((out mat) (mat mat)) mat
-  (with-components ((o out) (m mat))
-    (psetf o00 m00 o10 m10 o20 m20
-           o01 m01 o11 m11 o21 m21
-           o02 m02 o12 m12 o22 m22))
-  out)
 
 (ss:defspecialization (mat :inline t) ((mat net.mfiano.lisp.origin.dmat4:mat))
     mat
   (net.mfiano.lisp.origin.dmat4:with-components ((m mat))
     (%mat m00 m10 m20 m01 m11 m21 m02 m12 m22)))
 
-(ss:defspecialization (mat! :inline t) ((out mat)
-                                        (mat net.mfiano.lisp.origin.dmat4:mat))
-    mat
-  (with-components ((o out))
-    (net.mfiano.lisp.origin.dmat4:with-components ((m mat))
-      (psetf o00 m00 o10 m10 o20 m20
-             o01 m01 o11 m11 o21 m21
-             o02 m02 o12 m12 o22 m22)))
-  out)
-
 (ss:defspecialization (mat :inline t) ((a dv3:vec) (b dv3:vec) (c dv3:vec)) mat
   (dv3:with-components ((a a) (b b) (c c))
     (%mat ax ay az bx by bz cx cy cz)))
-
-(ss:defspecialization (mat! :inline t) ((out mat)
-                                        (a dv3:vec) (b dv3:vec) (c dv3:vec))
-    mat
-  (with-components ((o out))
-    (dv3:with-components ((a a) (b b) (c c))
-      (psetf o00 ax o10 ay o20 az
-             o01 bx o11 by o21 bz
-             o02 cx o12 cy o22 cz)))
-  out)
 
 (ss:defspecialization (mat :inline t) ((a real) (b real) (c real)
                                        (d real) (e real) (f real)
@@ -90,31 +40,12 @@
         (float d 1d0) (float e 1d0) (float f 1d0)
         (float g 1d0) (float h 1d0) (float i 1d0)))
 
-(ss:defspecialization (mat! :inline t) ((out mat)
-                                        (a real) (b real) (c real)
-                                        (d real) (e real) (f real)
-                                        (g real) (h real) (i real))
-    mat
-  (with-components ((o out))
-    (psetf o00 (float a 1d0) o10 (float b 1d0) o20 (float c 1d0)
-           o01 (float d 1d0) o11 (float e 1d0) o21 (float f 1d0)
-           o02 (float g 1d0) o12 (float h 1d0) o22 (float i 1d0)))
-  out)
-
 (ss:defspecialization (mat :inline t) ((mat m3:mat))
     mat
   (m3:with-components ((m mat))
     (%mat (float m00 1d0) (float m10 1d0) (float m20 1d0)
           (float m01 1d0) (float m11 1d0) (float m21 1d0)
           (float m02 1d0) (float m12 1d0) (float m22 1d0))))
-
-(ss:defspecialization (mat! :inline t) ((out mat) (mat m3:mat)) mat
-  (with-components ((o out))
-    (m3:with-components ((m mat))
-      (psetf o00 (float m00 1d0) o10 (float m10 1d0) o20 (float m20 1d0)
-             o01 (float m01 1d0) o11 (float m11 1d0) o21 (float m21 1d0)
-             o02 (float m02 1d0) o12 (float m12 1d0) o22 (float m22 1d0))))
-  out)
 
 ;;; constants
 

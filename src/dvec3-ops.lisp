@@ -29,122 +29,43 @@
   (make-array 3 :element-type 'double-float :initial-contents args))
 
 (ss:defstore vec (&rest args))
-(ss:defstore vec! (&rest args))
 
 (ss:defspecialization (vec :inline t) () vec
   (%vec 0d0 0d0 0d0))
 
-(ss:defspecialization (vec! :inline t) ((out vec)) vec
-  (with-components ((o out))
-    (psetf ox 0d0
-           oy 0d0
-           oz 0d0))
-  out)
-
 (ss:defspecialization (vec :inline t) ((x real)) vec
   (%vec (float x 1d0) (float x 1d0) (float x 1d0)))
-
-(ss:defspecialization (vec! :inline t) ((out vec) (x real)) vec
-  (with-components ((o out))
-    (psetf ox (float x 1d0)
-           oy (float x 1d0)
-           oz (float x 1d0)))
-  out)
 
 (ss:defspecialization (vec :inline t) ((xy dv2:vec)) vec
   (dv2:with-components ((v xy))
     (%vec vx vy 0d0)))
 
-(ss:defspecialization (vec! :inline t) ((out vec) (xy dv2:vec)) vec
-  (with-components ((o out))
-    (dv2:with-components ((v xy))
-      (psetf ox vx
-             oy vy
-             oz 0d0)))
-  out)
-
 (ss:defspecialization (vec :inline t) ((xyz vec)) vec
   (with-components ((v xyz))
     (%vec vx vy vz)))
-
-(ss:defspecialization (vec! :inline t) ((out vec) (xyz vec)) vec
-  (with-components ((o out) (v xyz))
-    (psetf ox vx
-           oy vy
-           oz vz))
-  out)
 
 (ss:defspecialization (vec :inline t) ((xyzw net.mfiano.lisp.origin.dvec4:vec))
     vec
   (net.mfiano.lisp.origin.dvec4:with-components ((v xyzw))
     (%vec vx vy vz)))
 
-(ss:defspecialization (vec! :inline t) ((out vec)
-                                        (xyzw net.mfiano.lisp.origin.dvec4:vec))
-    vec
-  (with-components ((o out))
-    (net.mfiano.lisp.origin.dvec4:with-components ((v xyzw))
-      (psetf ox vx
-             oy vy
-             oz vz)))
-  out)
-
 (ss:defspecialization (vec :inline t) ((x real) (y real)) vec
   (%vec (float x 1d0) (float y 1d0) 0d0))
-
-(ss:defspecialization (vec! :inline t) ((out vec) (x real) (y real)) vec
-  (with-components ((o out))
-    (psetf ox (float x 1d0)
-           oy (float y 1d0)
-           oz 0d0))
-  out)
 
 (ss:defspecialization (vec :inline t) ((xy dv2:vec) (z real)) vec
   (dv2:with-components ((v xy))
     (%vec vx vy (float z 1d0))))
 
-(ss:defspecialization (vec! :inline t) ((out vec) (xy dv2:vec) (z real)) vec
-  (with-components ((o out))
-    (dv2:with-components ((v xy))
-      (psetf ox vx
-             oy vy
-             oz (float z 1d0))))
-  out)
-
 (ss:defspecialization (vec :inline t) ((x real) (yz dv2:vec)) vec
   (dv2:with-components ((v yz))
     (%vec (float x 1d0) vx vy)))
 
-(ss:defspecialization (vec! :inline t) ((out vec) (x real) (yz dv2:vec)) vec
-  (with-components ((o out))
-    (dv2:with-components ((v yz))
-      (psetf ox (float x 1d0)
-             oy vx
-             oz vy)))
-  out)
-
 (ss:defspecialization (vec :inline t) ((x real) (y real) (z real)) vec
   (%vec (float x 1d0) (float y 1d0) (float z 1d0)))
-
-(ss:defspecialization (vec! :inline t) ((out vec) (x real) (y real) (z real))
-    vec
-  (with-components ((o out))
-    (psetf ox (float x 1d0)
-           oy (float y 1d0)
-           oz (float z 1d0)))
-  out)
 
 (ss:defspecialization (vec :inline t) ((xyz v3:vec)) vec
   (v3:with-components ((v xyz))
     (%vec (float vx 1d0) (float vy 1d0) (float vz 1d0))))
-
-(ss:defspecialization (vec! :inline t) ((out vec) (xyz v3:vec)) vec
-  (with-components ((o out))
-    (v3:with-components ((v xyz))
-      (psetf ox (float vx 1d0)
-             oy (float vy 1d0)
-             oz (float vz 1d0))))
-  out)
 
 ;; ;;; constants
 
@@ -161,6 +82,7 @@
 (u:define-constant +forward+ (%vec 0d0 0d0 1d0) :test #'equalp)
 
 (u:define-constant +back+ (%vec 0d0 0d0 -1d0) :test #'equalp)
+
 ;; ;;; operators
 
 (int:define-op zero! ((in vec)) (:out vec)

@@ -6,18 +6,9 @@
   (make-array 16 :element-type 'single-float :initial-contents args))
 
 (ss:defstore mat (&rest args))
-(ss:defstore mat! (&rest args))
 
 (ss:defspecialization (mat :inline t) () mat
   (%mat 0f0 0f0 0f0 0f0 0f0 0f0 0f0 0f0 0f0 0f0 0f0 0f0 0f0 0f0 0f0 0f0))
-
-(ss:defspecialization (mat! :inline t) ((out mat)) mat
-  (with-components ((o out))
-    (psetf o00 0f0 o01 0f0 o02 0f0 o03 0f0
-           o10 0f0 o11 0f0 o12 0f0 o13 0f0
-           o20 0f0 o21 0f0 o22 0f0 o23 0f0
-           o30 0f0 o31 0f0 o32 0f0 o33 0f0))
-  out)
 
 (ss:defspecialization (mat :inline t) ((x real)) mat
   (%mat (float x 1f0) 0f0 0f0 0f0
@@ -25,68 +16,22 @@
         0f0 0f0 (float x 1f0) 0f0
         0f0 0f0 0f0 (float x 1f0)))
 
-(ss:defspecialization (mat! :inline t) ((out mat) (x real)) mat
-  (with-components ((o out))
-    (psetf o00 (float x 1f0) o10 0f0 o20 0f0 o30 0f0
-           o01 0f0 o11 (float x 1f0) o21 0f0 o31 0f0
-           o02 0f0 o12 0f0 o22 (float x 1f0) o32 0f0
-           o03 0f0 o13 0f0 o23 0f0 o33 (float x 1f0)))
-  out)
-
 (ss:defspecialization (mat :inline t) ((mat m2:mat)) mat
   (m2:with-components ((m mat))
     (%mat m00 m10 0f0 0f0 m01 m11 0f0 0f0 0f0 0f0 1f0 0f0 0f0 0f0 0f0 1f0)))
-
-(ss:defspecialization (mat! :inline t) ((out mat) (mat m2:mat)) mat
-  (with-components ((o out))
-    (m2:with-components ((m mat))
-      (psetf o00 m00 o10 m10 o20 0f0 o30 0f0
-             o01 m01 o11 m11 o21 0f0 o31 0f0
-             o02 0f0 o12 0f0 o22 1f0 o32 0f0
-             o03 0f0 o13 0f0 o23 0f0 o33 1f0)))
-  out)
 
 (ss:defspecialization (mat :inline t) ((mat m3:mat)) mat
   (m3:with-components ((m mat))
     (%mat m00 m10 m20 0f0 m01 m11 m21 0f0 m02 m12 m22 0f0 0f0 0f0 0f0 1f0)))
 
-(ss:defspecialization (mat! :inline t) ((out mat) (mat m3:mat)) mat
-  (with-components ((o out))
-    (m3:with-components ((m mat))
-      (psetf o00 m00 o10 m10 o20 m20 o30 0f0
-             o01 m01 o11 m11 o21 m21 o31 0f0
-             o02 m02 o12 m12 o22 m22 o32 0f0
-             o03 0f0 o13 0f0 o23 0f0 o33 1f0)))
-  out)
-
 (ss:defspecialization (mat :inline t) ((mat mat)) mat
   (with-components ((m mat))
     (%mat m00 m10 m20 m30 m01 m11 m21 m31 m02 m12 m22 m32 m03 m13 m23 m33)))
 
-(ss:defspecialization (mat! :inline t) ((out mat) (mat mat)) mat
-  (with-components ((o out) (m mat))
-    (psetf o00 m00 o10 m10 o20 m20 o30 m30
-           o01 m01 o11 m11 o21 m21 o31 m31
-           o02 m02 o12 m12 o22 m22 o32 m32
-           o03 m03 o13 m13 o23 m23 o33 m33))
-  out)
-
-(ss:defspecialization (mat :inline t) ((a v4:vec) (b v4:vec) (c v4:vec)
-                                       (d v4:vec))
+(ss:defspecialization (mat :inline t) ((a v4:vec) (b v4:vec) (c v4:vec) (d v4:vec))
     mat
   (v4:with-components ((a a) (b b) (c c) (d d))
     (%mat ax ay az aw bx by bz bw cx cy cz cw dx dy dz dw)))
-
-(ss:defspecialization (mat! :inline t) ((out mat) (a v4:vec) (b v4:vec)
-                                        (c v4:vec) (d v4:vec))
-    mat
-  (with-components ((o out))
-    (v4:with-components ((a a) (b b) (c c) (d d))
-      (psetf o00 ax o10 ay o20 az o30 aw
-             o01 bx o11 by o21 bz o31 bw
-             o02 cx o12 cy o22 cz o32 cw
-             o03 dx o13 dy o23 dz o33 dw)))
-  out)
 
 (ss:defspecialization (mat :inline t) ((a real) (b real) (c real) (d real)
                                        (e real) (f real) (g real) (h real)
@@ -98,31 +43,6 @@
         (float i 1f0) (float j 1f0) (float k 1f0) (float l 1f0)
         (float m 1f0) (float n 1f0) (float o 1f0) (float p 1f0)))
 
-(ss:defspecialization (mat! :inline t) ((out mat)
-                                        (a real) (b real) (c real) (d real)
-                                        (e real) (f real) (g real) (h real)
-                                        (i real) (j real) (k real) (l real)
-                                        (m real) (n real) (o real) (p real))
-    mat
-  (with-components ((om out))
-    (psetf om00 (float a 1f0)
-           om10 (float b 1f0)
-           om20 (float c 1f0)
-           om30 (float d 1f0)
-           om01 (float e 1f0)
-           om11 (float f 1f0)
-           om21 (float g 1f0)
-           om31 (float h 1f0)
-           om02 (float i 1f0)
-           om12 (float j 1f0)
-           om22 (float k 1f0)
-           om32 (float l 1f0)
-           om03 (float m 1f0)
-           om13 (float n 1f0)
-           om23 (float o 1f0)
-           om33 (float p 1f0)))
-  out)
-
 (ss:defspecialization (mat :inline t) ((mat net.mfiano.lisp.origin.dmat4:mat))
     mat
   (net.mfiano.lisp.origin.dmat4:with-components ((m mat))
@@ -130,29 +50,6 @@
           (float m01 1f0) (float m11 1f0) (float m21 1f0) (float m31 1f0)
           (float m02 1f0) (float m12 1f0) (float m22 1f0) (float m32 1f0)
           (float m03 1f0) (float m13 1f0) (float m23 1f0) (float m33 1f0))))
-
-(ss:defspecialization (mat! :inline t) ((out mat)
-                                        (mat net.mfiano.lisp.origin.dmat4:mat))
-    mat
-  (with-components ((o out))
-    (net.mfiano.lisp.origin.dmat4:with-components ((m mat))
-      (psetf o00 (float m00 1f0)
-             o10 (float m10 1f0)
-             o20 (float m20 1f0)
-             o30 (float m30 1f0)
-             o01 (float m01 1f0)
-             o11 (float m11 1f0)
-             o21 (float m21 1f0)
-             o31 (float m31 1f0)
-             o02 (float m02 1f0)
-             o12 (float m12 1f0)
-             o22 (float m22 1f0)
-             o32 (float m32 1f0)
-             o03 (float m03 1f0)
-             o13 (float m13 1f0)
-             o23 (float m23 1f0)
-             o33 (float m33 1f0))))
-  out)
 
 ;;; constants
 
