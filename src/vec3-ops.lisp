@@ -311,10 +311,12 @@
 (int:define-op box ((in1 vec) (in2 vec) (in3 vec)) (:out single-float)
   (dot (cross in1 in2) in3))
 
-(int:define-op angle ((in1 vec) (in2 vec)) (:out single-float :speed nil)
+(int:define-op angle ((in1 vec) (in2 vec)) (:out single-float)
   (let ((dot (dot in1 in2))
         (m*m (cl:* (length in1) (length in2))))
-    (if (zerop m*m) 0f0 (cl:acos (cl:/ dot m*m)))))
+    (if (zerop m*m)
+        0f0
+        (cl:acos (the (single-float -1f0 1f0) (cl:/ dot m*m))))))
 
 (int:define-op direction= ((in1 vec) (in2 vec)) (:out boolean)
   (cl:>= (dot (normalize in1) (normalize in2)) (cl:- 1 1e-7)))
@@ -440,14 +442,14 @@
 (int:define-op ceiling ((in vec)) (:out vec)
   (ceiling! (vec) in))
 
-(int:define-op mod! ((out vec) (in vec) (divisor real)) (:out vec :speed nil)
+(int:define-op mod! ((out vec) (in vec) (divisor single-float)) (:out vec)
   (with-components ((o out) (v in))
-    (psetf ox (cl:mod vx divisor)
-           oy (cl:mod vy divisor)
-           oz (cl:mod vz divisor)))
+    (psetf ox (nth-value 1 (ffloor vx divisor))
+           oy (nth-value 1 (ffloor vy divisor))
+           oz (nth-value 1 (ffloor vz divisor))))
   out)
 
-(int:define-op mod ((in vec) (divisor real)) (:out vec :speed nil)
+(int:define-op mod ((in vec) (divisor real)) (:out vec)
   (mod! (vec) in divisor))
 
 (int:define-op sin! ((out vec) (in vec)) (:out vec)
