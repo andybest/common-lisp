@@ -409,7 +409,6 @@
 (int:define-op max ((in1 vec) (in2 vec)) (:out vec)
   (max! (vec) in1 in2))
 
-;; TODO: double const
 (int:define-op radians! ((out vec) (in vec)) (:out vec)
   (with-components ((o out) (v in))
     (psetf ox (cl:* vx const:+deg/double+)
