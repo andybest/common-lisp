@@ -53,6 +53,14 @@
 
 (u:define-constant +zero+ (%vec 0f0 0f0) :test #'equalp)
 
+(u:define-constant +up+ (%vec 0f0 1f0) :test #'equalp)
+
+(u:define-constant +down+ (%vec 0f0 -1f0) :test #'equalp)
+
+(u:define-constant +left+ (%vec -1f0 0f0) :test #'equalp)
+
+(u:define-constant +right+ (%vec 1f0 0f0) :test #'equalp)
+
 ;;; operators
 
 (int:define-op zero! ((in vec)) (:out vec)

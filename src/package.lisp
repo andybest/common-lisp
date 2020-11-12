@@ -101,6 +101,10 @@
    #:with-components
    #:with-elements
    #:+zero+
+   #:+up+
+   #:+down+
+   #:+left+
+   #:+right+
    #:zero!
    #:zero-p
    #:random!
@@ -221,6 +225,10 @@
    #:with-components
    #:with-elements
    #:+zero+
+   #:+up+
+   #:+down+
+   #:+left+
+   #:+right+
    #:zero!
    #:zero-p
    #:random!
