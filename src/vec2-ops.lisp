@@ -322,6 +322,22 @@
 (int:define-op max ((in1 vec) (in2 vec)) (:out vec)
   (max! (vec) in1 in2))
 
+(int:define-op from-radians! ((out vec)
+                              (radians (single-float
+                                        #.(cl:- const:pi)
+                                        #.const:pi)))
+    (:out vec)
+  (with-components ((o out))
+    (psetf ox (cl:cos radians)
+           oy (cl:sin radians))
+    out))
+
+(int:define-op from-radians ((radians single-float
+                                      #.(cl:- const:pi)
+                                      #.const:pi))
+    (:out vec)
+  (from-radians! (vec) radians))
+
 (int:define-op radians! ((out vec) (vec vec)) (:out vec)
   (with-components ((o out) (v vec))
     (psetf ox (cl:* vx const:+deg+)
@@ -330,6 +346,16 @@
 
 (int:define-op radians ((in vec)) (:out vec)
   (radians! (vec) in))
+
+(int:define-op from-degrees! ((out vec) (degrees (single-float -360f0 360f0)))
+    (:out vec)
+  (with-components ((o out))
+    (psetf ox (cl:cos (cl:* degrees const:+deg+))
+           oy (cl:sin (cl:* degrees const:+deg+)))
+    out))
+
+(int:define-op from-degrees ((degrees (single-float -360f0 360f0))) (:out vec)
+  (from-degrees! (vec) degrees))
 
 (int:define-op degrees! ((out vec) (in vec)) (:out vec)
   (with-components ((o out) (v in))
