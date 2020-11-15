@@ -99,8 +99,7 @@
          (cl:< (cl:abs (cl:- q1y q2y)) tolerance)
          (cl:< (cl:abs (cl:- q1z q2z)) tolerance))))
 
-(int:define-op random! ((out quat)
-                        &key (min single-float 0f0) (max single-float 1f0))
+(int:define-op random! ((out quat) (min single-float) (max single-float))
     (:out quat)
   (with-components ((o out))
     (psetf ow (cl:+ min (cl:random (cl:- max min)))
@@ -109,9 +108,8 @@
            oz (cl:+ min (cl:random (cl:- max min)))))
   out)
 
-(int:define-op random (&key (min single-float 0f0) (max single-float 1f0))
-    (:out quat)
-  (random! (quat) :min min :max max))
+(int:define-op random ((min single-float) (max single-float)) (:out quat)
+  (random! (quat) min max))
 
 (int:define-op copy! ((out quat) (in quat)) (:out quat)
   (with-components ((o out) (q in))

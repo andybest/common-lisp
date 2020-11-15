@@ -115,8 +115,7 @@
          (cl:< (cl:abs (cl:- a32 b32)) tolerance)
          (cl:< (cl:abs (cl:- a33 b33)) tolerance))))
 
-(int:define-op random! ((out mat)
-                        &key (min single-float 0f0) (max single-float 1f0))
+(int:define-op random! ((out mat) (min single-float) (max single-float))
     (:out mat)
   (with-components ((o out))
     (psetf o00 (cl:+ min (cl:random (cl:- max min)))
@@ -137,9 +136,8 @@
            o33 (cl:+ min (cl:random (cl:- max min)))))
   out)
 
-(int:define-op random (&key (min single-float 0f0) (max single-float 1f0))
-    (:out mat)
-  (random! (mat) :min min :max max))
+(int:define-op random ((min single-float) (max single-float)) (:out mat)
+  (random! (mat) min max))
 
 (int:define-op copy! ((out mat) (in mat)) (:out mat)
   (with-components ((o out) (m in))

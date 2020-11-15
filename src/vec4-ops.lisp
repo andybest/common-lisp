@@ -118,8 +118,7 @@
   (with-components ((v in))
     (cl:= 0f0 vx vy vz)))
 
-(int:define-op random! ((out vec)
-                        &key (min single-float 0f0) (max single-float 1f0))
+(int:define-op random! ((out vec) (min single-float) (max single-float))
     (:out vec)
   (with-components ((o out))
     (psetf ox (cl:+ min (cl:random (cl:- max min)))
@@ -128,9 +127,8 @@
            ow (cl:+ min (cl:random (cl:- max min)))))
   out)
 
-(int:define-op random (&key (min single-float 0f0) (max single-float 1f0))
-    (:out vec)
-  (random! (vec) :min min :max max))
+(int:define-op random ((min single-float) (max single-float)) (:out vec)
+  (random! (vec) min max))
 
 (int:define-op copy! ((out vec) (in vec)) (:out vec)
   (with-components ((o out) (v in))
