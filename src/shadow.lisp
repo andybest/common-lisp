@@ -53,6 +53,9 @@
     (build-shader-programs programs-list)
     (rebind-blocks programs-list)))
 
+(defun find-shader-definition (program-name)
+  (u:href (meta :shader-definitions) program-name))
+
 (setf (meta :fn->deps) (u:dict #'equal)
       (meta :dep->fns) (u:dict #'equal)
       (meta :stage-fn->programs) (u:dict #'equal)
