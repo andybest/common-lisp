@@ -88,7 +88,11 @@
         (block (find-block block-alias)))
     (or (block-binding-valid-p block binding-point)
         (error "Cannot bind a block to a binding point with existing blocks of ~
-                a different layout."))
+                a different layout.~%~
+                Binding point: ~s~%~
+                Block alias: ~s"
+               binding-point
+               block-alias))
     (pushnew block (u:href bindings (block-type block) binding-point))
     (%bind-block (block-type block) block binding-point)
     (setf (slot-value block '%binding-point) binding-point)))
