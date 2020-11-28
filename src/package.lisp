@@ -25,6 +25,7 @@
    #:find-block
    #:find-buffer
    #:find-program
+   #:find-shader-definition
    #:get-program-id
    #:load-shaders
    #:read-buffer-path
