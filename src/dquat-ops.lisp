@@ -272,7 +272,7 @@
     (:out quat)
   (rotate! (quat 1) in1 in2 :space space))
 
-(int:define-op to-euler! ((out dv3:vec) (in quat)) (:out dv3:vec :speed nil)
+(int:define-op to-euler! ((out dv3:vec) (in quat)) (:out dv3:vec)
   (with-components ((q in))
     (let* ((sinr-cosp (cl:* 2d0 (cl:+ (cl:* qw qx) (cl:* qy qz))))
            (cosr-cosp (cl:- 1d0 (cl:* 2d0 (cl:+ (cl:* qx qx) (cl:* qy qy)))))
@@ -290,7 +290,7 @@
                oz yaw))))
   out)
 
-(int:define-op to-euler ((in quat)) (:out dv3:vec :speed nil)
+(int:define-op to-euler ((in quat)) (:out dv3:vec)
   (to-euler! (dv3:vec) in))
 
 (int:define-op to-vec3! ((out dv3:vec) (in quat)) (:out dv3:vec)
