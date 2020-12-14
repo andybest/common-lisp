@@ -440,19 +440,15 @@
 (int:define-op expt ((in vec) (power real)) (:out vec :speed nil)
   (expt! (vec) in power))
 
-(int:define-op sqrt! ((out vec) (in vec)) (:out vec :speed nil)
+(int:define-op sqrt! ((out vec) (in vec)) (:out vec)
   (with-components ((o out) (v in))
-    (check-type vx (double-float 0d0))
-    (check-type vy (double-float 0d0))
-    (check-type vz (double-float 0d0))
-    (check-type vw (double-float 0d0))
     (psetf ox (cl:sqrt (the (double-float 0d0) vx))
            oy (cl:sqrt (the (double-float 0d0) vy))
            oz (cl:sqrt (the (double-float 0d0) vz))
            ow (cl:sqrt (the (double-float 0d0) vw))))
   out)
 
-(int:define-op sqrt ((in vec)) (:out vec :speed nil)
+(int:define-op sqrt ((in vec)) (:out vec)
   (sqrt! (vec) in))
 
 (int:define-op floor! ((out vec) (in vec)) (:out vec :speed nil)

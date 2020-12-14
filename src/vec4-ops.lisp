@@ -441,10 +441,6 @@
 
 (int:define-op sqrt! ((out vec) (in vec)) (:out vec)
   (with-components ((o out) (v in))
-    (check-type vx (single-float 0f0))
-    (check-type vy (single-float 0f0))
-    (check-type vz (single-float 0f0))
-    (check-type vw (single-float 0f0))
     (psetf ox (cl:sqrt (the (single-float 0f0) vx))
            oy (cl:sqrt (the (single-float 0f0) vy))
            oz (cl:sqrt (the (single-float 0f0) vz))
