@@ -114,14 +114,14 @@
 (int:define-op copy ((in vec)) (:out vec)
   (copy! (vec) in))
 
-(int:define-op sign! ((out vec) (in vec)) (:out vec :speed nil)
+(int:define-op sign! ((out vec) (in vec)) (:out vec)
   (with-components ((o out) (v in))
     (psetf ox (signum vx)
            oy (signum vy)
            oz (signum vz)))
   out)
 
-(int:define-op sign ((in vec)) (:out vec :speed nil)
+(int:define-op sign ((in vec)) (:out vec)
   (sign! (vec) in))
 
 (int:define-op fract! ((out vec) (in vec)) (:out vec :speed nil)
