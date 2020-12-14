@@ -85,7 +85,7 @@
 
 (int:define-op zero! ((in vec)) (:out vec)
   (with-components ((v in))
-    (psetf vx 0f0 vy 0f0 vz 0f0))
+    (setf vx 0f0 vy 0f0 vz 0f0))
   in)
 
 (int:define-op zero-p ((in vec)) (:out boolean)
@@ -96,9 +96,9 @@
     (:out vec)
   (let ((diff (cl:- max min)))
     (with-components ((o out))
-      (psetf ox (cl:+ min (cl:random diff))
-             oy (cl:+ min (cl:random diff))
-             oz (cl:+ min (cl:random diff)))))
+      (setf ox (cl:+ min (cl:random diff))
+            oy (cl:+ min (cl:random diff))
+            oz (cl:+ min (cl:random diff)))))
   out)
 
 (int:define-op random ((min single-float) (max single-float)) (:out vec)
@@ -106,7 +106,7 @@
 
 (int:define-op copy! ((out vec) (in vec)) (:out vec)
   (with-components ((o out) (v in))
-    (psetf ox vx oy vy oz vz))
+    (setf ox vx oy vy oz vz))
   out)
 
 (int:define-op copy ((in vec)) (:out vec)
@@ -114,9 +114,9 @@
 
 (int:define-op sign! ((out vec) (in vec)) (:out vec)
   (with-components ((o out) (v in))
-    (psetf ox (signum vx)
-           oy (signum vy)
-           oz (signum vz)))
+    (setf ox (signum vx)
+          oy (signum vy)
+          oz (signum vz)))
   out)
 
 (int:define-op sign ((in vec)) (:out vec)
@@ -124,9 +124,9 @@
 
 (int:define-op fract! ((out vec) (in vec)) (:out vec)
   (with-components ((o out) (v in))
-    (psetf ox (cl:- vx (ffloor vx))
-           oy (cl:- vy (ffloor vy))
-           oz (cl:- vz (ffloor vz))))
+    (setf ox (cl:- vx (ffloor vx))
+          oy (cl:- vy (ffloor vy))
+          oz (cl:- vz (ffloor vz))))
   out)
 
 (int:define-op fract ((in vec)) (:out vec)
@@ -138,9 +138,9 @@
                        (max single-float most-positive-single-float))
     (:out vec)
   (with-components ((o out) (v in))
-    (psetf ox (u:clamp vx min max)
-           oy (u:clamp vy min max)
-           oz (u:clamp vz min max)))
+    (setf ox (u:clamp vx min max)
+          oy (u:clamp vy min max)
+          oz (u:clamp vz min max)))
   out)
 
 (int:define-op clamp ((in vec)
@@ -163,9 +163,9 @@
 
 (int:define-op +! ((out vec) (in1 vec) (in2 vec)) (:out vec)
   (with-components ((o out) (v1 in1) (v2 in2))
-    (psetf ox (cl:+ v1x v2x)
-           oy (cl:+ v1y v2y)
-           oz (cl:+ v1z v2z)))
+    (setf ox (cl:+ v1x v2x)
+          oy (cl:+ v1y v2y)
+          oz (cl:+ v1z v2z)))
   out)
 
 (int:define-op + ((in1 vec) (in2 vec)) (:out vec)
@@ -173,9 +173,9 @@
 
 (int:define-op -! ((out vec) (in1 vec) (in2 vec)) (:out vec)
   (with-components ((o out) (v1 in1) (v2 in2))
-    (psetf ox (cl:- v1x v2x)
-           oy (cl:- v1y v2y)
-           oz (cl:- v1z v2z)))
+    (setf ox (cl:- v1x v2x)
+          oy (cl:- v1y v2y)
+          oz (cl:- v1z v2z)))
   out)
 
 (int:define-op - ((in1 vec) (in2 vec)) (:out vec)
@@ -183,9 +183,9 @@
 
 (int:define-op *! ((out vec) (in1 vec) (in2 vec)) (:out vec)
   (with-components ((o out) (v1 in1) (v2 in2))
-    (psetf ox (cl:* v1x v2x)
-           oy (cl:* v1y v2y)
-           oz (cl:* v1z v2z)))
+    (setf ox (cl:* v1x v2x)
+          oy (cl:* v1y v2y)
+          oz (cl:* v1z v2z)))
   out)
 
 (int:define-op * ((in1 vec) (in2 vec)) (:out vec)
@@ -193,18 +193,18 @@
 
 (int:define-op /! ((out vec) (in1 vec) (in2 vec)) (:out vec)
   (with-components ((o out) (v1 in1) (v2 in2))
-    (psetf ox (if (zerop v2x) 0f0 (cl:/ v1x v2x))
-           oy (if (zerop v2y) 0f0 (cl:/ v1y v2y))
-           oz (if (zerop v2z) 0f0 (cl:/ v1z v2z))))
+    (setf ox (if (zerop v2x) 0f0 (cl:/ v1x v2x))
+          oy (if (zerop v2y) 0f0 (cl:/ v1y v2y))
+          oz (if (zerop v2z) 0f0 (cl:/ v1z v2z))))
   out)
 
 (int:define-op / ((in1 vec) (in2 vec)) (:out vec)
   (/! (vec) in1 in2))
 
 (defmacro %scale (ox oy oz x y z scalar)
-  `(psetf ,ox (cl:* ,x ,scalar)
-          ,oy (cl:* ,y ,scalar)
-          ,oz (cl:* ,z ,scalar)))
+  `(setf ,ox (cl:* ,x ,scalar)
+         ,oy (cl:* ,y ,scalar)
+         ,oz (cl:* ,z ,scalar)))
 
 (int:define-op scale! ((out vec) (in vec) (scalar single-float)) (:out vec)
   (with-components ((o out) (v in))
@@ -216,9 +216,9 @@
 
 (int:define-op invert! ((out vec) (in vec)) (:out vec)
   (with-components ((o out) (v in))
-    (psetf ox (if (zerop vx) 0f0 (cl:/ vx))
-           oy (if (zerop vy) 0f0 (cl:/ vy))
-           oz (if (zerop vz) 0f0 (cl:/ vz)))
+    (setf ox (if (zerop vx) 0f0 (cl:/ vx))
+          oy (if (zerop vy) 0f0 (cl:/ vy))
+          oz (if (zerop vz) 0f0 (cl:/ vz)))
     out))
 
 (int:define-op invert ((in vec)) (:out vec)
@@ -272,9 +272,9 @@
 
 (int:define-op round! ((out vec) (in vec)) (:out vec)
   (with-components ((o out) (v in))
-    (psetf ox (fround vx)
-           oy (fround vy)
-           oz (fround vz)))
+    (setf ox (fround vx)
+          oy (fround vy)
+          oz (fround vz)))
   out)
 
 (int:define-op round ((in vec)) (:out vec)
@@ -282,9 +282,9 @@
 
 (int:define-op abs! ((out vec) (in vec)) (:out vec)
   (with-components ((o out) (v in))
-    (psetf ox (cl:abs vx)
-           oy (cl:abs vy)
-           oz (cl:abs vz)))
+    (setf ox (cl:abs vx)
+          oy (cl:abs vy)
+          oz (cl:abs vz)))
   out)
 
 (int:define-op abs ((in vec)) (:out vec)
@@ -298,9 +298,9 @@
 
 (int:define-op cross! ((out vec) (in1 vec) (in2 vec)) (:out vec)
   (with-components ((o out) (v1 in1) (v2 in2))
-    (psetf ox (cl:- (cl:* v1y v2z) (cl:* v1z v2y))
-           oy (cl:- (cl:* v1z v2x) (cl:* v1x v2z))
-           oz (cl:- (cl:* v1x v2y) (cl:* v1y v2x))))
+    (setf ox (cl:- (cl:* v1y v2z) (cl:* v1z v2y))
+          oy (cl:- (cl:* v1z v2x) (cl:* v1x v2z))
+          oz (cl:- (cl:* v1x v2y) (cl:* v1y v2x))))
   out)
 
 (int:define-op cross ((in1 vec) (in2 vec)) (:out vec)
@@ -325,9 +325,9 @@
 (int:define-op lerp! ((out vec) (in1 vec) (in2 vec) (factor single-float))
     (:out vec)
   (with-components ((o out) (v1 in1) (v2 in2))
-    (psetf ox (u:lerp factor v1x v2x)
-           oy (u:lerp factor v1y v2y)
-           oz (u:lerp factor v1z v2z)))
+    (setf ox (u:lerp factor v1x v2x)
+          oy (u:lerp factor v1y v2y)
+          oz (u:lerp factor v1z v2z)))
   out)
 
 (int:define-op lerp ((in1 vec) (in2 vec) (factor single-float)) (:out vec)
@@ -359,9 +359,9 @@
 
 (int:define-op min! ((out vec) (in1 vec) (in2 vec)) (:out vec)
   (with-components ((o out) (v1 in1) (v2 in2))
-    (psetf ox (cl:min v1x v2x)
-           oy (cl:min v1y v2y)
-           oz (cl:min v1z v2z)))
+    (setf ox (cl:min v1x v2x)
+          oy (cl:min v1y v2y)
+          oz (cl:min v1z v2z)))
   out)
 
 (int:define-op min ((in1 vec) (in2 vec)) (:out vec)
@@ -369,9 +369,9 @@
 
 (int:define-op max! ((out vec) (in1 vec) (in2 vec)) (:out vec)
   (with-components ((o out) (v1 in1) (v2 in2))
-    (psetf ox (cl:max v1x v2x)
-           oy (cl:max v1y v2y)
-           oz (cl:max v1z v2z)))
+    (setf ox (cl:max v1x v2x)
+          oy (cl:max v1y v2y)
+          oz (cl:max v1z v2z)))
   out)
 
 (int:define-op max ((in1 vec) (in2 vec)) (:out vec)
@@ -379,9 +379,9 @@
 
 (int:define-op radians! ((out vec) (in vec)) (:out vec)
   (with-components ((o out) (v in))
-    (psetf ox (cl:* vx const:+deg+)
-           oy (cl:* vy const:+deg+)
-           oz (cl:* vz const:+deg+))
+    (setf ox (cl:* vx const:+deg+)
+          oy (cl:* vy const:+deg+)
+          oz (cl:* vz const:+deg+))
     out))
 
 (int:define-op radians ((in vec)) (:out vec)
@@ -389,9 +389,9 @@
 
 (int:define-op degrees! ((out vec) (in vec)) (:out vec)
   (with-components ((o out) (v in))
-    (psetf ox (cl:* vx const:+rad+)
-           oy (cl:* vy const:+rad+)
-           oz (cl:* vz const:+rad+)))
+    (setf ox (cl:* vx const:+rad+)
+          oy (cl:* vy const:+rad+)
+          oz (cl:* vz const:+rad+)))
   out)
 
 (int:define-op degrees ((in vec)) (:out vec)
@@ -399,9 +399,9 @@
 
 (int:define-op expt! ((out vec) (in vec) (power real)) (:out vec :speed nil)
   (with-components ((o out) (v in))
-    (psetf ox (cl:expt vx power)
-           oy (cl:expt vy power)
-           oz (cl:expt vz power)))
+    (setf ox (cl:expt vx power)
+          oy (cl:expt vy power)
+          oz (cl:expt vz power)))
   out)
 
 (int:define-op expt ((in vec) (power real)) (:out vec :speed nil)
@@ -409,9 +409,9 @@
 
 (int:define-op sqrt! ((out vec) (in vec)) (:out vec)
   (with-components ((o out) (v in))
-    (psetf ox (cl:sqrt (the (single-float 0f0) vx))
-           oy (cl:sqrt (the (single-float 0f0) vy))
-           oz (cl:sqrt (the (single-float 0f0) vz))))
+    (setf ox (cl:sqrt (the (single-float 0f0) vx))
+          oy (cl:sqrt (the (single-float 0f0) vy))
+          oz (cl:sqrt (the (single-float 0f0) vz))))
   out)
 
 (int:define-op sqrt ((in vec)) (:out vec)
@@ -419,9 +419,9 @@
 
 (int:define-op floor! ((out vec) (in vec)) (:out vec)
   (with-components ((o out) (v in))
-    (psetf ox (ffloor vx)
-           oy (ffloor vy)
-           oz (ffloor vz)))
+    (setf ox (ffloor vx)
+          oy (ffloor vy)
+          oz (ffloor vz)))
   out)
 
 (int:define-op floor ((in vec)) (:out vec)
@@ -429,9 +429,9 @@
 
 (int:define-op ceiling! ((out vec) (in vec)) (:out vec)
   (with-components ((o out) (v in))
-    (psetf ox (fceiling vx)
-           oy (fceiling vy)
-           oz (fceiling vz)))
+    (setf ox (fceiling vx)
+          oy (fceiling vy)
+          oz (fceiling vz)))
   out)
 
 (int:define-op ceiling ((in vec)) (:out vec)
@@ -439,9 +439,9 @@
 
 (int:define-op mod! ((out vec) (in vec) (divisor single-float)) (:out vec)
   (with-components ((o out) (v in))
-    (psetf ox (nth-value 1 (ffloor vx divisor))
-           oy (nth-value 1 (ffloor vy divisor))
-           oz (nth-value 1 (ffloor vz divisor))))
+    (setf ox (nth-value 1 (ffloor vx divisor))
+          oy (nth-value 1 (ffloor vy divisor))
+          oz (nth-value 1 (ffloor vz divisor))))
   out)
 
 (int:define-op mod ((in vec) (divisor real)) (:out vec)
@@ -449,9 +449,9 @@
 
 (int:define-op sin! ((out vec) (in vec)) (:out vec)
   (with-components ((o out) (v in))
-    (psetf ox (cl:sin vx)
-           oy (cl:sin vy)
-           oz (cl:sin vz)))
+    (setf ox (cl:sin vx)
+          oy (cl:sin vy)
+          oz (cl:sin vz)))
   out)
 
 (int:define-op sin ((in vec)) (:out vec)
@@ -459,9 +459,9 @@
 
 (int:define-op cos! ((out vec) (in vec)) (:out vec)
   (with-components ((o out) (v in))
-    (psetf ox (cl:cos vx)
-           oy (cl:cos vy)
-           oz (cl:cos vz)))
+    (setf ox (cl:cos vx)
+          oy (cl:cos vy)
+          oz (cl:cos vz)))
   out)
 
 (int:define-op cos ((in vec)) (:out vec)
@@ -469,9 +469,9 @@
 
 (int:define-op tan! ((out vec) (in vec)) (:out vec)
   (with-components ((o out) (v in))
-    (psetf ox (cl:tan vx)
-           oy (cl:tan vy)
-           oz (cl:tan vz)))
+    (setf ox (cl:tan vx)
+          oy (cl:tan vy)
+          oz (cl:tan vz)))
   out)
 
 (int:define-op tan ((in vec)) (:out vec)
@@ -479,9 +479,9 @@
 
 (int:define-op asin! ((out vec) (in vec)) (:out vec :speed nil)
   (with-components ((o out) (v in))
-    (psetf ox (cl:asin vx)
-           oy (cl:asin vy)
-           oz (cl:asin vz)))
+    (setf ox (cl:asin vx)
+          oy (cl:asin vy)
+          oz (cl:asin vz)))
   out)
 
 (int:define-op asin ((in vec)) (:out vec :speed nil)
@@ -489,9 +489,9 @@
 
 (int:define-op acos! ((out vec) (in vec)) (:out vec :speed nil)
   (with-components ((o out) (v in))
-    (psetf ox (cl:acos vx)
-           oy (cl:acos vy)
-           oz (cl:acos vz)))
+    (setf ox (cl:acos vx)
+          oy (cl:acos vy)
+          oz (cl:acos vz)))
   out)
 
 (int:define-op acos ((in vec)) (:out vec :speed nil)
@@ -499,9 +499,9 @@
 
 (int:define-op atan! ((out vec) (in vec)) (:out vec)
   (with-components ((o out) (v in))
-    (psetf ox (cl:atan vx)
-           oy (cl:atan vy)
-           oz (cl:atan vz)))
+    (setf ox (cl:atan vx)
+          oy (cl:atan vy)
+          oz (cl:atan vz)))
   out)
 
 (int:define-op atan ((in vec)) (:out vec)
