@@ -434,22 +434,22 @@
 (int:define-op tan ((in vec)) (:out vec)
   (tan! (vec) in))
 
-(int:define-op asin! ((out vec) (in vec)) (:out vec :speed nil)
+(int:define-op asin! ((out vec) (in vec)) (:out vec)
   (with-components ((o out) (v in))
-    (setf ox (cl:asin vx)
-          oy (cl:asin vy)))
+    (setf ox (cl:asin (the (double-float -1d0 1d0) vx))
+          oy (cl:asin (the (double-float -1d0 1d0) vy))))
   out)
 
-(int:define-op asin ((in vec)) (:out vec :speed nil)
+(int:define-op asin ((in vec)) (:out vec)
   (asin! (vec) in))
 
-(int:define-op acos! ((out vec) (in vec)) (:out vec :speed nil)
+(int:define-op acos! ((out vec) (in vec)) (:out vec)
   (with-components ((o out) (v in))
-    (setf ox (cl:acos vx)
-          oy (cl:acos vy)))
+    (setf ox (cl:acos (the (double-float -1d0 1d0) vx))
+          oy (cl:acos (the (double-float -1d0 1d0) vy))))
   out)
 
-(int:define-op acos ((in vec)) (:out vec :speed nil)
+(int:define-op acos ((in vec)) (:out vec)
   (acos! (vec) in))
 
 (int:define-op atan! ((out vec) (in vec)) (:out vec)
