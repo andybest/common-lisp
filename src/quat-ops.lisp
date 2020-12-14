@@ -291,42 +291,6 @@
 (int:define-op to-euler ((in quat)) (:out v3:vec)
   (to-euler! (v3:vec) in))
 
-(int:define-op to-vec3! ((out v3:vec) (in quat)) (:out v3:vec)
-  (v3:with-components ((v out))
-    (with-components ((q in))
-      (psetf vx qx vy qy vz qz)))
-  out)
-
-(int:define-op to-vec3 ((in quat)) (:out v3:vec)
-  (to-vec3! (v3:vec) in))
-
-(int:define-op to-vec4! ((out v4:vec) (in quat)) (:out v4:vec)
-  (v4:with-components ((v out))
-    (with-components ((q in))
-      (psetf vx qw vy qx vz qy vw qz)))
-  out)
-
-(int:define-op to-vec4 ((in quat)) (:out v4:vec)
-  (to-vec4! (v4:vec) in))
-
-(int:define-op from-vec3! ((out quat) (in v3:vec)) (:out quat)
-  (with-components ((q out))
-    (v3:with-components ((v in))
-      (psetf qw 0f0 qx vx qy vy qz vz)))
-  out)
-
-(int:define-op from-vec3 ((in v3:vec)) (:out quat)
-  (from-vec3! (quat) in))
-
-(int:define-op from-vec4! ((out quat) (in v4:vec)) (:out quat)
-  (with-components ((q out))
-    (v4:with-components ((v in))
-      (psetf qw vx qx vy qy vz qz vw)))
-  out)
-
-(int:define-op from-vec4 ((in v4:vec)) (:out quat)
-  (from-vec4! (quat) in))
-
 (int:define-op to-mat3! ((out m3:mat) (in quat)) (:out m3:mat)
   (let ((s (/ 2 (length-squared in))))
     (m3:with-components ((o out))

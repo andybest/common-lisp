@@ -137,34 +137,6 @@
     (true (q:= (q:rotate-euler q:+id+ vy) rqy))
     (true (q:= (q:rotate-euler q:+id+ vz) rqz))))
 
-(define-test q/vec3-convert
-  (let* ((q (q:quat 0.3628688 0.9540863 0.017128706 0.32979298))
-         (r (v3:vec (aref q 1) (aref q 2) (aref q 3)))
-         (o (v3:vec)))
-    (is v3:= (q:to-vec3! o q) r)
-    (is v3:= o r)
-    (is v3:= (q:to-vec3 q) r))
-  (let* ((v (v3:vec 0.2571392 0.19932675 -0.025900126))
-         (r (q:quat 0 (aref v 0) (aref v 1) (aref v 2)))
-         (o (q:quat)))
-    (is q:= (q:from-vec3! o v) r)
-    (is q:= o r)
-    (is q:= (q:from-vec3 v) r)))
-
-(define-test q/vec4-convert
-  (let* ((q (q:quat 0.3628688 0.9540863 0.017128706 0.32979298))
-         (r (v4:vec (aref q 0) (aref q 1) (aref q 2) (aref q 3)))
-         (o (v4:vec)))
-    (is v4:= (q:to-vec4! o q) r)
-    (is v4:= o r)
-    (is v4:= (q:to-vec4 q) r))
-  (let* ((v (v4:vec 0.2571392 0.19932675 -0.025900126 0.8267517))
-         (r (q:quat (aref v 0) (aref v 1) (aref v 2) (aref v 3)))
-         (o (q:quat)))
-    (is q:= (q:from-vec4! o v) r)
-    (is q:= o r)
-    (is q:= (q:from-vec4 v) r)))
-
 (define-test q/mat4-convert
   (let ((q (q:rotate-euler q:+id+ (v3:vec const:pi/3 0 0)))
         (qo (q:quat))

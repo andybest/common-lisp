@@ -1372,14 +1372,6 @@
    #:rotate
    #:to-euler!
    #:to-euler
-   #:to-vec3!
-   #:to-vec3
-   #:to-vec4!
-   #:to-vec4
-   #:from-vec3!
-   #:from-vec3
-   #:from-vec4!
-   #:from-vec4
    #:to-mat3!
    #:to-mat3
    #:to-mat4!
@@ -1462,14 +1454,6 @@
    #:rotate
    #:to-euler!
    #:to-euler
-   #:to-vec3!
-   #:to-vec3
-   #:to-vec4!
-   #:to-vec4
-   #:from-vec3!
-   #:from-vec3
-   #:from-vec4!
-   #:from-vec4
    #:to-mat3!
    #:to-mat3
    #:to-mat4!
