@@ -101,11 +101,12 @@
 
 (int:define-op random! ((out quat) (min double-float) (max double-float))
     (:out quat)
-  (with-components ((o out))
-    (psetf ow (cl:+ min (cl:random (cl:- max min)))
-           ox (cl:+ min (cl:random (cl:- max min)))
-           oy (cl:+ min (cl:random (cl:- max min)))
-           oz (cl:+ min (cl:random (cl:- max min)))))
+  (let ((diff (cl:- max min)))
+    (with-components ((o out))
+      (psetf ow (cl:+ min (cl:random diff))
+             ox (cl:+ min (cl:random diff))
+             oy (cl:+ min (cl:random diff))
+             oz (cl:+ min (cl:random diff)))))
   out)
 
 (int:define-op random ((min double-float) (max double-float)) (:out quat)

@@ -81,11 +81,12 @@
 
 (int:define-op random! ((out mat) (min single-float) (max single-float))
     (:out mat)
-  (with-components ((o out))
-    (psetf o00 (cl:+ min (cl:random (cl:- max min)))
-           o01 (cl:+ min (cl:random (cl:- max min)))
-           o10 (cl:+ min (cl:random (cl:- max min)))
-           o11 (cl:+ min (cl:random (cl:- max min)))))
+  (let ((diff (cl:- max min)))
+    (with-components ((o out))
+      (psetf o00 (cl:+ min (cl:random diff))
+             o01 (cl:+ min (cl:random diff))
+             o10 (cl:+ min (cl:random diff))
+             o11 (cl:+ min (cl:random diff)))))
   out)
 
 (int:define-op random ((min single-float) (max single-float)) (:out mat)

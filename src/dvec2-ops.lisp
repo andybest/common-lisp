@@ -75,9 +75,10 @@
 
 (int:define-op random! ((out vec) (min double-float) (max double-float))
     (:out vec)
-  (with-components ((o out))
-    (psetf ox (cl:+ min (cl:random (cl:- max min)))
-           oy (cl:+ min (cl:random (cl:- max min)))))
+  (let ((diff (cl:- max min)))
+    (with-components ((o out))
+      (psetf ox (cl:+ min (cl:random diff))
+             oy (cl:+ min (cl:random diff)))))
   out)
 
 (int:define-op random ((min double-float) (max double-float))
