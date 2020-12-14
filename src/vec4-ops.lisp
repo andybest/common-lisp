@@ -294,10 +294,11 @@
   (cl:sqrt (distance-squared in1 in2)))
 
 (defmacro %normalize (ox oy oz ow x y z w)
-  (u:with-gensyms (length)
+  (u:with-gensyms (length inv-length)
     `(let ((,length (%length ,x ,y ,z ,w)))
        (unless (zerop ,length)
-         (%scale ,ox ,oy ,oz ,ow ,x ,y ,z ,w (cl:/ ,length))))))
+         (let ((,inv-length (cl:/ ,length)))
+           (%scale ,ox ,oy ,oz ,ow ,x ,y ,z ,w ,inv-length))))))
 
 (int:define-op normalize! ((out vec) (in vec)) (:out vec)
   (let ((length (length in)))
