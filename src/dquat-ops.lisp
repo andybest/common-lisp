@@ -73,7 +73,7 @@
 
 (int:define-op id! ((in quat)) (:out quat)
   (with-components ((q in))
-    (setf qw 1d0 qx 0d0 qy 0d0 qz 0d0))
+    (psetf qw 1d0 qx 0d0 qy 0d0 qz 0d0))
   in)
 
 (int:define-op id-p ((in quat)) (:out boolean)
@@ -83,7 +83,7 @@
 
 (int:define-op zero! ((in quat)) (:out quat)
   (with-components ((q in))
-    (setf qw 0d0 qx 0d0 qy 0d0 qz 0d0))
+    (psetf qw 0d0 qx 0d0 qy 0d0 qz 0d0))
   in)
 
 (int:define-op = ((in1 quat) (in2 quat)
@@ -103,10 +103,10 @@
     (:out quat)
   (let ((diff (cl:- max min)))
     (with-components ((o out))
-      (setf ow (cl:+ min (cl:random diff))
-            ox (cl:+ min (cl:random diff))
-            oy (cl:+ min (cl:random diff))
-            oz (cl:+ min (cl:random diff)))))
+      (psetf ow (cl:+ min (cl:random diff))
+             ox (cl:+ min (cl:random diff))
+             oy (cl:+ min (cl:random diff))
+             oz (cl:+ min (cl:random diff)))))
   out)
 
 (int:define-op random ((min double-float) (max double-float)) (:out quat)
@@ -114,7 +114,7 @@
 
 (int:define-op copy! ((out quat) (in quat)) (:out quat)
   (with-components ((o out) (q in))
-    (setf ow qw ox qx oy qy oz qz))
+    (psetf ow qw ox qx oy qy oz qz))
   out)
 
 (int:define-op copy ((in quat)) (:out quat)
@@ -122,10 +122,10 @@
 
 (int:define-op +! ((out quat) (in1 quat) (in2 quat)) (:out quat)
   (with-components ((o out) (q1 in1) (q2 in2))
-    (setf ow (cl:+ q1w q2w)
-          ox (cl:+ q1x q2x)
-          oy (cl:+ q1y q2y)
-          oz (cl:+ q1z q2z)))
+    (psetf ow (cl:+ q1w q2w)
+           ox (cl:+ q1x q2x)
+           oy (cl:+ q1y q2y)
+           oz (cl:+ q1z q2z)))
   out)
 
 (int:define-op + ((in1 quat) (in2 quat)) (:out quat)
@@ -133,24 +133,24 @@
 
 (int:define-op -! ((out quat) (in1 quat) (in2 quat)) (:out quat)
   (with-components ((o out) (q1 in1) (q2 in2))
-    (setf ow (cl:- q1w q2w)
-          ox (cl:- q1x q2x)
-          oy (cl:- q1y q2y)
-          oz (cl:- q1z q2z)))
+    (psetf ow (cl:- q1w q2w)
+           ox (cl:- q1x q2x)
+           oy (cl:- q1y q2y)
+           oz (cl:- q1z q2z)))
   out)
 
 (int:define-op - ((in1 quat) (in2 quat)) (:out quat)
   (-! (quat 1) in1 in2))
 
 (defmacro %* (ow ox oy oz q1w q1x q1y q1z q2w q2x q2y q2z)
-  `(setf ,ow (cl:- (cl:* ,q1w ,q2w) (cl:* ,q1x ,q2x) (cl:* ,q1y ,q2y)
-                   (cl:* ,q1z ,q2z))
-         ,ox (cl:- (cl:+ (cl:* ,q1w ,q2x) (cl:* ,q1x ,q2w) (cl:* ,q1y ,q2z))
-                   (cl:* ,q1z ,q2y))
-         ,oy (cl:- (cl:+ (cl:* ,q1w ,q2y) (cl:* ,q1y ,q2w) (cl:* ,q1z ,q2x))
-                   (cl:* ,q1x ,q2z))
-         ,oz (cl:- (cl:+ (cl:* ,q1w ,q2z) (cl:* ,q1z ,q2w) (cl:* ,q1x ,q2y))
-                   (cl:* ,q1y ,q2x))))
+  `(psetf ,ow (cl:- (cl:* ,q1w ,q2w) (cl:* ,q1x ,q2x) (cl:* ,q1y ,q2y)
+                    (cl:* ,q1z ,q2z))
+          ,ox (cl:- (cl:+ (cl:* ,q1w ,q2x) (cl:* ,q1x ,q2w) (cl:* ,q1y ,q2z))
+                    (cl:* ,q1z ,q2y))
+          ,oy (cl:- (cl:+ (cl:* ,q1w ,q2y) (cl:* ,q1y ,q2w) (cl:* ,q1z ,q2x))
+                    (cl:* ,q1x ,q2z))
+          ,oz (cl:- (cl:+ (cl:* ,q1w ,q2z) (cl:* ,q1z ,q2w) (cl:* ,q1x ,q2y))
+                    (cl:* ,q1y ,q2x))))
 
 (int:define-op *! ((out quat) (in1 quat) (in2 quat)) (:out quat)
   (with-components ((o out) (q1 in1) (q2 in2))
@@ -161,10 +161,10 @@
   (*! (quat 1) in1 in2))
 
 (defmacro %scale (ow ox oy oz w x y z scalar)
-  `(setf ,ow (cl:* ,w ,scalar)
-         ,ox (cl:* ,x ,scalar)
-         ,oy (cl:* ,y ,scalar)
-         ,oz (cl:* ,z ,scalar)))
+  `(psetf ,ow (cl:* ,w ,scalar)
+          ,ox (cl:* ,x ,scalar)
+          ,oy (cl:* ,y ,scalar)
+          ,oz (cl:* ,z ,scalar)))
 
 (int:define-op scale! ((out quat) (in quat) (scalar double-float)) (:out quat)
   (with-components ((o out) (v in))
@@ -176,10 +176,10 @@
 
 (int:define-op conjugate! ((out quat) (in quat)) (:out quat)
   (with-components ((o out) (q in))
-    (setf ow qw
-          ox (cl:- qx)
-          oy (cl:- qy)
-          oz (cl:- qz)))
+    (psetf ow qw
+           ox (cl:- qx)
+           oy (cl:- qy)
+           oz (cl:- qz)))
   out)
 
 (int:define-op conjugate ((in quat)) (:out quat)
@@ -245,11 +245,11 @@
                         (q2 0d0 0d0 0d0 0d0))
           (ecase space
             (:local
-             (setf q1w qw q1x qx q1y qy q1z qz
-                   q2w rw q2x rx q2y ry q2z rz))
+             (psetf q1w qw q1x qx q1y qy q1z qz
+                    q2w rw q2x rx q2y ry q2z rz))
             (:world
-             (setf q1w rw q1x rx q1y ry q1z rz
-                   q2w qw q2x qx q2y qy q2z qz)))
+             (psetf q1w rw q1x rx q1y ry q1z rz
+                    q2w qw q2x qx q2y qy q2z qz)))
           (%* ow ox oy oz q1w q1x q1y q1z q2w q2x q2y q2z)))))
   out)
 
@@ -285,9 +285,9 @@
            (cosy-cosp (cl:- 1d0 (cl:* 2d0 (cl:+ (cl:* qy qy) (cl:* qz qz)))))
            (yaw (atan siny-cosp cosy-cosp)))
       (dv3:with-components ((o out))
-        (setf ox roll
-              oy pitch
-              oz yaw))))
+        (psetf ox roll
+               oy pitch
+               oz yaw))))
   out)
 
 (int:define-op to-euler ((in quat)) (:out dv3:vec)
@@ -301,15 +301,15 @@
                             (a (cl:* qx sx) (cl:* qx sy) (cl:* qx sz))
                             (b (cl:* qy sy) (cl:* qy sz) (cl:* qz sz))
                             (c (cl:* qw sx) (cl:* qw sy) (cl:* qw sz)))
-          (setf o00 (cl:- 1 (cl:+ bx bz))
-                o01 (cl:- ay cz)
-                o02 (cl:+ az cy)
-                o10 (cl:+ ay cz)
-                o11 (cl:- 1 (cl:+ ax bz))
-                o12 (cl:- bz cx)
-                o20 (cl:- az cy)
-                o21 (cl:+ by cx)
-                o22 (cl:- 1 (cl:+ ax bx)))))))
+          (psetf o00 (cl:- 1 (cl:+ bx bz))
+                 o01 (cl:- ay cz)
+                 o02 (cl:+ az cy)
+                 o10 (cl:+ ay cz)
+                 o11 (cl:- 1 (cl:+ ax bz))
+                 o12 (cl:- bz cx)
+                 o20 (cl:- az cy)
+                 o21 (cl:+ by cx)
+                 o22 (cl:- 1 (cl:+ ax bx)))))))
   out)
 
 (int:define-op to-mat3 ((in quat)) (:out dm3:mat)
@@ -323,22 +323,22 @@
                             (a (cl:* qx sx) (cl:* qx sy) (cl:* qx sz))
                             (b (cl:* qy sy) (cl:* qy sz) (cl:* qz sz))
                             (c (cl:* qw sx) (cl:* qw sy) (cl:* qw sz)))
-          (setf o00 (cl:- 1 (cl:+ bx bz))
-                o01 (cl:- ay cz)
-                o02 (cl:+ az cy)
-                o03 0d0
-                o10 (cl:+ ay cz)
-                o11 (cl:- 1 (cl:+ ax bz))
-                o12 (cl:- by cx)
-                o13 0d0
-                o20 (cl:- az cy)
-                o21 (cl:+ by cx)
-                o22 (cl:- 1 (cl:+ ax bx))
-                o23 0d0
-                o30 0d0
-                o31 0d0
-                o32 0d0
-                o33 1d0)))))
+          (psetf o00 (cl:- 1 (cl:+ bx bz))
+                 o01 (cl:- ay cz)
+                 o02 (cl:+ az cy)
+                 o03 0d0
+                 o10 (cl:+ ay cz)
+                 o11 (cl:- 1 (cl:+ ax bz))
+                 o12 (cl:- by cx)
+                 o13 0d0
+                 o20 (cl:- az cy)
+                 o21 (cl:+ by cx)
+                 o22 (cl:- 1 (cl:+ ax bx))
+                 o23 0d0
+                 o30 0d0
+                 o31 0d0
+                 o32 0d0
+                 o33 1d0)))))
   out)
 
 (int:define-op to-mat4 ((in quat)) (:out dm4:mat)
@@ -442,18 +442,18 @@
           (negate! q2 q2)
           (setf dot (cl:- dot)))
         (if (> (abs dot) 0.9995d0)
-            (setf ow (u:lerp factor q1w q2w)
-                  ox (u:lerp factor q1x q2x)
-                  oy (u:lerp factor q1y q2y)
-                  oz (u:lerp factor q1z q2z))
+            (psetf ow (u:lerp factor q1w q2w)
+                   ox (u:lerp factor q1x q2x)
+                   oy (u:lerp factor q1y q2y)
+                   oz (u:lerp factor q1z q2z))
             (let* ((angle (acos (the (double-float -0.9995d0 0.9995d0) dot)))
                    (sin-angle (sin angle))
                    (scale1 (/ (sin (cl:* angle (cl:- 1 factor))) sin-angle))
                    (scale2 (/ (sin (cl:* factor angle)) sin-angle)))
-              (setf ow (cl:+ (cl:* q1w scale1) (cl:* q2w scale2))
-                    ox (cl:+ (cl:* q1x scale1) (cl:* q2x scale2))
-                    oy (cl:+ (cl:* q1y scale1) (cl:* q2y scale2))
-                    oz (cl:+ (cl:* q1z scale1) (cl:* q2z scale2))))))))
+              (psetf ow (cl:+ (cl:* q1w scale1) (cl:* q2w scale2))
+                     ox (cl:+ (cl:* q1x scale1) (cl:* q2x scale2))
+                     oy (cl:+ (cl:* q1y scale1) (cl:* q2y scale2))
+                     oz (cl:+ (cl:* q1z scale1) (cl:* q2z scale2))))))))
   out)
 
 (int:define-op slerp ((in1 quat) (in2 quat) (factor float)) (:out quat)
@@ -464,10 +464,10 @@
     `(let* ((,half-angle (cl:* ,angle 0.5))
             (,c (cos ,half-angle))
             (,s (sin ,half-angle)))
-       (setf ,qw ,c
-             ,qx (cl:* ,vx ,s)
-             ,qy (cl:* ,vy ,s)
-             ,qz (cl:* ,vz ,s)))))
+       (psetf ,qw ,c
+              ,qx (cl:* ,vx ,s)
+              ,qy (cl:* ,vy ,s)
+              ,qz (cl:* ,vz ,s)))))
 
 (int:define-op from-axis-angle! ((out quat) (axis dv3:vec) (angle double-float))
     (:out quat)
@@ -491,11 +491,11 @@
                 :on axes/angles :by #'cddr
               :do (dv3:with-components ((a axis))
                     (case axis
-                      (:x (setf vx 1d0 vy 0d0 vz 0d0))
-                      (:y (setf vx 0d0 vy 1d0 vz 0d0))
-                      (:z (setf vx 0d0 vy 0d0 vz 1d0))
+                      (:x (psetf vx 1d0 vy 0d0 vz 0d0))
+                      (:y (psetf vx 0d0 vy 1d0 vz 0d0))
+                      (:z (psetf vx 0d0 vy 0d0 vz 1d0))
                       (t
-                       (setf vx ax vy ay vz az)
+                       (psetf vx ax vy ay vz az)
                        (dv3::%normalize vx vy vz vx vy vz))))
                   (%from-axis-angle qw qx qy qz vx vy vz angle)
                   (ecase space
