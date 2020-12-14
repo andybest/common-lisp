@@ -149,18 +149,16 @@
     (:out vec)
   (clamp! (vec) in :min min :max max))
 
-(int:define-op = ((in1 vec) (in2 vec)) (:out boolean)
-  (with-components ((v1 in1) (v2 in2))
-    (and (cl:= v1x v2x)
-         (cl:= v1y v2y)
-         (cl:= v1z v2z))))
-
-(int:define-op ~ ((in1 vec) (in2 vec) &key (tolerance single-float 1e-7))
+(int:define-op = ((in1 vec) (in2 vec)
+                  &key (rel single-float 1e-7) (abs single-float rel))
     (:out boolean)
   (with-components ((v1 in1) (v2 in2))
-    (and (cl:< (cl:abs (cl:- v1x v2x)) tolerance)
-         (cl:< (cl:abs (cl:- v1y v2y)) tolerance)
-         (cl:< (cl:abs (cl:- v1z v2z)) tolerance))))
+    (and (cl:<= (cl:abs (cl:- v1x v2x))
+                (cl:max abs (cl:* rel (cl:max (cl:abs v1x) (cl:abs v2x)))))
+         (cl:<= (cl:abs (cl:- v1y v2y))
+                (cl:max abs (cl:* rel (cl:max (cl:abs v1y) (cl:abs v2y)))))
+         (cl:<= (cl:abs (cl:- v1z v2z))
+                (cl:max abs (cl:* rel (cl:max (cl:abs v1z) (cl:abs v2z))))))))
 
 (int:define-op +! ((out vec) (in1 vec) (in2 vec)) (:out vec)
   (with-components ((o out) (v1 in1) (v2 in2))
@@ -320,7 +318,7 @@
   (cl:>= (dot (normalize in1) (normalize in2)) (cl:- 1 1e-7)))
 
 (int:define-op parallel-p ((in1 vec) (in2 vec)) (:out boolean)
-  (~ (cross in1 in2) +zero+))
+  (= (cross in1 in2) +zero+))
 
 (int:define-op lerp! ((out vec) (in1 vec) (in2 vec) (factor single-float))
     (:out vec)

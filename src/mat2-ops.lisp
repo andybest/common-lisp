@@ -66,18 +66,18 @@
     (and (cl:= 0f0 m10 m01)
          (cl:= 1f0 m00 m11))))
 
-(int:define-op = ((in1 mat) (in2 mat)) (:out boolean)
-  (with-components ((a in1) (b in2))
-    (and (cl:= a00 b00) (cl:= a01 b01)
-         (cl:= a10 b10) (cl:= a11 b11))))
-
-(int:define-op ~ ((in1 mat) (in2 mat) &key (tolerance single-float 1e-7))
+(int:define-op = ((in1 mat) (in2 mat)
+                  &key (rel single-float 1e-7) (abs single-float rel))
     (:out boolean)
   (with-components ((a in1) (b in2))
-    (and (cl:< (cl:abs (cl:- a00 b00)) tolerance)
-         (cl:< (cl:abs (cl:- a01 b01)) tolerance)
-         (cl:< (cl:abs (cl:- a10 b10)) tolerance)
-         (cl:< (cl:abs (cl:- a11 b11)) tolerance))))
+    (and (<= (abs (cl:- a00 b00))
+             (max abs (cl:* rel (max (abs a00) (abs b00)))))
+         (<= (abs (cl:- a01 b01))
+             (max abs (cl:* rel (max (abs a01) (abs b01)))))
+         (<= (abs (cl:- a10 b10))
+             (max abs (cl:* rel (max (abs a10) (abs b10)))))
+         (<= (abs (cl:- a11 b11))
+             (max abs (cl:* rel (max (abs a11) (abs b11))))))))
 
 (int:define-op random! ((out mat) (min single-float) (max single-float))
     (:out mat)
@@ -268,7 +268,7 @@
   (transpose! (mat 1) in))
 
 (int:define-op orthogonal-p ((in mat)) (:out boolean :inline nil)
-  (~ (* in (transpose in)) +id+))
+  (= (* in (transpose in)) +id+))
 
 (int:define-op trace ((in mat)) (:out single-float)
   (with-components ((m in))

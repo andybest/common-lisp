@@ -127,16 +127,14 @@
     (:out vec)
   (clamp! (vec) in :min min :max max))
 
-(int:define-op = ((in1 vec) (in2 vec)) (:out boolean)
+(int:define-op = ((in1 vec) (in2 vec)
+                  &key (rel double-float 1d-7) (abs double-float rel))
+    (:out boolean)
   (with-components ((v1 in1) (v2 in2))
-    (and (cl:= v1x v2x)
-         (cl:= v1y v2y))))
-
-(int:define-op ~ ((in1 vec) (in2 vec) &key (tolerance double-float 1d-7))
-    (:out boolean :speed nil)
-  (with-components ((v1 in1) (v2 in2))
-    (and (cl:< (cl:abs (cl:- v1x v2x)) tolerance)
-         (cl:< (cl:abs (cl:- v1y v2y)) tolerance))))
+    (and (cl:<= (cl:abs (cl:- v1x v2x))
+                (cl:max abs (cl:* rel (cl:max (cl:abs v1x) (cl:abs v2x)))))
+         (cl:<= (cl:abs (cl:- v1y v2y))
+                (cl:max abs (cl:* rel (cl:max (cl:abs v1y) (cl:abs v2y))))))))
 
 (int:define-op +! ((out vec) (in1 vec) (in2 vec)) (:out vec)
   (with-components ((o out) (v1 in1) (v2 in2))

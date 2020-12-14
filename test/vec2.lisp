@@ -25,11 +25,11 @@
         (v (v2:vec 10.42 -10.42))
         (r (v2:vec 0.42 0.58)))
     (is v2:= (v2:fract (v2:vec)) (v2:vec))
-    (is v2:~ (v2:fract v) r)
+    (is v2:= (v2:fract v) r)
     (v2:fract! o (v2:vec))
     (is v2:= o (v2:vec))
     (v2:fract! o v)
-    (is v2:~ o r)))
+    (is v2:= o r)))
 
 (define-test v2/clamp
   (let ((v (v2:vec -1.5185602 0.3374052))
@@ -49,8 +49,8 @@
   (let ((v1 (v2:vec 0.8598654 -0.4803753))
         (v2 (v2:vec 1e-8 1e-8)))
     (true (v2:= v1 v1))
-    (true (v2:~ (v2:+ v1 v2) v1))
-    (true (v2:~ v2 v2:+zero+))))
+    (true (v2:= (v2:+ v1 v2) v1))
+    (true (v2:= v2 v2:+zero+))))
 
 (define-test v2/add
   (let ((v1 (v2:vec 0.4110496 -0.87680984))

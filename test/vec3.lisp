@@ -17,11 +17,11 @@
         (v (v3:vec 10.42 -10.42 0))
         (r (v3:vec 0.42 0.58 0)))
     (is v3:= (v3:fract (v3:vec)) (v3:vec))
-    (is v3:~ (v3:fract v) r)
+    (is v3:= (v3:fract v) r)
     (v3:fract! o (v3:vec))
     (is v3:= o (v3:vec))
     (v3:fract! o v)
-    (is v3:~ o r)))
+    (is v3:= o r)))
 
 (define-test v3/copy
   (let ((v (v3:vec 1 2 3))
@@ -49,8 +49,8 @@
   (let ((v1 (v3:vec 0.8598654 -0.4803753 -0.3822465))
         (v2 (v3:vec 1e-8 1e-8 1e-8)))
     (true (v3:= v1 v1))
-    (true (v3:~ (v3:+ v1 v2) v1))
-    (true (v3:~ v2 v3:+zero+))))
+    (true (v3:= (v3:+ v1 v2) v1))
+    (true (v3:= v2 v3:+zero+))))
 
 (define-test v3/add
   (let ((v1 (v3:vec 0.4110496 -0.87680984 -0.62870455))

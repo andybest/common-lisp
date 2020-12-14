@@ -47,31 +47,31 @@
     (is m2:= (m2:- m2 m2:+zero+) m2)))
 
 (define-test m2/multiply
-    (let ((m (m2:mat 1 5 2 6))
-          (r (m2:mat 11 35 14 46))
-          (rot-z (m2:rotate m2:+id+ const:pi/3))
-          (o (m2:mat)))
-      (is m2:= (m2:*! o m m) r)
-      (is m2:= o r)
-      (is m2:= (m2:* m m2:+id+) m)
-      (is m2:= (m2:* m2:+id+ m) m)
-      (is m2:= (m2:* m m2:+id+) (m2:* m2:+id+ m))
-      (isnt m2:= (m2:* m rot-z) (m2:* rot-z m))))
+  (let ((m (m2:mat 1 5 2 6))
+        (r (m2:mat 11 35 14 46))
+        (rot-z (m2:rotate m2:+id+ const:pi/3))
+        (o (m2:mat)))
+    (is m2:= (m2:*! o m m) r)
+    (is m2:= o r)
+    (is m2:= (m2:* m m2:+id+) m)
+    (is m2:= (m2:* m2:+id+ m) m)
+    (is m2:= (m2:* m m2:+id+) (m2:* m2:+id+ m))
+    (isnt m2:= (m2:* m rot-z) (m2:* rot-z m))))
 
 (define-test m2/rotation-vec)
 (let ((rmx m2:+id+)
       (omx (m2:mat 1))
       (rvx (v2:vec 1 0)))
   (is m2:= (m2:rotation-axis-from-vec2! omx rvx :x) rmx)
-  (true (m2:~ omx rmx))
+  (true (m2:= omx rmx))
   (is m2:= (m2:rotation-axis-from-vec2 m2:+id+ rvx :x) rmx))
 
 (define-test m2/rotation
-    (let ((omz (m2:mat 1))
-          (rmz (m2:mat 0.5 0.86602545 -0.86602545 0.5)))
-      (true (m2:~ (m2:rotate! omz m2:+id+ const:pi/3) rmz))
-      (true (m2:~ omz rmz))
-      (true (m2:~ (m2:rotate m2:+id+ const:pi/3) rmz))))
+  (let ((omz (m2:mat 1))
+        (rmz (m2:mat 0.5 0.86602545 -0.86602545 0.5)))
+    (true (m2:= (m2:rotate! omz m2:+id+ const:pi/3) rmz))
+    (true (m2:= omz rmz))
+    (true (m2:= (m2:rotate m2:+id+ const:pi/3) rmz))))
 
 (define-test m2/scale
   (let ((m (m2:mat 10 0 0 20))
@@ -83,15 +83,15 @@
     (is v2:= (m2:get-scale (m2:scale m2:+id+ v)) v)))
 
 (define-test m2/vec2-multiply
-    (let ((m (m2:rotate m2:+id+ const:pi/3))
-          (v (v2:vec 1 2))
-          (o (v2:vec))
-          (rv (v2:vec -1.2320509 1.8660254)))
-      (is v2:= (m2:*v2! o m v) rv)
-      (is v2:= o rv)
-      (is v2:= (m2:*v2 m v) rv)
-      (is v2:= (m2:*v2 m2:+id+ v) v)
-      (is v2:= (m2:*v2 m2:+id+ v2:+zero+) v2:+zero+)))
+  (let ((m (m2:rotate m2:+id+ const:pi/3))
+        (v (v2:vec 1 2))
+        (o (v2:vec))
+        (rv (v2:vec -1.2320509 1.8660254)))
+    (is v2:= (m2:*v2! o m v) rv)
+    (is v2:= o rv)
+    (is v2:= (m2:*v2 m v) rv)
+    (is v2:= (m2:*v2 m2:+id+ v) v)
+    (is v2:= (m2:*v2 m2:+id+ v2:+zero+) v2:+zero+)))
 
 (define-test m2/transpose
   (let ((m (m2:mat 1 5 2 6))
@@ -103,7 +103,7 @@
     (is m2:= (m2:transpose m2:+id+) m2:+id+)))
 
 (define-test m2/orthogonal-predicate
-    (true (m2:orthogonal-p (m2:rotate m2:+id+ const:pi)))
+  (true (m2:orthogonal-p (m2:rotate m2:+id+ const:pi)))
   (true (m2:orthogonal-p (m2:rotate m2:+id+ const:pi/2)))
   (true (m2:orthogonal-p (m2:rotate m2:+id+ const:pi/3))))
 
