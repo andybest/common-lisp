@@ -460,8 +460,8 @@
 (defmacro %from-axis-angle (qw qx qy qz vx vy vz angle)
   (u:with-gensyms (half-angle c s)
     `(let* ((,half-angle (cl:* ,angle 0.5))
-            (,c (float (cos ,half-angle) 1f0))
-            (,s (float (sin ,half-angle) 1f0)))
+            (,c (cos ,half-angle))
+            (,s (sin ,half-angle)))
        (setf ,qw ,c
              ,qx (cl:* ,vx ,s)
              ,qy (cl:* ,vy ,s)
