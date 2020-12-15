@@ -36,10 +36,13 @@
   (let ((v (v4:vec -1.5185602 0.3374052 1.5218115 1.8188539))
         (r (v4:vec -1 0.3374052 1 1))
         (o (v4:vec)))
-    (is v4:= (v4:clamp! o v :min -1.0 :max 1.0) r)
+    (is v4:= (v4:clamp! o v -1.0 1.0) r)
     (is v4:= o r)
-    (is v4:= (v4:clamp v :min -1.0 :max 1.0) r)
-    (is v4:= (v4:clamp v) v)))
+    (is v4:= (v4:clamp v -1.0 1.0) r)
+    (is v4:= (v4:clamp v
+                       most-negative-single-float
+                       most-positive-single-float)
+        v)))
 
 (define-test v4/zero
   (let ((v (v4:vec -0.72470546 0.57963276 0.8775625 0.44206798)))

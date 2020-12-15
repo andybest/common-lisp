@@ -35,10 +35,13 @@
   (let ((v (v3:vec -1.5185602 0.3374052 1.5218115))
         (r (v3:vec -1 0.3374052 1))
         (o (v3:vec)))
-    (is v3:= (v3:clamp! o v :min -1.0 :max 1.0) r)
+    (is v3:= (v3:clamp! o v -1.0 1.0) r)
     (is v3:= o r)
-    (is v3:= (v3:clamp v :min -1.0 :max 1.0) r)
-    (is v3:= (v3:clamp v) v)))
+    (is v3:= (v3:clamp v -1.0 1.0) r)
+    (is v3:= (v3:clamp v
+                       most-negative-single-float
+                       most-positive-single-float)
+        v)))
 
 (define-test v3/zero
   (let ((v (v3:vec -0.72470546 0.57963276 0.8775625)))

@@ -19,10 +19,13 @@
   (let ((m (m2:mat 1 -2 3 -4))
         (o (m2:mat))
         (r (m2:mat 1 -1 1 -1)))
-    (is m2:= (m2:clamp! o m :min -1.0 :max 1.0) r)
+    (is m2:= (m2:clamp! o m -1.0 1.0) r)
     (is m2:= o r)
-    (is m2:= (m2:clamp m :min -1.0 :max 1.0) r)
-    (is m2:= (m2:clamp m) m)))
+    (is m2:= (m2:clamp m -1.0 1.0) r)
+    (is m2:= (m2:clamp m
+                       most-negative-single-float
+                       most-positive-single-float)
+        m)))
 
 (define-test m2/add
   (let ((m1 (m2:mat 0.50253403 0.64249194 0.51019014 0.64168155))

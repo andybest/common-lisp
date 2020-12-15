@@ -35,10 +35,13 @@
   (let ((v (v2:vec -1.5185602 0.3374052))
         (r (v2:vec -1 0.3374052))
         (o (v2:vec)))
-    (is v2:= (v2:clamp! o v :min -1.0 :max 1.0) r)
+    (is v2:= (v2:clamp! o v -1.0 1.0) r)
     (is v2:= o r)
-    (is v2:= (v2:clamp v :min -1.0 :max 1.0) r)
-    (is v2:= (v2:clamp v) v)))
+    (is v2:= (v2:clamp v -1.0 1.0) r)
+    (is v2:= (v2:clamp v
+                       most-negative-single-float
+                       most-positive-single-float)
+        v)))
 
 (define-test v2/zero
   (let ((v (v2:vec -0.72470546 0.57963276)))

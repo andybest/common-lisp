@@ -4,9 +4,11 @@
   (:local-nicknames
    (#:u #:net.mfiano.lisp.golden-utils))
   (:use #:cl)
+  (:shadow
+   #:=)
   (:export
-   #:make-accessor-symbol
-   #:define-op))
+   #:=
+   #:make-accessor-symbol))
 
 (defpackage #:net.mfiano.lisp.origin.constants
   (:local-nicknames
@@ -402,7 +404,6 @@
    #:negate
    #:cross!
    #:cross
-   #:box
    #:angle
    #:direction=
    #:parallel-p
@@ -442,8 +443,8 @@
    #:acos
    #:atan!
    #:atan
-   #:make-velocity!
-   #:make-velocity))
+   #:velocity!
+   #:velocity))
 
 (defpackage #:net.mfiano.lisp.origin.dvec3
   (:local-nicknames
@@ -535,7 +536,6 @@
    #:negate
    #:cross!
    #:cross
-   #:box
    #:angle
    #:direction=
    #:parallel-p
@@ -575,8 +575,8 @@
    #:acos
    #:atan!
    #:atan
-   #:make-velocity!
-   #:make-velocity))
+   #:velocity!
+   #:velocity))
 
 (defpackage #:net.mfiano.lisp.origin.vec4
   (:local-nicknames
@@ -1478,6 +1478,7 @@
    (#:m4 #:net.mfiano.lisp.origin.mat4)
    (#:q #:net.mfiano.lisp.origin.quat)
    (#:u #:net.mfiano.lisp.golden-utils)
+   (#:v2 #:net.mfiano.lisp.origin.vec2)
    (#:v3 #:net.mfiano.lisp.origin.vec3)
    (#:v4 #:net.mfiano.lisp.origin.vec4))
   (:use #:cl)
