@@ -82,6 +82,11 @@
            m20 0d0 m21 0d0 m22 0d0))
   mat)
 
+(u:fn-> zero () mat)
+(u:defun-inline zero ()
+  (declare (optimize speed))
+  (zero! (mat)))
+
 (u:fn-> zero-p (mat) boolean)
 (u:defun-inline zero-p (mat)
   (declare (optimize speed))

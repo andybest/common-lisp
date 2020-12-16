@@ -46,7 +46,8 @@
 (define-test v2/zero
   (let ((v (v2:vec -0.72470546 0.57963276)))
     (is v2:= (v2:zero! v) v2:+zero+)
-    (is v2:= v v2:+zero+)))
+    (is v2:= v v2:+zero+)
+    (is v2:= (v2:zero) v2:+zero+)))
 
 (define-test v2/equality
   (let ((v1 (v2:vec 0.8598654 -0.4803753))

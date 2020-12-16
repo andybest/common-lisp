@@ -107,6 +107,7 @@
    #:+down+
    #:+left+
    #:+right+
+   #:zero
    #:zero!
    #:zero-p
    #:random!
@@ -234,6 +235,7 @@
    #:+down+
    #:+left+
    #:+right+
+   #:zero
    #:zero!
    #:zero-p
    #:random!
@@ -364,6 +366,7 @@
    #:+right+
    #:+forward+
    #:+back+
+   #:zero
    #:zero!
    #:zero-p
    #:random!
@@ -496,6 +499,7 @@
    #:+right+
    #:+forward+
    #:+back+
+   #:zero
    #:zero!
    #:zero-p
    #:random!
@@ -623,6 +627,7 @@
    #:with-components
    #:with-elements
    #:+zero+
+   #:zero
    #:zero!
    #:zero-p
    #:random!
@@ -745,6 +750,7 @@
    #:with-components
    #:with-elements
    #:+zero+
+   #:zero
    #:zero!
    #:zero-p
    #:random!
@@ -843,6 +849,7 @@
    #:pretty-print
    #:+zero+
    #:+id+
+   #:zero
    #:zero!
    #:zero-p
    #:random
@@ -911,6 +918,7 @@
    #:pretty-print
    #:+zero+
    #:+id+
+   #:zero
    #:zero!
    #:zero-p
    #:random
@@ -980,6 +988,7 @@
    #:pretty-print
    #:+zero+
    #:+id+
+   #:zero
    #:zero!
    #:zero-p
    #:id
@@ -1063,6 +1072,7 @@
    #:pretty-print
    #:+zero+
    #:+id+
+   #:zero
    #:zero!
    #:zero-p
    #:id
@@ -1146,6 +1156,7 @@
    #:pretty-print
    #:+zero+
    #:+id+
+   #:zero
    #:zero!
    #:zero-p
    #:id
@@ -1243,6 +1254,7 @@
    #:pretty-print
    #:+zero+
    #:+id+
+   #:zero
    #:zero!
    #:zero-p
    #:id

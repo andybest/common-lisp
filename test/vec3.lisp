@@ -46,7 +46,8 @@
 (define-test v3/zero
   (let ((v (v3:vec -0.72470546 0.57963276 0.8775625)))
     (is v3:= (v3:zero! v) v3:+zero+)
-    (is v3:= v v3:+zero+)))
+    (is v3:= v v3:+zero+)
+    (is v3:= (v3:zero) v3:+zero+)))
 
 (define-test v3/equality
   (let ((v1 (v3:vec 0.8598654 -0.4803753 -0.3822465))

@@ -88,6 +88,11 @@
     (setf vx 0f0 vy 0f0))
   vec)
 
+(u:fn-> zero () vec)
+(u:defun-inline zero ()
+  (declare (optimize speed))
+  (zero! (vec)))
+
 (u:fn-> zero-p (vec) boolean)
 (u:defun-inline zero-p (vec)
   (declare (optimize speed))
