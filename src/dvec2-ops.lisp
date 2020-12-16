@@ -4,22 +4,18 @@
 
 (u:fn-> x (vec) u:f64)
 (u:defun-inline x (vec)
-  (declare (optimize speed))
   (aref vec 0))
 
 (u:fn-> (setf x) (u:f64 vec) u:f64)
 (u:defun-inline (setf x) (value vec)
-  (declare (optimize speed))
   (setf (aref vec 0) value))
 
 (u:fn-> y (vec) u:f64)
 (u:defun-inline y (vec)
-  (declare (optimize speed))
   (aref vec 1))
 
 (u:fn-> (setf y) (u:f64 vec) u:f64)
 (u:defun-inline (setf y) (value vec)
-  (declare (optimize speed))
   (setf (aref vec 1) value))
 
 ;;; constructors
