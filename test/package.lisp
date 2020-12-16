@@ -2,7 +2,7 @@
 
 (defpackage #:net.mfiano.lisp.origin.test
   (:local-nicknames
-   (#:const #:net.mfiano.lisp.origin.constants)
+   (#:com #:net.mfiano.lisp.origin.common)
    (#:m2 #:net.mfiano.lisp.origin.mat2)
    (#:m3 #:net.mfiano.lisp.origin.mat3)
    (#:m4 #:net.mfiano.lisp.origin.mat4)
