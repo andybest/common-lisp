@@ -4,6 +4,7 @@
   (let ((q (q:quat))
         (r (q:quat 1 0 0 0)))
     (is q:= q:+id+ r)
+    (is q:= (q:id) r)
     (true (q:id-p (q:quat 1)))
     (true (q:id-p (q:id! q)))))
 

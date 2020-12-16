@@ -846,6 +846,7 @@
    #:zero!
    #:zero-p
    #:random
+   #:id
    #:id!
    #:id-p
    #:=
@@ -913,6 +914,7 @@
    #:zero!
    #:zero-p
    #:random
+   #:id
    #:id!
    #:id-p
    #:=
@@ -980,6 +982,7 @@
    #:+id+
    #:zero!
    #:zero-p
+   #:id
    #:id!
    #:id-p
    #:=
@@ -1062,6 +1065,7 @@
    #:+id+
    #:zero!
    #:zero-p
+   #:id
    #:id!
    #:id-p
    #:=
@@ -1144,6 +1148,7 @@
    #:+id+
    #:zero!
    #:zero-p
+   #:id
    #:id!
    #:id-p
    #:=
@@ -1240,6 +1245,7 @@
    #:+id+
    #:zero!
    #:zero-p
+   #:id
    #:id!
    #:id-p
    #:=
@@ -1337,6 +1343,7 @@
    #:z
    #:+zero+
    #:+id+
+   #:id
    #:id!
    #:id-p
    #:zero!
@@ -1419,6 +1426,7 @@
    #:z
    #:+zero+
    #:+id+
+   #:id
    #:id!
    #:id-p
    #:zero!

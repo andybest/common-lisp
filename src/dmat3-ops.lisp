@@ -96,6 +96,11 @@
            m20 0d0 m21 0d0 m22 1d0))
   mat)
 
+(u:fn-> id () mat)
+(u:defun-inline id ()
+  (declare (optimize speed))
+  (id! (mat)))
+
 (u:fn-> id-p (mat) boolean)
 (u:defun-inline id-p (mat)
   (declare (optimize speed))

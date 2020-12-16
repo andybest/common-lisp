@@ -4,6 +4,7 @@
   (let ((m (m3:mat))
         (r (m3:mat 1 0 0 0 1 0 0 0 1)))
     (is m3:= m3:+id+ r)
+    (is m3:= (m3:id) r)
     (true (m3:id-p (m3:mat 1)))
     (true (m3:id-p (m3:id! m)))))
 

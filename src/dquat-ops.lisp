@@ -94,12 +94,15 @@
     (psetf qw 1d0 qx 0d0 qy 0d0 qz 0d0))
   quat)
 
+(u:fn-> id () quat)
+(u:defun-inline id ()
+  (declare (optimize speed))
+  (id! (quat)))
+
 (u:fn-> id-p (quat) boolean)
 (u:defun-inline id-p (quat)
   (declare (optimize speed))
-  (with-components ((q quat))
-    (and (cl:= 1d0 qw)
-         (cl:= 0d0 qx qy qz))))
+  (= quat +id+))
 
 (u:fn-> zero! (quat) quat)
 (u:defun-inline zero! (quat)
