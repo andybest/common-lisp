@@ -1353,12 +1353,10 @@
    #:x
    #:y
    #:z
-   #:+zero+
    #:+id+
    #:id
    #:id!
    #:id-p
-   #:zero!
    #:=
    #:random!
    #:random
@@ -1436,12 +1434,10 @@
    #:x
    #:y
    #:z
-   #:+zero+
    #:+id+
    #:id
    #:id!
    #:id-p
-   #:zero!
    #:=
    #:random!
    #:random

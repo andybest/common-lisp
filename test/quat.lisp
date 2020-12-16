@@ -10,10 +10,11 @@
 
 (define-test q/equality
   (let ((q1 (q:quat 0.25889468 -0.4580922 0.6231675 0.34003425))
-        (q2 (q:quat 1e-8 1e-8 1e-8 1e-8)))
+        (q2 (q:quat 1f0 1e-8 1e-8 1e-8))
+        (r (q:quat 1.2588947 -0.4580922 0.6231675 0.34003425)))
     (true (q:= q1 q1))
-    (true (q:= (q:+ q1 q2) q1))
-    (true (q:= q2 (q:quat)))))
+    (true (q:= (q:+ q1 q2) r))
+    (true (q:= q2 (q:quat 1f0)))))
 
 (define-test q/copy
   (let ((q (q:quat 0.34003425 -0.4920528 0.8754709 0.6535034))

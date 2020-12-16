@@ -49,7 +49,7 @@
 (ss:defstore quat (&rest args))
 
 (ss:defspecialization (quat :inline t) () quat
-  (%quat 0d0 0d0 0d0 0d0))
+  (%quat 1d0 0d0 0d0 0d0))
 
 (ss:defspecialization (quat :inline t) ((w real)) quat
   (%quat (float w 1d0) 0d0 0d0 0d0))
@@ -71,8 +71,6 @@
     (%quat (float qw 1d0) (float qx 1d0) (float qy 1d0) (float qz 1d0))))
 
 ;;; constants
-
-(u:define-constant +zero+ (%quat 0d0 0d0 0d0 0d0) :test #'equalp)
 
 (u:define-constant +id+ (%quat 1d0 0d0 0d0 0d0) :test #'equalp)
 
@@ -103,13 +101,6 @@
 (u:defun-inline id-p (quat)
   (declare (optimize speed))
   (= quat +id+))
-
-(u:fn-> zero! (quat) quat)
-(u:defun-inline zero! (quat)
-  (declare (optimize speed))
-  (with-components ((q quat))
-    (psetf qw 0d0 qx 0d0 qy 0d0 qz 0d0))
-  quat)
 
 (u:fn-> random! (quat u:f64 u:f64) quat)
 (u:defun-inline random! (out min max)
