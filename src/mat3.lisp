@@ -1,6 +1,6 @@
 (in-package #:net.mfiano.lisp.origin.mat3)
 
-(deftype mat () '(simple-array single-float (9)))
+(deftype mat () '(simple-array u:f32 (9)))
 
 (defmacro with-components (((prefix matrix) &rest rest) &body body)
   (u:once-only (matrix)

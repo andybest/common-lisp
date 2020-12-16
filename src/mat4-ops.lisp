@@ -99,7 +99,10 @@
 (u:fn-> zero () mat)
 (u:defun-inline zero ()
   (declare (optimize speed))
-  (zero! (mat)))
+  (%mat 0f0 0f0 0f0 0f0
+        0f0 0f0 0f0 0f0
+        0f0 0f0 0f0 0f0
+        0f0 0f0 0f0 0f0))
 
 (u:fn-> zero-p (mat) boolean)
 (u:defun-inline zero-p (mat)
@@ -119,7 +122,7 @@
 (u:fn-> id () mat)
 (u:defun-inline id ()
   (declare (optimize speed))
-  (id! (mat)))
+  (id! (zero)))
 
 (u:fn-> id-p (mat) boolean)
 (u:defun-inline id-p (mat)
@@ -152,7 +155,7 @@
 (u:fn-> random (u:f32 u:f32) mat)
 (u:defun-inline random (min max)
   (declare (optimize speed))
-  (random! (mat) min max))
+  (random! (zero) min max))
 
 (u:fn-> copy! (mat mat) mat)
 (u:defun-inline copy! (out mat)
@@ -167,7 +170,7 @@
 (u:fn-> copy (mat) mat)
 (u:defun-inline copy (mat)
   (declare (optimize speed))
-  (copy! (mat) mat))
+  (copy! (zero) mat))
 
 (u:fn-> clamp! (mat mat u:f32 u:f32) mat)
 (u:defun-inline clamp! (out mat min max)
@@ -194,7 +197,7 @@
 (u:fn-> clamp (mat u:f32 u:f32) mat)
 (u:defun-inline clamp (mat min max)
   (declare (optimize speed))
-  (clamp! (mat) mat min max))
+  (clamp! (zero) mat min max))
 
 (u:fn-> +! (mat mat mat) mat)
 (u:defun-inline +! (out mat1 mat2)
@@ -221,7 +224,7 @@
 (u:fn-> + (mat mat) mat)
 (u:defun-inline + (mat1 mat2)
   (declare (optimize speed))
-  (+! (mat) mat1 mat2))
+  (+! (zero) mat1 mat2))
 
 (u:fn-> -! (mat mat mat) mat)
 (u:defun-inline -! (out mat1 mat2)
@@ -248,7 +251,7 @@
 (u:fn-> - (mat mat) mat)
 (u:defun-inline - (mat1 mat2)
   (declare (optimize speed))
-  (-! (mat) mat1 mat2))
+  (-! (zero) mat1 mat2))
 
 (defmacro %* (o00 o01 o02 o03 o10 o11 o12 o13 o20 o21 o22 o23 o30 o31 o32 o33
               a00 a01 a02 a03 a10 a11 a12 a13 a20 a21 a22 a23 a30 a31 a32 a33
@@ -298,7 +301,7 @@
 (u:fn-> * (mat mat) mat)
 (u:defun-inline * (mat1 mat2)
   (declare (optimize speed))
-  (*! (mat) mat1 mat2))
+  (*! (zero) mat1 mat2))
 
 (u:fn-> copy-rotation! (mat mat) mat)
 (u:defun-inline copy-rotation! (out mat)
@@ -312,7 +315,7 @@
 (u:fn-> copy-rotation (mat) mat)
 (u:defun-inline copy-rotation (mat)
   (declare (optimize speed))
-  (copy-rotation! (mat 1) mat))
+  (copy-rotation! (id) mat))
 
 (u:fn-> rotation-to-mat3! (m3:mat mat) m3:mat)
 (u:defun-inline rotation-to-mat3! (out mat)
@@ -327,7 +330,7 @@
 (u:fn-> rotation-to-mat3 (mat) m3:mat)
 (u:defun-inline rotation-to-mat3 (mat)
   (declare (optimize speed))
-  (rotation-to-mat3! (m3:mat 1) mat))
+  (rotation-to-mat3! (m3:id) mat))
 
 (u:fn-> normalize-rotation! (mat mat) mat)
 (u:defun-inline normalize-rotation! (out mat)
@@ -358,7 +361,7 @@
 (u:fn-> get-column (mat (integer 0 3)) v4:vec)
 (u:defun-inline get-column (mat index)
   (declare (optimize speed))
-  (get-column! (v4:vec) mat index))
+  (get-column! (v4:zero) mat index))
 
 (u:fn-> set-column! (mat mat v4:vec (integer 0 3)) mat)
 (u:defun-inline set-column! (out mat vec index)
@@ -376,7 +379,7 @@
 (u:fn-> set-column (mat v4:vec (integer 0 3)) mat)
 (u:defun-inline set-column (mat vec index)
   (declare (optimize speed))
-  (set-column! (mat 1) mat vec index))
+  (set-column! (id) mat vec index))
 
 (u:fn-> get-translation! (v3:vec mat) v3:vec)
 (u:defun-inline get-translation! (out mat)
@@ -389,7 +392,7 @@
 (u:fn-> get-translation (mat) v3:vec)
 (u:defun-inline get-translation (mat)
   (declare (optimize speed))
-  (get-translation! (v3:vec) mat))
+  (get-translation! (v3:zero) mat))
 
 (u:fn-> set-translation! (mat mat v3:vec) mat)
 (u:defun-inline set-translation! (out mat vec)
@@ -432,7 +435,7 @@
 (u:fn-> translate (mat v3:vec) mat)
 (u:defun-inline translate (mat vec)
   (declare (optimize speed))
-  (translate! (mat 1) mat vec))
+  (translate! (id) mat vec))
 
 (u:fn-> rotation-axis-to-vec3! (v3:vec mat keyword) v3:vec)
 (u:defun-inline rotation-axis-to-vec3! (out mat axis)
@@ -448,7 +451,7 @@
 (u:fn-> rotation-axis-to-vec3 (mat keyword) v3:vec)
 (u:defun-inline rotation-axis-to-vec3 (mat axis)
   (declare (optimize speed))
-  (rotation-axis-to-vec3! (v3:vec) mat axis))
+  (rotation-axis-to-vec3! (v3:zero) mat axis))
 
 (u:fn-> rotation-axis-from-vec3! (mat v3:vec keyword) mat)
 (u:defun-inline rotation-axis-from-vec3! (out vec axis)
@@ -499,7 +502,7 @@
 (u:fn-> rotate (mat v3:vec) mat)
 (u:defun-inline rotate (mat vec)
   (declare (optimize speed))
-  (rotate! (mat 1) mat vec))
+  (rotate! (id) mat vec))
 
 (u:fn-> get-scale! (v3:vec mat) v3:vec)
 (u:defun-inline get-scale! (out mat)
@@ -513,7 +516,7 @@
 (u:fn-> get-scale (mat) v3:vec)
 (u:defun-inline get-scale (mat)
   (declare (optimize speed))
-  (get-scale! (v3:vec) mat))
+  (get-scale! (v3:zero) mat))
 
 (u:fn-> set-scale! (mat mat v3:vec) mat)
 (u:defun-inline set-scale! (out mat vec)
@@ -555,7 +558,7 @@
 (u:fn-> scale (mat v3:vec) mat)
 (u:defun-inline scale (mat vec)
   (declare (optimize speed))
-  (scale! (mat 1) mat vec))
+  (scale! (id) mat vec))
 
 (defmacro %*v4! (ox oy oz ow
                  m00 m01 m02 m03 m10 m11 m12 m13 m20 m21 m22 m23 m30 m31 m32 m33
@@ -582,7 +585,7 @@
 (u:fn-> *v4 (mat v4:vec) v4:vec)
 (u:defun-inline *v4 (mat vec)
   (declare (optimize speed))
-  (*v4! (v4:vec) mat vec))
+  (*v4! (v4:zero) mat vec))
 
 (u:fn-> transpose! (mat mat) mat)
 (u:defun-inline transpose! (out mat)
@@ -599,7 +602,7 @@
 (u:fn-> transpose (mat) mat)
 (u:defun-inline transpose (mat)
   (declare (optimize speed))
-  (transpose! (mat 1) mat))
+  (transpose! (id) mat))
 
 (u:fn-> orthogonal-p (mat) boolean)
 (defun orthogonal-p (mat)
@@ -623,7 +626,7 @@
 (u:fn-> orthonormalize (mat) mat)
 (u:defun-inline orthonormalize (mat)
   (declare (optimize speed))
-  (orthonormalize! (mat 1) mat))
+  (orthonormalize! (id) mat))
 
 (defmacro %trace (m00 m11 m22 m33)
   `(cl:+ ,m00 ,m11 ,m22 ,m33))
@@ -650,7 +653,7 @@
 (u:fn-> main-diagonal (mat) v4:vec)
 (u:defun-inline main-diagonal (mat)
   (declare (optimize speed))
-  (main-diagonal! (v4:vec) mat))
+  (main-diagonal! (v4:zero) mat))
 
 (u:fn-> anti-diagonal! (v4:vec mat) v4:vec)
 (u:defun-inline anti-diagonal! (out mat)
@@ -663,7 +666,7 @@
 (u:fn-> anti-diagonal (mat) v4:vec)
 (u:defun-inline anti-diagonal (mat)
   (declare (optimize speed))
-  (anti-diagonal! (v4:vec) mat))
+  (anti-diagonal! (v4:zero) mat))
 
 (u:fn-> determinant (mat) u:f32)
 (u:defun-inline determinant (mat)
@@ -699,7 +702,7 @@
 (u:fn-> invert-orthogonal (mat) mat)
 (u:defun-inline invert-orthogonal (mat)
   (declare (optimize speed))
-  (invert-orthogonal! (mat 1) mat))
+  (invert-orthogonal! (id) mat))
 
 (u:fn-> invert! (mat mat) (values mat boolean))
 (defun invert! (out mat)
@@ -792,7 +795,7 @@
 (u:fn-> invert (mat) mat)
 (u:defun-inline invert (mat)
   (declare (optimize speed))
-  (invert! (mat 1) mat))
+  (invert! (id) mat))
 
 (u:fn-> set-view! (mat v3:vec v3:vec v3:vec) mat)
 (defun set-view! (out eye target up)
@@ -834,7 +837,7 @@
 (u:fn-> set-view (v3:vec v3:vec v3:vec) mat)
 (u:defun-inline set-view (eye target up)
   (declare (optimize speed))
-  (set-view! (mat 1) eye target up))
+  (set-view! (id) eye target up))
 
 (u:fn-> set-projection/orthographic! (mat u:f32 u:f32 u:f32 u:f32 u:f32 u:f32)
         mat)
@@ -855,7 +858,7 @@
 (u:fn-> set-projection/orthographic (u:f32 u:f32 u:f32 u:f32 u:f32 u:f32) mat)
 (u:defun-inline set-projection/orthographic (left right bottom top near far)
   (declare (optimize speed))
-  (set-projection/orthographic! (mat 1) left right bottom top near far))
+  (set-projection/orthographic! (id) left right bottom top near far))
 
 (u:fn-> set-projection/perspective! (mat u:f32 u:f32 u:f32 u:f32) mat)
 (u:defun-inline set-projection/perspective! (out fov aspect near far)
@@ -873,4 +876,4 @@
 (u:fn-> set-projection/perspective (u:f32 u:f32 u:f32 u:f32) mat)
 (u:defun-inline set-projection/perspective (fov aspect near far)
   (declare (optimize speed))
-  (set-projection/perspective! (mat 1) fov aspect near far))
+  (set-projection/perspective! (id) fov aspect near far))

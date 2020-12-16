@@ -900,8 +900,8 @@
    (#:const #:net.mfiano.lisp.origin.constants)
    (#:dv2 #:net.mfiano.lisp.origin.dvec2)
    (#:int #:net.mfiano.lisp.origin.internal)
-   (#:m2 #:net.mfiano.lisp.origin.mat2)
    (#:ss #:specialization-store)
+   (#:m2 #:net.mfiano.lisp.origin.mat2)
    (#:u #:net.mfiano.lisp.golden-utils))
   (:use #:cl)
   (:shadow

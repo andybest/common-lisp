@@ -27,7 +27,7 @@
 (u:fn-> unproject (v3:vec m4:mat m4:mat v4:vec) v3:vec)
 (u:defun-inline unproject (point model projection viewport)
   (declare (optimize speed))
-  (unproject! (v3:vec) point model projection viewport))
+  (unproject! (v3:zero) point model projection viewport))
 
 (u:fn-> translate-point (v3:vec v3:vec u:f32) v3:vec)
 (u:defun-inline translate-point (point direction distance)
@@ -54,7 +54,7 @@
          (dir-dot-plane (v3:dot dir plane-normal))
          (plane-line (v3:- line-point1 plane-point)))
     (if (zerop dir-dot-plane)
-        (v3:vec)
+        (v3:zero)
         (let ((dist (/ (- (v3:dot plane-normal plane-line)) dir-dot-plane)))
           (translate-point line-point1 dir dist)))))
 

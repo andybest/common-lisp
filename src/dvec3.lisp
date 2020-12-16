@@ -1,6 +1,6 @@
 (in-package #:net.mfiano.lisp.origin.dvec3)
 
-(deftype vec () '(simple-array double-float (3)))
+(deftype vec () '(simple-array u:f64 (3)))
 
 (defmacro with-components (((prefix vec) &rest rest) &body body)
   (u:once-only (vec)

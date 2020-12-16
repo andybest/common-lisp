@@ -1,6 +1,6 @@
 (in-package #:net.mfiano.lisp.origin.dquat)
 
-(deftype quat () '(simple-array double-float (4)))
+(deftype quat () '(simple-array u:f64 (4)))
 
 (defmacro with-components (((prefix quat) &rest rest) &body body)
   (u:once-only (quat)

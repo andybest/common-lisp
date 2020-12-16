@@ -91,7 +91,7 @@
 (u:fn-> zero () vec)
 (u:defun-inline zero ()
   (declare (optimize speed))
-  (zero! (vec)))
+  (%vec 0f0 0f0))
 
 (u:fn-> zero-p (vec) boolean)
 (u:defun-inline zero-p (vec)
@@ -110,7 +110,7 @@
 (u:fn-> random (u:f32 u:f32) vec)
 (u:defun-inline random (min max)
   (declare (optimize speed))
-  (random! (vec) min max))
+  (random! (zero) min max))
 
 (u:fn-> copy! (vec vec) vec)
 (u:defun-inline copy! (out vec)
@@ -122,7 +122,7 @@
 (u:fn-> copy (vec) vec)
 (u:defun-inline copy (vec)
   (declare (optimize speed))
-  (copy! (vec) vec))
+  (copy! (zero) vec))
 
 (u:fn-> sign! (vec vec) vec)
 (u:defun-inline sign! (out vec)
@@ -135,7 +135,7 @@
 (u:fn-> sign (vec) vec)
 (u:defun-inline sign (vec)
   (declare (optimize speed))
-  (sign! (vec) vec))
+  (sign! (zero) vec))
 
 (u:fn-> fract! (vec vec) vec)
 (u:defun-inline fract! (out vec)
@@ -148,7 +148,7 @@
 (u:fn-> fract (vec) vec)
 (u:defun-inline fract (vec)
   (declare (optimize speed))
-  (fract! (vec) vec))
+  (fract! (zero) vec))
 
 (u:fn-> clamp! (vec vec u:f32 u:f32) vec)
 (u:defun-inline clamp! (out vec min max)
@@ -161,7 +161,7 @@
 (u:fn-> clamp (vec u:f32 u:f32) vec)
 (u:defun-inline clamp (vec min max)
   (declare (optimize speed))
-  (clamp! (vec) vec min max))
+  (clamp! (zero) vec min max))
 
 (u:fn-> +! (vec vec vec) vec)
 (u:defun-inline +! (out vec1 vec2)
@@ -174,7 +174,7 @@
 (u:fn-> + (vec vec) vec)
 (u:defun-inline + (vec1 vec2)
   (declare (optimize speed))
-  (+! (vec) vec1 vec2))
+  (+! (zero) vec1 vec2))
 
 (u:fn-> -! (vec vec vec) vec)
 (u:defun-inline -! (out vec1 vec2)
@@ -187,7 +187,7 @@
 (u:fn-> - (vec vec) vec)
 (u:defun-inline - (vec1 vec2)
   (declare (optimize speed))
-  (-! (vec) vec1 vec2))
+  (-! (zero) vec1 vec2))
 
 (u:fn-> *! (vec vec vec) vec)
 (u:defun-inline *! (out vec1 vec2)
@@ -200,7 +200,7 @@
 (u:fn-> * (vec vec) vec)
 (u:defun-inline * (vec1 vec2)
   (declare (optimize speed))
-  (*! (vec) vec1 vec2))
+  (*! (zero) vec1 vec2))
 
 (u:fn-> /! (vec vec vec) vec)
 (u:defun-inline /! (out vec1 vec2)
@@ -213,7 +213,7 @@
 (u:fn-> / (vec vec) vec)
 (u:defun-inline / (vec1 vec2)
   (declare (optimize speed))
-  (/! (vec) vec1 vec2))
+  (/! (zero) vec1 vec2))
 
 (defmacro %scale (ox oy x y scalar)
   `(psetf ,ox (cl:* ,x ,scalar)
@@ -229,7 +229,7 @@
 (u:fn-> scale (vec u:f32) vec)
 (u:defun-inline scale (vec scalar)
   (declare (optimize speed))
-  (scale! (vec) vec scalar))
+  (scale! (zero) vec scalar))
 
 (u:fn-> invert! (vec vec) vec)
 (u:defun-inline invert! (out vec)
@@ -242,7 +242,7 @@
 (u:fn-> invert (vec) vec)
 (u:defun-inline invert (vec)
   (declare (optimize speed))
-  (invert! (vec) vec))
+  (invert! (zero) vec))
 
 (defmacro %dot (v1x v1y v2x v2y)
   `(cl:+ (cl:* ,v1x ,v2x) (cl:* ,v1y ,v2y)))
@@ -302,7 +302,7 @@
 (u:fn-> normalize (vec) vec)
 (u:defun-inline normalize (vec)
   (declare (optimize speed))
-  (normalize! (vec) vec))
+  (normalize! (zero) vec))
 
 (u:fn-> round! (vec vec) vec)
 (u:defun-inline round! (out vec)
@@ -315,7 +315,7 @@
 (u:fn-> round (vec) vec)
 (u:defun-inline round (vec)
   (declare (optimize speed))
-  (round! (vec) vec))
+  (round! (zero) vec))
 
 (u:fn-> abs! (vec vec) vec)
 (u:defun-inline abs! (out vec)
@@ -328,7 +328,7 @@
 (u:fn-> abs (vec) vec)
 (u:defun-inline abs (vec)
   (declare (optimize speed))
-  (abs! (vec) vec))
+  (abs! (zero) vec))
 
 (u:fn-> negate! (vec vec) vec)
 (u:defun-inline negate! (out vec)
@@ -338,7 +338,7 @@
 (u:fn-> negate (vec) vec)
 (u:defun-inline negate (vec)
   (declare (optimize speed))
-  (negate! (vec) vec))
+  (negate! (zero) vec))
 
 (u:fn-> angle (vec vec) u:f32)
 (u:defun-inline angle (vec1 vec2)
@@ -365,7 +365,7 @@
 (u:fn-> lerp (vec vec u:f32) vec)
 (u:defun-inline lerp (vec1 vec2 factor)
   (declare (optimize speed))
-  (lerp! (vec) vec1 vec2 factor))
+  (lerp! (zero) vec1 vec2 factor))
 
 (u:fn-> < (vec vec) boolean)
 (u:defun-inline < (vec1 vec2)
@@ -406,7 +406,7 @@
 (u:fn-> min (vec vec) vec)
 (u:defun-inline min (vec1 vec2)
   (declare (optimize speed))
-  (min! (vec) vec1 vec2))
+  (min! (zero) vec1 vec2))
 
 (u:fn-> max! (vec vec vec) vec)
 (u:defun-inline max! (out vec1 vec2)
@@ -419,7 +419,7 @@
 (u:fn-> max (vec vec) vec)
 (u:defun-inline max (vec1 vec2)
   (declare (optimize speed))
-  (max! (vec) vec1 vec2))
+  (max! (zero) vec1 vec2))
 
 (u:fn-> from-radians! (vec (single-float #.(cl:- const:pi) #.const:pi)) vec)
 (u:defun-inline from-radians! (vec radians)
@@ -432,7 +432,7 @@
 (u:fn-> from-radians ((single-float #.(cl:- const:pi) #.const:pi)) vec)
 (u:defun-inline from-radians (radians)
   (declare (optimize speed))
-  (from-radians! (vec) radians))
+  (from-radians! (zero) radians))
 
 (u:fn-> radians! (vec vec) vec)
 (u:defun-inline radians! (out vec)
@@ -445,7 +445,7 @@
 (u:fn-> radians (vec) vec)
 (u:defun-inline radians (vec)
   (declare (optimize speed))
-  (radians! (vec) vec))
+  (radians! (zero) vec))
 
 (u:fn-> from-degrees! (vec (single-float -360f0 360f0)) vec)
 (u:defun-inline from-degrees! (out degrees)
@@ -458,7 +458,7 @@
 (u:fn-> from-degrees ((single-float -360f0 360f0)) vec)
 (u:defun-inline from-degrees (degrees)
   (declare (optimize speed))
-  (from-degrees! (vec) degrees))
+  (from-degrees! (zero) degrees))
 
 (u:fn-> degrees! (vec vec) vec)
 (u:defun-inline degrees! (out vec)
@@ -471,7 +471,7 @@
 (u:fn-> degrees (vec) vec)
 (u:defun-inline degrees (vec)
   (declare (optimize speed))
-  (degrees! (vec) vec))
+  (degrees! (zero) vec))
 
 (u:fn-> expt! (vec vec real) vec)
 (u:defun-inline expt! (out vec power)
@@ -482,7 +482,7 @@
 
 (u:fn-> expt (vec real) vec)
 (u:defun-inline expt (vec power)
-  (expt! (vec) vec power))
+  (expt! (zero) vec power))
 
 (u:fn-> sqrt! (vec vec) vec)
 (u:defun-inline sqrt! (out vec)
@@ -495,7 +495,7 @@
 (u:fn-> sqrt (vec) vec)
 (u:defun-inline sqrt (vec)
   (declare (optimize speed))
-  (sqrt! (vec) vec))
+  (sqrt! (zero) vec))
 
 (u:fn-> floor! (vec vec) vec)
 (u:defun-inline floor! (out vec)
@@ -508,7 +508,7 @@
 (u:fn-> floor (vec) vec)
 (u:defun-inline floor (vec)
   (declare (optimize speed))
-  (floor! (vec) vec))
+  (floor! (zero) vec))
 
 (u:fn-> ceiling! (vec vec) vec)
 (u:defun-inline ceiling! (out vec)
@@ -521,7 +521,7 @@
 (u:fn-> ceiling (vec) vec)
 (u:defun-inline ceiling (vec)
   (declare (optimize speed))
-  (ceiling! (vec) vec))
+  (ceiling! (zero) vec))
 
 (u:fn-> mod! (vec vec u:f32) vec)
 (u:defun-inline mod! (out vec divisor)
@@ -534,7 +534,7 @@
 (u:fn-> mod (vec u:f32) vec)
 (u:defun-inline mod (vec divisor)
   (declare (optimize speed))
-  (mod! (vec) vec divisor))
+  (mod! (zero) vec divisor))
 
 (u:fn-> sin! (vec vec) vec)
 (u:defun-inline sin! (out vec)
@@ -547,7 +547,7 @@
 (u:fn-> sin (vec) vec)
 (u:defun-inline sin (vec)
   (declare (optimize speed))
-  (sin! (vec) vec))
+  (sin! (zero) vec))
 
 (u:fn-> cos! (vec vec) vec)
 (u:defun-inline cos! (out vec)
@@ -560,7 +560,7 @@
 (u:fn-> cos (vec) vec)
 (u:defun-inline cos (vec)
   (declare (optimize speed))
-  (cos! (vec) vec))
+  (cos! (zero) vec))
 
 (u:fn-> tan! (vec vec) vec)
 (u:defun-inline tan! (out vec)
@@ -573,7 +573,7 @@
 (u:fn-> tan (vec) vec)
 (u:defun-inline tan (vec)
   (declare (optimize speed))
-  (tan! (vec) vec))
+  (tan! (zero) vec))
 
 (u:fn-> asin! (vec vec) vec)
 (u:defun-inline asin! (out vec)
@@ -586,7 +586,7 @@
 (u:fn-> asin (vec) vec)
 (u:defun-inline asin (vec)
   (declare (optimize speed))
-  (asin! (vec) vec))
+  (asin! (zero) vec))
 
 (u:fn-> acos! (vec vec) vec)
 (u:defun-inline acos! (out vec)
@@ -599,7 +599,7 @@
 (u:fn-> acos (vec) vec)
 (u:defun-inline acos (vec)
   (declare (optimize speed))
-  (acos! (vec) vec))
+  (acos! (zero) vec))
 
 (u:fn-> atan! (vec vec) vec)
 (u:defun-inline atan! (out vec)
@@ -612,4 +612,4 @@
 (u:fn-> atan (vec) vec)
 (u:defun-inline atan (vec)
   (declare (optimize speed))
-  (atan! (vec) vec))
+  (atan! (zero) vec))

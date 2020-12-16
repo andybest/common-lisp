@@ -2,7 +2,7 @@
 
 ;;; type
 
-(deftype quat () '(simple-array single-float (4)))
+(deftype quat () '(simple-array u:f32 (4)))
 
 ;;; accessors
 
@@ -105,7 +105,7 @@
 (u:fn-> id () quat)
 (u:defun-inline id ()
   (declare (optimize speed))
-  (id! (quat)))
+  (%quat 1f0 0f0 0f0 0f0))
 
 (u:fn-> id-p (quat) boolean)
 (u:defun-inline id-p (quat)
@@ -126,7 +126,7 @@
 (u:fn-> random (u:f32 u:f32) quat)
 (u:defun-inline random (min max)
   (declare (optimize speed))
-  (random! (quat) min max))
+  (random! (id) min max))
 
 (u:fn-> copy! (quat quat) quat)
 (u:defun-inline copy! (out quat)
@@ -138,7 +138,7 @@
 (u:fn-> copy (quat) quat)
 (u:defun-inline copy (quat)
   (declare (optimize speed))
-  (copy! (quat 1) quat))
+  (copy! (id) quat))
 
 (u:fn-> +! (quat quat quat) quat)
 (u:defun-inline +! (out quat1 quat2)
@@ -153,7 +153,7 @@
 (u:fn-> + (quat quat) quat)
 (u:defun-inline + (quat1 quat2)
   (declare (optimize speed))
-  (+! (quat 1) quat1 quat2))
+  (+! (id) quat1 quat2))
 
 (u:fn-> -! (quat quat quat) quat)
 (u:defun-inline -! (out quat1 quat2)
@@ -168,7 +168,7 @@
 (u:fn-> - (quat quat) quat)
 (u:defun-inline - (quat1 quat2)
   (declare (optimize speed))
-  (-! (quat 1) quat1 quat2))
+  (-! (id) quat1 quat2))
 
 (defmacro %* (ow ox oy oz q1w q1x q1y q1z q2w q2x q2y q2z)
   `(psetf ,ow (cl:- (cl:* ,q1w ,q2w) (cl:* ,q1x ,q2x) (cl:* ,q1y ,q2y)
@@ -190,7 +190,7 @@
 (u:fn-> * (quat quat) quat)
 (u:defun-inline * (quat1 quat2)
   (declare (optimize speed))
-  (*! (quat 1) quat1 quat2))
+  (*! (id) quat1 quat2))
 
 (defmacro %scale (ow ox oy oz w x y z scalar)
   `(psetf ,ow (cl:* ,w ,scalar)
@@ -208,7 +208,7 @@
 (u:fn-> scale (quat u:f32) quat)
 (u:defun-inline scale (quat scalar)
   (declare (optimize speed))
-  (scale! (quat) quat scalar))
+  (scale! (id) quat scalar))
 
 (u:fn-> conjugate! (quat quat) quat)
 (u:defun-inline conjugate! (out quat)
@@ -223,7 +223,7 @@
 (u:fn-> conjugate (quat) quat)
 (u:defun-inline conjugate (quat)
   (declare (optimize speed))
-  (conjugate! (quat 1) quat))
+  (conjugate! (id) quat))
 
 (u:fn-> cross! (quat quat quat) quat)
 (u:defun-inline cross! (out quat1 quat2)
@@ -233,7 +233,7 @@
 (u:fn-> cross (quat quat) quat)
 (u:defun-inline cross (quat1 quat2)
   (declare (optimize speed))
-  (cross! (quat 1) quat1 quat2))
+  (cross! (id) quat1 quat2))
 
 (u:fn-> length-squared (quat) u:f32)
 (u:defun-inline length-squared (quat)
@@ -257,7 +257,7 @@
 (u:fn-> normalize (quat) quat)
 (u:defun-inline normalize (quat)
   (declare (optimize speed))
-  (normalize! (quat 1) quat))
+  (normalize! (id) quat))
 
 (u:fn-> negate! (quat quat) quat)
 (u:defun-inline negate! (out quat)
@@ -267,7 +267,7 @@
 (u:fn-> negate (quat) quat)
 (u:defun-inline negate (quat)
   (declare (optimize speed))
-  (negate! (quat 1) quat))
+  (negate! (id) quat))
 
 (u:fn-> dot (quat quat) u:f32)
 (u:defun-inline dot (quat1 quat2)
@@ -285,7 +285,7 @@
 (u:fn-> inverse (quat) quat)
 (u:defun-inline inverse (quat)
   (declare (optimize speed))
-  (inverse! (quat 1) quat))
+  (inverse! (id) quat))
 
 (u:fn-> rotate-euler! (quat quat v3:vec &key (:space keyword)) quat)
 (defun rotate-euler! (out quat vec &key (space :local))
@@ -318,7 +318,7 @@
 (u:fn-> rotate-euler (quat v3:vec &key (:space keyword)) quat)
 (u:defun-inline rotate-euler (quat vec &key (space :local))
   (declare (optimize speed))
-  (rotate-euler! (quat 1) quat vec :space space))
+  (rotate-euler! (id) quat vec :space space))
 
 (u:fn-> rotate! (quat quat quat &key (:space keyword)) quat)
 (defun rotate! (out quat1 quat2 &key (space :local))
@@ -333,7 +333,7 @@
 (u:fn-> rotate (quat quat &key (:space keyword)) quat)
 (u:defun-inline rotate (quat1 quat2 &key (space :local))
   (declare (optimize speed))
-  (rotate! (quat 1) quat1 quat2 :space space))
+  (rotate! (id) quat1 quat2 :space space))
 
 (u:fn-> to-euler! (v3:vec quat) v3:vec)
 (u:defun-inline to-euler! (out quat)
@@ -358,7 +358,7 @@
 (u:fn-> to-euler (quat) v3:vec)
 (u:defun-inline to-euler (quat)
   (declare (optimize speed))
-  (to-euler! (v3:vec) quat))
+  (to-euler! (v3:zero) quat))
 
 (u:fn-> to-mat3! (m3:mat quat) m3:mat)
 (u:defun-inline to-mat3! (out quat)
@@ -384,7 +384,7 @@
 (u:fn-> to-mat3 (quat) m3:mat)
 (u:defun-inline to-mat3 (quat)
   (declare (optimize speed))
-  (to-mat3! (m3:mat 1) quat))
+  (to-mat3! (m3:id) quat))
 
 (u:fn-> to-mat4! (m4:mat quat) m4:mat)
 (u:defun-inline to-mat4! (out quat)
@@ -417,7 +417,7 @@
 (u:fn-> to-mat4 (quat) m4:mat)
 (u:defun-inline to-mat4 (quat)
   (declare (optimize speed))
-  (to-mat4! (m4:mat 1) quat))
+  (to-mat4! (m4:id) quat))
 
 (u:fn-> from-mat3! (quat m3:mat) quat)
 (defun from-mat3! (out mat)
@@ -465,7 +465,7 @@
 (u:fn-> from-mat3 (m3:mat) quat)
 (u:defun-inline from-mat3 (mat)
   (declare (optimize speed))
-  (from-mat3! (quat 1) mat))
+  (from-mat3! (id) mat))
 
 (u:fn-> from-mat4! (quat m4:mat) quat)
 (u:defun-inline from-mat4! (out mat)
@@ -513,7 +513,7 @@
 (u:fn-> from-mat4 (m4:mat) quat)
 (u:defun-inline from-mat4 (mat)
   (declare (optimize speed))
-  (from-mat4! (quat 1) mat))
+  (from-mat4! (id) mat))
 
 (u:fn-> slerp! (quat quat quat u:f32) quat)
 (defun slerp! (out quat1 quat2 factor)
@@ -543,7 +543,7 @@
 (u:fn-> slerp (quat quat u:f32) quat)
 (u:defun-inline slerp (quat1 quat2 factor)
   (declare (optimize speed))
-  (slerp! (quat 1) quat1 quat2 factor))
+  (slerp! (id) quat1 quat2 factor))
 
 (defmacro %from-axis-angle (qw qx qy qz vx vy vz angle)
   (u:with-gensyms (half-angle c s)
@@ -566,7 +566,7 @@
 (u:fn-> from-axis-angle (v3:vec u:f32) quat)
 (u:defun-inline from-axis-angle (axis angle)
   (declare (optimize speed))
-  (from-axis-angle! (quat 1) axis angle))
+  (from-axis-angle! (id) axis angle))
 
 (u:fn-> orient! (quat keyword &rest (or keyword v3:vec u:f32)) quat)
 (u:defun-inline orient! (out space &rest axes/angles)
@@ -595,7 +595,7 @@
 (u:fn-> orient (keyword &rest (or keyword v3:vec u:f32)) quat)
 (u:defun-inline orient (space &rest axes/angles)
   (declare (optimize speed))
-  (apply #'orient! (quat 1) space axes/angles))
+  (apply #'orient! (id) space axes/angles))
 
 (u:fn-> from-velocity! (quat v3:vec u:f32) quat)
 (u:defun-inline from-velocity! (out velocity delta)
@@ -611,4 +611,4 @@
 (u:fn-> from-velocity (v3:vec u:f32) quat)
 (u:defun-inline from-velocity (velocity delta)
   (declare (optimize speed))
-  (from-velocity! (quat 1) velocity delta))
+  (from-velocity! (id) velocity delta))

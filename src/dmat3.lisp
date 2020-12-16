@@ -1,6 +1,6 @@
 (in-package #:net.mfiano.lisp.origin.dmat3)
 
-(deftype mat () '(simple-array double-float (9)))
+(deftype mat () '(simple-array u:f64 (9)))
 
 (defmacro with-components (((prefix matrix) &rest rest) &body body)
   (u:once-only (matrix)
