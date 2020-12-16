@@ -25,12 +25,12 @@
 
 (in-package #:net.mfiano.lisp.origin.line3d)
 
-(declaim (inline line))
+(declaim (inline %line))
 (defstruct (line
-            (:constructor %line (start end))
-            (:conc-name nil)
             (:predicate nil)
-            (:copier nil))
+            (:copier nil)
+            (:constructor %line (start end))
+            (:conc-name nil))
   (start (point3d:point 0f0 0f0 0f0) :type point3d:point)
   (end (point3d:point 0f0 0f0 0f0) :type point3d:point))
 

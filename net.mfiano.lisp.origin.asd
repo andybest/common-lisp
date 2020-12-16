@@ -54,12 +54,13 @@
     ((:file "package")
      (:file "swizzle")
      (:file "shaping")))
-   (:module "geometry"
+   (:module "primitives"
     :components
-    (
-     (:file "general")
-     (:file "point2d")
+    ((:file "point2d")
      (:file "point3d")
      (:file "line2d")
      (:file "line3d")
+     (:file "circle")
+     (:file "box2d")
+     (:file "oriented-box-2d")
      (:file "flux")))))
