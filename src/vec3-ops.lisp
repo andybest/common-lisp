@@ -4,33 +4,33 @@
 
 (u:fn-> x (vec) u:f32)
 (u:defun-inline x (vec)
-  (locally (declare (optimize speed (safety 0)))
-    (aref vec 0)))
+  (declare (optimize speed))
+  (aref vec 0))
 
 (u:fn-> (setf x) (u:f32 vec) u:f32)
 (u:defun-inline (setf x) (value vec)
-  (locally (declare (optimize speed (safety 0)))
-    (setf (aref vec 0) value)))
+  (declare (optimize speed))
+  (setf (aref vec 0) value))
 
 (u:fn-> y (vec) u:f32)
 (u:defun-inline y (vec)
-  (locally (declare (optimize speed (safety 0)))
-    (aref vec 1)))
+  (declare (optimize speed))
+  (aref vec 1))
 
 (u:fn-> (setf y) (u:f32 vec) u:f32)
 (u:defun-inline (setf y) (value vec)
-  (locally (declare (optimize speed (safety 0)))
-    (setf (aref vec 1) value)))
+  (declare (optimize speed))
+  (setf (aref vec 1) value))
 
 (u:fn-> z (vec) u:f32)
 (u:defun-inline z (vec)
-  (locally (declare (optimize speed (safety 0)))
-    (aref vec 2)))
+  (declare (optimize speed))
+  (aref vec 2))
 
 (u:fn-> (setf z) (u:f32 vec) u:f32)
 (u:defun-inline (setf z) (value vec)
-  (locally (declare (optimize speed (safety 0)))
-    (setf (aref vec 2) value)))
+  (declare (optimize speed))
+  (setf (aref vec 2) value))
 
 ;;; constructors
 
@@ -110,8 +110,7 @@
 (u:defun-inline zero! (vec)
   (declare (optimize speed))
   (with-components ((v vec))
-    (locally (declare (optimize (safety 0)))
-      (setf vx 0f0 vy 0f0 vz 0f0)))
+    (setf vx 0f0 vy 0f0 vz 0f0))
   vec)
 
 (u:fn-> zero-p (vec) boolean)
@@ -138,8 +137,7 @@
 (u:defun-inline copy! (out vec)
   (declare (optimize speed))
   (with-components ((o out) (v vec))
-    (locally (declare (optimize (safety 0)))
-      (setf ox vx oy vy oz vz)))
+    (setf ox vx oy vy oz vz))
   out)
 
 (u:fn-> copy (vec) vec)
