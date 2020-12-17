@@ -30,8 +30,8 @@
 
 (deftype point () 'v3:vec)
 
-(u:fn-> point (u:f32 u:f32 u:f32) point)
-(u:defun-inline point (x y z)
+(u:fn-> point (&optional u:f32 u:f32 u:f32) point)
+(u:defun-inline point (&optional (x 0f0) (y 0f0) (z 0f0))
   (declare (optimize speed))
   (v3::%vec x y z))
 
@@ -43,7 +43,7 @@
 (u:fn-> unproject (point m4:mat m4:mat v4:vec) point)
 (u:defun-inline unproject (point model projection viewport)
   (declare (optimize speed))
-  (u:mvlet ((out (point 0f0 0f0 0f0))
+  (u:mvlet ((out (point))
             (inverse-pm success-p (m4:invert (m4:* projection model))))
     (unless success-p
       (return-from unproject out))

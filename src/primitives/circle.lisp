@@ -25,10 +25,10 @@
             (:copier nil)
             (:constructor %circle)
             (:conc-name nil))
-  (position (point2d:point 0f0 0f0) :type point2d:point)
+  (position (point2d:point) :type point2d:point)
   (radius 1f0 :type u:f32))
 
 (u:fn-> circle (&key (:position point2d:point) (:radius u:f32)) circle)
-(u:defun-inline circle (&key (position (point2d:point 0f0 0f0)) (radius 1f0))
+(u:defun-inline circle (&key (position (point2d:point)) (radius 1f0))
   (declare (optimize speed))
   (%circle :position position :radius radius))

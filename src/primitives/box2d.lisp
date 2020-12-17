@@ -33,12 +33,12 @@
             (:copier nil)
             (:constructor %box)
             (:conc-name nil))
-  (position (point2d:point 0f0 0f0) :type point2d:point)
+  (position (point2d:point) :type point2d:point)
   (size (v2:vec 1f0 1f0) :type v2:vec))
 
 (u:fn-> box (&key (:position point2d:point) (:size v2:vec)) box)
 (declaim (inline box))
-(defun box (&key (position (point2d:point 0f0 0f0)) (size (v2:vec 1f0 1f0)))
+(defun box (&key (position (point2d:point)) (size (v2:vec 1f0 1f0)))
   "Construct a rectangle whose bottom-left corner is origined at POSITION,
 extending to SIZE units."
   (declare (optimize speed))

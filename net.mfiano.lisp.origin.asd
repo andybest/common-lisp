@@ -49,11 +49,6 @@
      (:file "dmat4")
      (:file "quat")
      (:file "dquat")))
-   (:module "general"
-    :components
-    ((:file "package")
-     (:file "swizzle")
-     (:file "shaping")))
    (:module "primitives"
     :components
     ((:file "point2d")
@@ -62,5 +57,12 @@
      (:file "line3d")
      (:file "circle")
      (:file "box2d")
-     (:file "oriented-box-2d")
-     (:file "flux")))))
+     (:file "oriented-box-2d")))
+   (:module "primitive-tests"
+    :components
+    ((:file "2d")))
+   (:module "general"
+    :components
+    ((:file "package")
+     (:file "swizzle")
+     (:file "shaping")))))

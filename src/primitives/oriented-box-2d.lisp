@@ -28,7 +28,7 @@
             (:copier nil)
             (:constructor %box)
             (:conc-name nil))
-  (position (point2d:point 0f0 0f0) :type point2d:point)
+  (position (point2d:point) :type point2d:point)
   (half-extents (v2:vec 1 1) :type v2:vec)
   (angle 0f0 :type u:f32))
 
@@ -38,7 +38,7 @@
         box)
 (declaim (inline box))
 (defun box (&key
-              (position (point2d:point 0f0 0f0))
+              (position (point2d:point))
               (half-extents (v2:vec 1f0 1f0))
               (angle 0f0))
   "Construct a rectangle whose center point is origined at POSITION, which

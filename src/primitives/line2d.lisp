@@ -32,8 +32,8 @@
             (:copier nil)
             (:constructor %line (start end))
             (:conc-name nil))
-  (start (point2d:point 0f0 0f0) :type point2d:point)
-  (end (point2d:point 0f0 0f0) :type point2d:point))
+  (start (point2d:point) :type point2d:point)
+  (end (point2d:point) :type point2d:point))
 
 (u:fn-> line (point2d:point point2d:point) line)
 (u:defun-inline line (start end)

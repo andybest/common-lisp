@@ -25,8 +25,8 @@
 
 (deftype point () 'v2:vec)
 
-(u:fn-> point (u:f32 u:f32) point)
-(u:defun-inline point (x y)
+(u:fn-> point (&optional u:f32 u:f32) point)
+(u:defun-inline point (&optional (x 0f0) (y 0f0))
   (declare (optimize speed))
   (v2::%vec x y))
 
