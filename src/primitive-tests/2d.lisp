@@ -53,7 +53,8 @@ POINT-IN-ORIENTED-BOX-P for testing against rotated rectangles."
 
 (u:fn-> point-in-oriented-box-p (point:point obox:box) boolean)
 (defun point-in-oriented-box-p (point box)
-  "Test whether a 2D point is contained within an oriented rectangle."
+  "Test whether a 2D point is contained within an oriented rectangle. See
+POINT-IN-BOX-P for a less expanesive test if the rectangle is axis-aligned."
   (declare (optimize speed))
   (let ((vector (v2:- point (obox:position box)))
         (angle (- (obox:angle box))))
