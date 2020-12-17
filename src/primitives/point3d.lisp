@@ -31,17 +31,20 @@
 (deftype point () 'v3:vec)
 
 (u:fn-> point (&optional u:f32 u:f32 u:f32) point)
-(u:defun-inline point (&optional (x 0f0) (y 0f0) (z 0f0))
+(declaim (inline point))
+(defun point (&optional (x 0f0) (y 0f0) (z 0f0))
   (declare (optimize speed))
   (v3::%vec x y z))
 
 (u:fn-> translate (point v3:vec u:f32) point)
-(u:defun-inline translate (point direction distance)
+(declaim (inline translate))
+(defun translate (point direction distance)
   (declare (optimize speed))
   (v3:+ point (v3:scale direction distance)))
 
 (u:fn-> unproject (point m4:mat m4:mat v4:vec) point)
-(u:defun-inline unproject (point model projection viewport)
+(declaim (inline unproject))
+(defun unproject (point model projection viewport)
   (declare (optimize speed))
   (u:mvlet ((out (point))
             (inverse-pm success-p (m4:invert (m4:* projection model))))

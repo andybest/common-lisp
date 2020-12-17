@@ -29,6 +29,7 @@
   (radius 1f0 :type u:f32))
 
 (u:fn-> circle (&key (:position point2d:point) (:radius u:f32)) circle)
-(u:defun-inline circle (&key (position (point2d:point)) (radius 1f0))
+(declaim (inline circle))
+(defun circle (&key (position (point2d:point)) (radius 1f0))
   (declare (optimize speed))
   (%circle :position position :radius radius))

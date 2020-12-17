@@ -26,11 +26,13 @@
 (deftype point () 'v2:vec)
 
 (u:fn-> point (&optional u:f32 u:f32) point)
-(u:defun-inline point (&optional (x 0f0) (y 0f0))
+(declaim (inline point))
+(defun point (&optional (x 0f0) (y 0f0))
   (declare (optimize speed))
   (v2::%vec x y))
 
 (u:fn-> translate (point v2:vec u:f32) point)
-(u:defun-inline translate (point direction distance)
+(declaim (inline translate))
+(defun translate (point direction distance)
   (declare (optimize speed))
   (v2:+ point (v2:scale direction distance)))

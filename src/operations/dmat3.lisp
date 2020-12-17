@@ -3,8 +3,9 @@
 ;;; constructors
 
 (u:fn-> %mat (&rest u:f64) mat)
+(declaim (inline %mat))
 (u:eval-always
-  (u:defun-inline %mat (&rest args)
+  (defun %mat (&rest args)
     (declare (optimize speed))
     (make-array 9 :element-type 'double-float :initial-contents args)))
 
@@ -61,7 +62,8 @@
 ;;; operators
 
 (u:fn-> = (mat mat &key (:rel u:f64) (:abs u:f64)) boolean)
-(u:defun-inline = (mat1 mat2 &key (rel 1d-7) (abs rel))
+(declaim (inline =))
+(defun = (mat1 mat2 &key (rel 1d-7) (abs rel))
   (with-components ((a mat1) (b mat2))
     (and (com:= a00 b00 rel abs)
          (com:= a01 b01 rel abs)
@@ -74,7 +76,8 @@
          (com:= a22 b22 rel abs))))
 
 (u:fn-> zero! (mat) mat)
-(u:defun-inline zero! (mat)
+(declaim (inline zero!))
+(defun zero! (mat)
   (declare (optimize speed))
   (with-components ((m mat))
     (psetf m00 0d0 m01 0d0 m02 0d0
@@ -83,19 +86,22 @@
   mat)
 
 (u:fn-> zero () mat)
-(u:defun-inline zero ()
+(declaim (inline zero))
+(defun zero ()
   (declare (optimize speed))
   (%mat 0d0 0d0 0d0
         0d0 0d0 0d0
         0d0 0d0 0d0))
 
 (u:fn-> zero-p (mat) boolean)
-(u:defun-inline zero-p (mat)
+(declaim (inline zero-p))
+(defun zero-p (mat)
   (declare (optimize speed))
   (= mat +zero+))
 
 (u:fn-> id! (mat) mat)
-(u:defun-inline id! (mat)
+(declaim (inline id!))
+(defun id! (mat)
   (declare (optimize speed))
   (with-components ((m mat))
     (psetf m00 1d0 m01 0d0 m02 0d0
@@ -104,17 +110,20 @@
   mat)
 
 (u:fn-> id () mat)
-(u:defun-inline id ()
+(declaim (inline id))
+(defun id ()
   (declare (optimize speed))
   (id! (zero)))
 
 (u:fn-> id-p (mat) boolean)
-(u:defun-inline id-p (mat)
+(declaim (inline id-p))
+(defun id-p (mat)
   (declare (optimize speed))
   (= mat +id+))
 
 (u:fn-> random! (mat u:f64 u:f64) mat)
-(u:defun-inline random! (out min max)
+(declaim (inline random!))
+(defun random! (out min max)
   (declare (optimize speed))
   (let ((diff (cl:- max min)))
     (with-components ((o out))
@@ -130,12 +139,14 @@
   out)
 
 (u:fn-> random (u:f64 u:f64) mat)
-(u:defun-inline random (min max)
+(declaim (inline random))
+(defun random (min max)
   (declare (optimize speed))
   (random! (zero) min max))
 
 (u:fn-> copy! (mat mat) mat)
-(u:defun-inline copy! (out mat)
+(declaim (inline copy!))
+(defun copy! (out mat)
   (declare (optimize speed))
   (with-components ((o out) (m mat))
     (psetf o00 m00 o01 m01 o02 m02
@@ -144,12 +155,14 @@
   out)
 
 (u:fn-> copy (mat) mat)
-(u:defun-inline copy (mat)
+(declaim (inline copy))
+(defun copy (mat)
   (declare (optimize speed))
   (copy! (zero) mat))
 
 (u:fn-> clamp! (mat mat u:f64 u:f64) mat)
-(u:defun-inline clamp! (out mat min max)
+(declaim (inline clamp!))
+(defun clamp! (out mat min max)
   (declare (optimize speed))
   (with-components ((o out) (m mat))
     (psetf o00 (u:clamp m00 min max)
@@ -164,12 +177,14 @@
   out)
 
 (u:fn-> clamp (mat u:f64 u:f64) mat)
-(u:defun-inline clamp (mat min max)
+(declaim (inline clamp))
+(defun clamp (mat min max)
   (declare (optimize speed))
   (clamp! (zero) mat min max))
 
 (u:fn-> +! (mat mat mat) mat)
-(u:defun-inline +! (out mat1 mat2)
+(declaim (inline +!))
+(defun +! (out mat1 mat2)
   (declare (optimize speed))
   (with-components ((o out) (a mat1) (b mat2))
     (psetf o00 (cl:+ a00 b00)
@@ -184,12 +199,14 @@
   out)
 
 (u:fn-> + (mat mat) mat)
-(u:defun-inline + (mat1 mat2)
+(declaim (inline +))
+(defun + (mat1 mat2)
   (declare (optimize speed))
   (+! (zero) mat1 mat2))
 
 (u:fn-> -! (mat mat mat) mat)
-(u:defun-inline -! (out mat1 mat2)
+(declaim (inline -!))
+(defun -! (out mat1 mat2)
   (declare (optimize speed))
   (with-components ((o out) (a mat1) (b mat2))
     (psetf o00 (cl:- a00 b00)
@@ -204,7 +221,8 @@
   out)
 
 (u:fn-> - (mat mat) mat)
-(u:defun-inline - (mat1 mat2)
+(declaim (inline -))
+(defun - (mat1 mat2)
   (declare (optimize speed))
   (-! (zero) mat1 mat2))
 
@@ -222,7 +240,8 @@
           ,o22 (cl:+ (cl:* ,a20 ,b02) (cl:* ,a21 ,b12) (cl:* ,a22 ,b22))))
 
 (u:fn-> *! (mat mat mat) mat)
-(u:defun-inline *! (out mat1 mat2)
+(declaim (inline *!))
+(defun *! (out mat1 mat2)
   (declare (optimize speed))
   (with-components ((o out) (a mat1) (b mat2))
     (%* o00 o01 o02 o10 o11 o12 o20 o21 o22
@@ -231,12 +250,14 @@
   out)
 
 (u:fn-> * (mat mat) mat)
-(u:defun-inline * (mat1 mat2)
+(declaim (inline *))
+(defun * (mat1 mat2)
   (declare (optimize speed))
   (*! (zero) mat1 mat2))
 
 (u:fn-> copy-rotation! (mat mat) mat)
-(u:defun-inline copy-rotation! (out mat)
+(declaim (inline copy-rotation!))
+(defun copy-rotation! (out mat)
   (declare (optimize speed))
   (with-components ((o out) (m mat))
     (psetf o00 m00 o01 m01
@@ -244,12 +265,14 @@
   out)
 
 (u:fn-> copy-rotation (mat) mat)
-(u:defun-inline copy-rotation (mat)
+(declaim (inline copy-rotation))
+(defun copy-rotation (mat)
   (declare (optimize speed))
   (copy-rotation! (id) mat))
 
 (u:fn-> rotation-to-mat2! (dm2:mat mat) dm2:mat)
-(u:defun-inline rotation-to-mat2! (out mat)
+(declaim (inline rotation-to-mat2!))
+(defun rotation-to-mat2! (out mat)
   (declare (optimize speed))
   (dm2:with-components ((o out))
     (with-components ((m mat))
@@ -258,12 +281,14 @@
   out)
 
 (u:fn-> rotation-to-mat2 (mat) dm2:mat)
-(u:defun-inline rotation-to-mat2 (mat)
+(declaim (inline rotation-to-mat2))
+(defun rotation-to-mat2 (mat)
   (declare (optimize speed))
   (rotation-to-mat2! (dm2:id) mat))
 
 (u:fn-> normalize-rotation! (mat mat) mat)
-(u:defun-inline normalize-rotation! (out mat)
+(declaim (inline normalize-rotation!))
+(defun normalize-rotation! (out mat)
   (declare (optimize speed))
   (with-components ((o out) (m mat))
     (dv2::%normalize o00 o10 m00 m10)
@@ -272,12 +297,14 @@
   out)
 
 (u:fn-> normalize-rotation (mat) mat)
-(u:defun-inline normalize-rotation (mat)
+(declaim (inline normalize-rotation))
+(defun normalize-rotation (mat)
   (declare (optimize speed))
   (normalize-rotation! (copy mat) mat))
 
 (u:fn-> get-column! (dv3:vec mat (integer 0 2)) dv3:vec)
-(u:defun-inline get-column! (out mat index)
+(declaim (inline get-column!))
+(defun get-column! (out mat index)
   (declare (optimize speed))
   (with-components ((m mat))
     (dv3:with-components ((o out))
@@ -288,12 +315,14 @@
   out)
 
 (u:fn-> get-column (mat (integer 0 2)) dv3:vec)
-(u:defun-inline get-column (mat index)
+(declaim (inline get-column))
+(defun get-column (mat index)
   (declare (optimize speed))
   (get-column! (dv3:zero) mat index))
 
 (u:fn-> set-column! (mat mat dv3:vec (integer 0 2)) mat)
-(u:defun-inline set-column! (out mat vec index)
+(declaim (inline set-column!))
+(defun set-column! (out mat vec index)
   (declare (optimize speed))
   (with-components ((o out))
     (dv3:with-components ((v vec))
@@ -305,12 +334,14 @@
   out)
 
 (u:fn-> set-column (mat dv3:vec (integer 0 2)) mat)
-(u:defun-inline set-column (mat vec index)
+(declaim (inline set-column))
+(defun set-column (mat vec index)
   (declare (optimize speed))
   (set-column! (id) mat vec index))
 
 (u:fn-> get-translation! (dv2:vec mat) dv2:vec)
-(u:defun-inline get-translation! (out mat)
+(declaim (inline get-translation!))
+(defun get-translation! (out mat)
   (declare (optimize speed))
   (with-components ((m mat))
     (dv2:with-components ((o out))
@@ -318,12 +349,14 @@
   out)
 
 (u:fn-> get-translation (mat) dv2:vec)
-(u:defun-inline get-translation (mat)
+(declaim (inline get-translation))
+(defun get-translation (mat)
   (declare (optimize speed))
   (get-translation! (dv2:zero) mat))
 
 (u:fn-> set-translation! (mat mat dv2:vec) mat)
-(u:defun-inline set-translation! (out mat vec)
+(declaim (inline set-translation!))
+(defun set-translation! (out mat vec)
   (declare (optimize speed))
   (with-components ((o out) (m mat))
     (dv2:with-components ((v vec))
@@ -332,12 +365,14 @@
   out)
 
 (u:fn-> set-translation (mat dv2:vec) mat)
-(u:defun-inline set-translation (mat vec)
+(declaim (inline set-translation))
+(defun set-translation (mat vec)
   (declare (optimize speed))
   (set-translation! (copy mat) mat vec))
 
 (u:fn-> translate! (mat mat dv2:vec) mat)
-(u:defun-inline translate! (out mat vec)
+(declaim (inline translate!))
+(defun translate! (out mat vec)
   (declare (optimize speed))
   (with-components ((o out) (m mat))
     (dv2:with-components ((v vec))
@@ -354,12 +389,14 @@
   out)
 
 (u:fn-> translate (mat dv2:vec) mat)
-(u:defun-inline translate (mat vec)
+(declaim (inline translate))
+(defun translate (mat vec)
   (declare (optimize speed))
   (translate! (id) mat vec))
 
 (u:fn-> rotation-axis-to-vec2! (dv2:vec mat keyword) dv2:vec)
-(u:defun-inline rotation-axis-to-vec2! (out mat axis)
+(declaim (inline rotation-axis-to-vec2!))
+(defun rotation-axis-to-vec2! (out mat axis)
   (declare (optimize speed))
   (dv2:with-components ((v out))
     (with-components ((m mat))
@@ -369,12 +406,14 @@
   out)
 
 (u:fn-> rotation-axis-to-vec2 (mat keyword) dv2:vec)
-(u:defun-inline rotation-axis-to-vec2 (mat axis)
+(declaim (inline rotation-axis-to-vec2))
+(defun rotation-axis-to-vec2 (mat axis)
   (declare (optimize speed))
   (rotation-axis-to-vec2! (dv2:zero) mat axis))
 
 (u:fn-> rotation-axis-from-vec2! (mat dv2:vec keyword) mat)
-(u:defun-inline rotation-axis-from-vec2! (out vec axis)
+(declaim (inline rotation-axis-from-vec2!))
+(defun rotation-axis-from-vec2! (out vec axis)
   (declare (optimize speed))
   (with-components ((o out))
     (dv2:with-components ((v vec))
@@ -384,12 +423,14 @@
   out)
 
 (u:fn-> rotation-axis-from-vec2 (mat dv2:vec keyword) mat)
-(u:defun-inline rotation-axis-from-vec2 (mat vec axis)
+(declaim (inline rotation-axis-from-vec2))
+(defun rotation-axis-from-vec2 (mat vec axis)
   (declare (optimize speed))
   (rotation-axis-from-vec2! (copy mat) vec axis))
 
 (u:fn-> rotate! (mat mat u:f64 &key (:space keyword)) mat)
-(u:defun-inline rotate! (out mat angle &key (space :local))
+(declaim (inline rotate!))
+(defun rotate! (out mat angle &key (space :local))
   (dm2:with-elements ((m 1d0 0d0 0d0 1d0))
     (with-components ((o out))
       (let ((s (sin angle))
@@ -402,12 +443,14 @@
   out)
 
 (u:fn-> rotate (mat u:f64) mat)
-(u:defun-inline rotate (mat vec)
+(declaim (inline rotate))
+(defun rotate (mat vec)
   (declare (optimize speed))
   (rotate! (id) mat vec))
 
 (u:fn-> get-scale! (dv2:vec mat) dv2:vec)
-(u:defun-inline get-scale! (out mat)
+(declaim (inline get-scale!))
+(defun get-scale! (out mat)
   (declare (optimize speed))
   (dv2:with-components ((o out))
     (psetf ox (dv2:length (rotation-axis-to-vec2 mat :x))
@@ -415,12 +458,14 @@
   out)
 
 (u:fn-> get-scale (mat) dv2:vec)
-(u:defun-inline get-scale (mat)
+(declaim (inline get-scale))
+(defun get-scale (mat)
   (declare (optimize speed))
   (get-scale! (dv2:zero) mat))
 
 (u:fn-> set-scale! (mat mat dv2:vec) mat)
-(u:defun-inline set-scale! (out mat vec)
+(declaim (inline set-scale!))
+(defun set-scale! (out mat vec)
   (declare (optimize speed))
   (with-components ((o out))
     (dv2:with-components ((v vec))
@@ -429,12 +474,14 @@
   out)
 
 (u:fn-> set-scale (mat dv2:vec) mat)
-(u:defun-inline set-scale (mat vec)
+(declaim (inline set-scale))
+(defun set-scale (mat vec)
   (declare (optimize speed))
   (set-scale! (copy mat) mat vec))
 
 (u:fn-> scale! (mat mat dv2:vec) mat)
-(u:defun-inline scale! (out mat vec)
+(declaim (inline scale!))
+(defun scale! (out mat vec)
   (declare (optimize speed))
   (with-components ((o out) (m mat))
     (dv2:with-components ((v vec))
@@ -450,12 +497,14 @@
   out)
 
 (u:fn-> scale (mat dv2:vec) mat)
-(u:defun-inline scale (mat vec)
+(declaim (inline scale))
+(defun scale (mat vec)
   (declare (optimize speed))
   (scale! (id) mat vec))
 
 (u:fn-> *v3! (dv3:vec mat dv3:vec) dv3:vec)
-(u:defun-inline *v3! (out mat vec)
+(declaim (inline *v3!))
+(defun *v3! (out mat vec)
   (declare (optimize speed))
   (dv3:with-components ((v vec) (o out))
     (with-components ((m mat))
@@ -465,12 +514,14 @@
   out)
 
 (u:fn-> *v3 (mat dv3:vec) dv3:vec)
-(u:defun-inline *v3 (mat vec)
+(declaim (inline *v3))
+(defun *v3 (mat vec)
   (declare (optimize speed))
   (*v3! (dv3:zero) mat vec))
 
 (u:fn-> transpose! (mat mat) mat)
-(u:defun-inline transpose! (out mat)
+(declaim (inline transpose!))
+(defun transpose! (out mat)
   (declare (optimize speed))
   (with-components ((o (copy! out mat)))
     (rotatef o01 o10)
@@ -479,11 +530,13 @@
   out)
 
 (u:fn-> transpose (mat) mat)
-(u:defun-inline transpose (mat)
+(declaim (inline transpose))
+(defun transpose (mat)
   (declare (optimize speed))
   (transpose! (id) mat))
 
 (u:fn-> orthogonal-p (mat) boolean)
+(declaim (inline orthogonal-p))
 (defun orthogonal-p (mat)
   (declare (optimize speed))
   (= (* mat (transpose mat)) +id+))
@@ -492,18 +545,21 @@
   `(cl:+ ,m00 ,m11 ,m22))
 
 (u:fn-> trace (mat) u:f64)
-(u:defun-inline trace (mat)
+(declaim (inline trace))
+(defun trace (mat)
   (with-components ((m mat))
     (%trace m00 m11 m22)))
 
 (u:fn-> diagonal-p (mat) boolean)
-(u:defun-inline diagonal-p (mat)
+(declaim (inline diagonal-p))
+(defun diagonal-p (mat)
   (declare (optimize speed))
   (with-components ((m mat))
     (cl:= 0d0 m10 m20 m01 m21 m02 m12)))
 
 (u:fn-> main-diagonal! (dv3:vec mat) dv3:vec)
-(u:defun-inline main-diagonal! (out mat)
+(declaim (inline main-diagonal!))
+(defun main-diagonal! (out mat)
   (declare (optimize speed))
   (with-components ((m mat))
     (dv3:with-components ((v out))
@@ -511,12 +567,14 @@
   out)
 
 (u:fn-> main-diagonal (mat) dv3:vec)
-(u:defun-inline main-diagonal (mat)
+(declaim (inline main-diagonal))
+(defun main-diagonal (mat)
   (declare (optimize speed))
   (main-diagonal! (dv3:zero) mat))
 
 (u:fn-> anti-diagonal! (dv3:vec mat) dv3:vec)
-(u:defun-inline anti-diagonal! (out mat)
+(declaim (inline anti-diagonal!))
+(defun anti-diagonal! (out mat)
   (declare (optimize speed))
   (with-components ((m mat))
     (dv3:with-components ((v out))
@@ -524,6 +582,7 @@
   out)
 
 (u:fn-> anti-diagonal (mat) dv3:vec)
-(u:defun-inline anti-diagonal (mat)
+(declaim (inline anti-diagonal))
+(defun anti-diagonal (mat)
   (declare (optimize speed))
   (anti-diagonal! (dv3:zero) mat))
