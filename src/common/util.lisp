@@ -10,3 +10,26 @@
 (defmacro = (x y rel abs)
   `(< (abs (- ,x ,y))
       (max ,abs (* ,rel (max (abs ,x) (abs ,y))))))
+
+(defmacro cwset (count out subst &body body)
+  `(psetf
+    ,@(loop :for i :below count
+            :append `((aref ,out ,i)
+                      ,@(u:tree-leaves
+                         body
+                         (lambda (x)
+                           (and (symbolp x)
+                                (member x (u:ensure-list subst))))
+                         (lambda (x)
+                           `(aref ,x ,i)))))))
+
+(defmacro cwcmp (count subst &body body)
+  `(and
+    ,@(loop :for i :below count
+            :append `(,@(u:tree-leaves
+                         body
+                         (lambda (x)
+                           (and (symbolp x)
+                                (member x (u:ensure-list subst))))
+                         (lambda (x)
+                           `(aref ,x ,i)))))))

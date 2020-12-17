@@ -10,6 +10,8 @@
   ;; util
   (:export
    #:=
+   #:cwcmp
+   #:cwset
    #:make-accessor-symbol)
   ;; constants
   (:export
