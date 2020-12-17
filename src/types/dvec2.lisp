@@ -149,3 +149,71 @@
        ,(if rest
             `(with-elements ,rest ,@body)
             `(progn ,@body)))))
+
+;;; constructors
+
+(u:fn-> %vec (&rest u:f64) vec)
+(declaim (inline %vec))
+(u:eval-always
+  (defun %vec (&rest args)
+    (declare (optimize speed))
+    (make-array 2 :element-type 'u:f64 :initial-contents args)))
+
+(ss:defstore vec (&rest args))
+
+(ss:defspecialization (vec :inline t) () vec
+  (%vec 0d0 0d0))
+
+(ss:defspecialization (vec :inline t) ((x real)) vec
+  (%vec (float x 1d0) (float x 1d0)))
+
+(ss:defspecialization (vec :inline t) ((x real) (y real)) vec
+  (%vec (float x 1d0) (float y 1d0)))
+
+(ss:defspecialization (vec :inline t)
+    ((vec (or (simple-array u:f32 (2))
+              (simple-array u:f32 (3))
+              (simple-array u:f32 (4)))))
+    vec
+  (%vec (float (aref vec 0) 1d0) (float (aref vec 1) 1d0)))
+
+(ss:defspecialization (vec :inline t)
+    ((vec (or (simple-array u:f64 (2))
+              (simple-array u:f64 (3))
+              (simple-array u:f64 (4)))))
+    vec
+  (%vec (aref vec 0) (aref vec 1)))
+
+;;; accessors
+
+(u:fn-> x (vec) u:f64)
+(declaim (inline x))
+(defun x (vec)
+  (aref vec 0))
+
+(u:fn-> (setf x) (u:f64 vec) u:f64)
+(declaim (inline (setf x)))
+(defun (setf x) (value vec)
+  (setf (aref vec 0) value))
+
+(u:fn-> y (vec) u:f64)
+(declaim (inline y))
+(defun y (vec)
+  (aref vec 1))
+
+(u:fn-> (setf y) (u:f64 vec) u:f64)
+(declaim (inline (setf y)))
+(defun (setf y) (value vec)
+  (setf (aref vec 1) value))
+
+;;; constants
+
+(u:define-constant +zero+ (%vec 0d0 0d0) :test #'equalp)
+
+(u:define-constant +up+ (%vec 0d0 1d0) :test #'equalp)
+
+(u:define-constant +down+ (%vec 0d0 -1d0) :test #'equalp)
+
+(u:define-constant +left+ (%vec -1d0 0d0) :test #'equalp)
+
+(u:define-constant +right+ (%vec 1d0 0d0) :test #'equalp)

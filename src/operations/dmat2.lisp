@@ -1,55 +1,5 @@
 (in-package #:net.mfiano.lisp.origin.dmat2)
 
-;;; constructors
-
-(u:fn-> %mat (&rest u:f64) mat)
-(declaim (inline %mat))
-(u:eval-always
-  (defun %mat (&rest args)
-    (declare (optimize speed))
-    (make-array 4 :element-type 'double-float :initial-contents args)))
-
-(ss:defstore mat (&rest args))
-
-(ss:defspecialization (mat :inline t) () mat
-  (%mat 0d0 0d0 0d0 0d0))
-
-(ss:defspecialization (mat :inline t) ((x real)) mat
-  (%mat (float x 1d0) 0d0 0d0 (float x 1d0)))
-
-(ss:defspecialization (mat :inline t) ((mat mat)) mat
-  (with-components ((m mat))
-    (%mat m00 m01 m10 m11)))
-
-(ss:defspecialization (mat :inline t) ((mat net.mfiano.lisp.origin.dmat3:mat))
-    mat
-  (net.mfiano.lisp.origin.dmat3:with-components ((m mat))
-    (%mat m00 m01 m10 m11)))
-
-(ss:defspecialization (mat :inline t) ((mat net.mfiano.lisp.origin.dmat4:mat))
-    mat
-  (net.mfiano.lisp.origin.dmat4:with-components ((m mat))
-    (%mat m00 m01 m10 m11)))
-
-(ss:defspecialization (mat :inline t) ((a dv2:vec) (b dv2:vec)) mat
-  (dv2:with-components ((a a) (b b))
-    (%mat ax ay bx by)))
-
-(ss:defspecialization (mat :inline t) ((a real) (b real) (c real) (d real)) mat
-  (%mat (float a 1d0) (float b 1d0) (float c 1d0) (float d 1d0)))
-
-(ss:defspecialization (mat :inline t) ((mat m2:mat)) mat
-  (m2:with-components ((m mat))
-    (%mat (float m00 1d0) (float m10 1d0) (float m01 1d0) (float m11 1d0))))
-
-;;; constants
-
-(u:define-constant +zero+ (%mat 0d0 0d0 0d0 0d0) :test #'equalp)
-
-(u:define-constant +id+ (%mat 1d0 0d0 0d0 1d0) :test #'equalp)
-
-;;; operators
-
 (u:fn-> = (mat mat &key (:rel u:f64) (:abs u:f64)) boolean)
 (declaim (inline =))
 (defun = (mat1 mat2 &key (rel 1d-7) (abs rel))

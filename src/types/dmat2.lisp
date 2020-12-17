@@ -98,3 +98,52 @@
 (defun pretty-print (matrix &optional (stream *standard-output*))
   (with-components ((m matrix))
     (format stream "[~,6f, ~,6f~% ~,6f, ~,6f]" m00 m01 m10 m11)))
+
+;;; constructors
+
+(u:fn-> %mat (&rest u:f64) mat)
+(declaim (inline %mat))
+(u:eval-always
+  (defun %mat (&rest args)
+    (declare (optimize speed))
+    (make-array 4 :element-type 'u:f64 :initial-contents args)))
+
+(ss:defstore mat (&rest args))
+
+(ss:defspecialization (mat :inline t) () mat
+  (%mat 0d0 0d0
+        0d0 0d0))
+
+(ss:defspecialization (mat :inline t) ((x real)) mat
+  (%mat (float x 1d0) 0d0
+        0d0 (float x 1d0)))
+
+(ss:defspecialization (mat :inline t) ((mat mat)) mat
+  (%mat (aref mat 0) (aref mat 2)
+        (aref mat 1) (aref mat 3)))
+
+(ss:defspecialization (mat :inline t) ((mat (simple-array u:f64 (9)))) mat
+  (%mat (aref mat 0) (aref mat 3)
+        (aref mat 1) (aref mat 4)))
+
+(ss:defspecialization (mat :inline t) ((mat (simple-array u:f64 (16)))) mat
+  (%mat (aref mat 0) (aref mat 4)
+        (aref mat 1) (aref mat 5)))
+
+(ss:defspecialization (mat :inline t) ((vec1 dv2:vec) (vec2 dv2:vec)) mat
+  (%mat (aref vec1 0) (aref vec1 1)
+        (aref vec2 0) (aref vec2 1)))
+
+(ss:defspecialization (mat :inline t) ((a real) (b real) (c real) (d real)) mat
+  (%mat (float a 1d0) (float b 1d0)
+        (float c 1d0) (float d 1d0)))
+
+(ss:defspecialization (mat :inline t) ((mat m2:mat)) mat
+  (%mat (float (aref mat 0) 1d0) (float (aref mat 1) 1d0)
+        (float (aref mat 2) 1d0) (float (aref mat 3) 1d0)))
+
+;;; constants
+
+(u:define-constant +zero+ (%mat 0d0 0d0 0d0 0d0) :test #'equalp)
+
+(u:define-constant +id+ (%mat 1d0 0d0 0d0 1d0) :test #'equalp)

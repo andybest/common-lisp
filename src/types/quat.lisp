@@ -105,3 +105,84 @@
        ,(if rest
             `(with-elements ,rest ,@body)
             `(progn ,@body)))))
+
+;;; constructors
+
+(u:fn-> %quat (&rest u:f32) quat)
+(declaim (inline %quat))
+(u:eval-always
+  (defun %quat (&rest args)
+    (declare (optimize speed))
+    (make-array 4 :element-type 'u:f32 :initial-contents args)))
+
+(ss:defstore quat (&rest args))
+
+(ss:defspecialization (quat :inline t) () quat
+  (%quat 1f0 0f0 0f0 0f0))
+
+(ss:defspecialization (quat :inline t) ((w real)) quat
+  (%quat (float w 1f0) 0f0 0f0 0f0))
+
+(ss:defspecialization (quat :inline t) ((w real) (x real) (y real) (z real))
+    quat
+  (%quat (float w 1f0) (float x 1f0) (float y 1f0) (float z 1f0)))
+
+(ss:defspecialization (quat :inline t) ((quat (simple-array u:f64 (4)))) quat
+  (%quat (float (aref quat 0) 1f0)
+         (float (aref quat 1) 1f0)
+         (float (aref quat 2) 1f0)
+         (float (aref quat 3) 1f0)))
+
+;;; accessors
+
+(u:fn-> w (quat) u:f32)
+(declaim (inline w))
+(defun w (quat)
+  (declare (optimize speed))
+  (aref quat 0))
+
+(u:fn-> (setf w) (u:f32 quat) u:f32)
+(declaim (inline (setf w)))
+(defun (setf w) (value quat)
+  (declare (optimize speed))
+  (setf (aref quat 0) value))
+
+(u:fn-> x (quat) u:f32)
+(declaim (inline x))
+(defun x (quat)
+  (declare (optimize speed))
+  (aref quat 1))
+
+(u:fn-> (setf x) (u:f32 quat) u:f32)
+(declaim (inline (setf x)))
+(defun (setf x) (value quat)
+  (declare (optimize speed))
+  (setf (aref quat 1) value))
+
+(u:fn-> y (quat) u:f32)
+(declaim (inline y))
+(defun y (quat)
+  (declare (optimize speed))
+  (aref quat 2))
+
+(u:fn-> (setf y) (u:f32 quat) u:f32)
+(declaim (inline (setf y)))
+(defun (setf y) (value quat)
+  (declare (optimize speed))
+  (setf (aref quat 2) value))
+
+(u:fn-> z (quat) u:f32)
+(declaim (inline z))
+(defun z (quat)
+  (declare (optimize speed))
+  (aref quat 3))
+
+(u:fn-> (setf z) (u:f32 quat) u:f32)
+(declaim (inline (setf z)))
+(defun (setf z) (value quat)
+  (declare (optimize speed))
+  (setf (aref quat 3) value))
+
+;;; constants
+
+(u:define-constant +id+ (%quat 1f0 0f0 0f0 0f0) :test #'equalp)

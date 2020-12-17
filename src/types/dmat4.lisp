@@ -162,3 +162,90 @@
                      ~,6f, ~,6f, ~,6f, ~,6f~% ~
                      ~,6f, ~,6f, ~,6f, ~,6f]"
             m00 m01 m02 m03 m10 m11 m12 m13 m20 m21 m22 m23 m30 m31 m32 m33)))
+
+;;; constructors
+
+(u:fn-> %mat (&rest u:f64) mat)
+(declaim (inline %mat))
+(u:eval-always
+  (defun %mat (&rest args)
+    (declare (optimize speed))
+    (make-array 16 :element-type 'u:f64 :initial-contents args)))
+
+(ss:defstore mat (&rest args))
+
+(ss:defspecialization (mat :inline t) () mat
+  (%mat 0d0 0d0 0d0 0d0
+        0d0 0d0 0d0 0d0
+        0d0 0d0 0d0 0d0
+        0d0 0d0 0d0 0d0))
+
+(ss:defspecialization (mat :inline t) ((x real)) mat
+  (%mat (float x 1d0) 0d0 0d0 0d0
+        0d0 (float x 1d0) 0d0 0d0
+        0d0 0d0 (float x 1d0) 0d0
+        0d0 0d0 0d0 (float x 1d0)))
+
+(ss:defspecialization (mat :inline t) ((mat dm2:mat)) mat
+  (%mat (aref mat 0) (aref mat 1) 0d0 0d0
+        (aref mat 2) (aref mat 3) 0d0 0d0
+        0d0 0d0 1d0 0d0
+        0d0 0d0 0d0 1d0))
+
+(ss:defspecialization (mat :inline t) ((mat dm3:mat)) mat
+  (%mat (aref mat 0) (aref mat 1) (aref mat 2) 0d0
+        (aref mat 3) (aref mat 4) (aref mat 5) 0d0
+        (aref mat 6) (aref mat 7) (aref mat 8) 0d0
+        0d0 0d0 0d0 1d0))
+
+(ss:defspecialization (mat :inline t) ((mat mat)) mat
+  (%mat (aref mat 0) (aref mat 1) (aref mat 2) (aref mat 3)
+        (aref mat 4) (aref mat 5) (aref mat 6) (aref mat 7)
+        (aref mat 8) (aref mat 9) (aref mat 10) (aref mat 11)
+        (aref mat 12) (aref mat 13) (aref mat 14) (aref mat 15)))
+
+(ss:defspecialization (mat :inline t)
+    ((vec1 dv4:vec) (vec2 dv4:vec) (vec3 dv4:vec) (vec4 dv4:vec))
+    mat
+  (%mat (aref vec1 0) (aref vec1 1) (aref vec1 2) (aref vec1 3)
+        (aref vec2 0) (aref vec2 1) (aref vec2 2) (aref vec2 3)
+        (aref vec3 0) (aref vec3 1) (aref vec3 2) (aref vec3 3)
+        (aref vec4 0) (aref vec4 1) (aref vec4 2) (aref vec4 3)))
+
+(ss:defspecialization (mat :inline t) ((a real) (b real) (c real) (d real)
+                                       (e real) (f real) (g real) (h real)
+                                       (i real) (j real) (k real) (l real)
+                                       (m real) (n real) (o real) (p real))
+    mat
+  (%mat (float a 1d0) (float b 1d0) (float c 1d0) (float d 1d0)
+        (float e 1d0) (float f 1d0) (float g 1d0) (float h 1d0)
+        (float i 1d0) (float j 1d0) (float k 1d0) (float l 1d0)
+        (float m 1d0) (float n 1d0) (float o 1d0) (float p 1d0)))
+
+(ss:defspecialization (mat :inline t) ((mat m4:mat)) mat
+  (%mat (float (aref mat 0) 1d0)
+        (float (aref mat 1) 1d0)
+        (float (aref mat 2) 1d0)
+        (float (aref mat 3) 1d0)
+        (float (aref mat 4) 1d0)
+        (float (aref mat 5) 1d0)
+        (float (aref mat 6) 1d0)
+        (float (aref mat 7) 1d0)
+        (float (aref mat 8) 1d0)
+        (float (aref mat 9) 1d0)
+        (float (aref mat 10) 1d0)
+        (float (aref mat 11) 1d0)
+        (float (aref mat 12) 1d0)
+        (float (aref mat 13) 1d0)
+        (float (aref mat 14) 1d0)
+        (float (aref mat 15) 1d0)))
+
+;;; constants
+
+(u:define-constant +zero+
+    (%mat 0d0 0d0 0d0 0d0 0d0 0d0 0d0 0d0 0d0 0d0 0d0 0d0 0d0 0d0 0d0 0d0)
+  :test #'equalp)
+
+(u:define-constant +id+
+    (%mat 1d0 0d0 0d0 0d0 0d0 1d0 0d0 0d0 0d0 0d0 1d0 0d0 0d0 0d0 0d0 1d0)
+  :test #'equalp)
