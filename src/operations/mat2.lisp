@@ -263,9 +263,9 @@
   out)
 
 (u:fn-> rotate (mat u:f32) mat)
-(u:defun-inline rotate (mat vec)
+(u:defun-inline rotate (mat angle)
   (declare (optimize speed))
-  (rotate! (id) mat vec))
+  (rotate! (id) mat angle))
 
 (u:fn-> get-scale! (v2:vec mat) v2:vec)
 (u:defun-inline get-scale! (out mat)
