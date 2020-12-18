@@ -3,6 +3,9 @@
 (u:fn-> = (vec vec &key (:rel u:f64) (:abs u:f64)) boolean)
 (declaim (inline =))
 (defun = (vec1 vec2 &key (rel 1d-7) (abs rel))
+  "Compare vectors VEC1 and VEC2 for equality. REL and ABS are the relative and
+absolute tolerances to compare by, and should be tuned specially for the
+application domain."
   (declare (optimize speed))
   (com:cwcmp 4 (vec1 vec2) (com:= vec1 vec2 rel abs)))
 

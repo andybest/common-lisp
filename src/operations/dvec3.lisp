@@ -3,6 +3,9 @@
 (u:fn-> = (vec vec &key (:rel u:f64) (:abs u:f64)) boolean)
 (declaim (inline =))
 (defun = (vec1 vec2 &key (rel 1d-7) (abs rel))
+  "Compare vectors VEC1 and VEC2 for equality. REL and ABS are the relative and
+absolute tolerances to compare by, and should be tuned specially for the
+application domain."
   (declare (optimize speed))
   (com:cwcmp 3 (vec1 vec2) (com:= vec1 vec2 rel abs)))
 
@@ -302,6 +305,8 @@ negated."
 (u:fn-> cross! (vec vec vec) vec)
 (declaim (inline cross!))
 (defun cross! (out vec1 vec2)
+  "Modify vector OUT to be the result of the cross product between vectors VEC1
+and VEC2."
   (declare (optimize speed))
   (with-components ((o out) (v1 vec1) (v2 vec2))
     (psetf ox (cl:- (cl:* v1y v2z) (cl:* v1z v2y))
@@ -312,6 +317,8 @@ negated."
 (u:fn-> cross (vec vec) vec)
 (declaim (inline cross))
 (defun cross (vec1 vec2)
+  "Construct a fresh vector with the result of the cross product between vectors
+VEC1 and VEC2."
   (declare (optimize speed))
   (cross! (zero) vec1 vec2))
 
