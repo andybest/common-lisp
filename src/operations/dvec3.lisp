@@ -9,6 +9,7 @@
 (u:fn-> zero! (vec) vec)
 (declaim (inline zero!))
 (defun zero! (vec)
+  "Modify the vector VEC by setting each of its components to zero."
   (declare (optimize speed))
   (com:cwset 3 vec nil 0d0)
   vec)
@@ -16,18 +17,22 @@
 (u:fn-> zero () vec)
 (declaim (inline zero))
 (defun zero ()
+  "Construct a fresh vector with each component set to zero."
   (declare (optimize speed))
   (%vec 0d0 0d0 0d0))
 
 (u:fn-> zero-p (vec) boolean)
 (declaim (inline zero-p))
 (defun zero-p (vec)
+  "Check whether or not the input vector is a zero vector."
   (declare (optimize speed))
   (= vec +zero+))
 
 (u:fn-> random! (vec u:f64 u:f64) vec)
 (declaim (inline random!))
 (defun random! (out min max)
+  "Modify vector VEC to have a random value for each of its components, The
+range of each component is bounded by MIN and MAX."
   (declare (optimize speed))
   (let ((diff (cl:- max min)))
     (com:cwset 3 out nil (cl:+ min (cl:random diff))))
@@ -36,12 +41,15 @@
 (u:fn-> random (u:f64 u:f64) vec)
 (declaim (inline random))
 (defun random (min max)
+  "Construct a fresh vector with random elements. The range of each component is
+bounded by MIN and MAX."
   (declare (optimize speed))
   (random! (zero) min max))
 
 (u:fn-> copy! (vec vec) vec)
 (declaim (inline copy!))
 (defun copy! (out vec)
+  "Modify vector OUT by copying the components of vector VEC into it."
   (declare (optimize speed))
   (com:cwset 3 out vec vec)
   out)
@@ -49,12 +57,15 @@
 (u:fn-> copy (vec) vec)
 (declaim (inline copy))
 (defun copy (vec)
+  "Construct a fresh vector that is a copy of vector VEC."
   (declare (optimize speed))
   (copy! (zero) vec))
 
 (u:fn-> sign! (vec vec) vec)
 (declaim (inline sign!))
 (defun sign! (out vec)
+  "Modify vector OUT to have its components represent the sign of each component
+of vector VEC."
   (declare (optimize speed))
   (com:cwset 3 out vec (signum vec))
   out)
@@ -62,23 +73,31 @@
 (u:fn-> sign (vec) vec)
 (declaim (inline sign))
 (defun sign (vec)
+  "Construct a fresh vector that has its components represent the sign of each
+component of vector VEC."
   (declare (optimize speed))
   (sign! (zero) vec))
 
 (u:fn-> fract! (vec vec) vec)
 (declaim (inline fract!))
 (defun fract! (out vec)
+  "Modify vector OUT to have its components contain the fractional portion of
+the components in vector VEC."
   (com:cwset 3 out vec (cl:- vec (ffloor vec)))
   out)
 
 (u:fn-> fract (vec) vec)
 (declaim (inline fract))
 (defun fract (vec)
+  "Construct a fresh vector that has its components contain the fractional
+portion of the components in vector VEC."
   (fract! (zero) vec))
 
 (u:fn-> clamp! (vec vec u:f64 u:f64) vec)
 (declaim (inline clamp!))
 (defun clamp! (out vec min max)
+  "Modify vector OUT to have its components represent the components of vector
+VEC, bounded by MIN and MAX."
   (declare (optimize speed))
   (com:cwset 3 out vec (u:clamp vec min max))
   out)
@@ -86,12 +105,16 @@
 (u:fn-> clamp (vec u:f64 u:f64) vec)
 (declaim (inline clamp))
 (defun clamp (vec min max)
+  "Construct a fresh vector that has the components of vector VEC bounded by MIN
+and MAX."
   (declare (optimize speed))
   (clamp! (zero) vec min max))
 
 (u:fn-> +! (vec vec vec) vec)
 (declaim (inline +!))
 (defun +! (out vec1 vec2)
+  "Modify vector OUT by performing component-wise addition of vectors VEC1 and
+VEC2."
   (declare (optimize speed))
   (com:cwset 3 out (vec1 vec2) (cl:+ vec1 vec2))
   out)
@@ -99,12 +122,16 @@
 (u:fn-> + (vec vec) vec)
 (declaim (inline +))
 (defun + (vec1 vec2)
+  "Construct a fresh vector by performing component-wise addition of vectors
+VEC1 and VEC2."
   (declare (optimize speed))
   (+! (zero) vec1 vec2))
 
 (u:fn-> -! (vec vec vec) vec)
 (declaim (inline -!))
 (defun -! (out vec1 vec2)
+  "Modify vector OUT by performing component-wise subtraction of vectors VEC1
+and VEC2."
   (declare (optimize speed))
   (com:cwset 3 out (vec1 vec2) (cl:- vec1 vec2))
   out)
@@ -112,12 +139,16 @@
 (u:fn-> - (vec vec) vec)
 (declaim (inline -))
 (defun - (vec1 vec2)
+  "Construct a fresh vector by performing component-wise substraction of vectors
+VEC1 and VEC2."
   (declare (optimize speed))
   (-! (zero) vec1 vec2))
 
 (u:fn-> *! (vec vec vec) vec)
 (declaim (inline *!))
 (defun *! (out vec1 vec2)
+  "Modify vector OUT by performing component-wise multiplication of vectors VEC1
+and VEC2."
   (declare (optimize speed))
   (com:cwset 3 out (vec1 vec2) (cl:* vec1 vec2))
   out)
@@ -125,12 +156,16 @@
 (u:fn-> * (vec vec) vec)
 (declaim (inline *))
 (defun * (vec1 vec2)
+  "Construct a fresh vector by performing component-wise multiplication of
+vectors VEC1 and VEC2."
   (declare (optimize speed))
   (*! (zero) vec1 vec2))
 
 (u:fn-> /! (vec vec vec) vec)
 (declaim (inline /!))
 (defun /! (out vec1 vec2)
+  "Modify vector OUT by performing component-wise division of vectors VEC1 and
+VEC2."
   (declare (optimize speed))
   (com:cwset 3 out (vec1 vec2) (if (zerop vec2) 0d0 (cl:/ vec1 vec2)))
   out)
@@ -138,12 +173,16 @@
 (u:fn-> / (vec vec) vec)
 (declaim (inline /))
 (defun / (vec1 vec2)
+  "Construct a fresh vector by performing component-wise division of vectors
+VEC1 and VEC2."
   (declare (optimize speed))
   (/! (zero) vec1 vec2))
 
 (u:fn-> scale! (vec vec u:f64) vec)
 (declaim (inline scale!))
 (defun scale! (out vec scalar)
+  "Modify vector OUT by adding the scalar SCALAR to each component of vector
+VEC."
   (declare (optimize speed))
   (with-components ((o out) (v vec))
     (psetf ox (cl:* vx scalar)
@@ -154,12 +193,16 @@
 (u:fn-> scale (vec u:f64) vec)
 (declaim (inline scale))
 (defun scale (vec scalar)
+  "Construct a fresh vector by adding the scalar SCALAR to each component of
+vector VEC."
   (declare (optimize speed))
   (scale! (zero) vec scalar))
 
 (u:fn-> invert! (vec vec) vec)
 (declaim (inline invert!))
 (defun invert! (out vec)
+  "Modify vector OUT to have each component be the inverted component of vector
+VEC."
   (declare (optimize speed))
   (com:cwset 3 out vec (if (zerop vec) 0d0 (cl:/ vec)))
   out)
@@ -167,24 +210,29 @@
 (u:fn-> invert (vec) vec)
 (declaim (inline invert))
 (defun invert (vec)
+  "Construct a fresh vector with each component being the inverted component of
+vector VEC."
   (declare (optimize speed))
   (invert! (zero) vec))
 
 (u:fn-> dot (vec vec) u:f64)
 (declaim (inline dot))
 (defun dot (vec1 vec2)
+  "Compute the dot product of vectors VEC1 and VEC2. Returns a scalar."
   (with-components ((v1 vec1) (v2 vec2))
     (cl:+ (cl:* v1x v2x) (cl:* v1y v2y) (cl:* v1z v2z))))
 
 (u:fn-> length-squared (vec) u:f64)
 (declaim (inline length-squared))
 (defun length-squared (vec)
+  "Compute the squared length of vector VEC."
   (with-components ((v vec))
     (cl:+ (cl:expt vx 2) (cl:expt vy 2) (cl:expt vz 2))))
 
 (u:fn-> length (vec) u:f64)
 (declaim (inline length))
 (defun length (vec)
+  "Compute the length of vector VEC. Returns a scalar."
   (cl:sqrt (length-squared vec)))
 
 (u:fn-> distance-squared (vec vec) u:f64)
