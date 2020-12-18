@@ -389,15 +389,12 @@
 (declaim (inline rotate!))
 (defun rotate! (out mat angle &key (space :local))
   (declare (optimize speed))
-  (with-components ((m (id)))
-    (let ((s (sin angle))
-          (c (cos angle)))
-      (copy! out mat)
-      (psetf m00 c m01 (cl:- s)
-             m10 s m11 c)
-      (ecase space
-        (:local (*! out out m))
-        (:world (*! out m out)))))
+  (let ((r (rotation-z-from-angle angle)))
+    (declare (dynamic-extent r))
+    (copy! out mat)
+    (ecase space
+      (:local (*! out out r))
+      (:world (*! out r out))))
   out)
 
 (u:fn-> rotate (mat u:f64) mat)
