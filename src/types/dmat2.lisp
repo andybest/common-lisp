@@ -89,12 +89,17 @@
 
 ;;; constructors
 
-(u:fn-> %mat (&rest u:f64) mat)
+(u:fn-> %mat (u:f64 u:f64 u:f64 u:f64) mat)
 (declaim (inline %mat))
 (u:eval-always
-  (defun %mat (&rest args)
+  (defun %mat (m00 m10 m01 m11)
     (declare (optimize speed))
-    (make-array 4 :element-type 'u:f64 :initial-contents args)))
+    (let ((mat (make-array 4 :element-type 'u:f64)))
+      (setf (aref mat 0) m00
+            (aref mat 1) m10
+            (aref mat 2) m01
+            (aref mat 3) m11)
+      mat)))
 
 (ss:defstore mat (&rest args))
 

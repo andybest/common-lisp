@@ -133,12 +133,31 @@
 
 ;;; constructors
 
-(u:fn-> %mat (&rest u:f32) mat)
+(u:fn-> %mat (u:f32 u:f32 u:f32 u:f32 u:f32 u:f32 u:f32 u:f32 u:f32 u:f32 u:f32
+                    u:f32 u:f32 u:f32 u:f32 u:f32)
+        mat)
 (declaim (inline %mat))
 (u:eval-always
-  (defun %mat (&rest args)
+  (defun %mat (m00 m10 m20 m30 m01 m11 m21 m31 m02 m12 m22 m32 m03 m13 m23 m33)
     (declare (optimize speed))
-    (make-array 16 :element-type 'u:f32 :initial-contents args)))
+    (let ((mat (make-array 16 :element-type 'u:f32)))
+      (setf (aref mat 0) m00
+            (aref mat 1) m10
+            (aref mat 2) m20
+            (aref mat 3) m30
+            (aref mat 4) m01
+            (aref mat 5) m11
+            (aref mat 6) m21
+            (aref mat 7) m31
+            (aref mat 8) m02
+            (aref mat 9) m12
+            (aref mat 10) m22
+            (aref mat 11) m32
+            (aref mat 12) m03
+            (aref mat 13) m13
+            (aref mat 14) m23
+            (aref mat 15) m33)
+      mat)))
 
 (ss:defstore mat (&rest args))
 
@@ -190,7 +209,7 @@
         (float i 1.0) (float j 1.0) (float k 1.0) (float l 1.0)
         (float m 1.0) (float n 1.0) (float o 1.0) (float p 1.0)))
 
-(ss:defspecialization (mat :inline t) ((mat (simple-array u:f64 (16)))) mat
+(ss:defspecialization (mat :inline t) ((mat (simple-array u:f32 (16)))) mat
   (%mat (float (aref mat 0) 1.0)
         (float (aref mat 1) 1.0)
         (float (aref mat 2) 1.0)

@@ -109,12 +109,22 @@
 
 ;;; constructors
 
-(u:fn-> %mat (&rest u:f32) mat)
+(u:fn-> %mat (u:f32 u:f32 u:f32 u:f32 u:f32 u:f32 u:f32 u:f32 u:f32) mat)
 (declaim (inline %mat))
 (u:eval-always
-  (defun %mat (&rest args)
+  (defun %mat (m00 m10 m20 m01 m11 m21 m02 m12 m22)
     (declare (optimize speed))
-    (make-array 9 :element-type 'u:f32 :initial-contents args)))
+    (let ((mat (make-array 9 :element-type 'u:f32)))
+      (setf (aref mat 0) m00
+            (aref mat 1) m10
+            (aref mat 2) m20
+            (aref mat 3) m01
+            (aref mat 4) m11
+            (aref mat 5) m21
+            (aref mat 6) m02
+            (aref mat 7) m12
+            (aref mat 8) m22)
+      mat)))
 
 (ss:defstore mat (&rest args))
 

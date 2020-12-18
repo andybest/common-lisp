@@ -147,12 +147,16 @@
 
 ;;; constructors
 
-(u:fn-> %vec (&rest u:f32) vec)
+(u:fn-> %vec (u:f32 u:f32 u:f32) vec)
 (declaim (inline %vec))
 (u:eval-always
-  (defun %vec (&rest args)
+  (defun %vec (x y z)
     (declare (optimize speed))
-    (make-array 3 :element-type 'u:f32 :initial-contents args)))
+    (let ((vec (make-array 3 :element-type 'u:f32)))
+      (setf (aref vec 0) x
+            (aref vec 1) y
+            (aref vec 2) z)
+      vec)))
 
 (ss:defstore vec (&rest args))
 

@@ -238,6 +238,7 @@
     (let ((x (dv3::%vec m00 m10 m20))
           (y (dv3::%vec m01 m11 m21))
           (z (dv3::%vec m02 m12 m22)))
+      (declare (dynamic-extent x y z))
       (dv3:normalize! x x)
       (dv3:normalize! y y)
       (dv3:normalize! z z)

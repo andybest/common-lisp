@@ -96,12 +96,17 @@
 
 ;;; constructors
 
-(u:fn-> %quat (&rest u:f32) quat)
+(u:fn-> %quat (u:f32 u:f32 u:f32 u:f32) quat)
 (declaim (inline %quat))
 (u:eval-always
-  (defun %quat (&rest args)
+  (defun %quat (w x y z)
     (declare (optimize speed))
-    (make-array 4 :element-type 'u:f32 :initial-contents args)))
+    (let ((quat (make-array 4 :element-type 'u:f32)))
+      (setf (aref quat 0) w
+            (aref quat 1) x
+            (aref quat 2) y
+            (aref quat 3) z)
+      quat)))
 
 (ss:defstore quat (&rest args))
 
