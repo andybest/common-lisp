@@ -138,6 +138,9 @@
 
 ;;; constructors
 
+;; Low-level function for creating a vector. This is not exported, as it is
+;; requires passing a total set of scalars, which is not as convenient as the
+;; specializations that follow this definition.
 (u:fn-> %vec (u:f32 u:f32 u:f32 u:f32) vec)
 (declaim (inline %vec))
 (u:eval-always
@@ -149,6 +152,9 @@
             (aref vec 2) z
             (aref vec 3) w)
       vec)))
+
+;;; Define a set of specializations for creating vectors from a variety of
+;;; different inputs.
 
 (ss:defstore vec (&rest args))
 
@@ -211,51 +217,60 @@
 (u:fn-> x (vec) u:f32)
 (declaim (inline x))
 (defun x (vec)
+  "Read the 'X' component of vector VEC."
   (declare (optimize speed))
   (aref vec 0))
 
 (u:fn-> (setf x) (u:f32 vec) u:f32)
 (declaim (inline (setf x)))
 (defun (setf x) (value vec)
+  "Write VALUE to the 'X' component of vector VEC."
   (declare (optimize speed))
   (setf (aref vec 0) value))
 
 (u:fn-> y (vec) u:f32)
 (declaim (inline y))
 (defun y (vec)
+  "Read the 'Y' component of vector VEC."
   (declare (optimize speed))
   (aref vec 1))
 
 (u:fn-> (setf y) (u:f32 vec) u:f32)
 (declaim (inline (setf y)))
 (defun (setf y) (value vec)
+  "Write VALUE to the 'Y' component of vector VEC."
   (declare (optimize speed))
   (setf (aref vec 1) value))
 
 (u:fn-> z (vec) u:f32)
 (declaim (inline z))
 (defun z (vec)
+  "Read the 'Z' component of vector VEC."
   (declare (optimize speed))
   (aref vec 2))
 
 (u:fn-> (setf z) (u:f32 vec) u:f32)
 (declaim (inline (setf z)))
 (defun (setf z) (value vec)
+  "Write VALUE to the 'Z' component of vector VEC."
   (declare (optimize speed))
   (setf (aref vec 2) value))
 
 (u:fn-> w (vec) u:f32)
 (declaim (inline w))
 (defun w (vec)
+  "Read the 'W' component of vector VEC."
   (declare (optimize speed))
   (aref vec 3))
 
 (u:fn-> (setf w) (u:f32 vec) u:f32)
 (declaim (inline (setf w)))
 (defun (setf w) (value vec)
+  "Write VALUE to the 'W' component of vector VEC."
   (declare (optimize speed))
   (setf (aref vec 3) value))
 
 ;;; constants
 
-(u:define-constant +zero+ (%vec 0.0 0.0 0.0 0.0) :test #'equalp)
+(u:define-constant +zero+ (%vec 0.0 0.0 0.0 0.0) :test #'equalp
+  "Constant representing a 4D zero vector.")
