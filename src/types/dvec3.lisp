@@ -240,23 +240,30 @@
 
 ;; ;;; constants
 
-(u:define-constant +zero+ (%vec 0d0 0d0 0d0) :test #'equalp
-  "Constant representing a 3D zero vector.")
+(u:define-constant +zero+ (%vec 0d0 0d0 0d0)
+  :test #'equalp
+  :documentation "Constant representing a 3D zero vector.")
 
-(u:define-constant +up+ (%vec 0d0 1d0 0d0) :test #'equalp
-  "Constant representing a 3D unit vector facing up.")
+(u:define-constant +up+ (%vec 0d0 1d0 0d0)
+  :test #'equalp
+  :documentation "Constant representing a 3D unit vector facing up.")
 
-(u:define-constant +down+ (%vec 0d0 -1d0 0d0) :test #'equalp
-  "Constant representing a 3D unit vector facing down.")
+(u:define-constant +down+ (%vec 0d0 -1d0 0d0)
+  :test #'equalp
+  :documentation "Constant representing a 3D unit vector facing down.")
 
-(u:define-constant +left+ (%vec -1d0 0d0 0d0) :test #'equalp
-  "Constant representing a 3D unit vector facing left.")
+(u:define-constant +left+ (%vec -1d0 0d0 0d0)
+  :test #'equalp
+  :documentation "Constant representing a 3D unit vector facing left.")
 
-(u:define-constant +right+ (%vec 1d0 0d0 0d0) :test #'equalp
-  "Constant representing a 3D unit vector facing right.")
+(u:define-constant +right+ (%vec 1d0 0d0 0d0)
+  :test #'equalp
+  :documentation "Constant representing a 3D unit vector facing right.")
 
-(u:define-constant +forward+ (%vec 0d0 0d0 1d0) :test #'equalp
-  "Constant representing a 3D unit vector facing forward.")
+(u:define-constant +forward+ (%vec 0d0 0d0 1d0)
+  :test #'equalp
+  :documentation "Constant representing a 3D unit vector facing forward.")
 
-(u:define-constant +back+ (%vec 0d0 0d0 -1d0) :test #'equalp
-  "Constant representing a 3D unit vector facing back.")
+(u:define-constant +back+ (%vec 0d0 0d0 -1d0)
+  :test #'equalp
+  :documentation "Constant representing a 3D unit vector facing back.")

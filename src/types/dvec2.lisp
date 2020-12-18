@@ -208,17 +208,22 @@
 
 ;;; constants
 
-(u:define-constant +zero+ (%vec 0d0 0d0) :test #'equalp
-  "Constant representing a 2D zero vector.")
+(u:define-constant +zero+ (%vec 0d0 0d0)
+  :test #'equalp
+  :documentation "Constant representing a 2D zero vector.")
 
-(u:define-constant +up+ (%vec 0d0 1d0) :test #'equalp
-  "Constant representing a 2D unit vector facing up.")
+(u:define-constant +up+ (%vec 0d0 1d0)
+  :test #'equalp
+  :documentation "Constant representing a 2D unit vector facing up.")
 
-(u:define-constant +down+ (%vec 0d0 -1d0) :test #'equalp
-  "Constant representing a 2D unit vector facing down.")
+(u:define-constant +down+ (%vec 0d0 -1d0)
+  :test #'equalp
+  :documentation "Constant representing a 2D unit vector facing down.")
 
-(u:define-constant +left+ (%vec -1d0 0d0) :test #'equalp
-  "Constant representing a 2D unit vector facing left.")
+(u:define-constant +left+ (%vec -1d0 0d0)
+  :test #'equalp
+  :documentation "Constant representing a 2D unit vector facing left.")
 
-(u:define-constant +right+ (%vec 1d0 0d0) :test #'equalp
-  "Constant representing a 2D unit vector facing right.")
+(u:define-constant +right+ (%vec 1d0 0d0)
+  :test #'equalp
+  :documentation "Constant representing a 2D unit vector facing right.")

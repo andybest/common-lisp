@@ -265,4 +265,6 @@
 
 ;;; constants
 
-(u:define-constant +zero+ (%vec 0d0 0d0 0d0 0d0) :test #'equalp)
+(u:define-constant +zero+ (%vec 0d0 0d0 0d0 0d0)
+  :test #'equalp
+  :documentation "Constant representing a 4D zero vector.")
