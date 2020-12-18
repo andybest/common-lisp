@@ -141,19 +141,19 @@
 (ss:defstore mat (&rest args))
 
 (ss:defspecialization (mat :inline t) () mat
-  (%mat 0f0 0f0 0f0
-        0f0 0f0 0f0
-        0f0 0f0 0f0))
+  (%mat 0.0 0.0 0.0
+        0.0 0.0 0.0
+        0.0 0.0 0.0))
 
 (ss:defspecialization (mat :inline t) ((x real)) mat
-  (%mat (float x 1f0) 0f0 0f0
-        0f0 (float x 1f0) 0f0
-        0f0 0f0 (float x 1f0)))
+  (%mat (float x 1.0) 0.0 0.0
+        0.0 (float x 1.0) 0.0
+        0.0 0.0 (float x 1.0)))
 
 (ss:defspecialization (mat :inline t) ((mat m2:mat)) mat
-  (%mat (aref mat 0) (aref mat 1) 0f0
-        (aref mat 2) (aref mat 3) 0f0
-        0f0 0f0 1f0))
+  (%mat (aref mat 0) (aref mat 1) 0.0
+        (aref mat 2) (aref mat 3) 0.0
+        0.0 0.0 1.0))
 
 (ss:defspecialization (mat :inline t) ((mat mat)) mat
   (%mat (aref mat 0) (aref mat 1) (aref mat 2)
@@ -175,24 +175,24 @@
                                        (d real) (e real) (f real)
                                        (g real) (h real) (i real))
     mat
-  (%mat (float a 1f0) (float b 1f0) (float c 1f0)
-        (float d 1f0) (float e 1f0) (float f 1f0)
-        (float g 1f0) (float h 1f0) (float i 1f0)))
+  (%mat (float a 1.0) (float b 1.0) (float c 1.0)
+        (float d 1.0) (float e 1.0) (float f 1.0)
+        (float g 1.0) (float h 1.0) (float i 1.0)))
 
 (ss:defspecialization (mat :inline t) ((mat (simple-array u:f64 (9)))) mat
-  (%mat (float (aref mat 0) 1f0)
-        (float (aref mat 1) 1f0)
-        (float (aref mat 2) 1f0)
-        (float (aref mat 3) 1f0)
-        (float (aref mat 4) 1f0)
-        (float (aref mat 5) 1f0)
-        (float (aref mat 6) 1f0)
-        (float (aref mat 7) 1f0)
-        (float (aref mat 8) 1f0)))
+  (%mat (float (aref mat 0) 1.0)
+        (float (aref mat 1) 1.0)
+        (float (aref mat 2) 1.0)
+        (float (aref mat 3) 1.0)
+        (float (aref mat 4) 1.0)
+        (float (aref mat 5) 1.0)
+        (float (aref mat 6) 1.0)
+        (float (aref mat 7) 1.0)
+        (float (aref mat 8) 1.0)))
 
 ;;; constants
 
-(u:define-constant +zero+ (%mat 0f0 0f0 0f0 0f0 0f0 0f0 0f0 0f0 0f0)
+(u:define-constant +zero+ (%mat 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0)
   :test #'equalp)
 
-(u:define-constant +id+ (%mat 1f0 0f0 0f0 0f0 1f0 0f0 0f0 0f0 1f0) :test #'equalp)
+(u:define-constant +id+ (%mat 1.0 0.0 0.0 0.0 1.0 0.0 0.0 0.0 1.0) :test #'equalp)

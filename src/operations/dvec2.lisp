@@ -141,16 +141,13 @@
   (declare (optimize speed))
   (/! (zero) vec1 vec2))
 
-(defmacro %scale (ox oy x y scalar)
-  `(psetf ,ox (cl:* ,x ,scalar)
-          ,oy (cl:* ,y ,scalar)))
-
 (u:fn-> scale! (vec vec u:f64) vec)
 (declaim (inline scale!))
 (defun scale! (out vec scalar)
   (declare (optimize speed))
   (with-components ((o out) (v vec))
-    (%scale ox oy vx vy scalar))
+    (psetf ox (cl:* vx scalar)
+           oy (cl:* vy scalar)))
   out)
 
 (u:fn-> scale (vec u:f64) vec)
@@ -172,31 +169,17 @@
   (declare (optimize speed))
   (invert! (zero) vec))
 
-(defmacro %dot (v1x v1y v2x v2y)
-  `(cl:+ (cl:* ,v1x ,v2x) (cl:* ,v1y ,v2y)))
-
 (u:fn-> dot (vec vec) u:f64)
 (declaim (inline dot))
 (defun dot (vec1 vec2)
   (with-components ((v1 vec1) (v2 vec2))
-    (%dot v1x v1y v2x v2y)))
-
-(defmacro %length-squared (x y)
-  ;; NOTE: This is not using %DOT because using * instead of EXPT and SBCL 1.5.9
-  ;; cannot correctly infer the type of the SQRT of the sum of squares as being
-  ;; a single-float. This is because SBCL's memory model policy is "everything
-  ;; is volatile", which is acceptable because two AREF calls to the same array
-  ;; may infact produce different values when threading is involved.
-  `(cl:+ (cl:expt ,x 2) (cl:expt ,y 2)))
+    (cl:+ (cl:* v1x v2x) (cl:* v1y v2y))))
 
 (u:fn-> length-squared (vec) u:f64)
 (declaim (inline length-squared))
 (defun length-squared (vec)
   (with-components ((v vec))
-    (%length-squared vx vy)))
-
-(defmacro %length (x y)
-  `(cl:sqrt (%length-squared ,x ,y)))
+    (cl:+ (cl:expt vx 2) (cl:expt vy 2))))
 
 (u:fn-> length (vec) u:f64)
 (declaim (inline length))
@@ -213,19 +196,13 @@
 (defun distance (vec1 vec2)
   (cl:sqrt (distance-squared vec1 vec2)))
 
-(defmacro %normalize (ox oy x y)
-  (u:with-gensyms (length inv-length)
-    `(let ((,length (%length ,x ,y)))
-       (unless (zerop ,length)
-         (let ((,inv-length (cl:/ ,length)))
-           (%scale ,ox ,oy ,x ,y ,inv-length))))))
-
 (u:fn-> normalize! (vec vec) vec)
 (declaim (inline normalize!))
 (defun normalize! (out vec)
   (declare (optimize speed))
-  (with-components ((o out) (v vec))
-    (%normalize ox oy vx vy))
+  (let ((length (length vec)))
+    (unless (zerop length)
+      (scale! out vec (cl:/ length))))
   out)
 
 (u:fn-> normalize (vec) vec)

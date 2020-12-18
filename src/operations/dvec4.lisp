@@ -141,18 +141,15 @@
   (declare (optimize speed))
   (/! (zero) vec1 vec2))
 
-(defmacro %scale (ox oy oz ow x y z w scalar)
-  `(psetf ,ox (cl:* ,x ,scalar)
-          ,oy (cl:* ,y ,scalar)
-          ,oz (cl:* ,z ,scalar)
-          ,ow (cl:* ,w ,scalar)))
-
 (u:fn-> scale! (vec vec u:f64) vec)
 (declaim (inline scale!))
 (defun scale! (out vec scalar)
   (declare (optimize speed))
   (with-components ((o out) (v vec))
-    (%scale ox oy oz ow vx vy vz vw scalar))
+    (psetf ox (cl:* vx scalar)
+           oy (cl:* vy scalar)
+           oz (cl:* vz scalar)
+           ow (cl:* vw scalar)))
   out)
 
 (u:fn-> scale (vec u:f64) vec)
@@ -174,31 +171,17 @@
   (declare (optimize speed))
   (invert! (zero) vec))
 
-(defmacro %dot (v1x v1y v1z v1w v2x v2y v2z v2w)
-  `(cl:+ (cl:* ,v1x ,v2x) (cl:* ,v1y ,v2y) (cl:* ,v1z ,v2z) (cl:* ,v1w ,v2w)))
-
 (u:fn-> dot (vec vec) u:f64)
 (declaim (inline dot))
 (defun dot (vec1 vec2)
   (with-components ((v1 vec1) (v2 vec2))
-    (%dot v1x v1y v1z v1w v2x v2y v2z v2w)))
-
-(defmacro %length-squared (x y z w)
-  ;; NOTE: This is not using %DOT because using * instead of EXPT and SBCL 1.5.9
-  ;; cannot correctly infer the type of the SQRT of the sum of squares as being
-  ;; a single-float. This is because SBCL's memory model policy is "everything
-  ;; is volatile", which is acceptable because two AREF calls to the same array
-  ;; may infact produce different values when threading is involved.
-  `(cl:+ (cl:expt ,x 2) (cl:expt ,y 2) (cl:expt ,z 2) (cl:expt ,w 2)))
+    (cl:+ (cl:* v1x v2x) (cl:* v1y v2y) (cl:* v1z v2z) (cl:* v1w v2w))))
 
 (u:fn-> length-squared (vec) u:f64)
 (declaim (inline length-squared))
 (defun length-squared (vec)
   (with-components ((v vec))
-    (%length-squared vx vy vz vw)))
-
-(defmacro %length (x y z w)
-  `(cl:sqrt (%length-squared ,x ,y ,z ,w)))
+    (cl:+ (cl:expt vx 2) (cl:expt vy 2) (cl:expt vz 2) (cl:expt vw 2))))
 
 (u:fn-> length (vec) u:f64)
 (declaim (inline length))
@@ -215,19 +198,13 @@
 (defun distance (vec1 vec2)
   (cl:sqrt (distance-squared vec1 vec2)))
 
-(defmacro %normalize (ox oy oz ow x y z w)
-  (u:with-gensyms (length inv-length)
-    `(let ((,length (%length ,x ,y ,z ,w)))
-       (unless (zerop ,length)
-         (let ((,inv-length (cl:/ ,length)))
-           (%scale ,ox ,oy ,oz ,ow ,x ,y ,z ,w ,inv-length))))))
-
 (u:fn-> normalize! (vec vec) vec)
 (declaim (inline normalize!))
 (defun normalize! (out vec)
   (declare (optimize speed))
-  (with-components ((o out) (v vec))
-    (%normalize ox oy oz ow vx vy vz vw))
+  (let ((length (length vec)))
+    (unless (zerop length)
+      (scale! out vec (cl:/ length))))
   out)
 
 (u:fn-> normalize (vec) vec)

@@ -90,12 +90,12 @@
    #:invert-orthogonal
    #:invert!
    #:invert
-   #:set-view!
-   #:set-view
-   #:set-projection/orthographic!
-   #:set-projection/orthographic
-   #:set-projection/perspective!
-   #:set-projection/perspective))
+   #:look-at!
+   #:look-at
+   #:orthographic!
+   #:orthographic
+   #:perspective!
+   #:perspective))
 
 (in-package #:net.mfiano.lisp.origin.dmat4)
 

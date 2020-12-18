@@ -9,16 +9,16 @@
 (declaim (inline zero!))
 (defun zero! (mat)
   (declare (optimize speed))
-  (com:cwset 9 mat nil 0f0)
+  (com:cwset 9 mat nil 0.0)
   mat)
 
 (u:fn-> zero () mat)
 (declaim (inline zero))
 (defun zero ()
   (declare (optimize speed))
-  (%mat 0f0 0f0 0f0
-        0f0 0f0 0f0
-        0f0 0f0 0f0))
+  (%mat 0.0 0.0 0.0
+        0.0 0.0 0.0
+        0.0 0.0 0.0))
 
 (u:fn-> zero-p (mat) boolean)
 (declaim (inline zero-p))
@@ -31,9 +31,9 @@
 (defun id! (mat)
   (declare (optimize speed))
   (with-components ((m mat))
-    (psetf m00 1f0 m01 0f0 m02 0f0
-           m10 0f0 m11 1f0 m12 0f0
-           m20 0f0 m21 0f0 m22 1f0))
+    (psetf m00 1.0 m01 0.0 m02 0.0
+           m10 0.0 m11 1.0 m12 0.0
+           m20 0.0 m21 0.0 m22 1.0))
   mat)
 
 (u:fn-> id () mat)
@@ -114,27 +114,20 @@
   (declare (optimize speed))
   (-! (zero) mat1 mat2))
 
-(defmacro %* (o00 o01 o02 o10 o11 o12 o20 o21 o22
-              a00 a01 a02 a10 a11 a12 a20 a21 a22
-              b00 b01 b02 b10 b11 b12 b20 b21 b22)
-  `(psetf ,o00 (cl:+ (cl:* ,a00 ,b00) (cl:* ,a01 ,b10) (cl:* ,a02 ,b20))
-          ,o10 (cl:+ (cl:* ,a10 ,b00) (cl:* ,a11 ,b10) (cl:* ,a12 ,b20))
-          ,o20 (cl:+ (cl:* ,a20 ,b00) (cl:* ,a21 ,b10) (cl:* ,a22 ,b20))
-          ,o01 (cl:+ (cl:* ,a00 ,b01) (cl:* ,a01 ,b11) (cl:* ,a02 ,b21))
-          ,o11 (cl:+ (cl:* ,a10 ,b01) (cl:* ,a11 ,b11) (cl:* ,a12 ,b21))
-          ,o21 (cl:+ (cl:* ,a20 ,b01) (cl:* ,a21 ,b11) (cl:* ,a22 ,b21))
-          ,o02 (cl:+ (cl:* ,a00 ,b02) (cl:* ,a01 ,b12) (cl:* ,a02 ,b22))
-          ,o12 (cl:+ (cl:* ,a10 ,b02) (cl:* ,a11 ,b12) (cl:* ,a12 ,b22))
-          ,o22 (cl:+ (cl:* ,a20 ,b02) (cl:* ,a21 ,b12) (cl:* ,a22 ,b22))))
-
 (u:fn-> *! (mat mat mat) mat)
 (declaim (inline *!))
 (defun *! (out mat1 mat2)
   (declare (optimize speed))
   (with-components ((o out) (a mat1) (b mat2))
-    (%* o00 o01 o02 o10 o11 o12 o20 o21 o22
-        a00 a01 a02 a10 a11 a12 a20 a21 a22
-        b00 b01 b02 b10 b11 b12 b20 b21 b22))
+    (psetf o00 (cl:+ (cl:* a00 b00) (cl:* a01 b10) (cl:* a02 b20))
+           o10 (cl:+ (cl:* a10 b00) (cl:* a11 b10) (cl:* a12 b20))
+           o20 (cl:+ (cl:* a20 b00) (cl:* a21 b10) (cl:* a22 b20))
+           o01 (cl:+ (cl:* a00 b01) (cl:* a01 b11) (cl:* a02 b21))
+           o11 (cl:+ (cl:* a10 b01) (cl:* a11 b11) (cl:* a12 b21))
+           o21 (cl:+ (cl:* a20 b01) (cl:* a21 b11) (cl:* a22 b21))
+           o02 (cl:+ (cl:* a00 b02) (cl:* a01 b12) (cl:* a02 b22))
+           o12 (cl:+ (cl:* a10 b02) (cl:* a11 b12) (cl:* a12 b22))
+           o22 (cl:+ (cl:* a20 b02) (cl:* a21 b12) (cl:* a22 b22))))
   out)
 
 (u:fn-> * (mat mat) mat)
@@ -174,14 +167,52 @@
   (declare (optimize speed))
   (rotation-to-mat2! (m2:id) mat))
 
+(u:fn-> rotation-axis-to-vec2! (v2:vec mat keyword) v2:vec)
+(declaim (inline rotation-axis-to-vec2!))
+(defun rotation-axis-to-vec2! (out mat axis)
+  (declare (optimize speed))
+  (v2:with-components ((v out))
+    (with-components ((m mat))
+      (ecase axis
+        (:x (psetf vx m00 vy m10))
+        (:y (psetf vx m01 vy m11)))))
+  out)
+
+(u:fn-> rotation-axis-to-vec2 (mat keyword) v2:vec)
+(declaim (inline rotation-axis-to-vec2))
+(defun rotation-axis-to-vec2 (mat axis)
+  (declare (optimize speed))
+  (rotation-axis-to-vec2! (v2:zero) mat axis))
+
+(u:fn-> rotation-axis-from-vec2! (mat v2:vec keyword) mat)
+(declaim (inline rotation-axis-from-vec2!))
+(defun rotation-axis-from-vec2! (out vec axis)
+  (declare (optimize speed))
+  (with-components ((o out))
+    (v2:with-components ((v vec))
+      (ecase axis
+        (:x (psetf o00 vx o10 vy))
+        (:y (psetf o01 vx o11 vy)))))
+  out)
+
+(u:fn-> rotation-axis-from-vec2 (mat v2:vec keyword) mat)
+(declaim (inline rotation-axis-from-vec2))
+(defun rotation-axis-from-vec2 (mat vec axis)
+  (declare (optimize speed))
+  (rotation-axis-from-vec2! (copy mat) vec axis))
+
 (u:fn-> normalize-rotation! (mat mat) mat)
 (declaim (inline normalize-rotation!))
 (defun normalize-rotation! (out mat)
   (declare (optimize speed))
-  (with-components ((o out) (m mat))
-    (v2::%normalize o00 o10 m00 m10)
-    (v2::%normalize o01 o11 m01 m11)
-    (v2::%normalize o02 o12 m02 m12))
+  (with-components ((m mat))
+    (let ((x (v2::%vec m00 m10))
+          (y (v2::%vec m01 m11)))
+      (declare (dynamic-extent x y))
+      (v2:normalize! x x)
+      (v2:normalize! y y)
+      (rotation-axis-from-vec2! out x :x)
+      (rotation-axis-from-vec2! out y :y)))
   out)
 
 (u:fn-> normalize-rotation (mat) mat)
@@ -282,59 +313,26 @@
   (declare (optimize speed))
   (translate! (id) mat vec))
 
-(u:fn-> rotation-axis-to-vec2! (v2:vec mat keyword) v2:vec)
-(declaim (inline rotation-axis-to-vec2!))
-(defun rotation-axis-to-vec2! (out mat axis)
-  (declare (optimize speed))
-  (v2:with-components ((v out))
-    (with-components ((m mat))
-      (ecase axis
-        (:x (psetf vx m00 vy m10))
-        (:y (psetf vx m01 vy m11)))))
-  out)
-
-(u:fn-> rotation-axis-to-vec2 (mat keyword) v2:vec)
-(declaim (inline rotation-axis-to-vec2))
-(defun rotation-axis-to-vec2 (mat axis)
-  (declare (optimize speed))
-  (rotation-axis-to-vec2! (v2:zero) mat axis))
-
-(u:fn-> rotation-axis-from-vec2! (mat v2:vec keyword) mat)
-(declaim (inline rotation-axis-from-vec2!))
-(defun rotation-axis-from-vec2! (out vec axis)
-  (declare (optimize speed))
-  (with-components ((o out))
-    (v2:with-components ((v vec))
-      (ecase axis
-        (:x (psetf o00 vx o10 vy))
-        (:y (psetf o01 vx o11 vy)))))
-  out)
-
-(u:fn-> rotation-axis-from-vec2 (mat v2:vec keyword) mat)
-(declaim (inline rotation-axis-from-vec2))
-(defun rotation-axis-from-vec2 (mat vec axis)
-  (declare (optimize speed))
-  (rotation-axis-from-vec2! (copy mat) vec axis))
-
 (u:fn-> rotate! (mat mat u:f32 &key (:space keyword)) mat)
 (declaim (inline rotate!))
 (defun rotate! (out mat angle &key (space :local))
-  (m2:with-elements ((m 1f0 0f0 0f0 1f0))
-    (with-components ((o out))
-      (let ((s (sin angle))
-            (c (cos angle)))
-        (copy! out mat)
-        (psetf m00 c m01 (cl:- s) m10 s m11 c)
-        (ecase space
-          (:local (m2::%* o00 o01 o10 o11 o00 o01 o10 o11 m00 m01 m10 m11))
-          (:world (m2::%* o00 o01 o10 o11 m00 m01 m10 m11 o00 o01 o10 o11))))))
+  (declare (optimize speed))
+  (with-components ((m (id)))
+    (let ((s (sin angle))
+          (c (cos angle)))
+      (copy! out mat)
+      (psetf m00 c m01 (cl:- s)
+             m10 s m11 c)
+      (ecase space
+        (:local (*! out out m))
+        (:world (*! out m out)))))
   out)
 
 (u:fn-> rotate (mat u:f32) mat)
 (declaim (inline rotate))
-(defun rotate (mat vec)
+(defun rotate (mat angle)
   (declare (optimize speed))
-  (rotate! (id) mat vec))
+  (rotate! (id) mat angle))
 
 (u:fn-> get-scale! (v2:vec mat) v2:vec)
 (declaim (inline get-scale!))
@@ -429,21 +427,18 @@
   (declare (optimize speed))
   (= (* mat (transpose mat)) +id+))
 
-(defmacro %trace (m00 m11 m22)
-  `(cl:+ ,m00 ,m11 ,m22))
-
 (u:fn-> trace (mat) u:f32)
 (declaim (inline trace))
 (defun trace (mat)
   (with-components ((m mat))
-    (%trace m00 m11 m22)))
+    (cl:+ m00 m11 m22)))
 
 (u:fn-> diagonal-p (mat) boolean)
 (declaim (inline diagonal-p))
 (defun diagonal-p (mat)
   (declare (optimize speed))
   (with-components ((m mat))
-    (cl:= 0f0 m10 m20 m01 m21 m02 m12)))
+    (cl:= 0.0 m10 m20 m01 m21 m02 m12)))
 
 (u:fn-> main-diagonal! (v3:vec mat) v3:vec)
 (declaim (inline main-diagonal!))

@@ -343,7 +343,7 @@
                       4f0 8f0 12f0 16f0)
               nil))))
 
-(define-test m4/set-view
+(define-test m4/look-at
   (let ((o (m4:id))
         (r (m4:mat -0.7071068f0 0f0 0.7071068f0 0f0
                    0f0 1f0 0f0 0f0
@@ -354,48 +354,44 @@
                     -0.19245008f0 0.8229512f0 0.5345225f0 0f0
                     -0.19245008f0 -0.5657789f0 0.80178374f0 0f0
                     -2.3841858e-7 -9.536743e-7 -18.708286f0 1f0)))
-    (true (m4:= (m4:set-view! o
-                              (v3:vec 1f0 0f0 0f0)
-                              (v3:vec 0f0 0f0 1f0)
-                              (v3:vec 0f0 1f0 0f0))
-                r))
-    (true (m4:= o r))
-    (true (m4:= (m4:set-view (v3:vec 1f0 0f0 0f0)
+    (true (m4:= (m4:look-at! o
+                             (v3:vec 1f0 0f0 0f0)
                              (v3:vec 0f0 0f0 1f0)
                              (v3:vec 0f0 1f0 0f0))
                 r))
-    (true (m4:= (m4:set-view! o2
-                              (v3:vec 5f0 10f0 15f0)
-                              (v3:vec 0f0 0f0 0f0)
-                              (v3:vec 0f0 1f0 -1f0))
-                r2))
-    (true (m4:= o2 r2))
-    (true (m4:= (m4:set-view (v3:vec 5f0 10f0 15f0)
+    (true (m4:= o r))
+    (true (m4:= (m4:look-at (v3:vec 1f0 0f0 0f0)
+                            (v3:vec 0f0 0f0 1f0)
+                            (v3:vec 0f0 1f0 0f0))
+                r))
+    (true (m4:= (m4:look-at! o2
+                             (v3:vec 5f0 10f0 15f0)
                              (v3:vec 0f0 0f0 0f0)
                              (v3:vec 0f0 1f0 -1f0))
+                r2))
+    (true (m4:= o2 r2))
+    (true (m4:= (m4:look-at (v3:vec 5f0 10f0 15f0)
+                            (v3:vec 0f0 0f0 0f0)
+                            (v3:vec 0f0 1f0 -1f0))
                 r2))))
 
-(define-test m4/set-projection/orthographic
+(define-test m4/orthographic
   (let ((r (m4:mat 0.05f0 0f0 0f0 0f0
                    0f0 0.1f0 0f0 0f0
                    0f0 0f0 -0.002f0 0f0
                    0f0 0f0 -1f0 1f0))
         (o (m4:id)))
-    (is m4:= (m4:set-projection/orthographic! o -20f0 20f0 -10f0 10f0 0f0 1000f0)
-        r)
+    (is m4:= (m4:orthographic! o -20f0 20f0 -10f0 10f0 0f0 1000f0) r)
     (is m4:= o r)
-    (is m4:= (m4:set-projection/orthographic -20f0 20f0 -10f0 10f0 0f0 1000f0)
-        r)))
+    (is m4:= (m4:orthographic -20f0 20f0 -10f0 10f0 0f0 1000f0) r)))
 
-(define-test m4/set-projection/perspective
+(define-test m4/perspective
   (let ((r (m4:mat 0.9742786f0 0f0 0f0 0f0
                    0f0 1.7320509f0 0f0 0f0
                    0f0 0f0 -1.002002f0 -1f0
                    0f0 0f0 -2.002002f0 0f0))
         (o (m4:id)))
-    (is m4:= (m4:set-projection/perspective!
-              o com:pi/3 (/ 16f0 9f0) 1f0 1000f0)
+    (is m4:= (m4:perspective! o com:pi/3 (/ 16f0 9f0) 1f0 1000f0)
         r)
     (is m4:= o r)
-    (is m4:= (m4:set-projection/perspective com:pi/3 (/ 16f0 9f0) 1f0 1000f0)
-        r)))
+    (is m4:= (m4:perspective com:pi/3 (/ 16f0 9f0) 1f0 1000f0) r)))

@@ -118,20 +118,20 @@
 (ss:defstore quat (&rest args))
 
 (ss:defspecialization (quat :inline t) () quat
-  (%quat 1f0 0f0 0f0 0f0))
+  (%quat 1.0 0.0 0.0 0.0))
 
 (ss:defspecialization (quat :inline t) ((w real)) quat
-  (%quat (float w 1f0) 0f0 0f0 0f0))
+  (%quat (float w 1.0) 0.0 0.0 0.0))
 
 (ss:defspecialization (quat :inline t) ((w real) (x real) (y real) (z real))
     quat
-  (%quat (float w 1f0) (float x 1f0) (float y 1f0) (float z 1f0)))
+  (%quat (float w 1.0) (float x 1.0) (float y 1.0) (float z 1.0)))
 
 (ss:defspecialization (quat :inline t) ((quat (simple-array u:f64 (4)))) quat
-  (%quat (float (aref quat 0) 1f0)
-         (float (aref quat 1) 1f0)
-         (float (aref quat 2) 1f0)
-         (float (aref quat 3) 1f0)))
+  (%quat (float (aref quat 0) 1.0)
+         (float (aref quat 1) 1.0)
+         (float (aref quat 2) 1.0)
+         (float (aref quat 3) 1.0)))
 
 ;;; accessors
 
@@ -185,4 +185,4 @@
 
 ;;; constants
 
-(u:define-constant +id+ (%quat 1f0 0f0 0f0 0f0) :test #'equalp)
+(u:define-constant +id+ (%quat 1.0 0.0 0.0 0.0) :test #'equalp)

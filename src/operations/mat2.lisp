@@ -9,15 +9,15 @@
 (declaim (inline zero!))
 (defun zero! (mat)
   (declare (optimize speed))
-  (com:cwset 4 mat nil 0f0)
+  (com:cwset 4 mat nil 0.0)
   mat)
 
 (u:fn-> zero () mat)
 (declaim (inline zero))
 (defun zero ()
   (declare (optimize speed))
-  (%mat 0f0 0f0
-        0f0 0f0))
+  (%mat 0.0 0.0
+        0.0 0.0))
 
 (u:fn-> zero-p (mat) boolean)
 (declaim (inline zero-p))
@@ -30,8 +30,8 @@
 (defun id! (mat)
   (declare (optimize speed))
   (with-components ((m mat))
-    (psetf m00 1f0 m01 0f0
-           m10 0f0 m11 1f0))
+    (psetf m00 1.0 m01 0.0
+           m10 0.0 m11 1.0))
   mat)
 
 (u:fn-> id () mat)
@@ -112,18 +112,15 @@
   (declare (optimize speed))
   (-! (zero) mat1 mat2))
 
-(defmacro %* (o00 o01 o10 o11 a00 a01 a10 a11 b00 b01 b10 b11)
-  `(psetf ,o00 (cl:+ (cl:* ,a00 ,b00) (cl:* ,a01 ,b10))
-          ,o10 (cl:+ (cl:* ,a10 ,b00) (cl:* ,a11 ,b10))
-          ,o01 (cl:+ (cl:* ,a00 ,b01) (cl:* ,a01 ,b11))
-          ,o11 (cl:+ (cl:* ,a10 ,b01) (cl:* ,a11 ,b11))))
-
 (u:fn-> *! (mat mat mat) mat)
 (declaim (inline *!))
 (defun *! (out mat1 mat2)
   (declare (optimize speed))
   (with-components ((o out) (a mat1) (b mat2))
-    (%* o00 o01 o10 o11 a00 a01 a10 a11 b00 b01 b10 b11))
+    (psetf o00 (cl:+ (cl:* a00 b00) (cl:* a01 b10))
+           o10 (cl:+ (cl:* a10 b00) (cl:* a11 b10))
+           o01 (cl:+ (cl:* a00 b01) (cl:* a01 b11))
+           o11 (cl:+ (cl:* a10 b01) (cl:* a11 b11))))
   out)
 
 (u:fn-> * (mat mat) mat)
@@ -204,16 +201,16 @@
 (u:fn-> rotate! (mat mat u:f32 &key (:space keyword)) mat)
 (declaim (inline rotate!))
 (defun rotate! (out mat angle &key (space :local))
+  (declare (optimize speed))
   (with-components ((m (id)))
-    (copy! out mat)
-    (when (cl:> (abs angle) 1e-7)
-      (let ((s (sin angle))
-            (c (cos angle)))
-        (psetf m00 c m01 (cl:- s)
-               m10 s m11 c)
-        (ecase space
-          (:local (*! out out m))
-          (:world (*! out m out))))))
+    (let ((s (sin angle))
+          (c (cos angle)))
+      (copy! out mat)
+      (psetf m00 c m01 (cl:- s)
+             m10 s m11 c)
+      (ecase space
+        (:local (*! out out m))
+        (:world (*! out m out)))))
   out)
 
 (u:fn-> rotate (mat u:f32) mat)
@@ -312,7 +309,7 @@
 (defun diagonal-p (mat)
   (declare (optimize speed))
   (with-components ((m mat))
-    (cl:= 0f0 m10 m01)))
+    (cl:= 0.0 m10 m01)))
 
 (u:fn-> main-diagonal! (v2:vec mat) v2:vec)
 (declaim (inline main-diagonal!))

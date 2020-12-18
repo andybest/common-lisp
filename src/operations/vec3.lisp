@@ -10,14 +10,14 @@
 (declaim (inline zero!))
 (defun zero! (vec)
   (declare (optimize speed))
-  (com:cwset 3 vec nil 0f0)
+  (com:cwset 3 vec nil 0.0)
   vec)
 
 (u:fn-> zero () vec)
 (declaim (inline zero))
 (defun zero ()
   (declare (optimize speed))
-  (%vec 0f0 0f0 0f0))
+  (%vec 0.0 0.0 0.0))
 
 (u:fn-> zero-p (vec) boolean)
 (declaim (inline zero-p))
@@ -134,7 +134,7 @@
 (declaim (inline /!))
 (defun /! (out vec1 vec2)
   (declare (optimize speed))
-  (com:cwset 3 out (vec1 vec2) (if (zerop vec2) 0f0 (cl:/ vec1 vec2)))
+  (com:cwset 3 out (vec1 vec2) (if (zerop vec2) 0.0 (cl:/ vec1 vec2)))
   out)
 
 (u:fn-> / (vec vec) vec)
@@ -143,17 +143,14 @@
   (declare (optimize speed))
   (/! (zero) vec1 vec2))
 
-(defmacro %scale (ox oy oz x y z scalar)
-  `(psetf ,ox (cl:* ,x ,scalar)
-          ,oy (cl:* ,y ,scalar)
-          ,oz (cl:* ,z ,scalar)))
-
 (u:fn-> scale! (vec vec u:f32) vec)
 (declaim (inline scale!))
 (defun scale! (out vec scalar)
   (declare (optimize speed))
   (with-components ((o out) (v vec))
-    (%scale ox oy oz vx vy vz scalar))
+    (psetf ox (cl:* vx scalar)
+           oy (cl:* vy scalar)
+           oz (cl:* vz scalar)))
   out)
 
 (u:fn-> scale (vec u:f32) vec)
@@ -166,7 +163,7 @@
 (declaim (inline invert!))
 (defun invert! (out vec)
   (declare (optimize speed))
-  (com:cwset 3 out vec (if (zerop vec) 0f0 (cl:/ vec)))
+  (com:cwset 3 out vec (if (zerop vec) 0.0 (cl:/ vec)))
   out)
 
 (u:fn-> invert (vec) vec)
@@ -175,33 +172,19 @@
   (declare (optimize speed))
   (invert! (zero) vec))
 
-(defmacro %dot (v1x v1y v1z v2x v2y v2z)
-  `(cl:+ (cl:* ,v1x ,v2x) (cl:* ,v1y ,v2y) (cl:* ,v1z ,v2z)))
-
 (u:fn-> dot (vec vec) u:f32)
 (declaim (inline dot))
 (defun dot (vec1 vec2)
   (declare (optimize speed))
   (with-components ((v1 vec1) (v2 vec2))
-    (%dot v1x v1y v1z v2x v2y v2z)))
-
-(defmacro %length-squared (x y z)
-  ;; NOTE: This is not using %DOT because using * instead of EXPT and SBCL 1.5.9
-  ;; cannot correctly infer the type of the SQRT of the sum of squares as being
-  ;; a single-float. This is because SBCL's memory model policy is "everything
-  ;; is volatile", which is acceptable because two AREF calls to the same array
-  ;; may infact produce different values when threading is involved.
-  `(cl:+ (cl:expt ,x 2) (cl:expt ,y 2) (cl:expt ,z 2)))
+    (cl:+ (cl:* v1x v2x) (cl:* v1y v2y) (cl:* v1z v2z))))
 
 (u:fn-> length-squared (vec) u:f32)
 (declaim (inline length-squared))
 (defun length-squared (vec)
   (declare (optimize speed))
   (with-components ((v vec))
-    (%length-squared vx vy vz)))
-
-(defmacro %length (x y z)
-  `(cl:sqrt (%length-squared ,x ,y ,z)))
+    (cl:+ (cl:expt vx 2) (cl:expt vy 2) (cl:expt vz 2))))
 
 (u:fn-> length (vec) u:f32)
 (declaim (inline length))
@@ -221,19 +204,13 @@
   (declare (optimize speed))
   (cl:sqrt (distance-squared vec1 vec2)))
 
-(defmacro %normalize (ox oy oz x y z)
-  (u:with-gensyms (length inv-length)
-    `(let ((,length (%length ,x ,y ,z)))
-       (unless (zerop ,length)
-         (let ((,inv-length (cl:/ ,length)))
-           (%scale ,ox ,oy ,oz ,x ,y ,z ,inv-length))))))
-
 (u:fn-> normalize! (vec vec) vec)
 (declaim (inline normalize!))
 (defun normalize! (out vec)
   (declare (optimize speed))
-  (with-components ((o out) (v vec))
-    (%normalize ox oy oz vx vy vz))
+  (let ((length (length vec)))
+    (unless (zerop length)
+      (scale! out vec (cl:/ length))))
   out)
 
 (u:fn-> normalize (vec) vec)
@@ -272,7 +249,7 @@
 (declaim (inline negate!))
 (defun negate! (out vec)
   (declare (optimize speed))
-  (scale! out vec -1f0))
+  (scale! out vec -1.0))
 
 (u:fn-> negate (vec) vec)
 (declaim (inline negate))
@@ -303,8 +280,8 @@
   (let ((dot (dot vec1 vec2))
         (m*m (cl:* (length vec1) (length vec2))))
     (if (zerop m*m)
-        0f0
-        (cl:acos (the (single-float -1f0 1f0) (cl:/ dot m*m))))))
+        0.0
+        (cl:acos (the (single-float -1.0 1.0) (cl:/ dot m*m))))))
 
 (u:fn-> direction= (vec vec) boolean)
 (declaim (inline direction=))
@@ -422,7 +399,7 @@
 (declaim (inline sqrt!))
 (defun sqrt! (out vec)
   (declare (optimize speed))
-  (com:cwset 3 out vec (cl:sqrt (the (single-float 0f0) vec)))
+  (com:cwset 3 out vec (cl:sqrt (the (single-float 0.0) vec)))
   out)
 
 (u:fn-> sqrt (vec) vec)
@@ -513,7 +490,7 @@
 (declaim (inline asin!))
 (defun asin! (out vec)
   (declare (optimize speed))
-  (com:cwset 3 out vec (cl:asin (the (single-float -1f0 1f0) vec)))
+  (com:cwset 3 out vec (cl:asin (the (single-float -1.0 1.0) vec)))
   out)
 
 (u:fn-> asin (vec) vec)
@@ -526,7 +503,7 @@
 (declaim (inline acos!))
 (defun acos! (out vec)
   (declare (optimize speed))
-  (com:cwset 3 out vec (cl:acos (the (single-float -1f0 1f0) vec)))
+  (com:cwset 3 out vec (cl:acos (the (single-float -1.0 1.0) vec)))
   out)
 
 (u:fn-> acos (vec) vec)

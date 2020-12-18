@@ -160,58 +160,58 @@
 (ss:defstore vec (&rest args))
 
 (ss:defspecialization (vec :inline t) () vec
-  (%vec 0f0 0f0 0f0 0f0))
+  (%vec 0.0 0.0 0.0 0.0))
 
 (ss:defspecialization (vec :inline t) ((x real)) vec
-  (%vec (float x 1f0) (float x 1f0) (float x 1f0) (float x 1f0)))
+  (%vec (float x 1.0) (float x 1.0) (float x 1.0) (float x 1.0)))
 
 (ss:defspecialization (vec :inline t) ((x real) (y real)) vec
-  (%vec (float x 1f0) (float y 1f0) 0f0 0f0))
+  (%vec (float x 1.0) (float y 1.0) 0.0 0.0))
 
 (ss:defspecialization (vec :inline t) ((x real) (y real) (z real)) vec
-  (%vec (float x 1f0) (float y 1f0) (float z 1f0) 0f0))
+  (%vec (float x 1.0) (float y 1.0) (float z 1.0) 0.0))
 
 (ss:defspecialization (vec :inline t) ((x real) (y real) (z real) (w real)) vec
-  (%vec (float x 1f0) (float y 1f0) (float z 1f0) (float w 1f0)))
+  (%vec (float x 1.0) (float y 1.0) (float z 1.0) (float w 1.0)))
 
 (ss:defspecialization (vec :inline t) ((vec v2:vec)) vec
-  (%vec (aref vec 0) (aref vec 1) 0f0 0f0))
+  (%vec (aref vec 0) (aref vec 1) 0.0 0.0))
 
 (ss:defspecialization (vec :inline t) ((vec v3:vec)) vec
-  (%vec (aref vec 0) (aref vec 1) (aref vec 2) 0f0))
+  (%vec (aref vec 0) (aref vec 1) (aref vec 2) 0.0))
 
 (ss:defspecialization (vec :inline t) ((vec vec)) vec
   (%vec (aref vec 0) (aref vec 1) (aref vec 2) (aref vec 3)))
 
 (ss:defspecialization (vec :inline t) ((vec v2:vec) (z real)) vec
-  (%vec (aref vec 0) (aref vec 1) (float z 1f0) 0f0))
+  (%vec (aref vec 0) (aref vec 1) (float z 1.0) 0.0))
 
 (ss:defspecialization (vec :inline t) ((x real) (vec v2:vec)) vec
-  (%vec (float x 1f0) (aref vec 0) (aref vec 1) 0f0))
+  (%vec (float x 1.0) (aref vec 0) (aref vec 1) 0.0))
 
 (ss:defspecialization (vec :inline t) ((vec1 v2:vec) (vec2 v2:vec)) vec
   (%vec (aref vec1 0) (aref vec1 1) (aref vec2 0) (aref vec2 1)))
 
 (ss:defspecialization (vec :inline t) ((x real) (vec v3:vec)) vec
-  (%vec (float x 1f0) (aref vec 0) (aref vec 1) (aref vec 2)))
+  (%vec (float x 1.0) (aref vec 0) (aref vec 1) (aref vec 2)))
 
 (ss:defspecialization (vec :inline t) ((vec v3:vec) (w real)) vec
-  (%vec (aref vec 0) (aref vec 1) (aref vec 2) (float w 1f0)))
+  (%vec (aref vec 0) (aref vec 1) (aref vec 2) (float w 1.0)))
 
 (ss:defspecialization (vec :inline t) ((vec v2:vec) (z real) (w real)) vec
-  (%vec (aref vec 0) (aref vec 1) (float z 1f0) (float w 1f0)))
+  (%vec (aref vec 0) (aref vec 1) (float z 1.0) (float w 1.0)))
 
 (ss:defspecialization (vec :inline t) ((x real) (y real) (vec v2:vec)) vec
-  (%vec (float x 1f0) (float y 1f0) (aref vec 0) (aref vec 1)))
+  (%vec (float x 1.0) (float y 1.0) (aref vec 0) (aref vec 1)))
 
 (ss:defspecialization (vec :inline t) ((x real) (vec v2:vec) (w real)) vec
-  (%vec (float x 1f0) (aref vec 0) (aref vec 1) (float w 1f0)))
+  (%vec (float x 1.0) (aref vec 0) (aref vec 1) (float w 1.0)))
 
 (ss:defspecialization (vec :inline t) ((vec (simple-array u:f64 (4)))) vec
-  (%vec (float (aref vec 0) 1f0)
-        (float (aref vec 1) 1f0)
-        (float (aref vec 2) 1f0)
-        (float (aref vec 3) 1f0)))
+  (%vec (float (aref vec 0) 1.0)
+        (float (aref vec 1) 1.0)
+        (float (aref vec 2) 1.0)
+        (float (aref vec 3) 1.0)))
 
 ;;; accessors
 
@@ -265,4 +265,4 @@
 
 ;;; constants
 
-(u:define-constant +zero+ (%vec 0f0 0f0 0f0 0f0) :test #'equalp)
+(u:define-constant +zero+ (%vec 0.0 0.0 0.0 0.0) :test #'equalp)

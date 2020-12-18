@@ -161,13 +161,13 @@
 (ss:defstore vec (&rest args))
 
 (ss:defspecialization (vec :inline t) () vec
-  (%vec 0f0 0f0))
+  (%vec 0.0 0.0))
 
 (ss:defspecialization (vec :inline t) ((x real)) vec
-  (%vec (float x 1f0) (float x 1f0)))
+  (%vec (float x 1.0) (float x 1.0)))
 
 (ss:defspecialization (vec :inline t) ((x real) (y real)) vec
-  (%vec (float x 1f0) (float y 1f0)))
+  (%vec (float x 1.0) (float y 1.0)))
 
 (ss:defspecialization (vec :inline t)
     ((vec (or (simple-array u:f32 (2))
@@ -181,7 +181,7 @@
               (simple-array u:f64 (3))
               (simple-array u:f64 (4)))))
     vec
-  (%vec (float (aref vec 0) 1f0) (float (aref vec 1) 1f0)))
+  (%vec (float (aref vec 0) 1.0) (float (aref vec 1) 1.0)))
 
 ;;; accessors
 
@@ -211,12 +211,12 @@
 
 ;;; constants
 
-(u:define-constant +zero+ (%vec 0f0 0f0) :test #'equalp)
+(u:define-constant +zero+ (%vec 0.0 0.0) :test #'equalp)
 
-(u:define-constant +up+ (%vec 0f0 1f0) :test #'equalp)
+(u:define-constant +up+ (%vec 0.0 1.0) :test #'equalp)
 
-(u:define-constant +down+ (%vec 0f0 -1f0) :test #'equalp)
+(u:define-constant +down+ (%vec 0.0 -1.0) :test #'equalp)
 
-(u:define-constant +left+ (%vec -1f0 0f0) :test #'equalp)
+(u:define-constant +left+ (%vec -1.0 0.0) :test #'equalp)
 
-(u:define-constant +right+ (%vec 1f0 0f0) :test #'equalp)
+(u:define-constant +right+ (%vec 1.0 0.0) :test #'equalp)
