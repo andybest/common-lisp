@@ -48,7 +48,6 @@
   (declare (optimize speed))
   (u:mvlet ((out (point))
             (inverse-pm success-p (m4:invert (m4:* projection model))))
-    (declare (dynamic-extent out))
     (unless success-p
       (return-from unproject out))
     (m4:with-components ((m inverse-pm))
