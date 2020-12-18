@@ -118,7 +118,9 @@
    #:acos!
    #:acos
    #:atan!
-   #:atan))
+   #:atan
+   #:velocity!
+   #:velocity))
 
 (in-package #:net.mfiano.lisp.origin.vec2)
 

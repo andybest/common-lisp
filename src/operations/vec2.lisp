@@ -632,3 +632,16 @@ each component of vector VEC."
 applied to each component of vector VEC."
   (declare (optimize speed))
   (atan! (zero) vec))
+
+(u:fn-> velocity! (vec vec u:f32) vec)
+(declaim (inline velocity!))
+(defun velocity! (vec axis rate)
+  (declare (optimize speed))
+  (copy! vec axis)
+  (normalize! vec vec)
+  (scale! vec vec rate))
+
+(u:fn-> velocity (vec u:f32) vec)
+(declaim (inline velocity))
+(defun velocity (axis rate)
+  (velocity! (zero) axis rate))
