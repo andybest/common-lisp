@@ -41,7 +41,6 @@
    #:y
    #:z
    #:with-components
-   #:with-elements
    #:+zero+
    #:+up+
    #:+down+
@@ -145,16 +144,6 @@
           (,(com:make-accessor-symbol prefix "Z") (aref ,vec 2)))
        ,(if rest
             `(with-components ,rest ,@body)
-            `(progn ,@body)))))
-
-(defmacro with-elements (((prefix x y z) &rest rest) &body body)
-  (let ((%x (com:make-accessor-symbol prefix "X"))
-        (%y (com:make-accessor-symbol prefix "Y"))
-        (%z (com:make-accessor-symbol prefix "Z")))
-    `(let ((,%x ,x) (,%y ,y) (,%z ,z))
-       (declare (ignorable ,%x ,%y ,%z))
-       ,(if rest
-            `(with-elements ,rest ,@body)
             `(progn ,@body)))))
 
 ;;; constructors

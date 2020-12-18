@@ -21,7 +21,6 @@
   (:export
    #:quat
    #:with-components
-   #:with-elements
    #:w
    #:x
    #:y
@@ -93,17 +92,6 @@
           (,(com:make-accessor-symbol prefix "Z") (aref ,quat 3)))
        ,(if rest
             `(with-components ,rest ,@body)
-            `(progn ,@body)))))
-
-(defmacro with-elements (((prefix w x y z) &rest rest) &body body)
-  (let ((%w (com:make-accessor-symbol prefix "W"))
-        (%x (com:make-accessor-symbol prefix "X"))
-        (%y (com:make-accessor-symbol prefix "Y"))
-        (%z (com:make-accessor-symbol prefix "Z")))
-    `(let ((,%w ,w) (,%x ,x) (,%y ,y) (,%z ,z))
-       (declare (ignorable ,%w ,%x ,%y ,%z))
-       ,(if rest
-            `(with-elements ,rest ,@body)
             `(progn ,@body)))))
 
 ;;; constructors

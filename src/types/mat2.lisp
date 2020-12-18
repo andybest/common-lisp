@@ -17,7 +17,6 @@
   (:export
    #:mat
    #:with-components
-   #:with-elements
    #:pretty-print
    #:+zero+
    #:+id+
@@ -81,17 +80,6 @@
           (,(com:make-accessor-symbol prefix "11") (aref ,matrix 3)))
        ,(if rest
             `(with-components ,rest ,@body)
-            `(progn ,@body)))))
-
-(defmacro with-elements (((prefix m00 m01 m10 m11) &rest rest) &body body)
-  (let ((%m00 (com:make-accessor-symbol prefix "00"))
-        (%m10 (com:make-accessor-symbol prefix "10"))
-        (%m01 (com:make-accessor-symbol prefix "01"))
-        (%m11 (com:make-accessor-symbol prefix "11")))
-    `(let ((,%m00 ,m00) (,%m10 ,m10) (,%m01 ,m01) (,%m11 ,m11))
-       (declare (ignorable ,%m00 ,%m10 ,%m01 ,%m11))
-       ,(if rest
-            `(with-elements ,rest ,@body)
             `(progn ,@body)))))
 
 (defun pretty-print (matrix &optional (stream *standard-output*))

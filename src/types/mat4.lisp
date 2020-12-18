@@ -20,7 +20,6 @@
   (:export
    #:mat
    #:with-components
-   #:with-elements
    #:pretty-print
    #:+zero+
    #:+id+
@@ -122,36 +121,6 @@
           (,(com:make-accessor-symbol prefix "33") (aref ,matrix 15)))
        ,(if rest
             `(with-components ,rest ,@body)
-            `(progn ,@body)))))
-
-(defmacro with-elements (((prefix m00 m01 m02 m03 m10 m11 m12 m13 m20 m21 m22
-                           m23 m30 m31 m32 m33)
-                          &rest rest)
-                         &body body)
-  (let ((%m00 (com:make-accessor-symbol prefix "00"))
-        (%m10 (com:make-accessor-symbol prefix "10"))
-        (%m20 (com:make-accessor-symbol prefix "20"))
-        (%m30 (com:make-accessor-symbol prefix "30"))
-        (%m01 (com:make-accessor-symbol prefix "01"))
-        (%m11 (com:make-accessor-symbol prefix "11"))
-        (%m21 (com:make-accessor-symbol prefix "21"))
-        (%m31 (com:make-accessor-symbol prefix "31"))
-        (%m02 (com:make-accessor-symbol prefix "02"))
-        (%m12 (com:make-accessor-symbol prefix "12"))
-        (%m22 (com:make-accessor-symbol prefix "22"))
-        (%m32 (com:make-accessor-symbol prefix "32"))
-        (%m03 (com:make-accessor-symbol prefix "03"))
-        (%m13 (com:make-accessor-symbol prefix "13"))
-        (%m23 (com:make-accessor-symbol prefix "23"))
-        (%m33 (com:make-accessor-symbol prefix "33")))
-    `(let ((,%m00 ,m00) (,%m10 ,m10) (,%m20 ,m20) (,%m30 ,m30)
-           (,%m01 ,m01) (,%m11 ,m11) (,%m21 ,m21) (,%m31 ,m31)
-           (,%m02 ,m02) (,%m12 ,m12) (,%m22 ,m22) (,%m32 ,m32)
-           (,%m03 ,m03) (,%m13 ,m13) (,%m23 ,m23) (,%m33 ,m33))
-       (declare (ignorable ,%m00 ,%m10 ,%m20 ,%m30 ,%m01 ,%m11 ,%m21 ,%m31
-                           ,%m02 ,%m12 ,%m22 ,%m32 ,%m03 ,%m13 ,%m23 ,%m33))
-       ,(if rest
-            `(with-elements ,rest ,@body)
             `(progn ,@body)))))
 
 (defun pretty-print (matrix &optional (stream *standard-output*))
