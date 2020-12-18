@@ -8,8 +8,9 @@
   (u:format-symbol (symbol-package prefix) "~@:(~{~a~}~)" (cons prefix args)))
 
 (defmacro = (x y rel abs)
-  `(< (abs (- ,x ,y))
-      (max ,abs (* ,rel (max (abs ,x) (abs ,y))))))
+  (u:once-only (x y)
+    `(< (abs (- ,x ,y))
+        (max ,abs (* ,rel (max (abs ,x) (abs ,y)))))))
 
 (defmacro cwset (count out subst &body body)
   `(psetf
