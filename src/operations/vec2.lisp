@@ -186,9 +186,7 @@ VEC1 and VEC2."
   "Modify vector OUT by adding the scalar SCALAR to each component of vector
 VEC."
   (declare (optimize speed))
-  (with-components ((o out) (v vec))
-    (psetf ox (cl:* vx scalar)
-           oy (cl:* vy scalar)))
+  (com:cwset 2 out vec (cl:* vec scalar))
   out)
 
 (u:fn-> scale (vec u:f32) vec)
@@ -239,21 +237,11 @@ vector VEC."
   (declare (optimize speed))
   (cl:sqrt (length-squared vec)))
 
-(u:fn-> distance-squared (vec vec) u:f32)
-(declaim (inline distance-squared))
-(defun distance-squared (vec1 vec2)
-  (declare (optimize speed))
-  (length-squared (- vec2 vec1)))
-
-(u:fn-> distance (vec vec) u:f32)
-(declaim (inline distance))
-(defun distance (vec1 vec2)
-  (declare (optimize speed))
-  (cl:sqrt (distance-squared vec1 vec2)))
-
 (u:fn-> normalize! (vec vec) vec)
 (declaim (inline normalize!))
 (defun normalize! (out vec)
+  "Modify vector OUT to to be the result of normalizing vector VEC to be of unit
+length."
   (declare (optimize speed))
   (let ((length (length vec)))
     (unless (zerop length)
@@ -263,12 +251,16 @@ vector VEC."
 (u:fn-> normalize (vec) vec)
 (declaim (inline normalize))
 (defun normalize (vec)
+  "Construct a fresh vector that is the result of normalizing vector VEC to be
+of unit length."
   (declare (optimize speed))
   (normalize! (zero) vec))
 
 (u:fn-> round! (vec vec) vec)
 (declaim (inline round!))
 (defun round! (out vec)
+  "Modify vector OUT to have its components be the result of rounding the
+components of vector VEC to the nearest whole number."
   (declare (optimize speed))
   (com:cwset 2 out vec (fround vec))
   out)
@@ -276,12 +268,16 @@ vector VEC."
 (u:fn-> round (vec) vec)
 (declaim (inline round))
 (defun round (vec)
+  "Construct a fresh vector that is the result of rounding the components of
+vector VEC to the nearest whole number."
   (declare (optimize speed))
   (round! (zero) vec))
 
 (u:fn-> abs! (vec vec) vec)
 (declaim (inline abs!))
 (defun abs! (out vec)
+  "Modify vector OUT to have the absolute value of each component of vector
+VEC."
   (declare (optimize speed))
   (com:cwset 2 out vec (cl:abs vec))
   out)
@@ -289,24 +285,31 @@ vector VEC."
 (u:fn-> abs (vec) vec)
 (declaim (inline abs))
 (defun abs (vec)
+  "Construct a fresh vector to have the absolute value of each component of
+vector VEC."
   (declare (optimize speed))
   (abs! (zero) vec))
 
 (u:fn-> negate! (vec vec) vec)
 (declaim (inline negate!))
 (defun negate! (out vec)
+  "Modify vector OUT to have the components of vector VEC with their signs
+negated."
   (declare (optimize speed))
   (scale! out vec -1.0))
 
 (u:fn-> negate (vec) vec)
 (declaim (inline negate))
 (defun negate (vec)
+  "Construct a fresh vector with the components of vector VEC with their signs
+negated."
   (declare (optimize speed))
   (negate! (zero) vec))
 
 (u:fn-> angle (vec vec) u:f32)
 (declaim (inline angle))
 (defun angle (vec1 vec2)
+  "Compute the angle in radians between the vectors VEC1 and VEC2."
   (declare (optimize speed))
   (let ((dot (dot vec1 vec2))
         (m*m (cl:* (length vec1) (length vec2))))
@@ -314,15 +317,25 @@ vector VEC."
         0.0
         (cl:acos (the (single-float -1.0 1.0) (cl:/ dot m*m))))))
 
-(u:fn-> direction= (vec vec) boolean)
+(u:fn-> direction= (vec vec &key (:rel u:f32) (:abs u:f32)) boolean)
 (declaim (inline direction=))
-(defun direction= (vec1 vec2)
+(defun direction= (vec1 vec2 &key (rel 1e-7) (abs rel))
+  "Check whether or not vectors VEC1 and VEC2 are facing in the same direction."
   (declare (optimize speed))
-  (cl:>= (dot (normalize vec1) (normalize vec2)) (cl:- 1 1e-7)))
+  (com:= (dot (normalize vec1) (normalize vec2)) 1f0 rel abs))
+
+(u:fn-> parallel-p (vec vec &key (:rel u:f32) (:abs u:f32)) boolean)
+(declaim (inline parallel-p))
+(defun parallel-p (vec1 vec2 &key (rel 1e-7) (abs rel))
+  "Check whether or not vectors VEC1 and VEC2 are parallel to each other."
+  (declare (optimize speed))
+  (com:= (cl:abs (dot (normalize vec1) (normalize vec2))) 1f0 rel abs))
 
 (u:fn-> lerp! (vec vec vec u:f32) vec)
 (declaim (inline lerp!))
 (defun lerp! (out vec1 vec2 factor)
+  "Modify vector OUT with the result of linearly interpolating between vectors
+VEC1 and VEC2 by FACTOR."
   (declare (optimize speed))
   (com:cwset 2 out (vec1 vec2) (u:lerp factor vec1 vec2))
   out)
@@ -330,30 +343,40 @@ vector VEC."
 (u:fn-> lerp (vec vec u:f32) vec)
 (declaim (inline lerp))
 (defun lerp (vec1 vec2 factor)
+  "Construct a fresh vector that is the result of linearly interpolating between
+vectors VEC1 and VEC2 by FACTOR."
   (declare (optimize speed))
   (lerp! (zero) vec1 vec2 factor))
 
 (u:fn-> < (vec vec) boolean)
 (declaim (inline <))
 (defun < (vec1 vec2)
+  "Check whether or not each component of vector VEC1 is less than the
+respective components of vector VEC2."
   (declare (optimize speed))
   (com:cwcmp 2 (vec1 vec2) (cl:< vec1 vec2)))
 
 (u:fn-> <= (vec vec) boolean)
 (declaim (inline <=))
 (defun <= (vec1 vec2)
+  "Check whether or not each component of vector VEC1 is less than or equal to
+  the respective components of vector VEC2."
   (declare (optimize speed))
   (com:cwcmp 2 (vec1 vec2) (cl:<= vec1 vec2)))
 
 (u:fn-> > (vec vec) boolean)
 (declaim (inline >))
 (defun > (vec1 vec2)
+  "Check whether or not each component of vector VEC1 is greater than the
+  respective components of vector VEC2."
   (declare (optimize speed))
   (com:cwcmp 2 (vec1 vec2) (cl:> vec1 vec2)))
 
 (u:fn-> >= (vec vec) boolean)
 (declaim (inline >=))
 (defun >= (vec1 vec2)
+  "Check whether or not each component of vector VEC1 is greater than or equal
+  to the respective components of vector VEC2."
   (declare (optimize speed))
   (com:cwcmp 2 (vec1 vec2) (cl:>= vec1 vec2)))
 
