@@ -383,6 +383,8 @@ respective components of vector VEC2."
 (u:fn-> min! (vec vec vec) vec)
 (declaim (inline min!))
 (defun min! (out vec1 vec2)
+  "Modify vector OUT to have the minimum value for each component in vectors
+VEC1 and VEC2."
   (declare (optimize speed))
   (com:cwset 4 out (vec1 vec2) (cl:min vec1 vec2))
   out)
@@ -390,12 +392,16 @@ respective components of vector VEC2."
 (u:fn-> min (vec vec) vec)
 (declaim (inline min))
 (defun min (vec1 vec2)
+  "Construct a fresh vector which has the minimum value of each component in
+vectors VEC1 and VEC2."
   (declare (optimize speed))
   (min! (zero) vec1 vec2))
 
 (u:fn-> max! (vec vec vec) vec)
 (declaim (inline max!))
 (defun max! (out vec1 vec2)
+  "Modify vector OUT to have the maximum value for each component in vectors
+VEC1 and VEC2."
   (declare (optimize speed))
   (com:cwset 4 out (vec1 vec2) (cl:max vec1 vec2))
   out)
@@ -403,12 +409,16 @@ respective components of vector VEC2."
 (u:fn-> max (vec vec) vec)
 (declaim (inline max))
 (defun max (vec1 vec2)
+  "Construct a fresh vector which has the maximum value of each component in
+vectors VEC1 and VEC2."
   (declare (optimize speed))
   (max! (zero) vec1 vec2))
 
 (u:fn-> radians! (vec vec) vec)
 (declaim (inline radians!))
 (defun radians! (out vec)
+  "Modify vector OUT to convert the components in vector VEC, which are assumed
+to be in degree units, to radian units."
   (declare (optimize speed))
   (com:cwset 4 out vec (cl:* vec com:+deg+))
   out)
@@ -416,12 +426,16 @@ respective components of vector VEC2."
 (u:fn-> radians (vec) vec)
 (declaim (inline radians))
 (defun radians (vec)
+  "Construct a fresh vector with the components in vector VEC, which are assumed
+to be in degree units, converted to radian units."
   (declare (optimize speed))
   (radians! (zero) vec))
 
 (u:fn-> degrees! (vec vec) vec)
 (declaim (inline degrees!))
 (defun degrees! (out vec)
+  "Modify vector OUT to convert the components in vector VEC, which are assumed
+to be in radian units, to degree units."
   (declare (optimize speed))
   (com:cwset 4 out vec (cl:* vec com:+rad+))
   out)
@@ -429,23 +443,30 @@ respective components of vector VEC2."
 (u:fn-> degrees (vec) vec)
 (declaim (inline degrees))
 (defun degrees (vec)
+  "Construct a fresh vector with the components in vector VEC, which are assumed
+to be in radian units, converted to degree units."
   (declare (optimize speed))
   (degrees! (zero) vec))
 
 (u:fn-> expt! (vec vec real) vec)
 (declaim (inline expt!))
 (defun expt! (out vec power)
+  "Modify vector OUT to be the components in vector VEC raised to the power of
+POWER."
   (com:cwset 4 out vec (cl:expt vec power))
   out)
 
 (u:fn-> expt (vec real) vec)
 (declaim (inline expt))
 (defun expt (vec power)
+  "Construct a fresh vector with the components in vector VEC raised to the
+power of POWER."
   (expt! (zero) vec power))
 
 (u:fn-> sqrt! (vec vec) vec)
 (declaim (inline sqrt!))
 (defun sqrt! (out vec)
+  "Modify vector OUT to have the square root of the components in VEC."
   (declare (optimize speed))
   (com:cwset 4 out vec (cl:sqrt (the (single-float 0.0) vec)))
   out)
@@ -453,12 +474,15 @@ respective components of vector VEC2."
 (u:fn-> sqrt (vec) vec)
 (declaim (inline sqrt))
 (defun sqrt (vec)
+  "Construct a fresh vector which has the square root of the components in VEC."
   (declare (optimize speed))
   (sqrt! (zero) vec))
 
 (u:fn-> floor! (vec vec) vec)
 (declaim (inline floor!))
 (defun floor! (out vec)
+  "Modify vector OUT to have the nearest integer less than or equal to each
+component of vector VEC."
   (declare (optimize speed))
   (com:cwset 4 out vec (ffloor vec))
   out)
@@ -466,12 +490,16 @@ respective components of vector VEC2."
 (u:fn-> floor (vec) vec)
 (declaim (inline floor))
 (defun floor (vec)
+  "Construct a fresh vector that has the nearest integer less than or equal to
+each component of vector VEC."
   (declare (optimize speed))
   (floor! (zero) vec))
 
 (u:fn-> ceiling! (vec vec) vec)
 (declaim (inline ceiling!))
 (defun ceiling! (out vec)
+  "Modify vector OUT to have the nearest integer greater than or equal to each
+component of vector VEC."
   (declare (optimize speed))
   (com:cwset 4 out vec (fceiling vec))
   out)
@@ -479,12 +507,15 @@ respective components of vector VEC2."
 (u:fn-> ceiling (vec) vec)
 (declaim (inline ceiling))
 (defun ceiling (vec)
+  "Construct a fresh vector that has the nearest integer greater than or equal
+to each component of vector VEC."
   (declare (optimize speed))
   (ceiling! (zero) vec))
 
 (u:fn-> mod! (vec vec u:f32) vec)
 (declaim (inline mod!))
 (defun mod! (out vec divisor)
+  "Modify vector OUT to have each component of vector VEC modulo DIVISOR."
   (declare (optimize speed))
   (com:cwset 4 out vec (nth-value 1 (ffloor vec divisor)))
   out)
@@ -492,12 +523,16 @@ respective components of vector VEC2."
 (u:fn-> mod (vec u:f32) vec)
 (declaim (inline mod))
 (defun mod (vec divisor)
+  "Construct a fresh vector that has each component of vector VEC modulo
+DIVISOR."
   (declare (optimize speed))
   (mod! (zero) vec divisor))
 
 (u:fn-> sin! (vec vec) vec)
 (declaim (inline sin!))
 (defun sin! (out vec)
+  "Modify vector OUT to have the trigonometric sine function applied to each
+component of vector VEC."
   (declare (optimize speed))
   (com:cwset 4 out vec (cl:sin vec))
   out)
@@ -505,12 +540,16 @@ respective components of vector VEC2."
 (u:fn-> sin (vec) vec)
 (declaim (inline sin))
 (defun sin (vec)
+  "Construct a fresh vector which has the trigonometric sine function applied to
+each component of vector VEC."
   (declare (optimize speed))
   (sin! (zero) vec))
 
 (u:fn-> cos! (vec vec) vec)
 (declaim (inline cos!))
 (defun cos! (out vec)
+  "Modify vector OUT to have the trigonometric cosine function applied to each
+component of vector VEC."
   (declare (optimize speed))
   (com:cwset 4 out vec (cl:cos vec))
   out)
@@ -518,12 +557,16 @@ respective components of vector VEC2."
 (u:fn-> cos (vec) vec)
 (declaim (inline cos))
 (defun cos (vec)
+  "Construct a fresh vector which has the trigonometric cosine function applied
+to each component of vector VEC."
   (declare (optimize speed))
   (cos! (zero) vec))
 
 (u:fn-> tan! (vec vec) vec)
 (declaim (inline tan!))
 (defun tan! (out vec)
+  "Modify vector OUT to have the trigonometric tangent function applied to each
+component of vector VEC."
   (declare (optimize speed))
   (com:cwset 4 out vec (cl:tan vec))
   out)
@@ -531,12 +574,16 @@ respective components of vector VEC2."
 (u:fn-> tan (vec) vec)
 (declaim (inline tan))
 (defun tan (vec)
+  "Construct a fresh vector which has the trigonometric tangent function applied
+to each component of vector VEC."
   (declare (optimize speed))
   (tan! (zero) vec))
 
 (u:fn-> asin! (vec vec) vec)
 (declaim (inline asin!))
 (defun asin! (out vec)
+  "Modify vector OUT to have the trigonometric arcsine function applied to each
+component of vector VEC."
   (declare (optimize speed))
   (com:cwset 4 out vec (cl:asin (the (single-float -1.0 1.0) vec)))
   out)
@@ -544,12 +591,16 @@ respective components of vector VEC2."
 (u:fn-> asin (vec) vec)
 (declaim (inline asin))
 (defun asin (vec)
+  "Construct a fresh vector which has the trigonometric arcsine function applied
+to each component of vector VEC."
   (declare (optimize speed))
   (asin! (zero) vec))
 
 (u:fn-> acos! (vec vec) vec)
 (declaim (inline acos!))
 (defun acos! (out vec)
+  "Modify vector OUT to have the trigonometric arccosine function applied to
+each component of vector VEC."
   (declare (optimize speed))
   (com:cwset 4 out vec (cl:acos (the (single-float -1.0 1.0) vec)))
   out)
@@ -557,12 +608,16 @@ respective components of vector VEC2."
 (u:fn-> acos (vec) vec)
 (declaim (inline acos))
 (defun acos (vec)
+  "Construct a fresh vector which has the trigonometric arccosine function
+applied to each component of vector VEC."
   (declare (optimize speed))
   (acos! (zero) vec))
 
 (u:fn-> atan! (vec vec) vec)
 (declaim (inline atan!))
 (defun atan! (out vec)
+  "Modify vector OUT to have the trigonometric arctangent function applied to
+each component of vector VEC."
   (declare (optimize speed))
   (com:cwset 4 out vec (cl:atan vec))
   out)
@@ -570,5 +625,7 @@ respective components of vector VEC2."
 (u:fn-> atan (vec) vec)
 (declaim (inline atan))
 (defun atan (vec)
+  "Construct a fresh vector which has the trigonometric arctangent function
+applied to each component of vector VEC."
   (declare (optimize speed))
   (atan! (zero) vec))
