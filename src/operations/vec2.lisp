@@ -636,6 +636,9 @@ applied to each component of vector VEC."
 (u:fn-> velocity! (vec vec u:f32) vec)
 (declaim (inline velocity!))
 (defun velocity! (vec axis rate)
+  "Modify vector OUT with components designating a velocity following the
+right-hand rule, whose direction is parallel to AXIS and has a magnitude of RATE
+units per second."
   (declare (optimize speed))
   (copy! vec axis)
   (normalize! vec vec)
@@ -644,4 +647,7 @@ applied to each component of vector VEC."
 (u:fn-> velocity (vec u:f32) vec)
 (declaim (inline velocity))
 (defun velocity (axis rate)
+  "Construct a fresh vector designating a velocity following the right-hand
+rule, whose direction is parallel to AXIS and has a magnitude of RATE units per
+second."
   (velocity! (zero) axis rate))
