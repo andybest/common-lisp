@@ -449,32 +449,21 @@
 (u:fn-> rotate! (mat mat dv3:vec &key (:space keyword)) mat)
 (defun rotate! (out mat vec &key (space :local))
   (declare (optimize speed))
-  (with-components ((m (id)))
-    (dv3:with-components ((v vec))
-      (let ((sx (sin vx))
-            (cx (cos vx))
-            (sy (sin vy))
-            (cy (cos vy))
-            (sz (sin vz))
-            (cz (cos vz)))
-        (copy! out mat)
-        (psetf m00 cz m01 (cl:- sz)
-               m10 sz m11 cz)
-        (ecase space
-          (:local (*! out out m))
-          (:world (*! out m out)))
-        (psetf m00 1d0 m01 0d0 m02 0d0
-               m10 0d0 m11 cx m12 (cl:- sx)
-               m20 0d0 m21 sx m22 cx)
-        (ecase space
-          (:local (*! out out m))
-          (:world (*! out m out)))
-        (psetf m00 cy m01 0d0 m02 sy
-               m10 0d0 m11 1d0 m12 0d0
-               m20 (cl:- sy) m21 0d0 m22 cy)
-        (ecase space
-          (:local (*! out out m))
-          (:world (*! out m out))))))
+  (dv3:with-components ((v vec))
+    (let ((x (rotation-x-from-angle vx))
+          (y (rotation-y-from-angle vy))
+          (z (rotation-y-from-angle vz)))
+      (declare (dynamic-extent x y z))
+      (copy! out mat)
+      (ecase space
+        (:local
+         (*! out out x)
+         (*! out out z)
+         (*! out out y))
+        (:world
+         (*! out x out)
+         (*! out z out)
+         (*! out y out)))))
   out)
 
 (u:fn-> rotate (mat dv3:vec) mat)
