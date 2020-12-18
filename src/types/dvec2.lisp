@@ -73,8 +73,6 @@
    #:dot
    #:length-squared
    #:length
-   #:distance-squared
-   #:distance
    #:normalize!
    #:normalize
    #:round!

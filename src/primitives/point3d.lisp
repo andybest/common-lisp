@@ -23,6 +23,8 @@
    #:z)
   ;; operations
   (:export
+   #:distance
+   #:distance-squared
    #:translate
    #:unproject))
 
@@ -41,6 +43,18 @@
 (defun translate (point direction distance)
   (declare (optimize speed))
   (v3:+ point (v3:scale direction distance)))
+
+(u:fn-> distance-squared (point point) u:f32)
+(declaim (inline distance-squared))
+(defun distance-squared (point1 point2)
+  (declare (optimize speed))
+  (v3:length-squared (v3:- point2 point1)))
+
+(u:fn-> distance (point point) u:f32)
+(declaim (inline distance))
+(defun distance (point1 point2)
+  (declare (optimize speed))
+  (sqrt (distance-squared point1 point2)))
 
 (u:fn-> unproject (point m4:mat m4:mat v4:vec) point)
 (declaim (inline unproject))

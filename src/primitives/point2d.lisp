@@ -19,6 +19,8 @@
    #:y)
   ;; operations
   (:export
+   #:distance
+   #:distance-squared
    #:translate))
 
 (in-package #:net.mfiano.lisp.origin.point2d)
@@ -36,3 +38,15 @@
 (defun translate (point direction distance)
   (declare (optimize speed))
   (v2:+ point (v2:scale direction distance)))
+
+(u:fn-> distance-squared (point point) u:f32)
+(declaim (inline distance-squared))
+(defun distance-squared (point1 point2)
+  (declare (optimize speed))
+  (v2:length-squared (v2:- point2 point1)))
+
+(u:fn-> distance (point point) u:f32)
+(declaim (inline distance))
+(defun distance (point1 point2)
+  (declare (optimize speed))
+  (sqrt (distance-squared point1 point2)))
