@@ -93,12 +93,8 @@
    #:min
    #:max!
    #:max
-   #:from-radians!
-   #:from-radians
    #:radians!
    #:radians
-   #:from-degrees!
-   #:from-degrees
    #:degrees!
    #:degrees
    #:expt!

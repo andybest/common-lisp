@@ -406,21 +406,6 @@ respective components of vector VEC2."
   (declare (optimize speed))
   (max! (zero) vec1 vec2))
 
-(u:fn-> from-radians! (vec (single-float #.(cl:- com:pi) #.com:pi)) vec)
-(declaim (inline from-radians!))
-(defun from-radians! (vec radians)
-  (declare (optimize speed))
-  (with-components ((o vec))
-    (psetf ox (cl:cos radians)
-           oy (cl:sin radians))
-    vec))
-
-(u:fn-> from-radians ((single-float #.(cl:- com:pi) #.com:pi)) vec)
-(declaim (inline from-radians))
-(defun from-radians (radians)
-  (declare (optimize speed))
-  (from-radians! (zero) radians))
-
 (u:fn-> radians! (vec vec) vec)
 (declaim (inline radians!))
 (defun radians! (out vec)
@@ -433,21 +418,6 @@ respective components of vector VEC2."
 (defun radians (vec)
   (declare (optimize speed))
   (radians! (zero) vec))
-
-(u:fn-> from-degrees! (vec (single-float -360.0 360.0)) vec)
-(declaim (inline from-degrees!))
-(defun from-degrees! (out degrees)
-  (declare (optimize speed))
-  (with-components ((o out))
-    (psetf ox (cl:cos (cl:* degrees com:+deg+))
-           oy (cl:sin (cl:* degrees com:+deg+))))
-  out)
-
-(u:fn-> from-degrees ((single-float -360.0 360.0)) vec)
-(declaim (inline from-degrees))
-(defun from-degrees (degrees)
-  (declare (optimize speed))
-  (from-degrees! (zero) degrees))
 
 (u:fn-> degrees! (vec vec) vec)
 (declaim (inline degrees!))
