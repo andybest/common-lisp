@@ -82,6 +82,7 @@
    #:negate
    #:angle
    #:direction=
+   #:parallel-p
    #:lerp!
    #:lerp
    #:<
