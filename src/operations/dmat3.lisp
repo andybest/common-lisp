@@ -201,6 +201,78 @@
   (declare (optimize speed))
   (rotation-axis-from-vec2! (copy mat) vec axis))
 
+(u:fn-> rotation-x-from-angle! (mat u:f64) mat)
+(declaim (inline rotation-x-from-angle!))
+(defun rotation-x-from-angle! (out angle)
+  (declare (optimize speed))
+  (let ((s (sin angle))
+        (c (cos angle)))
+    (with-components ((o out))
+      (psetf o00 1d0
+             o10 0d0
+             o20 0d0
+             o01 0d0
+             o11 c
+             o21 s
+             o02 0d0
+             o12 (cl:- s)
+             o22 c))
+    out))
+
+(u:fn-> rotation-x-from-angle (u:f64) mat)
+(declaim (inline rotation-x-from-angle))
+(defun rotation-x-from-angle (angle)
+  (declare (optimize speed))
+  (rotation-x-from-angle! (mat) angle))
+
+(u:fn-> rotation-y-from-angle! (mat u:f64) mat)
+(declaim (inline rotation-y-from-angle!))
+(defun rotation-y-from-angle! (out angle)
+  (declare (optimize speed))
+  (let ((s (sin angle))
+        (c (cos angle)))
+    (with-components ((o out))
+      (psetf o00 c
+             o10 0d0
+             o20 (cl:- s)
+             o01 0d0
+             o11 1d0
+             o21 0d0
+             o02 s
+             o12 0d0
+             o22 c))
+    out))
+
+(u:fn-> rotation-y-from-angle (u:f64) mat)
+(declaim (inline rotation-y-from-angle))
+(defun rotation-y-from-angle (angle)
+  (declare (optimize speed))
+  (rotation-y-from-angle! (mat) angle))
+
+(u:fn-> rotation-z-from-angle! (mat u:f64) mat)
+(declaim (inline rotation-z-from-angle!))
+(defun rotation-z-from-angle! (out angle)
+  (declare (optimize speed))
+  (let ((s (sin angle))
+        (c (cos angle)))
+    (with-components ((o out))
+      (psetf o00 c
+             o10 s
+             o20 0d0
+             o01 (cl:- s)
+             o11 c
+             o21 0d0
+             o02 0d0
+             o12 0d0
+             o22 1d0))
+    out))
+
+(u:fn-> rotation-z-from-angle (u:f64) mat)
+(declaim (inline rotation-z-from-angle))
+(defun rotation-z-from-angle (angle)
+  (declare (optimize speed))
+  (rotation-z-from-angle! (mat) angle))
+
 (u:fn-> normalize-rotation! (mat mat) mat)
 (declaim (inline normalize-rotation!))
 (defun normalize-rotation! (out mat)

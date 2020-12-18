@@ -198,19 +198,35 @@
   (declare (optimize speed))
   (rotation-axis-from-vec2! (copy mat) vec axis))
 
+(u:fn-> rotation-from-angle! (mat u:f32) mat)
+(declaim (inline rotation-from-angle!))
+(defun rotation-from-angle! (out angle)
+  (declare (optimize speed))
+  (let ((s (sin angle))
+        (c (cos angle)))
+    (with-components ((o out))
+      (psetf o00 c
+             o10 s
+             o01 (cl:- s)
+             o11 c))
+    out))
+
+(u:fn-> rotation-from-angle (u:f32) mat)
+(declaim (inline rotation-from-angle))
+(defun rotation-from-angle (angle)
+  (declare (optimize speed))
+  (rotation-from-angle! (mat) angle))
+
 (u:fn-> rotate! (mat mat u:f32 &key (:space keyword)) mat)
 (declaim (inline rotate!))
 (defun rotate! (out mat angle &key (space :local))
   (declare (optimize speed))
-  (with-components ((m (id)))
-    (let ((s (sin angle))
-          (c (cos angle)))
-      (copy! out mat)
-      (psetf m00 c m01 (cl:- s)
-             m10 s m11 c)
-      (ecase space
-        (:local (*! out out m))
-        (:world (*! out m out)))))
+  (let ((r (rotation-from-angle angle)))
+    (declare (dynamic-extent r))
+    (copy! out mat)
+    (ecase space
+      (:local (*! out out r))
+      (:world (*! out r out))))
   out)
 
 (u:fn-> rotate (mat u:f32) mat)
@@ -219,6 +235,7 @@
   (declare (optimize speed))
   (rotate! (id) mat angle))
 
+(u:fn-> rotation-from-angle! (mat u:f32) mat)
 (u:fn-> get-scale! (v2:vec mat) v2:vec)
 (declaim (inline get-scale!))
 (defun get-scale! (out mat)

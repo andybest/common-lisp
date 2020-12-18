@@ -62,6 +62,12 @@
    #:rotation-axis-to-vec3
    #:rotation-axis-from-vec3!
    #:rotation-axis-from-vec3
+   #:rotation-x-from-angle!
+   #:rotation-x-from-angle
+   #:rotation-y-from-angle!
+   #:rotation-y-from-angle!
+   #:rotation-z-from-angle
+   #:rotation-z-from-angle
    #:rotate!
    #:rotate
    #:get-scale!

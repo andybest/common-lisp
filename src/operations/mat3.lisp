@@ -201,6 +201,78 @@
   (declare (optimize speed))
   (rotation-axis-from-vec2! (copy mat) vec axis))
 
+(u:fn-> rotation-x-from-angle! (mat u:f32) mat)
+(declaim (inline rotation-x-from-angle!))
+(defun rotation-x-from-angle! (out angle)
+  (declare (optimize speed))
+  (let ((s (sin angle))
+        (c (cos angle)))
+    (with-components ((o out))
+      (psetf o00 1.0
+             o10 0.0
+             o20 0.0
+             o01 0.0
+             o11 c
+             o21 s
+             o02 0.0
+             o12 (cl:- s)
+             o22 c))
+    out))
+
+(u:fn-> rotation-x-from-angle (u:f32) mat)
+(declaim (inline rotation-x-from-angle))
+(defun rotation-x-from-angle (angle)
+  (declare (optimize speed))
+  (rotation-x-from-angle! (mat) angle))
+
+(u:fn-> rotation-y-from-angle! (mat u:f32) mat)
+(declaim (inline rotation-y-from-angle!))
+(defun rotation-y-from-angle! (out angle)
+  (declare (optimize speed))
+  (let ((s (sin angle))
+        (c (cos angle)))
+    (with-components ((o out))
+      (psetf o00 c
+             o10 0.0
+             o20 (cl:- s)
+             o01 0.0
+             o11 1.0
+             o21 0.0
+             o02 s
+             o12 0.0
+             o22 c))
+    out))
+
+(u:fn-> rotation-y-from-angle (u:f32) mat)
+(declaim (inline rotation-y-from-angle))
+(defun rotation-y-from-angle (angle)
+  (declare (optimize speed))
+  (rotation-y-from-angle! (mat) angle))
+
+(u:fn-> rotation-z-from-angle! (mat u:f32) mat)
+(declaim (inline rotation-z-from-angle!))
+(defun rotation-z-from-angle! (out angle)
+  (declare (optimize speed))
+  (let ((s (sin angle))
+        (c (cos angle)))
+    (with-components ((o out))
+      (psetf o00 c
+             o10 s
+             o20 0.0
+             o01 (cl:- s)
+             o11 c
+             o21 0.0
+             o02 0.0
+             o12 0.0
+             o22 1.0))
+    out))
+
+(u:fn-> rotation-z-from-angle (u:f32) mat)
+(declaim (inline rotation-z-from-angle))
+(defun rotation-z-from-angle (angle)
+  (declare (optimize speed))
+  (rotation-z-from-angle! (mat) angle))
+
 (u:fn-> normalize-rotation! (mat mat) mat)
 (declaim (inline normalize-rotation!))
 (defun normalize-rotation! (out mat)
@@ -317,15 +389,12 @@
 (declaim (inline rotate!))
 (defun rotate! (out mat angle &key (space :local))
   (declare (optimize speed))
-  (with-components ((m (id)))
-    (let ((s (sin angle))
-          (c (cos angle)))
-      (copy! out mat)
-      (psetf m00 c m01 (cl:- s)
-             m10 s m11 c)
-      (ecase space
-        (:local (*! out out m))
-        (:world (*! out m out)))))
+  (let ((r (rotation-z-from-angle angle)))
+    (declare (dynamic-extent r))
+    (copy! out mat)
+    (ecase space
+      (:local (*! out out r))
+      (:world (*! out r out))))
   out)
 
 (u:fn-> rotate (mat u:f32) mat)

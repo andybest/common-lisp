@@ -230,6 +230,99 @@
   (declare (optimize speed))
   (rotation-axis-from-vec3! (copy mat) vec axis))
 
+(u:fn-> rotation-x-from-angle! (mat u:f32) mat)
+(declaim (inline rotation-x-from-angle!))
+(defun rotation-x-from-angle! (out angle)
+  (declare (optimize speed))
+  (let ((s (sin angle))
+        (c (cos angle)))
+    (with-components ((o out))
+      (psetf o00 1.0
+             o10 0.0
+             o20 0.0
+             o30 0.0
+             o01 0.0
+             o11 c
+             o21 s
+             o31 0.0
+             o02 0.0
+             o12 (cl:- s)
+             o22 c
+             o32 0.0
+             o03 0.0
+             o13 0.0
+             o23 0.0
+             o33 1.0))
+    out))
+
+(u:fn-> rotation-x-from-angle (u:f32) mat)
+(declaim (inline rotation-x-from-angle))
+(defun rotation-x-from-angle (angle)
+  (declare (optimize speed))
+  (rotation-x-from-angle! (mat) angle))
+
+(u:fn-> rotation-y-from-angle! (mat u:f32) mat)
+(declaim (inline rotation-y-from-angle!))
+(defun rotation-y-from-angle! (out angle)
+  (declare (optimize speed))
+  (let ((s (sin angle))
+        (c (cos angle)))
+    (with-components ((o out))
+      (psetf o00 c
+             o10 0.0
+             o20 (cl:- s)
+             o30 0.0
+             o01 0.0
+             o11 1.0
+             o21 0.0
+             o31 0.0
+             o02 s
+             o12 0.0
+             o22 c
+             o32 0.0
+             o03 0.0
+             o13 0.0
+             o23 0.0
+             o33 1.0))
+    out))
+
+(u:fn-> rotation-y-from-angle (u:f32) mat)
+(declaim (inline rotation-y-from-angle))
+(defun rotation-y-from-angle (angle)
+  (declare (optimize speed))
+  (rotation-y-from-angle! (mat) angle))
+
+(u:fn-> rotation-z-from-angle! (mat u:f32) mat)
+(declaim (inline rotation-z-from-angle!))
+(defun rotation-z-from-angle! (out angle)
+  (declare (optimize speed))
+  (let ((s (sin angle))
+        (c (cos angle)))
+    (with-components ((o out))
+      (psetf o00 c
+             o10 s
+             o20 0.0
+             o30 0.0
+             o01 (cl:- s)
+             o11 c
+             o21 0.0
+             o31 0.0
+             o02 0.0
+             o12 0.0
+             o22 1.0
+             o32 0.0
+             o03 0.0
+             o13 0.0
+             o23 0.0
+             o33 1.0))
+    out))
+
+(u:fn-> rotation-z-from-angle (u:f32) mat)
+(declaim (inline rotation-z-from-angle))
+(defun rotation-z-from-angle (angle)
+  (declare (optimize speed))
+  (rotation-z-from-angle! (mat) angle))
+
 (u:fn-> normalize-rotation! (mat mat) mat)
 (declaim (inline normalize-rotation!))
 (defun normalize-rotation! (out mat)
@@ -357,32 +450,21 @@
 (u:fn-> rotate! (mat mat v3:vec &key (:space keyword)) mat)
 (defun rotate! (out mat vec &key (space :local))
   (declare (optimize speed))
-  (with-components ((m (id)))
-    (v3:with-components ((v vec))
-      (let ((sx (sin vx))
-            (cx (cos vx))
-            (sy (sin vy))
-            (cy (cos vy))
-            (sz (sin vz))
-            (cz (cos vz)))
-        (copy! out mat)
-        (psetf m00 cz m01 (cl:- sz)
-               m10 sz m11 cz)
-        (ecase space
-          (:local (*! out out m))
-          (:world (*! out m out)))
-        (psetf m00 1.0 m01 0.0 m02 0.0
-               m10 0.0 m11 cx m12 (cl:- sx)
-               m20 0.0 m21 sx m22 cx)
-        (ecase space
-          (:local (*! out out m))
-          (:world (*! out m out)))
-        (psetf m00 cy m01 0.0 m02 sy
-               m10 0.0 m11 1.0 m12 0.0
-               m20 (cl:- sy) m21 0.0 m22 cy)
-        (ecase space
-          (:local (*! out out m))
-          (:world (*! out m out))))))
+  (v3:with-components ((v vec))
+    (let ((x (rotation-x-from-angle vx))
+          (y (rotation-y-from-angle vy))
+          (z (rotation-z-from-angle vz)))
+      (declare (dynamic-extent x y z))
+      (copy! out mat)
+      (ecase space
+        (:local
+         (*! out out x)
+         (*! out out z)
+         (*! out out y))
+        (:world
+         (*! out x out)
+         (*! out z out)
+         (*! out y out)))))
   out)
 
 (u:fn-> rotate (mat v3:vec) mat)

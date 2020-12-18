@@ -58,9 +58,7 @@ POINT-IN-BOX-P for a less expanesive test if the rectangle is axis-aligned."
   (declare (optimize speed))
   (let ((vector (v2:- point (obox:position box)))
         (angle (- (obox:angle box))))
-    (m2:*v2! vector
-             (m2:mat (cos angle) (sin angle) (- (sin angle)) (cos angle))
-             vector)
+    (m2:*v2! vector (m2:rotation-from-angle angle) vector)
     (point-in-box-p (v2:+ vector (obox:half-extents box))
                     (box:box :position (point:point)
                              :size (v2:scale (obox:half-extents box) 2f0)))))
