@@ -730,8 +730,8 @@
   (declare (optimize speed))
   (look-at! (id) eye target up))
 
-(u:fn-> orthographic! (mat u:f64 u:f64 u:f64 u:f64 u:f64 u:f64) mat)
-(defun orthographic! (out left right bottom top near far)
+(u:fn-> ortho! (mat u:f64 u:f64 u:f64 u:f64 u:f64 u:f64) mat)
+(defun ortho! (out left right bottom top near far)
   (declare (optimize speed))
   (let ((right-left (cl:- right left))
         (top-bottom (cl:- top bottom))
@@ -745,11 +745,11 @@
              m23 (cl:- (/ (cl:+ far near) far-near))))
     out))
 
-(u:fn-> orthographic (u:f64 u:f64 u:f64 u:f64 u:f64 u:f64) mat)
-(declaim (inline orthographic))
-(defun orthographic (left right bottom top near far)
+(u:fn-> ortho (u:f64 u:f64 u:f64 u:f64 u:f64 u:f64) mat)
+(declaim (inline ortho))
+(defun ortho (left right bottom top near far)
   (declare (optimize speed))
-  (orthographic! (id) left right bottom top near far))
+  (ortho! (id) left right bottom top near far))
 
 (u:fn-> perspective! (mat u:f64 u:f64 u:f64 u:f64) mat)
 (defun perspective! (out fov aspect near far)

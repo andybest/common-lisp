@@ -92,8 +92,8 @@
    #:invert
    #:look-at!
    #:look-at
-   #:orthographic!
-   #:orthographic
+   #:ortho!
+   #:ortho
    #:perspective!
    #:perspective))
 

@@ -375,15 +375,15 @@
                             (v3:vec 0f0 1f0 -1f0))
                 r2))))
 
-(define-test m4/orthographic
+(define-test m4/ortho
   (let ((r (m4:mat 0.05f0 0f0 0f0 0f0
                    0f0 0.1f0 0f0 0f0
                    0f0 0f0 -0.002f0 0f0
                    0f0 0f0 -1f0 1f0))
         (o (m4:id)))
-    (is m4:= (m4:orthographic! o -20f0 20f0 -10f0 10f0 0f0 1000f0) r)
+    (is m4:= (m4:ortho! o -20f0 20f0 -10f0 10f0 0f0 1000f0) r)
     (is m4:= o r)
-    (is m4:= (m4:orthographic -20f0 20f0 -10f0 10f0 0f0 1000f0) r)))
+    (is m4:= (m4:ortho -20f0 20f0 -10f0 10f0 0f0 1000f0) r)))
 
 (define-test m4/perspective
   (let ((r (m4:mat 0.9742786f0 0f0 0f0 0f0
