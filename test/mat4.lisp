@@ -29,12 +29,12 @@
                    1f0 -1f0 1f0 -1f0
                    1f0 -1f0 1f0 -1f0
                    1f0 -1f0 1f0 -1f0)))
-    (is m4:= (m4:clamp! o m -1f0 1f0) r)
+    (is m4:= (m4:clamp-range! o m -1f0 1f0) r)
     (is m4:= o r)
-    (is m4:= (m4:clamp m -1f0 1f0) r)
-    (is m4:= (m4:clamp m
-                       most-negative-single-float
-                       most-positive-single-float)
+    (is m4:= (m4:clamp-range m -1f0 1f0) r)
+    (is m4:= (m4:clamp-range m
+                             most-negative-single-float
+                             most-positive-single-float)
         m)))
 
 (define-test m4/add

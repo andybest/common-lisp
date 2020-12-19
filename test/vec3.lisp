@@ -35,12 +35,12 @@
   (let ((v (v3:vec -1.5185602f0 0.3374052f0 1.5218115f0))
         (r (v3:vec -1f0 0.3374052f0 1f0))
         (o (v3:zero)))
-    (is v3:= (v3:clamp! o v -1f0 1f0) r)
+    (is v3:= (v3:clamp-range! o v -1f0 1f0) r)
     (is v3:= o r)
-    (is v3:= (v3:clamp v -1f0 1f0) r)
-    (is v3:= (v3:clamp v
-                       most-negative-single-float
-                       most-positive-single-float)
+    (is v3:= (v3:clamp-range v -1f0 1f0) r)
+    (is v3:= (v3:clamp-range v
+                             most-negative-single-float
+                             most-positive-single-float)
         v)))
 
 (define-test v3/zero

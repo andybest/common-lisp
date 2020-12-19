@@ -56,6 +56,8 @@
    #:fract
    #:clamp!
    #:clamp
+   #:clamp-range!
+   #:clamp-range
    #:=
    #:+!
    #:+

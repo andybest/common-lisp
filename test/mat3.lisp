@@ -26,12 +26,12 @@
         (r (m3:mat 1f0 -1f0 1f0
                    -1f0 1f0 -1f0
                    1f0 -1f0 1f0)))
-    (is m3:= (m3:clamp! o m -1f0 1f0) r)
+    (is m3:= (m3:clamp-range! o m -1f0 1f0) r)
     (is m3:= o r)
-    (is m3:= (m3:clamp m -1f0 1f0) r)
-    (is m3:= (m3:clamp m
-                       most-negative-single-float
-                       most-positive-single-float)
+    (is m3:= (m3:clamp-range m -1f0 1f0) r)
+    (is m3:= (m3:clamp-range m
+                             most-negative-single-float
+                             most-positive-single-float)
         m)))
 
 (define-test m3/add

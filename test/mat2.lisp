@@ -23,12 +23,12 @@
         (o (m2:zero))
         (r (m2:mat 1f0 -1f0
                    1f0 -1f0)))
-    (is m2:= (m2:clamp! o m -1f0 1f0) r)
+    (is m2:= (m2:clamp-range! o m -1f0 1f0) r)
     (is m2:= o r)
-    (is m2:= (m2:clamp m -1f0 1f0) r)
-    (is m2:= (m2:clamp m
-                       most-negative-single-float
-                       most-positive-single-float)
+    (is m2:= (m2:clamp-range m -1f0 1f0) r)
+    (is m2:= (m2:clamp-range m
+                             most-negative-single-float
+                             most-positive-single-float)
         m)))
 
 (define-test m2/add

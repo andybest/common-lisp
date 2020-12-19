@@ -98,22 +98,39 @@ portion of the components in vector VEC."
   (declare (optimize speed))
   (fract! (zero) vec))
 
-(u:fn-> clamp! (vec vec u:f32 u:f32) vec)
+(u:fn-> clamp! (vec vec vec vec) vec)
 (declaim (inline clamp!))
 (defun clamp! (out vec min max)
+  "Modify vector OUT to have its components represent the components of vector
+VEC, bounded by the components of vectors MIN and MAX."
+  (declare (optimize speed))
+  (com:cwset 2 out (vec min max) (u:clamp vec min max))
+  out)
+
+(u:fn-> clamp (vec vec vec) vec)
+(declaim (inline clamp))
+(defun clamp (vec min max)
+  "Construct a fresh vector that has the components of vector VEC bounded by the
+  components of vectors MIN and MAX."
+  (declare (optimize speed))
+  (clamp! (zero) vec min max))
+
+(u:fn-> clamp-range! (vec vec u:f32 u:f32) vec)
+(declaim (inline clamp-range!))
+(defun clamp-range! (out vec min max)
   "Modify vector OUT to have its components represent the components of vector
 VEC, bounded by MIN and MAX."
   (declare (optimize speed))
   (com:cwset 2 out vec (u:clamp vec min max))
   out)
 
-(u:fn-> clamp (vec u:f32 u:f32) vec)
-(declaim (inline clamp))
-(defun clamp (vec min max)
+(u:fn-> clamp-range (vec u:f32 u:f32) vec)
+(declaim (inline clamp-range))
+(defun clamp-range (vec min max)
   "Construct a fresh vector that has the components of vector VEC bounded by MIN
 and MAX."
   (declare (optimize speed))
-  (clamp! (zero) vec min max))
+  (clamp-range! (zero) vec min max))
 
 (u:fn-> +! (vec vec vec) vec)
 (declaim (inline +!))

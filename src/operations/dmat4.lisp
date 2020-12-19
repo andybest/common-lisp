@@ -77,18 +77,35 @@
   (declare (optimize speed))
   (copy! (zero) mat))
 
-(u:fn-> clamp! (mat mat u:f64 u:f64) mat)
+(u:fn-> clamp! (mat mat mat mat) mat)
 (declaim (inline clamp!))
 (defun clamp! (out mat min max)
+  "Modify matrix OUT to have its components represent the components of matrix
+MAT, bounded by the components of matrices MIN and MAX."
+  (declare (optimize speed))
+  (com:cwset 16 out (mat min max) (u:clamp mat min max))
+  out)
+
+(u:fn-> clamp (mat mat mat) mat)
+(declaim (inline clamp))
+(defun clamp (mat min max)
+  "Construct a fresh matrix that has the components of matrix MAT bounded by the
+  components of matrices MIN and MAX."
+  (declare (optimize speed))
+  (clamp! (zero) mat min max))
+
+(u:fn-> clamp-range! (mat mat u:f64 u:f64) mat)
+(declaim (inline clamp-range!))
+(defun clamp-range! (out mat min max)
   (declare (optimize speed))
   (com:cwset 16 out mat (u:clamp mat min max))
   out)
 
-(u:fn-> clamp (mat u:f64 u:f64) mat)
-(declaim (inline clamp))
-(defun clamp (mat min max)
+(u:fn-> clamp-range (mat u:f64 u:f64) mat)
+(declaim (inline clamp-range))
+(defun clamp-range (mat min max)
   (declare (optimize speed))
-  (clamp! (zero) mat min max))
+  (clamp-range! (zero) mat min max))
 
 (u:fn-> +! (mat mat mat) mat)
 (declaim (inline +!))
