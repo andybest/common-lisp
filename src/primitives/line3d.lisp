@@ -34,9 +34,9 @@
   (start (point3d:point) :type point3d:point)
   (end (point3d:point) :type point3d:point))
 
-(u:fn-> line (point3d:point point3d:point) line)
+(u:fn-> line (&key (:start point3d:point) (:end point3d:point)) line)
 (declaim (inline line))
-(defun line (start end)
+(defun line (&key (start (point3d:point)) (end (point3d:point)))
   (declare (optimize speed))
   (%line start end))
 

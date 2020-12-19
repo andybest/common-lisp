@@ -35,9 +35,9 @@
   (start (point2d:point) :type point2d:point)
   (end (point2d:point) :type point2d:point))
 
-(u:fn-> line (point2d:point point2d:point) line)
+(u:fn-> line (&key (:start point2d:point) (:end point2d:point)) line)
 (declaim (inline line))
-(defun line (start end)
+(defun line (&key (start (point2d:point)) (end (point2d:point)))
   (declare (optimize speed))
   (%line start end))
 
