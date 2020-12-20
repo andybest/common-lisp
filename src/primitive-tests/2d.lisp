@@ -13,11 +13,17 @@
    (#:v2 #:net.mfiano.lisp.origin.vec2))
   (:use #:cl)
   (:export
+   #:box/box
+   #:box/circle
    #:box/line
+   #:circle/box
+   #:circle/circle
+   #:circle/oriented-box
    #:circle/line
    #:line/box
    #:line/circle
    #:line/oriented-box
+   #:oriented-box/circle
    #:oriented-box/line
    #:point-in-box-p
    #:point-in-circle-p
@@ -43,14 +49,14 @@
 
 (u:fn-> point-in-circle-p (point:point circle:circle) boolean)
 (defun point-in-circle-p (point circle)
-  "Test if a 2D point is contained within a circle."
+  "Test if a point is contained within a circle."
   (declare (optimize speed))
   (let ((line (line:line :start point :end (circle:position circle))))
     (< (line:length-squared line) (expt (circle:radius circle) 2))))
 
 (u:fn-> point-in-box-p (point:point box:box) boolean)
 (defun point-in-box-p (point box)
-  "Test if a 2D point is contained within an axis-aligned rectangle. See
+  "Test if a point is contained within an axis-aligned rectangle. See
 POINT-IN-ORIENTED-BOX-P for testing against rotated rectangles."
   (declare (optimize speed))
   (v2:with-components ((p point)
@@ -61,8 +67,8 @@ POINT-IN-ORIENTED-BOX-P for testing against rotated rectangles."
 
 (u:fn-> point-in-oriented-box-p (point:point obox:box) boolean)
 (defun point-in-oriented-box-p (point box)
-  "Test if a 2D point is contained within an oriented rectangle. See
-POINT-IN-BOX-P for a less expanesive test if the rectangle is axis-aligned."
+  "Test if a point is contained within an oriented rectangle. See POINT-IN-BOX-P
+for a less expanesive test if the rectangle is axis-aligned."
   (declare (optimize speed))
   (let ((vector (v2:- point (obox:position box)))
         (angle (- (obox:angle box))))
@@ -92,13 +98,13 @@ POINT-IN-BOX-P for a less expanesive test if the rectangle is axis-aligned."
 
 (u:fn-> line/circle (line:line circle:circle) boolean)
 (defun line/circle (line circle)
-  "Test if a 2D line intersects a circle."
+  "Test if a line intersects a circle."
   (declare (optimize speed))
   (%line/circle line circle))
 
 (u:fn-> circle/line (circle:circle line:line) boolean)
 (defun circle/line (circle line)
-  "Test if a circle intersects a 2D line."
+  "Test if a circle intersects a line."
   (declare (optimize speed))
   (%line/circle line circle))
 
@@ -130,13 +136,13 @@ POINT-IN-BOX-P for a less expanesive test if the rectangle is axis-aligned."
 
 (u:fn-> line/box (line:line box:box) boolean)
 (defun line/box (line box)
-  "Test if a 2D line intersects a 2D box."
+  "Test if a line intersects a box."
   (declare (optimize speed))
   (%line/box line box))
 
 (u:fn-> box/line (box:box line:line) boolean)
 (defun box/line (box line)
-  "Test if a 2D box intersects a 2D line."
+  "Test if a box intersects a line."
   (declare (optimize speed))
   (%line/box line box))
 
@@ -164,12 +170,91 @@ ORIENTED-BOX/LINE."
 
 (u:fn-> line/oriented-box (line:line obox:box) boolean)
 (defun line/oriented-box (line box)
-  "Test if a 2D line intersects a 2D oriented box."
+  "Test if a line intersects an oriented box."
   (declare (optimize speed))
   (%line/oriented-box line box))
 
 (u:fn-> oriented-box/line (obox:box line:line) boolean)
 (defun oriented-box/line (box line)
-  "Test if a 2D oriented box intersects a 2D line."
+  "Test if an oriented box intersects a line."
   (declare (optimize speed))
   (%line/oriented-box line box))
+
+(u:fn-> circle/circle (circle:circle circle:circle) boolean)
+(defun circle/circle (circle1 circle2)
+  "Test if two circles intersect."
+  (declare (optimize speed))
+  ;; First, construct a line between the two circle centers. Then, if the length
+  ;; of the line is less than the sum of the two circle radii, we have an
+  ;; intersection. To avoid the square root, we get the squared length of the
+  ;; line and compare it to the squared sum of the radii.
+  (<= (line:length-squared (line:line :start (circle:position circle1)
+                                      :end (circle:position circle2)))
+      (expt (+ (circle:radius circle1) (circle:radius circle2)) 2)))
+
+(u:fn-> %circle/box (circle:circle box:box) boolean)
+(declaim (inline %circle/box))
+(defun %circle/box (circle box)
+  "Helper function that does the work for CIRCLE/BOX and BOX/CIRCLE."
+  (declare (optimize speed))
+  ;; First, we clamp the circle's center point to the box's minimum and maximum
+  ;; bounds, which places the closest point to the circle on the surface of the
+  ;; box. Then, we draw a line from the closest point to the center of the
+  ;; circle, and if it's less than the squared radius of the circle, they
+  ;; intersect.
+  (let* ((circle-position (circle:position circle))
+         (closest-point (v2:copy circle-position)))
+    (v2:clamp! closest-point closest-point (box:min box) (box:max box))
+    (<= (line:length-squared (line:line :start circle-position
+                                        :end closest-point))
+        (expt (circle:radius circle) 2))))
+
+(u:fn-> circle/box (circle:circle box:box) boolean)
+(defun circle/box (circle box)
+  "Test if a circle intersects a box."
+  (declare (optimize speed))
+  (%circle/box circle box))
+
+(u:fn-> box/circle (box:box circle:circle) boolean)
+(defun box/circle (box circle)
+  "Test if a box intersects a circle."
+  (declare (optimize speed))
+  (%circle/box circle box))
+
+(u:fn-> %circle/oriented-box (circle:circle obox:box) boolean)
+(declaim (inline %circle/oriented-box))
+(defun %circle/oriented-box (circle box)
+  "Helper function that does the work for CIRCLE/ORIENTED-BOX and
+ORIENTED-BOX/CIRCLE."
+  (declare (optimize speed))
+  ;; First, we move the circle into the local space of the oriented box by
+  ;; translating the center of the circle relative to the center of the box.
+  ;; Then, we rotate the translated point in the negative orientation of the
+  ;; box. We can then perform a check with the existing CIRCLE/BOX test to see
+  ;; if they intersect.
+  (let ((half-extents (obox:half-extents box))
+        (vector (v2:- (circle:position circle) (obox:position box)))
+        (rotation (m2:rotation-from-angle (- (obox:angle box)))))
+    (m2:*v2! vector rotation vector)
+    (circle/box (circle:circle :position (v2:+ vector half-extents)
+                               :radius (circle:radius circle))
+                (box:box :size (v2:scale half-extents 2.0)))))
+
+(u:fn-> circle/oriented-box (circle:circle obox:box) boolean)
+(defun circle/oriented-box (circle box)
+  "Test if a circle intersects an oriented box."
+  (declare (optimize speed))
+  (%circle/oriented-box circle box))
+
+(u:fn-> oriented-box/circle (obox:box circle:circle) boolean)
+(defun oriented-box/circle (box circle)
+  "Test if an oriented box intersects a circle."
+  (declare (optimize speed))
+  (%circle/oriented-box circle box))
+
+(u:fn-> box/box (box:box box:box) boolean)
+(defun box/box (box1 box2)
+  "Test if two boxes intersect."
+  (declare (optimize speed))
+  (and (v2:<= (box:min box1) (box:max box2))
+       (v2:<= (box:min box2) (box:max box1))))
