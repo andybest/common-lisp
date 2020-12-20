@@ -51,4 +51,5 @@
    (:file "geometry/primitives/circle")
    (:file "geometry/primitives/box2d")
    (:file "geometry/primitives/oriented-box-2d")
-   (:file "geometry/tests/2d")))
+   (:file "geometry/tests/2d")
+   (:file "geometry/bounds")))

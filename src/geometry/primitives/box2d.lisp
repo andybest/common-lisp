@@ -22,6 +22,7 @@
    #:size)
   ;; operations
   (:export
+   #:box-from-min/max
    #:max
    #:min
    #:vertices))
