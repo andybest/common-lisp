@@ -100,15 +100,6 @@
    #:pi/4
    #:pi/6
    #:pi/12)
-  ;; general
-  (:export
-   #:line-direction
-   #:line-plane-intersect
-   #:line-point-distance
-   #:line-segment-midpoint
-   #:translate-point
-   #:unproject!
-   #:unproject)
   ;; shaping
   (:export
    #:linear
@@ -143,9 +134,4 @@
    #:bounce-in
    #:bounce-in-out
    #:hermite-curve
-   #:quintic-curve
-   ;; geometry
-   #:line2d
-   #:line2d-start
-   #:line2d-end
-   #:line2d-length))
+   #:quintic-curve))
