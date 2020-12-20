@@ -67,7 +67,7 @@ corner."
 (u:fn-> max (box) point2d:point)
 (declaim (inline max))
 (defun max (box)
-  "Return the maximum point of a rectangle. This is usually its top-left
+  "Return the maximum point of a rectangle. This is usually its top-right
 corner."
   (declare (optimize speed))
   (let ((position (position box)))
