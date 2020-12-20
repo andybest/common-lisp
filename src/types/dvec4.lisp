@@ -2,9 +2,10 @@
 
 (defpackage #:net.mfiano.lisp.origin.dvec4
   (:local-nicknames
+   (#:com #:net.mfiano.lisp.origin.common)
+   (#:const #:net.mfiano.lisp.origin.constants)
    (#:dv2 #:net.mfiano.lisp.origin.dvec2)
    (#:dv3 #:net.mfiano.lisp.origin.dvec3)
-   (#:com #:net.mfiano.lisp.origin.common)
    (#:ss #:specialization-store)
    (#:u #:net.mfiano.lisp.golden-utils)
    (#:v4 #:net.mfiano.lisp.origin.vec4))

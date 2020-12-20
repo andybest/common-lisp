@@ -64,7 +64,7 @@
                    2f0 6f0))
         (r (m2:mat 11f0 35f0
                    14f0 46f0))
-        (rot-z (m2:rotate m2:+id+ com:pi/3))
+        (rot-z (m2:rotate m2:+id+ const:pi/3))
         (o (m2:zero)))
     (is m2:= (m2:*! o m m) r)
     (is m2:= o r)
@@ -85,9 +85,9 @@
   (let ((omz (m2:id))
         (rmz (m2:mat 0.5f0 0.86602545f0
                      -0.86602545f0 0.5f0)))
-    (true (m2:= (m2:rotate! omz m2:+id+ com:pi/3) rmz))
+    (true (m2:= (m2:rotate! omz m2:+id+ const:pi/3) rmz))
     (true (m2:= omz rmz))
-    (true (m2:= (m2:rotate m2:+id+ com:pi/3) rmz))))
+    (true (m2:= (m2:rotate m2:+id+ const:pi/3) rmz))))
 
 (define-test m2/scale
   (let ((m (m2:mat 10f0 0f0
@@ -101,7 +101,7 @@
     (is v2:= (m2:get-scale (m2:scale m2:+id+ v)) v)))
 
 (define-test m2/vec2-multiply
-  (let ((m (m2:rotate m2:+id+ com:pi/3))
+  (let ((m (m2:rotate m2:+id+ const:pi/3))
         (v (v2:vec 1f0 2f0))
         (o (v2:zero))
         (rv (v2:vec -1.2320509f0 1.8660254f0)))
@@ -123,9 +123,9 @@
     (is m2:= (m2:transpose m2:+id+) m2:+id+)))
 
 (define-test m2/orthogonal-predicate
-  (true (m2:orthogonal-p (m2:rotate m2:+id+ com:pi)))
-  (true (m2:orthogonal-p (m2:rotate m2:+id+ com:pi/2)))
-  (true (m2:orthogonal-p (m2:rotate m2:+id+ com:pi/3))))
+  (true (m2:orthogonal-p (m2:rotate m2:+id+ const:pi)))
+  (true (m2:orthogonal-p (m2:rotate m2:+id+ const:pi/2)))
+  (true (m2:orthogonal-p (m2:rotate m2:+id+ const:pi/3))))
 
 (define-test m2/trace
   (is = (m2:trace (m2:zero)) 0f0)

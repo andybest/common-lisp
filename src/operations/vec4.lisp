@@ -440,7 +440,7 @@ vectors VEC1 and VEC2."
   "Modify vector OUT to convert the components in vector VEC, which are assumed
 to be in degree units, to radian units."
   (declare (optimize speed))
-  (com:cwset 4 out vec (cl:* vec com:+deg+))
+  (com:cwset 4 out vec (cl:* vec const:+deg+))
   out)
 
 (u:fn-> radians (vec) vec)
@@ -457,7 +457,7 @@ to be in degree units, converted to radian units."
   "Modify vector OUT to convert the components in vector VEC, which are assumed
 to be in radian units, to degree units."
   (declare (optimize speed))
-  (com:cwset 4 out vec (cl:* vec com:+rad+))
+  (com:cwset 4 out vec (cl:* vec const:+rad+))
   out)
 
 (u:fn-> degrees (vec) vec)

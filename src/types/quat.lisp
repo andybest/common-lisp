@@ -3,6 +3,7 @@
 (defpackage #:net.mfiano.lisp.origin.quat
   (:local-nicknames
    (#:com #:net.mfiano.lisp.origin.common)
+   (#:const #:net.mfiano.lisp.origin.constants)
    (#:m3 #:net.mfiano.lisp.origin.mat3)
    (#:m4 #:net.mfiano.lisp.origin.mat4)
    (#:ss #:specialization-store)

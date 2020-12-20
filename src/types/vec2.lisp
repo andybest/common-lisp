@@ -3,6 +3,7 @@
 (defpackage #:net.mfiano.lisp.origin.vec2
   (:local-nicknames
    (#:com #:net.mfiano.lisp.origin.common)
+   (#:const #:net.mfiano.lisp.origin.constants)
    (#:ss #:specialization-store)
    (#:u #:net.mfiano.lisp.golden-utils))
   (:use #:cl)

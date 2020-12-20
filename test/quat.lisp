@@ -47,9 +47,9 @@
         (q2 (q:quat 10f0 20f0 30f0 40f0))
         (q3 q:+id+)
         (r (q:quat -280f0 40f0 60f0 80f0))
-        (rot-x (q:rotate-euler q:+id+ (v3:vec com:pi/3 0f0 0f0)))
-        (rot-y (q:rotate-euler q:+id+ (v3:vec 0f0 com:pi/4 0f0)))
-        (rot-xy (q:rotate-euler q:+id+ (v3:vec com:pi/3 com:pi/4 0f0)))
+        (rot-x (q:rotate-euler q:+id+ (v3:vec const:pi/3 0f0 0f0)))
+        (rot-y (q:rotate-euler q:+id+ (v3:vec 0f0 const:pi/4 0f0)))
+        (rot-xy (q:rotate-euler q:+id+ (v3:vec const:pi/3 const:pi/4 0f0)))
         (o (q:id)))
     (is q:= (q:*! o q1 q2) r)
     (is q:= o r)
@@ -126,9 +126,9 @@
         (rqx (q:quat 0.86602545f0 0.5f0 0f0 0f0))
         (rqy (q:quat 0.86602545f0 0f0 0.5f0 0f0))
         (rqz (q:quat 0.86602545f0 0f0 0f0 0.5f0))
-        (vx (v3:vec com:pi/3 0f0 0f0))
-        (vy (v3:vec 0f0 com:pi/3 0f0))
-        (vz (v3:vec 0f0 0f0 com:pi/3)))
+        (vx (v3:vec const:pi/3 0f0 0f0))
+        (vy (v3:vec 0f0 const:pi/3 0f0))
+        (vz (v3:vec 0f0 0f0 const:pi/3)))
     (true (q:= (q:rotate-euler! oqx q:+id+ vx) rqx))
     (true (q:= (q:rotate-euler! oqy q:+id+ vy) rqy))
     (true (q:= (q:rotate-euler! oqz q:+id+ vz) rqz))
@@ -140,7 +140,7 @@
     (true (q:= (q:rotate-euler q:+id+ vz) rqz))))
 
 (define-test q/mat4-convert
-  (let ((q (q:rotate-euler q:+id+ (v3:vec com:pi/3 0f0 0f0)))
+  (let ((q (q:rotate-euler q:+id+ (v3:vec const:pi/3 0f0 0f0)))
         (qo (q:id))
         (r (m4:mat 1f0 0f0 0f0 0f0
                    0f0 0.5f0 0.86602545f0 0f0

@@ -79,7 +79,7 @@
         (r (m3:mat 38f0 98f0 158f0
                    44f0 116f0 188f0
                    50f0 134f0 218f0))
-        (rot-z (m3:rotate m3:+id+ com:pi/3))
+        (rot-z (m3:rotate m3:+id+ const:pi/3))
         (tr1 (m3:translate m3:+id+ (v2:vec 5f0 10f0)))
         (tr2 (m3:translate m3:+id+ (v2:vec 10f0 20f0)))
         (o (m3:zero)))
@@ -112,7 +112,7 @@
     (is v2:= (m3:get-translation m) rv)))
 
 (define-test m3/translate
-  (let ((m (m3:rotate m3:+id+ com:pi/3))
+  (let ((m (m3:rotate m3:+id+ const:pi/3))
         (v (v2:vec 5f0 10f0)))
     (is v2:= (m3:get-translation (m3:translate m3:+id+ v)) v)
     (is v2:= (m3:get-translation (m3:translate m v)) v)))
@@ -142,9 +142,9 @@
         (rmz (m3:mat 0.5f0 0.86602545f0 0f0
                      -0.86602545f0 0.5f0 0f0
                      0f0 0f0 1f0)))
-    (true (m3:= (m3:rotate! omz m3:+id+ com:pi/3) rmz))
+    (true (m3:= (m3:rotate! omz m3:+id+ const:pi/3) rmz))
     (true (m3:= omz rmz))
-    (true (m3:= (m3:rotate m3:+id+ com:pi/3) rmz))))
+    (true (m3:= (m3:rotate m3:+id+ const:pi/3) rmz))))
 
 (define-test m3/scale
   (let ((m (m3:mat 10f0 0f0 0f0
@@ -160,7 +160,7 @@
     (is v2:= (m3:get-scale (m3:scale m3:+id+ v)) v)))
 
 (define-test m3/vec3-multiply
-  (let ((m (m3:rotate m3:+id+ com:pi/3))
+  (let ((m (m3:rotate m3:+id+ const:pi/3))
         (v (v3:vec 1f0 2f0 3f0))
         (o (v3:zero))
         (rv (v3:vec -1.2320509f0 1.8660254f0 3f0)))
@@ -184,9 +184,9 @@
     (is m3:= (m3:transpose m3:+id+) m3:+id+)))
 
 (define-test m3/orthogonal-predicate
-  (true (m3:orthogonal-p (m3:rotate m3:+id+ com:pi)))
-  (true (m3:orthogonal-p (m3:rotate m3:+id+ com:pi/2)))
-  (true (m3:orthogonal-p (m3:rotate m3:+id+ com:pi/3))))
+  (true (m3:orthogonal-p (m3:rotate m3:+id+ const:pi)))
+  (true (m3:orthogonal-p (m3:rotate m3:+id+ const:pi/2)))
+  (true (m3:orthogonal-p (m3:rotate m3:+id+ const:pi/3))))
 
 (define-test m3/trace
   (is = (m3:trace (m3:zero)) 0f0)

@@ -273,7 +273,7 @@
            (roll (atan sinr-cosp cosr-cosp))
            (sinp (cl:* 2.0 (cl:- (cl:* qw qy) (cl:* qz qx))))
            (pitch (if (>= (abs sinp) 1.0)
-                      (cl:* com:pi/2 (signum sinp))
+                      (cl:* const:pi/2 (signum sinp))
                       (asin (the (single-float -1.0 1.0) sinp))))
            (siny-cosp (cl:* 2.0 (cl:+ (cl:* qw qz) (cl:* qx qy))))
            (cosy-cosp (cl:- 1.0 (cl:* 2.0 (cl:+ (cl:* qy qy) (cl:* qz qz)))))
