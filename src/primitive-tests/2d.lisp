@@ -16,6 +16,7 @@
    #:box/box
    #:box/circle
    #:box/line
+   #:box/oriented-box
    #:circle/box
    #:circle/circle
    #:circle/oriented-box
@@ -23,8 +24,10 @@
    #:line/box
    #:line/circle
    #:line/oriented-box
+   #:oriented-box/box
    #:oriented-box/circle
    #:oriented-box/line
+   #:oriented-box/oriented-box
    #:point-in-box-p
    #:point-in-circle-p
    #:point-in-oriented-box-p
@@ -258,3 +261,52 @@ ORIENTED-BOX/CIRCLE."
   (declare (optimize speed))
   (and (v2:<= (box:min box1) (box:max box2))
        (v2:<= (box:min box2) (box:max box1))))
+
+(u:fn-> %box/oriented-box (box:box obox:box) boolean)
+(declaim (inline %box/oriented-box))
+(defun %box/oriented-box (box1 box2)
+  "Helper function that does the work for BOX/ORIENTED-BOX and
+ORIENTED-BOX/BOX."
+  (declare (optimize speed))
+  (let ((axes (vector v2:+right+ v2:+up+ (v2:vec) (v2:vec)))
+        (rotation (m2:rotation-from-angle (obox:angle box2))))
+    (v2:with-components ((h (obox:half-extents box2)))
+      (m2:*v2! (aref axes 2) rotation (v2:normalize (v2:vec hx 0)))
+      (m2:*v2! (aref axes 3) rotation (v2:normalize (v2:vec 0 hy)))
+      (map nil
+           (lambda (x)
+             (v2:with-components ((i1 (box::interval box1 x))
+                                  (i2 (obox::interval box2 x)))
+               (unless (and (<= i2x i1y) (<= i1x i2y))
+                 (return-from %box/oriented-box nil))))
+           axes)
+      t)))
+
+(u:fn-> box/oriented-box (box:box obox:box) boolean)
+(defun box/oriented-box (box1 box2)
+  "Test if a box and an oriented box intersect."
+  (declare (optimize speed))
+  (%box/oriented-box box1 box2))
+
+(u:fn-> oriented-box/box (obox:box box:box) boolean)
+(defun oriented-box/box (box1 box2)
+  "Test if an oriented box and a box intersect."
+  (declare (optimize speed))
+  (%box/oriented-box box2 box1))
+
+(u:fn-> oriented-box/oriented-box (obox:box obox:box) boolean)
+(defun oriented-box/oriented-box (box1 box2)
+  "Test if two oriented boxes intersect."
+  (declare (optimize speed))
+  (let* ((angle1 (obox:angle box1))
+         (half-extents1 (obox:half-extents box1))
+         (position2 (v2:copy (obox:position box2)))
+         (local1 (box:box :size (v2:scale half-extents1 2.0)))
+         (local2 (obox:box :position position2
+                           :half-extents (obox:half-extents box2)
+                           :angle (- (obox:angle box2) angle1)))
+         (vector (v2:- position2 (obox:position box1)))
+         (rotation (m2:rotation-from-angle (- angle1))))
+    (m2:*v2! vector rotation vector)
+    (v2:+! (obox:position local2) vector half-extents1)
+    (box/oriented-box local1 local2)))

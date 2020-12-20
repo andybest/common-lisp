@@ -23,7 +23,8 @@
   ;; operations
   (:export
    #:max
-   #:min))
+   #:min
+   #:vertices))
 
 (in-package #:net.mfiano.lisp.origin.box2d)
 
@@ -72,3 +73,31 @@ corner."
   (declare (optimize speed))
   (let ((position (position box)))
     (v2:vec (v2:max position (v2:+ position (size box))))))
+
+(u:fn-> vertices (box) vector)
+(declaim (inline vertices))
+(defun vertices (box)
+  "Get a list of a box's vertices."
+  (declare (optimize speed))
+  (v2:with-components ((min- (min box))
+                       (max- (max box)))
+    (vector min-
+            max-
+            (v2:vec min-x max-y)
+            (v2:vec max-x min-y))))
+
+(u:fn-> interval (box v2:vec) v2:vec)
+(defun interval (box axis)
+  "Get the interval of the box along the given AXIS. This is used to test if two
+intervals overlap in a separating axis theorem test. AXIS is expected to be
+normalized."
+  (declare (optimize speed))
+  (let ((vertices (vertices box)))
+    (v2:with-components ((r (v2:vec (v2:dot axis (aref vertices 0)))))
+      (map nil
+           (lambda (x)
+             (let ((projection (v2:dot axis x)))
+               (setf rx (u:clamp rx rx projection)
+                     ry (u:clamp ry projection ry))))
+           vertices)
+      r)))
