@@ -64,5 +64,4 @@
    (:module "general"
     :components
     ((:file "package")
-     (:file "swizzle")
      (:file "shaping")))))
