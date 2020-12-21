@@ -51,6 +51,7 @@
    (:file "geometry/shapes/circle")
    (:file "geometry/shapes/rect")
    (:file "geometry/shapes/oriented-rect")
+   (:file "geometry/shapes/ray")
    (:file "geometry/shapes/set2d")
    (:file "geometry/shapes/set3d")
    (:file "geometry/package")
