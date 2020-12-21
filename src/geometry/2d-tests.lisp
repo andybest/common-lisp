@@ -59,23 +59,18 @@
 (defun %point2d/rect (point rect)
   "Helper function that does the work for POINT2D/RECT and RECT/POINT2D."
   (declare (optimize speed))
-  (v2:with-components ((p point)
-                       (min- (rect:min rect))
-                       (max- (rect:max rect)))
-    (and (<= min-x px max-x)
-         (<= min-y py max-y))))
+  (and (v2:<= (rect:min rect) point)
+       (v2:<= point (rect:max rect))))
 
 (u:fn-> point2d/rect (point2d:point rect:rect) boolean)
 (defun point2d/rect (point rect)
-  "Test if a 2D point is contained within a rect. See POINT2D/ORIENTED-RECT for
-testing against rotated rects."
+  "Test if a 2D point is contained within a rect."
   (declare (optimize speed))
   (%point2d/rect point rect))
 
 (u:fn-> rect/point2d (rect:rect point2d:point) boolean)
 (defun rect/point2d (rect point)
-  "Test if a rect contains a 2D point. See ORIENTED-RECT/POINT2D for testing
-against rotated rects."
+  "Test if a rect contains a 2D point."
   (declare (optimize speed))
   (%point2d/rect point rect))
 
