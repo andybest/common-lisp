@@ -51,4 +51,5 @@
    #:shape-set-2d/line2d
    #:shape-set-2d/oriented-rect
    #:shape-set-2d/point2d
-   #:shape-set-2d/rect))
+   #:shape-set-2d/rect
+   #:shape-set-2d/shape-set-2d))
