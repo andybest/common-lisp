@@ -22,15 +22,18 @@
    #:circle/circle
    #:circle/line2d
    #:circle/oriented-rect
+   #:circle/point2d
    #:circle/rect
    #:circle/shape-set-2d
    #:line2d/circle
    #:line2d/oriented-rect
+   #:line2d/point2d
    #:line2d/rect
    #:line2d/shape-set-2d
    #:oriented-rect/circle
    #:oriented-rect/line2d
    #:oriented-rect/oriented-rect
+   #:oriented-rect/point2d
    #:oriented-rect/rect
    #:oriented-rect/shape-set-2d
    #:point2d/circle
@@ -41,9 +44,11 @@
    #:rect/circle
    #:rect/line2d
    #:rect/oriented-rect
+   #:rect/point2d
    #:rect/rect
    #:rect/shape-set-2d
    #:shape-set-2d/circle
    #:shape-set-2d/line2d
    #:shape-set-2d/oriented-rect
+   #:shape-set-2d/point2d
    #:shape-set-2d/rect))
