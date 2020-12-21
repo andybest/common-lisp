@@ -1,5 +1,12 @@
 (in-package #:net.mfiano.lisp.origin.geometry)
 
+(u:fn-> point2d/point2d (point2d:point point2d:point) boolean)
+(declaim (inline point2d/point2d))
+(defun point2d/point2d (point1 point2)
+  "Test if two 2D points intersect."
+  (declare (optimize speed))
+  (v2:= point1 point2))
+
 (u:fn-> %point2d/line2d (point2d:point line2d:line) boolean)
 (declaim (inline %point2d/line2d))
 (defun %point2d/line2d (point line)

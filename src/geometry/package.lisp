@@ -39,6 +39,7 @@
    #:point2d/circle
    #:point2d/line2d
    #:point2d/oriented-rect
+   #:point2d/point2d
    #:point2d/rect
    #:point2d/shape-set-2d
    #:rect/circle
