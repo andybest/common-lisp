@@ -26,8 +26,8 @@
             (:constructor %rect)
             (:conc-name nil))
   (origin (point2d:point) :type point2d:point)
-  (half-extents (v2:vec 1 1) :type v2:vec)
-  (angle 0f0 :type u:f32))
+  (half-extents (v2:vec 1) :type v2:vec)
+  (angle 0.0 :type u:f32))
 
 (u:fn-> rect (&key (:origin point2d:point)
                    (:half-extents v2:vec)
@@ -36,8 +36,8 @@
 (declaim (inline rect))
 (defun rect (&key
                (origin (point2d:point))
-               (half-extents (v2:vec 1f0 1f0))
-               (angle 0f0))
+               (half-extents (v2:vec 1))
+               (angle 0.0))
   "Construct a rect whose center point is origined at ORIGIN, which extends
 along both axes by half of HALF-EXTENTS, with an ANGLE of rotation in radians."
   (declare (optimize speed))

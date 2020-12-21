@@ -31,7 +31,7 @@
 
 (u:fn-> point (&optional u:f32 u:f32 u:f32) point)
 (declaim (inline point))
-(defun point (&optional (x 0f0) (y 0f0) (z 0f0))
+(defun point (&optional (x 0.0) (y 0.0) (z 0.0))
   (declare (optimize speed))
   (v3::%vec x y z))
 
@@ -69,7 +69,7 @@
                              (i (v4:vec (1- (/ (* (- px vx) 2) vz))
                                         (1- (/ (* (- py vy) 2) vw))
                                         (1- (* pz 2))
-                                        1f0)))
+                                        1.0)))
           (m4:*v4! o m i)
           (when (zerop ow)
             (return-from unproject out))

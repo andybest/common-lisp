@@ -26,7 +26,7 @@
 
 (u:fn-> point (&optional u:f32 u:f32) point)
 (declaim (inline point))
-(defun point (&optional (x 0f0) (y 0f0))
+(defun point (&optional (x 0.0) (y 0.0))
   (declare (optimize speed))
   (v2::%vec x y))
 

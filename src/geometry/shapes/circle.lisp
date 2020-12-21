@@ -21,10 +21,10 @@
             (:constructor %circle)
             (:conc-name nil))
   (origin (point2d:point) :type point2d:point)
-  (radius 1f0 :type u:f32))
+  (radius 1.0 :type u:f32))
 
 (u:fn-> circle (&key (:origin point2d:point) (:radius u:f32)) circle)
 (declaim (inline circle))
-(defun circle (&key (origin (point2d:point)) (radius 1f0))
+(defun circle (&key (origin (point2d:point)) (radius 1.0))
   (declare (optimize speed))
   (%circle :origin origin :radius radius))

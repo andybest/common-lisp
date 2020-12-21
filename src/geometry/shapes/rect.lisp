@@ -31,11 +31,11 @@
             (:constructor %rect)
             (:conc-name nil))
   (origin (point2d:point) :type point2d:point)
-  (size (v2:vec 1f0 1f0) :type v2:vec))
+  (size (v2:vec 1) :type v2:vec))
 
 (u:fn-> rect (&key (:origin point2d:point) (:size v2:vec)) rect)
 (declaim (inline rect))
-(defun rect (&key (origin (point2d:point)) (size (v2:vec 1f0 1f0)))
+(defun rect (&key (origin (point2d:point)) (size (v2:vec 1)))
   "Construct a rect whose bottom-left corner is origined at ORIGIN, extending
 to SIZE units."
   (declare (optimize speed))
@@ -44,8 +44,8 @@ to SIZE units."
 (u:fn-> rect-from-min/max (&key (:min point2d:point) (:max point2d:point)) rect)
 (declaim (inline rect-from-min/max))
 (defun rect-from-min/max (&key
-                            (min (point2d:point -0.5 -0.5))
-                            (max (point2d:point 0.5 0.5)))
+                            (min (point2d:point -0.5))
+                            (max (point2d:point 0.5)))
   "Construct a rect from a MINIMUM and MAXIMUM points. These correspond to the
 bottom-left corner and upper-right corner of the resulting rectangle,
 respectively."
@@ -58,7 +58,7 @@ respectively."
   "Return the minimum point of a rect."
   (declare (optimize speed))
   (let ((origin (origin rect)))
-    (v2:vec (v2:min origin (v2:+ origin (size rect))))))
+    (v2:min origin (v2:+ origin (size rect)))))
 
 (u:fn-> max (rect) point2d:point)
 (declaim (inline max))
@@ -66,7 +66,7 @@ respectively."
   "Return the maximum point of a rect."
   (declare (optimize speed))
   (let ((origin (origin rect)))
-    (v2:vec (v2:max origin (v2:+ origin (size rect))))))
+    (v2:max origin (v2:+ origin (size rect)))))
 
 (u:fn-> vertices (rect) vector)
 (declaim (inline vertices))

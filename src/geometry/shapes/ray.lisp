@@ -7,6 +7,8 @@
    (#:v3 #:net.mfiano.lisp.origin.vec3))
   (:use #:cl)
   (:export
+   #:direction
+   #:origin
    #:ray
    #:ray-from-points))
 
@@ -19,11 +21,11 @@
             (:constructor %ray (origin direction))
             (:conc-name nil))
   (origin (point3d:point) :type point3d:point)
-  (direction (v3:vec 0f0 0f0 1f0) :type v3:vec))
+  (direction (v3:vec 0 0 1) :type v3:vec))
 
 (u:fn-> ray (&key (:origin point3d:point) (:direction v3:vec)) ray)
 (declaim (inline ray))
-(defun ray (&key (origin (point3d:point)) (direction (v3:vec 0f0 0f0 1f0)))
+(defun ray (&key (origin (point3d:point)) (direction (v3:vec 0 0 1)))
   (declare (optimize speed))
   (%ray origin (v3:normalize direction)))
 
