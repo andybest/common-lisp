@@ -4,26 +4,24 @@
 ;;; mathematical sense. Since line segments are so common in physics, we have
 ;;; chosen to use this convention (as many other game physics libraries do).
 
-(defpackage #:net.mfiano.lisp.origin.line3d
+(defpackage #:net.mfiano.lisp.origin.geometry.line3d
   (:local-nicknames
-   (#:point3d #:net.mfiano.lisp.origin.point3d)
+   (#:point3d #:net.mfiano.lisp.origin.geometry.point3d)
    (#:u #:net.mfiano.lisp.golden-utils)
    (#:v3 #:net.mfiano.lisp.origin.vec3))
   (:use #:cl)
   (:shadow
    #:length)
-  ;; type and accessors
-  (:export
-   #:line
-   #:start
-   #:end)
   (:export
    #:direction
+   #:end
    #:length
    #:length-squared
-   #:midpoint))
+   #:line
+   #:midpoint
+   #:start))
 
-(in-package #:net.mfiano.lisp.origin.line3d)
+(in-package #:net.mfiano.lisp.origin.geometry.line3d)
 
 (declaim (inline %line))
 (defstruct (line

@@ -1,41 +1,6 @@
-(in-package #:cl-user)
+(in-package #:net.mfiano.lisp.origin.geometry)
 
-(defpackage #:net.mfiano.lisp.origin.primitive-tests.2d
-  (:local-nicknames
-   (#:com #:net.mfiano.lisp.origin.common)
-   (#:circle #:net.mfiano.lisp.origin.circle)
-   (#:line #:net.mfiano.lisp.origin.line2d)
-   (#:m2 #:net.mfiano.lisp.origin.mat2)
-   (#:orect #:net.mfiano.lisp.origin.oriented-rect)
-   (#:point #:net.mfiano.lisp.origin.point2d)
-   (#:rect #:net.mfiano.lisp.origin.rect)
-   (#:u #:net.mfiano.lisp.golden-utils)
-   (#:v2 #:net.mfiano.lisp.origin.vec2))
-  (:use #:cl)
-  (:export
-   #:circle/circle
-   #:circle/oriented-rect
-   #:circle/rect
-   #:circle/line
-   #:line/circle
-   #:line/oriented-rect
-   #:line/rect
-   #:oriented-rect/circle
-   #:oriented-rect/line
-   #:oriented-rect/oriented-rect
-   #:oriented-rect/rect
-   #:point-in-rect-p
-   #:point-in-circle-p
-   #:point-in-oriented-rect-p
-   #:point-on-line-p
-   #:rect/rect
-   #:rect/circle
-   #:rect/line
-   #:rect/oriented-rect))
-
-(in-package #:net.mfiano.lisp.origin.primitive-tests.2d)
-
-(u:fn-> point-on-line-p (point:point line:line &key (:rel u:f32) (:abs u:f32))
+(u:fn-> point-on-line-p (point2d:point line:line &key (:rel u:f32) (:abs u:f32))
         boolean)
 (defun point-on-line-p (point line &key (rel 1e-7) (abs rel))
   "Test if a 2D point falls on a 2D line."
@@ -50,14 +15,14 @@
            (b (- sy (* m sx))))
       (com:= py (+ (* m px) b) rel abs))))
 
-(u:fn-> point-in-circle-p (point:point circle:circle) boolean)
+(u:fn-> point-in-circle-p (point2d:point circle:circle) boolean)
 (defun point-in-circle-p (point circle)
   "Test if a point is contained within a circle."
   (declare (optimize speed))
-  (let ((line (line:line :start point :end (circle:position circle))))
+  (let ((line (line:line :start point :end (circle:origin circle))))
     (< (line:length-squared line) (expt (circle:radius circle) 2))))
 
-(u:fn-> point-in-rect-p (point:point rect:rect) boolean)
+(u:fn-> point-in-rect-p (point2d:point rect:rect) boolean)
 (defun point-in-rect-p (point rect)
   "Test if a point is contained within a rect. See POINT-IN-ORIENTED-RECT-P for
 testing against rotated rectangles."
@@ -68,12 +33,12 @@ testing against rotated rectangles."
     (and (<= min-x px max-x)
          (<= min-y py max-y))))
 
-(u:fn-> point-in-oriented-rect-p (point:point orect:rect) boolean)
+(u:fn-> point-in-oriented-rect-p (point2d:point orect:rect) boolean)
 (defun point-in-oriented-rect-p (point rect)
   "Test if a point is contained within an oriented rect. See POINT-IN-RECT-P for
 a less expanesive test if the rectangle is axis-aligned."
   (declare (optimize speed))
-  (let ((vector (v2:- point (orect:position rect)))
+  (let ((vector (v2:- point (orect:origin rect)))
         (angle (- (orect:angle rect))))
     (m2:*v2! vector (m2:rotation-from-angle angle) vector)
     (point-in-rect-p (v2:+ vector (orect:half-extents rect))
@@ -90,13 +55,13 @@ a less expanesive test if the rectangle is axis-aligned."
   ;; the squared length of that line is less than the squared radius of the
   ;; circle, there is an intersection.
   (let* ((line-start (line:start line))
-         (circle-position (circle:position circle))
+         (circle-origin (circle:origin circle))
          (ab (v2:- (line:end line) line-start))
-         (t-param (/ (v2:dot (v2:- circle-position line-start) ab)
+         (t-param (/ (v2:dot (v2:- circle-origin line-start) ab)
                      (v2:length-squared ab))))
     (when (<= 0.0 t-param 1.0)
       (< (line:length-squared
-          (line:line :start circle-position
+          (line:line :start circle-origin
                      :end (v2:+ line-start (v2:scale ab t-param))))
          (expt (circle:radius circle) 2)))))
 
@@ -159,14 +124,14 @@ ORIENTED-RECT/LINE."
   ;; Here, we construct a line that is in the local space of the oriented rect.
   ;; In its local space, the oriented rect is just an axis-aligned rect, so we
   ;; can just use the existing LINE/RECT test.
-  (let* ((rect-position (orect:position rect))
+  (let* ((rect-origin (orect:origin rect))
          (half-extents (orect:half-extents rect))
-         (vector (v2:- (line:start line) rect-position))
+         (vector (v2:- (line:start line) rect-origin))
          (rotation (m2:rotation-from-angle (- (orect:angle rect))))
          (local-line (line:line)))
     (m2:*v2! vector rotation vector)
     (v2:+! (line:start local-line) vector half-extents)
-    (v2:-! vector (line:end line) rect-position)
+    (v2:-! vector (line:end line) rect-origin)
     (m2:*v2! vector rotation vector)
     (v2:+! (line:end local-line) vector half-extents)
     (line/rect local-line
@@ -192,8 +157,8 @@ ORIENTED-RECT/LINE."
   ;; of the line is less than the sum of the two circle radii, we have an
   ;; intersection. To avoid the square root, we get the squared length of the
   ;; line and compare it to the squared sum of the radii.
-  (<= (line:length-squared (line:line :start (circle:position circle1)
-                                      :end (circle:position circle2)))
+  (<= (line:length-squared (line:line :start (circle:origin circle1)
+                                      :end (circle:origin circle2)))
       (expt (+ (circle:radius circle1) (circle:radius circle2)) 2)))
 
 (u:fn-> %circle/rect (circle:circle rect:rect) boolean)
@@ -206,10 +171,10 @@ ORIENTED-RECT/LINE."
   ;; rect. Then, we draw a line from the closest point to the center of the
   ;; circle, and if it's less than the squared radius of the circle, they
   ;; intersect.
-  (let* ((circle-position (circle:position circle))
-         (closest-point (v2:copy circle-position)))
+  (let* ((circle-origin (circle:origin circle))
+         (closest-point (v2:copy circle-origin)))
     (v2:clamp! closest-point closest-point (rect:min rect) (rect:max rect))
-    (<= (line:length-squared (line:line :start circle-position
+    (<= (line:length-squared (line:line :start circle-origin
                                         :end closest-point))
         (expt (circle:radius circle) 2))))
 
@@ -237,10 +202,10 @@ ORIENTED-RECT/CIRCLE."
   ;; rect. We can then perform a check with the existing CIRCLE/RECT test to see
   ;; if they intersect.
   (let ((half-extents (orect:half-extents rect))
-        (vector (v2:- (circle:position circle) (orect:position rect)))
+        (vector (v2:- (circle:origin circle) (orect:origin rect)))
         (rotation (m2:rotation-from-angle (- (orect:angle rect)))))
     (m2:*v2! vector rotation vector)
-    (circle/rect (circle:circle :position (v2:+ vector half-extents)
+    (circle/rect (circle:circle :origin (v2:+ vector half-extents)
                                 :radius (circle:radius circle))
                  (rect:rect :size (v2:scale half-extents 2.0)))))
 
@@ -301,13 +266,13 @@ ORIENTED-RECT/RECT."
   (declare (optimize speed))
   (let* ((angle1 (orect:angle rect1))
          (half-extents1 (orect:half-extents rect1))
-         (position2 (v2:copy (orect:position rect2)))
+         (origin2 (v2:copy (orect:origin rect2)))
          (local1 (rect:rect :size (v2:scale half-extents1 2.0)))
-         (local2 (orect:rect :position position2
+         (local2 (orect:rect :origin origin2
                              :half-extents (orect:half-extents rect2)
                              :angle (- (orect:angle rect2) angle1)))
-         (vector (v2:- position2 (orect:position rect1)))
+         (vector (v2:- origin2 (orect:origin rect1)))
          (rotation (m2:rotation-from-angle (- angle1))))
     (m2:*v2! vector rotation vector)
-    (v2:+! (orect:position local2) vector half-extents1)
+    (v2:+! (orect:origin local2) vector half-extents1)
     (rect/oriented-rect local1 local2)))

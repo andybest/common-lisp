@@ -5,45 +5,41 @@
 ;;;; two different representations: an origin and size with RECT, and a minimum
 ;;;; and maximum point with RECT-FROM-MIN/MAX.
 
-(defpackage #:net.mfiano.lisp.origin.rect
+(defpackage #:net.mfiano.lisp.origin.geometry.rect
   (:local-nicknames
-   (#:point2d #:net.mfiano.lisp.origin.point2d)
+   (#:point2d #:net.mfiano.lisp.origin.geometry.point2d)
    (#:u #:net.mfiano.lisp.golden-utils)
    (#:v2 #:net.mfiano.lisp.origin.vec2))
   (:use #:cl)
   (:shadow
    #:max
-   #:min
-   #:position)
-  ;; type and accessors
+   #:min)
   (:export
-   #:rect
-   #:position
-   #:size)
-  ;; operations
-  (:export
-   #:rect-from-min/max
    #:max
-   #:min))
+   #:min
+   #:origin
+   #:rect
+   #:rect-from-min/max
+   #:rect-p
+   #:size))
 
-(in-package #:net.mfiano.lisp.origin.rect)
+(in-package #:net.mfiano.lisp.origin.geometry.rect)
 
 (declaim (inline %rect))
 (defstruct (rect
-            (:predicate nil)
             (:copier nil)
             (:constructor %rect)
             (:conc-name nil))
-  (position (point2d:point) :type point2d:point)
+  (origin (point2d:point) :type point2d:point)
   (size (v2:vec 1f0 1f0) :type v2:vec))
 
-(u:fn-> rect (&key (:position point2d:point) (:size v2:vec)) rect)
+(u:fn-> rect (&key (:origin point2d:point) (:size v2:vec)) rect)
 (declaim (inline rect))
-(defun rect (&key (position (point2d:point)) (size (v2:vec 1f0 1f0)))
-  "Construct a rect whose bottom-left corner is origined at POSITION, extending
+(defun rect (&key (origin (point2d:point)) (size (v2:vec 1f0 1f0)))
+  "Construct a rect whose bottom-left corner is origined at ORIGIN, extending
 to SIZE units."
   (declare (optimize speed))
-  (%rect :position position :size size))
+  (%rect :origin origin :size size))
 
 (u:fn-> rect-from-min/max (&key (:min point2d:point) (:max point2d:point)) rect)
 (declaim (inline rect-from-min/max))
@@ -54,23 +50,23 @@ to SIZE units."
 bottom-left corner and upper-right corner of the resulting rectangle,
 respectively."
   (declare (optimize speed))
-  (%rect :position min :size (v2:- max min)))
+  (%rect :origin min :size (v2:- max min)))
 
 (u:fn-> min (rect) point2d:point)
 (declaim (inline min))
 (defun min (rect)
   "Return the minimum point of a rect."
   (declare (optimize speed))
-  (let ((position (position rect)))
-    (v2:vec (v2:min position (v2:+ position (size rect))))))
+  (let ((origin (origin rect)))
+    (v2:vec (v2:min origin (v2:+ origin (size rect))))))
 
 (u:fn-> max (rect) point2d:point)
 (declaim (inline max))
 (defun max (rect)
   "Return the maximum point of a rect."
   (declare (optimize speed))
-  (let ((position (position rect)))
-    (v2:vec (v2:max position (v2:+ position (size rect))))))
+  (let ((origin (origin rect)))
+    (v2:vec (v2:max origin (v2:+ origin (size rect))))))
 
 (u:fn-> vertices (rect) vector)
 (declaim (inline vertices))

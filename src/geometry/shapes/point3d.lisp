@@ -3,7 +3,7 @@
 ;;; 3D points are just type aliased to be vec3, with a convenience constructor
 ;;; function.
 
-(defpackage #:net.mfiano.lisp.origin.point3d
+(defpackage #:net.mfiano.lisp.origin.geometry.point3d
   (:local-nicknames
    (#:u #:net.mfiano.lisp.golden-utils)
    (#:v3 #:net.mfiano.lisp.origin.vec3)
@@ -15,20 +15,17 @@
    #:x
    #:y
    #:z)
-  ;; type and accessors
-  (:export
-   #:point
-   #:x
-   #:y
-   #:z)
-  ;; operations
   (:export
    #:distance
    #:distance-squared
+   #:point
    #:translate
-   #:unproject))
+   #:unproject
+   #:x
+   #:y
+   #:z))
 
-(in-package #:net.mfiano.lisp.origin.point3d)
+(in-package #:net.mfiano.lisp.origin.geometry.point3d)
 
 (deftype point () 'v3:vec)
 

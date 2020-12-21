@@ -3,7 +3,7 @@
 ;;; 2D points are just type aliased to be vec2, with a convenience constructor
 ;;; function.
 
-(defpackage #:net.mfiano.lisp.origin.point2d
+(defpackage #:net.mfiano.lisp.origin.geometry.point2d
   (:local-nicknames
    (#:u #:net.mfiano.lisp.golden-utils)
    (#:v2 #:net.mfiano.lisp.origin.vec2))
@@ -12,18 +12,15 @@
    #:net.mfiano.lisp.origin.vec2
    #:x
    #:y)
-  ;; type and accessors
-  (:export
-   #:point
-   #:x
-   #:y)
-  ;; operations
   (:export
    #:distance
    #:distance-squared
-   #:translate))
+   #:point
+   #:translate
+   #:x
+   #:y))
 
-(in-package #:net.mfiano.lisp.origin.point2d)
+(in-package #:net.mfiano.lisp.origin.geometry.point2d)
 
 (deftype point () 'v2:vec)
 
