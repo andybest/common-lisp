@@ -15,13 +15,13 @@
    #:angle
    #:half-extents
    #:origin
-   #:rect))
+   #:rect
+   #:rect-p))
 
 (in-package #:net.mfiano.lisp.origin.geometry.oriented-rect)
 
 (declaim (inline %rect))
 (defstruct (rect
-            (:predicate nil)
             (:copier nil)
             (:constructor %rect)
             (:conc-name nil))
