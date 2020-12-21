@@ -4,7 +4,7 @@
   (:local-nicknames
    (#:com #:net.mfiano.lisp.origin.common)
    (#:circle #:net.mfiano.lisp.origin.geometry.circle)
-   (#:line #:net.mfiano.lisp.origin.geometry.line2d)
+   (#:line2d #:net.mfiano.lisp.origin.geometry.line2d)
    (#:m2 #:net.mfiano.lisp.origin.mat2)
    (#:orect #:net.mfiano.lisp.origin.geometry.oriented-rect)
    (#:point2d #:net.mfiano.lisp.origin.geometry.point2d)
@@ -20,21 +20,30 @@
   ;; collision tests
   (:export
    #:circle/circle
+   #:circle/line2d
    #:circle/oriented-rect
    #:circle/rect
-   #:circle/line
-   #:line/circle
-   #:line/oriented-rect
-   #:line/rect
+   #:circle/shape-set-2d
+   #:line2d/circle
+   #:line2d/oriented-rect
+   #:line2d/rect
+   #:line2d/shape-set-2d
    #:oriented-rect/circle
-   #:oriented-rect/line
+   #:oriented-rect/line2d
    #:oriented-rect/oriented-rect
    #:oriented-rect/rect
-   #:point-in-rect-p
-   #:point-in-circle-p
-   #:point-in-oriented-rect-p
-   #:point-on-line-p
-   #:rect/rect
+   #:oriented-rect/shape-set-2d
+   #:point2d/circle
+   #:point2d/line2d
+   #:point2d/oriented-rect
+   #:point2d/rect
+   #:point2d/shape-set-2d
    #:rect/circle
-   #:rect/line
-   #:rect/oriented-rect))
+   #:rect/line2d
+   #:rect/oriented-rect
+   #:rect/rect
+   #:rect/shape-set-2d
+   #:shape-set-2d/circle
+   #:shape-set-2d/line2d
+   #:shape-set-2d/oriented-rect
+   #:shape-set-2d/rect))

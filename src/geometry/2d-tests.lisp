@@ -1,13 +1,13 @@
 (in-package #:net.mfiano.lisp.origin.geometry)
 
-(u:fn-> point-on-line-p (point2d:point line:line &key (:rel u:f32) (:abs u:f32))
+(u:fn-> point2d/line2d (point2d:point line2d:line &key (:rel u:f32) (:abs u:f32))
         boolean)
-(defun point-on-line-p (point line &key (rel 1e-7) (abs rel))
+(defun point2d/line2d (point line &key (rel 1e-7) (abs rel))
   "Test if a 2D point falls on a 2D line."
   (declare (optimize speed))
   (v2:with-components ((p point)
-                       (s (line:start line))
-                       (e (line:end line)))
+                       (s (line2d:start line))
+                       (e (line2d:end line)))
     (assert (/= sx ex))
     (let* ((dy (- ey sy))
            (dx (- ex sx))
@@ -15,16 +15,16 @@
            (b (- sy (* m sx))))
       (com:= py (+ (* m px) b) rel abs))))
 
-(u:fn-> point-in-circle-p (point2d:point circle:circle) boolean)
-(defun point-in-circle-p (point circle)
-  "Test if a point is contained within a circle."
+(u:fn-> point2d/circle (point2d:point circle:circle) boolean)
+(defun point2d/circle (point circle)
+  "Test if a 2D point is contained within a circle."
   (declare (optimize speed))
-  (let ((line (line:line :start point :end (circle:origin circle))))
-    (< (line:length-squared line) (expt (circle:radius circle) 2))))
+  (let ((line (line2d:line :start point :end (circle:origin circle))))
+    (< (line2d:length-squared line) (expt (circle:radius circle) 2))))
 
-(u:fn-> point-in-rect-p (point2d:point rect:rect) boolean)
-(defun point-in-rect-p (point rect)
-  "Test if a point is contained within a rect. See POINT-IN-ORIENTED-RECT-P for
+(u:fn-> point2d/rect (point2d:point rect:rect) boolean)
+(defun point2d/rect (point rect)
+  "Test if a 2D point is contained within a rect. See POINT2D/ORIENTED-RECT for
 testing against rotated rectangles."
   (declare (optimize speed))
   (v2:with-components ((p point)
@@ -33,66 +33,78 @@ testing against rotated rectangles."
     (and (<= min-x px max-x)
          (<= min-y py max-y))))
 
-(u:fn-> point-in-oriented-rect-p (point2d:point orect:rect) boolean)
-(defun point-in-oriented-rect-p (point rect)
-  "Test if a point is contained within an oriented rect. See POINT-IN-RECT-P for
+(u:fn-> point/oriented-rect (point2d:point orect:rect) boolean)
+(defun point2d/oriented-rect (point rect)
+  "Test if a 2D point is contained within an oriented rect. See POINT2D/RECT for
 a less expanesive test if the rectangle is axis-aligned."
   (declare (optimize speed))
   (let ((vector (v2:- point (orect:origin rect)))
         (angle (- (orect:angle rect))))
     (m2:*v2! vector (m2:rotation-from-angle angle) vector)
-    (point-in-rect-p (v2:+ vector (orect:half-extents rect))
-                     (rect:rect :size (v2:scale (orect:half-extents rect)
-                                                2f0)))))
+    (point2d/rect (v2:+ vector (orect:half-extents rect))
+                  (rect:rect :size (v2:scale (orect:half-extents rect) 2f0)))))
 
-(u:fn-> %line/circle (line:line circle:circle) boolean)
-(declaim (inline %line/circle))
-(defun %line/circle (line circle)
-  "Helper function that does the work for LINE/CIRCLE and CIRCLE/LINE."
+(u:fn-> point2d/shape-set-2d (point2d:point shape-set-2d:shape-set) boolean)
+(defun point2d/shape-set-2d (point shape-set)
+  "Test if a 2D point is contained within any of a 2D shape set's shapes."
+  (declare (optimize speed))
+  (let ((circles (shape-set-2d:circles shape-set))
+        (rects (shape-set-2d:rects shape-set)))
+    (dotimes (i (length circles))
+      (when (point2d/circle point (svref circles i))
+        (return-from point2d/shape-set-2d t)))
+    (dotimes (i (length rects))
+      (when (point2d/rect point (svref rects i))
+        (return-from point2d/shape-set-2d t)))))
+
+(u:fn-> %line2d/circle (line2d:line circle:circle) boolean)
+(declaim (inline %line2d/circle))
+(defun %line2d/circle (line circle)
+  "Helper function that does the work for LINE2D/CIRCLE and CIRCLE/LINE2D."
   (declare (optimize speed))
   ;; Here, we find the closest point to the center of the circle on the line.
   ;; Then we draw a line from the center of the circle to this closest point. If
   ;; the squared length of that line is less than the squared radius of the
   ;; circle, there is an intersection.
-  (let* ((line-start (line:start line))
+  (let* ((line-start (line2d:start line))
          (circle-origin (circle:origin circle))
-         (ab (v2:- (line:end line) line-start))
+         (ab (v2:- (line2d:end line) line-start))
          (t-param (/ (v2:dot (v2:- circle-origin line-start) ab)
                      (v2:length-squared ab))))
     (when (<= 0.0 t-param 1.0)
-      (< (line:length-squared
-          (line:line :start circle-origin
-                     :end (v2:+ line-start (v2:scale ab t-param))))
+      (< (line2d:length-squared
+          (line2d:line :start circle-origin
+                       :end (v2:+ line-start (v2:scale ab t-param))))
          (expt (circle:radius circle) 2)))))
 
-(u:fn-> line/circle (line:line circle:circle) boolean)
-(defun line/circle (line circle)
-  "Test if a line intersects a circle."
+(u:fn-> line2d/circle (line2d:line circle:circle) boolean)
+(defun line2d/circle (line circle)
+  "Test if a 2D line intersects a circle."
   (declare (optimize speed))
-  (%line/circle line circle))
+  (%line2d/circle line circle))
 
-(u:fn-> circle/line (circle:circle line:line) boolean)
-(defun circle/line (circle line)
-  "Test if a circle intersects a line."
+(u:fn-> circle/line2d (circle:circle line2d:line) boolean)
+(defun circle/line2d (circle line)
+  "Test if a circle intersects a 2D line."
   (declare (optimize speed))
-  (%line/circle line circle))
+  (%line2d/circle line circle))
 
-(u:fn-> %line/rect (line:line rect:rect) boolean)
-(declaim (inline %line/rect))
-(defun %line/rect (line rect)
+(u:fn-> %line2d/rect (line2d:line rect:rect) boolean)
+(declaim (inline %line2d/rect))
+(defun %line2d/rect (line rect)
   "Helper function that does the work for LINE/RECT and RECT/LINE."
   (declare (optimize speed))
-  (let ((start (line:start line)))
+  (let ((start (line2d:start line)))
     ;; First, check if either end point of the line is contained in the rect. If
     ;; yes, we have an intersection and don't need to continue with the more
     ;; expensive test.
-    (when (or (point-in-rect-p start rect)
-              (point-in-rect-p (line:end line) rect))
-      (return-from %line/rect t))
+    (when (or (point2d/rect start rect)
+              (point2d/rect (line2d:end line) rect))
+      (return-from %line2d/rect t))
     ;; Perform a raycast against the rect with a ray constructed from the line.
     ;; If the ray hits, and the length of the ray is less than the length of the
     ;; line, there is an interesection.
-    (let ((inv-dir (v2:invert (line:direction line))))
+    (let ((inv-dir (v2:invert (line2d:direction line))))
       (v2:with-components ((min- (v2:* (v2:- (rect:min rect) start) inv-dir))
                            (max- (v2:* (v2:- (rect:max rect) start) inv-dir)))
         (let ((t-min (max (min min-x max-x) (min min-y max-y)))
@@ -101,23 +113,23 @@ a less expanesive test if the rectangle is axis-aligned."
                      (<= t-min t-max))
             (let ((t-param (if (minusp t-min) t-max t-min)))
               (and (plusp t-param)
-                   (< (expt t-param 2) (line:length-squared line))))))))))
+                   (< (expt t-param 2) (line2d:length-squared line))))))))))
 
-(u:fn-> line/rect (line:line rect:rect) boolean)
-(defun line/rect (line rect)
-  "Test if a line intersects a rect."
+(u:fn-> line2d/rect (line2d:line rect:rect) boolean)
+(defun line2d/rect (line rect)
+  "Test if a 2D line intersects a rect."
   (declare (optimize speed))
-  (%line/rect line rect))
+  (%line2d/rect line rect))
 
-(u:fn-> rect/line (rect:rect line:line) boolean)
-(defun rect/line (rect line)
-  "Test if a rect intersects a line."
+(u:fn-> rect/line2d (rect:rect line2d:line) boolean)
+(defun rect/line2d (rect line)
+  "Test if a rect intersects a 2D line."
   (declare (optimize speed))
-  (%line/rect line rect))
+  (%line2d/rect line rect))
 
-(u:fn-> %line/oriented-rect (line:line orect:rect) boolean)
-(declaim (inline %line/oriented-rect))
-(defun %line/oriented-rect (line rect)
+(u:fn-> %line2d/oriented-rect (line2d:line orect:rect) boolean)
+(declaim (inline %line2d/oriented-rect))
+(defun %line2d/oriented-rect (line rect)
   "Helper function that does the work for LINE/ORIENTED-RECT and
 ORIENTED-RECT/LINE."
   (declare (optimize speed))
@@ -126,28 +138,28 @@ ORIENTED-RECT/LINE."
   ;; can just use the existing LINE/RECT test.
   (let* ((rect-origin (orect:origin rect))
          (half-extents (orect:half-extents rect))
-         (vector (v2:- (line:start line) rect-origin))
+         (vector (v2:- (line2d:start line) rect-origin))
          (rotation (m2:rotation-from-angle (- (orect:angle rect))))
-         (local-line (line:line)))
+         (local-line (line2d:line)))
     (m2:*v2! vector rotation vector)
-    (v2:+! (line:start local-line) vector half-extents)
-    (v2:-! vector (line:end line) rect-origin)
+    (v2:+! (line2d:start local-line) vector half-extents)
+    (v2:-! vector (line2d:end line) rect-origin)
     (m2:*v2! vector rotation vector)
-    (v2:+! (line:end local-line) vector half-extents)
-    (line/rect local-line
-               (rect:rect :size (v2:scale (orect:half-extents rect) 2f0)))))
+    (v2:+! (line2d:end local-line) vector half-extents)
+    (line2d/rect local-line
+                 (rect:rect :size (v2:scale (orect:half-extents rect) 2f0)))))
 
-(u:fn-> line/oriented-rect (line:line orect:rect) boolean)
-(defun line/oriented-rect (line rect)
-  "Test if a line intersects an oriented rect."
+(u:fn-> line2d/oriented-rect (line2d:line orect:rect) boolean)
+(defun line2d/oriented-rect (line rect)
+  "Test if a 2D line intersects an oriented rect."
   (declare (optimize speed))
-  (%line/oriented-rect line rect))
+  (%line2d/oriented-rect line rect))
 
-(u:fn-> oriented-rect/line (orect:rect line:line) boolean)
-(defun oriented-rect/line (rect line)
-  "Test if an oriented rect intersects a line."
+(u:fn-> oriented-rect/line2d (orect:rect line2d:line) boolean)
+(defun oriented-rect/line2d (rect line)
+  "Test if an oriented rect intersects a 2D line."
   (declare (optimize speed))
-  (%line/oriented-rect line rect))
+  (%line2d/oriented-rect line rect))
 
 (u:fn-> circle/circle (circle:circle circle:circle) boolean)
 (defun circle/circle (circle1 circle2)
@@ -157,8 +169,8 @@ ORIENTED-RECT/LINE."
   ;; of the line is less than the sum of the two circle radii, we have an
   ;; intersection. To avoid the square root, we get the squared length of the
   ;; line and compare it to the squared sum of the radii.
-  (<= (line:length-squared (line:line :start (circle:origin circle1)
-                                      :end (circle:origin circle2)))
+  (<= (line2d:length-squared (line2d:line :start (circle:origin circle1)
+                                          :end (circle:origin circle2)))
       (expt (+ (circle:radius circle1) (circle:radius circle2)) 2)))
 
 (u:fn-> %circle/rect (circle:circle rect:rect) boolean)
@@ -174,8 +186,8 @@ ORIENTED-RECT/LINE."
   (let* ((circle-origin (circle:origin circle))
          (closest-point (v2:copy circle-origin)))
     (v2:clamp! closest-point closest-point (rect:min rect) (rect:max rect))
-    (<= (line:length-squared (line:line :start circle-origin
-                                        :end closest-point))
+    (<= (line2d:length-squared (line2d:line :start circle-origin
+                                            :end closest-point))
         (expt (circle:radius circle) 2))))
 
 (u:fn-> circle/rect (circle:circle rect:rect) boolean)
@@ -276,3 +288,111 @@ ORIENTED-RECT/RECT."
     (m2:*v2! vector rotation vector)
     (v2:+! (orect:origin local2) vector half-extents1)
     (rect/oriented-rect local1 local2)))
+
+(u:fn-> %shape-set-2d/line2d (shape-set-2d:shape-set line2d:line) boolean)
+(declaim (inline %shape-set-2d/line-2d))
+(defun %shape-set-2d/line2d (shape-set line)
+  "Helper function that does the work for SHAPE-SET-2D/LINE2D and
+LINE2D/SHAPE-SET-2D."
+  (declare (optimize speed))
+  (let ((circles (shape-set-2d:circles shape-set))
+        (rects (shape-set-2d:rects shape-set)))
+    (dotimes (i (length circles))
+      (when (line2d/circle line (svref circles i))
+        (return-from %shape-set-2d/line2d t)))
+    (dotimes (i (length rects))
+      (when (line2d/rect line (svref rects i))
+        (return-from %shape-set-2d/line2d t)))))
+
+(u:fn-> shape-set-2d/line2d (shape-set-2d:shape-set line2d:line) boolean)
+(defun shape-set-2d/line2d (shape-set line)
+  "Test if any of a 2D shape set's shapes intersects with a 2D line."
+  (declare (optimize speed))
+  (%shape-set-2d/line2d shape-set line))
+
+(u:fn-> line2d/shape-set-2d (line2d:line shape-set-2d:shape-set) boolean)
+(defun line2d/shape-set-2d (line shape-set)
+  "Test if a 2D line intersects with any of a 2D shape set's shapes."
+  (declare (optimize speed))
+  (%shape-set-2d/line2d shape-set line))
+
+(u:fn-> %shape-set-2d/circle (shape-set-2d:shape-set circle:circle) boolean)
+(declaim (inline %shape-set-2d/circle))
+(defun %shape-set-2d/circle (shape-set circle)
+  "Helper function that does the work for SHAPE-SET-2D/CIRCLE and
+CIRCLE/SHAPE-SET-2D."
+  (declare (optimize speed))
+  (let ((circles (shape-set-2d:circles shape-set))
+        (rects (shape-set-2d:rects shape-set)))
+    (dotimes (i (length circles))
+      (when (circle/circle circle (svref circles i))
+        (return-from %shape-set-2d/circle t)))
+    (dotimes (i (length rects))
+      (when (circle/rect circle (svref rects i))
+        (return-from %shape-set-2d/circle t)))))
+
+(u:fn-> shape-set-2d/circle (shape-set-2d:shape-set circle:circle) boolean)
+(defun shape-set-2d/circle (shape-set circle)
+  "Test if any of a 2D shape set's shapes intersects with a circle."
+  (declare (optimize speed))
+  (%shape-set-2d/circle shape-set circle))
+
+(u:fn-> circle/shape-set-2d (circle:circle shape-set-2d:shape-set) boolean)
+(defun circle/shape-set-2d (circle shape-set)
+  "Test if a circle intersects with any of a 2D shape set's shapes."
+  (declare (optimize speed))
+  (%shape-set-2d/circle shape-set circle))
+
+(u:fn-> %shape-set-2d/rect (shape-set-2d:shape-set rect:rect) boolean)
+(declaim (inline %shape-set-2d/rect))
+(defun %shape-set-2d/rect (shape-set rect)
+  "Helper function that does the work for SHAPE-SET-2D/RECT and
+RECT/SHAPE-SET-2D."
+  (declare (optimize speed))
+  (let ((circles (shape-set-2d:circles shape-set))
+        (rects (shape-set-2d:rects shape-set)))
+    (dotimes (i (length circles))
+      (when (rect/circle rect (svref circles i))
+        (return-from %shape-set-2d/rect t)))
+    (dotimes (i (length rects))
+      (when (rect/rect rect (svref rects i))
+        (return-from %shape-set-2d/rect t)))))
+
+(u:fn-> shape-set-2d/rect (shape-set-2d:shape-set rect:rect) boolean)
+(defun shape-set-2d/rect (shape-set rect)
+  "Test if any of a 2D shape set's shapes intersects with a rect."
+  (declare (optimize speed))
+  (%shape-set-2d/rect shape-set rect))
+
+(u:fn-> rect/shape-set-2d (rect:rect shape-set-2d:shape-set) boolean)
+(defun rect/shape-set-2d (rect shape-set)
+  "Test if a rect intersects with any of a 2D shape set's shapes."
+  (declare (optimize speed))
+  (%shape-set-2d/rect shape-set rect))
+
+(u:fn-> %shape-set-2d/oriented-rect (shape-set-2d:shape-set orect:rect) boolean)
+(declaim (inline %shape-set-2d/oriented-rect))
+(defun %shape-set-2d/oriented-rect (shape-set rect)
+  "Helper function that does the work for SHAPE-SET-2D/ORIENTED-RECT and
+ORIENTED-RECT/SHAPE-SET-2D."
+  (declare (optimize speed))
+  (let ((circles (shape-set-2d:circles shape-set))
+        (rects (shape-set-2d:rects shape-set)))
+    (dotimes (i (length circles))
+      (when (oriented-rect/circle rect (svref circles i))
+        (return-from %shape-set-2d/oriented-rect t)))
+    (dotimes (i (length rects))
+      (when (oriented-rect/rect rect (svref rects i))
+        (return-from %shape-set-2d/oriented-rect t)))))
+
+(u:fn-> shape-set-2d/oriented-rect (shape-set-2d:shape-set orect:rect) boolean)
+(defun shape-set-2d/oriented-rect (shape-set rect)
+  "Test if any of a 2D shape set's shapes intersects with an oriented rect."
+  (declare (optimize speed))
+  (%shape-set-2d/oriented-rect shape-set rect))
+
+(u:fn-> oriented-rect/shape-set-2d (orect:rect shape-set-2d:shape-set) boolean)
+(defun oriented-rect/shape-set-2d (rect shape-set)
+  "Test if an oriented rect intersects with any of a 2D shape set's shapes."
+  (declare (optimize speed))
+  (%shape-set-2d/oriented-rect shape-set rect))
