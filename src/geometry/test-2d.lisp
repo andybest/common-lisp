@@ -40,6 +40,7 @@
   "Helper function that does the work for POINT2D/CIRCLE and CIRCLE/POINT2D."
   (declare (optimize speed))
   (let ((line (line2d:line :start point :end (circle:origin circle))))
+    (declare (dynamic-extent line))
     (< (line2d:length-squared line) (expt (circle:radius circle) 2))))
 
 (u:fn-> point2d/circle (point2d:point circle:circle) boolean)
@@ -82,6 +83,7 @@ ORIENTED-RECT/POINT2D."
   (declare (optimize speed))
   (let ((vector (v2:- point (orect:origin rect)))
         (angle (- (orect:angle rect))))
+    (declare (dynamic-extent vector))
     (m2:*v2! vector (m2:rotation-from-angle angle) vector)
     (point2d/rect (v2:+ vector (orect:half-extents rect))
                   (rect:rect :size (v2:scale (orect:half-extents rect) 2f0)))))
@@ -143,8 +145,9 @@ SHAPE-SET-2D/POINT2D."
   (let* ((line-start (line2d:start line))
          (circle-origin (circle:origin circle))
          (ab (v2:- (line2d:end line) line-start))
-         (t-param (/ (v2:dot (v2:- circle-origin line-start) ab)
-                     (v2:length-squared ab))))
+         (direction (v2:- circle-origin line-start))
+         (t-param (/ (v2:dot direction ab) (v2:length-squared ab))))
+    (declare (dynamic-extent ab direction))
     (when (<= 0.0 t-param 1.0)
       (< (line2d:length-squared
           (line2d:line :start circle-origin
@@ -179,6 +182,7 @@ SHAPE-SET-2D/POINT2D."
     ;; If the ray hits, and the length of the ray is less than the length of the
     ;; line, there is an interesection.
     (let ((inv-dir (v2:invert (line2d:direction line))))
+      (declare (dynamic-extent inv-dir))
       (v2:with-components ((min- (v2:* (v2:- (rect:min rect) start) inv-dir))
                            (max- (v2:* (v2:- (rect:max rect) start) inv-dir)))
         (let ((t-min (max (min min-x max-x) (min min-y max-y)))
@@ -215,6 +219,7 @@ ORIENTED-RECT/LINE."
          (vector (v2:- (line2d:start line) rect-origin))
          (rotation (m2:rotation-from-angle (- (orect:angle rect))))
          (local-line (line2d:line)))
+    (declare (dynamic-extent vector rotation local-line))
     (m2:*v2! vector rotation vector)
     (v2:+! (line2d:start local-line) vector half-extents)
     (v2:-! vector (line2d:end line) rect-origin)
@@ -243,9 +248,11 @@ ORIENTED-RECT/LINE."
   ;; of the line is less than the sum of the two circle radii, we have an
   ;; intersection. To avoid the square root, we get the squared length of the
   ;; line and compare it to the squared sum of the radii.
-  (<= (line2d:length-squared (line2d:line :start (circle:origin circle1)
-                                          :end (circle:origin circle2)))
-      (expt (+ (circle:radius circle1) (circle:radius circle2)) 2)))
+  (let ((line (line2d:line :start (circle:origin circle1)
+                           :end (circle:origin circle2))))
+    (declare (dynamic-extent line))
+    (<= (line2d:length-squared line)
+        (expt (+ (circle:radius circle1) (circle:radius circle2)) 2))))
 
 (u:fn-> %circle/rect (circle:circle rect:rect) boolean)
 (declaim (inline %circle/rect))
@@ -259,6 +266,7 @@ ORIENTED-RECT/LINE."
   ;; intersect.
   (let* ((circle-origin (circle:origin circle))
          (closest-point (v2:copy circle-origin)))
+    (declare (dynamic-extent closest-point))
     (v2:clamp! closest-point closest-point (rect:min rect) (rect:max rect))
     (<= (line2d:length-squared (line2d:line :start circle-origin
                                             :end closest-point))
@@ -290,6 +298,7 @@ ORIENTED-RECT/CIRCLE."
   (let ((half-extents (orect:half-extents rect))
         (vector (v2:- (circle:origin circle) (orect:origin rect)))
         (rotation (m2:rotation-from-angle (- (orect:angle rect)))))
+    (declare (dynamic-extent vector rotation))
     (m2:*v2! vector rotation vector)
     (circle/rect (circle:circle :origin (v2:+ vector half-extents)
                                 :radius (circle:radius circle))
@@ -320,11 +329,14 @@ ORIENTED-RECT/CIRCLE."
   "Helper function that does the work for RECT/ORIENTED-RECT and
 ORIENTED-RECT/RECT."
   (declare (optimize speed))
-  (let ((axes (vector v2:+right+ v2:+up+ (v2:vec) (v2:vec)))
-        (rotation (m2:rotation-from-angle (orect:angle rect2))))
-    (v2:with-components ((h (orect:half-extents rect2)))
-      (m2:*v2! (aref axes 2) rotation (v2:normalize (v2:vec hx 0)))
-      (m2:*v2! (aref axes 3) rotation (v2:normalize (v2:vec 0 hy)))
+  (v2:with-components ((h (orect:half-extents rect2)))
+    (let ((axes (vector v2:+right+ v2:+up+ (v2:vec) (v2:vec)))
+          (rotation (m2:rotation-from-angle (orect:angle rect2)))
+          (axis3 (v2:normalize (v2:vec hx 0)))
+          (axis4 (v2:normalize (v2:vec 0 hy))))
+      (declare (dynamic-extent axes rotation axis3 axis4))
+      (m2:*v2! (aref axes 2) rotation axis3)
+      (m2:*v2! (aref axes 3) rotation axis4)
       (map nil
            (lambda (x)
              (v2:with-components ((i1 (rect::interval rect1 x))
@@ -359,6 +371,7 @@ ORIENTED-RECT/RECT."
                              :angle (- (orect:angle rect2) angle1)))
          (vector (v2:- origin2 (orect:origin rect1)))
          (rotation (m2:rotation-from-angle (- angle1))))
+    (declare (dynamic-extent origin2 local1 local2 vector rotation))
     (m2:*v2! vector rotation vector)
     (v2:+! (orect:origin local2) vector half-extents1)
     (rect/oriented-rect local1 local2)))
