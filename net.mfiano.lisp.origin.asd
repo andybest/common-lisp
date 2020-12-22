@@ -61,5 +61,6 @@
    (:file "geometry/shapes/set3d")
    (:file "geometry/package")
    (:file "geometry/bounds")
-   (:file "geometry/2d-tests")
-   (:file "geometry/3d-tests")))
+   (:file "geometry/test-2d")
+   (:file "geometry/closest-point-3d")
+   (:file "geometry/test-3d")))

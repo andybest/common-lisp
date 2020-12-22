@@ -6,6 +6,7 @@
   (:local-nicknames
    (#:point3d #:net.mfiano.lisp.origin.geometry.point3d)
    (#:u #:net.mfiano.lisp.golden-utils)
+   (#:v2 #:net.mfiano.lisp.origin.vec2)
    (#:v3 #:net.mfiano.lisp.origin.vec3))
   (:use #:cl)
   (:shadow
@@ -66,3 +67,39 @@
         (size (size aabb)))
     (v3:max (v3:+ origin size)
             (v3:- origin size))))
+
+(u:fn-> vertices (aabb) (simple-vector 8))
+(declaim (inline vertices))
+(defun vertices (aabb)
+  "Get a vector of an AABB's vertices."
+  (declare (optimize speed))
+  (let* ((min (min aabb))
+         (max (max aabb))
+         (min-x (v3:x min))
+         (min-y (v3:y min))
+         (min-z (v3:z min))
+         (max-x (v3:x max))
+         (max-y (v3:y max))
+         (max-z (v3:z max)))
+    (vector min
+            max
+            (v3:vec min-x max-y max-z)
+            (v3:vec min-x max-y min-z)
+            (v3:vec min-x min-y max-z)
+            (v3:vec max-x max-y min-z)
+            (v3:vec max-x min-y max-z)
+            (v3:vec max-x min-y min-z))))
+
+(u:fn-> interval (aabb v3:vec) v2:vec)
+(defun interval (aabb axis)
+  "Get the interval of the AABB along the given AXIS. This is used to test if
+  two intervals overlap in a separating axis theorem test. AXIS is expected to
+  be normalized."
+  (declare (optimize speed))
+  (let ((vertices (vertices aabb)))
+    (v2:with-components ((r (v2:vec (v3:dot axis (aref vertices 0)))))
+      (dotimes (i 8)
+        (let ((projection (v3:dot axis (aref vertices i))))
+          (setf rx (u:clamp rx rx projection)
+                ry (u:clamp ry projection ry))))
+      r)))

@@ -68,17 +68,17 @@ respectively."
   (let ((origin (origin rect)))
     (v2:max origin (v2:+ origin (size rect)))))
 
-(u:fn-> vertices (rect) vector)
+(u:fn-> vertices (rect) (simple-vector 4))
 (declaim (inline vertices))
 (defun vertices (rect)
-  "Get a list of a rect's vertices."
+  "Get a vector of a rect's vertices."
   (declare (optimize speed))
-  (v2:with-components ((min- (min rect))
-                       (max- (max rect)))
-    (vector min-
-            max-
-            (v2:vec min-x max-y)
-            (v2:vec max-x min-y))))
+  (let ((min (min rect))
+        (max (max rect)))
+    (vector min
+            max
+            (v2:vec (v2:x min) (v2:y max))
+            (v2:vec (v2:x max) (v2:y min)))))
 
 (u:fn-> interval (rect v2:vec) v2:vec)
 (defun interval (rect axis)
@@ -87,11 +87,10 @@ two intervals overlap in a separating axis theorem test. AXIS is expected to be
 normalized."
   (declare (optimize speed))
   (let ((vertices (vertices rect)))
+    (declare (dynamic-extent vertices))
     (v2:with-components ((r (v2:vec (v2:dot axis (aref vertices 0)))))
-      (map nil
-           (lambda (x)
-             (let ((projection (v2:dot axis x)))
-               (setf rx (u:clamp rx rx projection)
-                     ry (u:clamp ry projection ry))))
-           vertices)
+      (dotimes (i 4)
+        (let ((projection (v2:dot axis (aref vertices i))))
+          (setf rx (u:clamp rx rx projection)
+                ry (u:clamp ry projection ry))))
       r)))

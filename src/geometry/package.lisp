@@ -14,6 +14,7 @@
    (#:plane #:net.mfiano.lisp.origin.geometry.plane)
    (#:point2d #:net.mfiano.lisp.origin.geometry.point2d)
    (#:point3d #:net.mfiano.lisp.origin.geometry.point3d)
+   (#:ray #:net.mfiano.lisp.origin.geometry.ray)
    (#:rect #:net.mfiano.lisp.origin.geometry.rect)
    (#:shape-set-2d #:net.mfiano.lisp.origin.geometry.shape-set-2d)
    (#:sphere #:net.mfiano.lisp.origin.geometry.sphere)
@@ -64,14 +65,40 @@
    #:shape-set-2d/shape-set-2d)
   ;; 3D intersection tests
   (:export
+   #:aabb/aabb
+   #:aabb/obb
+   #:aabb/plane
    #:aabb/point3d
+   #:aabb/sphere
+   #:line3d/point3d
+   #:obb/aabb
+   #:obb/obb
+   #:obb/plane
    #:obb/point3d
+   #:obb/sphere
+   #:plane/aabb
+   #:plane/obb
+   #:plane/plane
    #:plane/point3d
+   #:plane/sphere
    #:point3d/aabb
+   #:point3d/line3d
    #:point3d/obb
    #:point3d/plane
    #:point3d/point3d
+   #:point3d/ray
    #:point3d/sphere
-   #:sphere/point3d)
+   #:ray/point3d
+   #:sphere/aabb
+   #:sphere/obb
+   #:sphere/plane
+   #:sphere/point3d
+   #:sphere/sphere)
   ;; 3D closest point tests
-  (:export))
+  (:export
+   #:closest-point-aabb
+   #:closest-point-line3d
+   #:closest-point-obb
+   #:closest-point-plane
+   #:closest-point-ray
+   #:closest-point-sphere))

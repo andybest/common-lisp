@@ -24,13 +24,13 @@
 
 (u:fn-> point2d/line2d (point2d:point line2d:line) boolean)
 (defun point2d/line2d (point line)
-  "Test if a 2D point coincides with a 2D line."
+  "Test if a 2D point is on a 2D line."
   (declare (optimize speed))
   (%point2d/line2d point line))
 
 (u:fn-> line2d/point2d (line2d:line point2d:point) boolean)
 (defun line2d/point2d (line point)
-  "Test if a 2D line coincides with a 2D point."
+  "Test if a 2D line contains a 2D point."
   (declare (optimize speed))
   (%point2d/line2d point line))
 
@@ -85,7 +85,8 @@ ORIENTED-RECT/POINT2D."
         (angle (- (orect:angle rect))))
     (declare (dynamic-extent vector))
     (m2:*v2! vector (m2:rotation-from-angle angle) vector)
-    (point2d/rect (v2:+ vector (orect:half-extents rect))
+    (v2:+! vector vector (orect:half-extents rect))
+    (point2d/rect vector
                   (rect:rect :size (v2:scale (orect:half-extents rect) 2f0)))))
 
 (u:fn-> point2d/oriented-rect (point2d:point orect:rect) boolean)
@@ -248,11 +249,8 @@ ORIENTED-RECT/LINE."
   ;; of the line is less than the sum of the two circle radii, we have an
   ;; intersection. To avoid the square root, we get the squared length of the
   ;; line and compare it to the squared sum of the radii.
-  (let ((line (line2d:line :start (circle:origin circle1)
-                           :end (circle:origin circle2))))
-    (declare (dynamic-extent line))
-    (<= (line2d:length-squared line)
-        (expt (+ (circle:radius circle1) (circle:radius circle2)) 2))))
+  (<= (point2d:distance-squared (circle:origin circle1) (circle:origin circle2))
+      (expt (+ (circle:radius circle1) (circle:radius circle2)) 2)))
 
 (u:fn-> %circle/rect (circle:circle rect:rect) boolean)
 (declaim (inline %circle/rect))
@@ -264,12 +262,12 @@ ORIENTED-RECT/LINE."
   ;; rect. Then, we draw a line from the closest point to the center of the
   ;; circle, and if it's less than the squared radius of the circle, they
   ;; intersect.
-  (let* ((circle-origin (circle:origin circle))
-         (closest-point (v2:copy circle-origin)))
-    (declare (dynamic-extent closest-point))
-    (v2:clamp! closest-point closest-point (rect:min rect) (rect:max rect))
-    (<= (line2d:length-squared (line2d:line :start circle-origin
-                                            :end closest-point))
+  (let ((circle-origin (circle:origin circle)))
+    (<= (line2d:length-squared
+         (line2d:line :start circle-origin
+                      :end (v2:clamp circle-origin
+                                     (rect:min rect)
+                                     (rect:max rect))))
         (expt (circle:radius circle) 2))))
 
 (u:fn-> circle/rect (circle:circle rect:rect) boolean)
@@ -300,7 +298,8 @@ ORIENTED-RECT/CIRCLE."
         (rotation (m2:rotation-from-angle (- (orect:angle rect)))))
     (declare (dynamic-extent vector rotation))
     (m2:*v2! vector rotation vector)
-    (circle/rect (circle:circle :origin (v2:+ vector half-extents)
+    (v2:+! vector vector half-extents)
+    (circle/rect (circle:circle :origin vector
                                 :radius (circle:radius circle))
                  (rect:rect :size (v2:scale half-extents 2.0)))))
 
