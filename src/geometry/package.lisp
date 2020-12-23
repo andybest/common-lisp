@@ -101,4 +101,8 @@
    #:closest-point-obb
    #:closest-point-plane
    #:closest-point-ray
-   #:closest-point-sphere))
+   #:closest-point-sphere)
+  ;; 3D raycast tests
+  (:export
+   #:raycast-aabb
+   #:raycast-sphere))
