@@ -687,7 +687,7 @@
 (u:fn-> invert! (mat mat) (values mat boolean))
 (defun invert! (out mat)
   (let ((determinant (determinant mat)))
-    (when (< (abs determinant) 1e-15)
+    (when (com:= determinant 0.0 1e-15 1e-15)
       (return-from invert! (values mat nil)))
     (with-components ((o out) (m mat))
       (psetf o00 (/ (cl:- (cl:+ (cl:* m11 m22 m33) (cl:* m12 m23 m31)
