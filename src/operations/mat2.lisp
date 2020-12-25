@@ -252,7 +252,6 @@ MAT, bounded by the components of matrices MIN and MAX."
   (declare (optimize speed))
   (rotate! (id) mat angle))
 
-(u:fn-> rotation-from-angle! (mat u:f32) mat)
 (u:fn-> get-scale! (v2:vec mat) v2:vec)
 (declaim (inline get-scale!))
 (defun get-scale! (out mat)
