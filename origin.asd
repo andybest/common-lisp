@@ -3,8 +3,8 @@
   :author "Michael Fiano <mail@mfiano.net>"
   :license "MIT"
   :homepage "https://mfiano.net/projects/origin"
-  :source-control (:git "https://github.com/mfiano/origin")
-  :bug-tracker "https://github.com/mfiano/origin/issues"
+  :source-control (:git "https://git.mfiano.net/mfiano/origin")
+  :bug-tracker "https://git.mfiano.net/mfiano/origin/issues"
   :encoding :utf-8
   :depends-on (#:golden-utils
                #:specialization-store)
