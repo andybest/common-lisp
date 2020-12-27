@@ -3,8 +3,8 @@
   :author ("Michael Fiano <mail@mfiano.net>")
   :license "MIT"
   :homepage "https://mfiano.net/projects/dungen"
-  :source-control (:git "https://github.com/mfiano/dungen")
-  :bug-tracker "https://github.com/mfiano/dungen/issues"
+  :source-control (:git "https://git.mfiano.net/mfiano/dungen")
+  :bug-tracker "https://git.mfiano.net/mfiano/dungen/issues"
   :encoding :utf-8
   :depends-on (#:cl-pcg
                #:golden-utils
