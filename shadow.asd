@@ -3,8 +3,8 @@
   :author "Michael Fiano <mail@mfiano.net>"
   :license "MIT"
   :homepage "https://mfiano.net/projects/shadow"
-  :source-control (:git "https://github.com/mfiano/shadow")
-  :bug-tracker "https://github.com/mfiano/shadow/issues"
+  :source-control (:git "https://git.mfiano.net/mfiano/shadow")
+  :bug-tracker "https://git.mfiano.net/mfiano/shadow/issues"
   :encoding :utf-8
   :depends-on (#:cl-opengl
                #:glsl-packing
