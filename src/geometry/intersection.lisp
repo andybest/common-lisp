@@ -1,4 +1,4 @@
-(in-package #:net.mfiano.lisp.origin.geometry)
+(in-package #:origin.geometry)
 
 (u:fn-> point2d/point2d (point2d:point point2d:point) boolean)
 (declaim (inline point2d/point2d))

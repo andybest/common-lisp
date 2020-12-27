@@ -1,14 +1,14 @@
 (in-package #:cl-user)
 
-(defpackage #:net.mfiano.lisp.origin.test
+(defpackage #:origin.test
   (:local-nicknames
-   (#:const #:net.mfiano.lisp.origin.constants)
-   (#:m2 #:net.mfiano.lisp.origin.mat2)
-   (#:m3 #:net.mfiano.lisp.origin.mat3)
-   (#:m4 #:net.mfiano.lisp.origin.mat4)
-   (#:q #:net.mfiano.lisp.origin.quat)
-   (#:v2 #:net.mfiano.lisp.origin.vec2)
-   (#:v3 #:net.mfiano.lisp.origin.vec3)
-   (#:v4 #:net.mfiano.lisp.origin.vec4))
+   (#:const #:origin.constants)
+   (#:m2 #:origin.mat2)
+   (#:m3 #:origin.mat3)
+   (#:m4 #:origin.mat4)
+   (#:q #:origin.quat)
+   (#:v2 #:origin.vec2)
+   (#:v3 #:origin.vec3)
+   (#:v4 #:origin.vec4))
   (:use #:cl
         #:parachute))

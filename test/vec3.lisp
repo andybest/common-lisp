@@ -1,4 +1,4 @@
-(in-package #:net.mfiano.lisp.origin.test)
+(in-package #:origin.test)
 
 (define-test v3/sign
   (let ((o (v3:zero)))

@@ -1,15 +1,15 @@
 (in-package #:cl-user)
 
-(defpackage #:net.mfiano.lisp.origin.dmat4
+(defpackage #:origin.dmat4
   (:local-nicknames
-   (#:com #:net.mfiano.lisp.origin.common)
-   (#:dm2 #:net.mfiano.lisp.origin.dmat2)
-   (#:dm3 #:net.mfiano.lisp.origin.dmat3)
-   (#:dv3 #:net.mfiano.lisp.origin.dvec3)
-   (#:dv4 #:net.mfiano.lisp.origin.dvec4)
-   (#:m4 #:net.mfiano.lisp.origin.mat4)
+   (#:com #:origin.common)
+   (#:dm2 #:origin.dmat2)
+   (#:dm3 #:origin.dmat3)
+   (#:dv3 #:origin.dvec3)
+   (#:dv4 #:origin.dvec4)
+   (#:m4 #:origin.mat4)
    (#:ss #:specialization-store)
-   (#:u #:net.mfiano.lisp.golden-utils))
+   (#:u #:golden-utils))
   (:use #:cl)
   (:shadow
    #:=
@@ -104,7 +104,7 @@
    #:perspective!
    #:perspective))
 
-(in-package #:net.mfiano.lisp.origin.dmat4)
+(in-package #:origin.dmat4)
 
 (deftype mat () '(simple-array u:f64 (16)))
 

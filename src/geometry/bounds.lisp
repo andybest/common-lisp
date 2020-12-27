@@ -1,4 +1,4 @@
-(in-package #:net.mfiano.lisp.origin.geometry)
+(in-package #:origin.geometry)
 
 ;;;; This file defines a package for constructing minimum bounding shapes.
 

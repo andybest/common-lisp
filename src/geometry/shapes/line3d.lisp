@@ -4,11 +4,11 @@
 ;;; mathematical sense. Since line segments are so common in physics, we have
 ;;; chosen to use this convention (as many other game physics libraries do).
 
-(defpackage #:net.mfiano.lisp.origin.geometry.line3d
+(defpackage #:origin.geometry.line3d
   (:local-nicknames
-   (#:point3d #:net.mfiano.lisp.origin.geometry.point3d)
-   (#:u #:net.mfiano.lisp.golden-utils)
-   (#:v3 #:net.mfiano.lisp.origin.vec3))
+   (#:point3d #:origin.geometry.point3d)
+   (#:u #:golden-utils)
+   (#:v3 #:origin.vec3))
   (:use #:cl)
   (:shadow
    #:length)
@@ -21,7 +21,7 @@
    #:midpoint
    #:start))
 
-(in-package #:net.mfiano.lisp.origin.geometry.line3d)
+(in-package #:origin.geometry.line3d)
 
 (declaim (inline %line))
 (defstruct (line

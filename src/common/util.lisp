@@ -1,4 +1,4 @@
-(in-package #:net.mfiano.lisp.origin.common)
+(in-package #:origin.common)
 
 #+sbcl
 (setf sb-ext:*inline-expansion-limit*

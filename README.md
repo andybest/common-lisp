@@ -24,7 +24,7 @@ of writing, this currently includes: ABCL, SBCL, CCL, ECL, and Clasp.
 ## Install
 
 ``` lisp
-(ql:quickload :net.mfiano.lisp.origin)
+(ql:quickload :origin)
 ```
 
 ## Contributors

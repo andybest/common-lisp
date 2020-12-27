@@ -1,4 +1,4 @@
-(in-package #:net.mfiano.lisp.origin.geometry)
+(in-package #:origin.geometry)
 
 (u:fn-> raycast-sphere (ray:ray sphere:sphere) (or u:f32 null))
 (defun raycast-sphere (ray sphere)

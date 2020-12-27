@@ -2,13 +2,13 @@
 
 ;;;; A 3D oriented box primitive.
 
-(defpackage #:net.mfiano.lisp.origin.geometry.obb
+(defpackage #:origin.geometry.obb
   (:local-nicknames
-   (#:m3 #:net.mfiano.lisp.origin.mat3)
-   (#:point3d #:net.mfiano.lisp.origin.geometry.point3d)
-   (#:u #:net.mfiano.lisp.golden-utils)
-   (#:v2 #:net.mfiano.lisp.origin.vec2)
-   (#:v3 #:net.mfiano.lisp.origin.vec3))
+   (#:m3 #:origin.mat3)
+   (#:point3d #:origin.geometry.point3d)
+   (#:u #:golden-utils)
+   (#:v2 #:origin.vec2)
+   (#:v3 #:origin.vec3))
   (:use #:cl)
   (:export
    #:obb
@@ -17,7 +17,7 @@
    #:size
    #:rotation))
 
-(in-package #:net.mfiano.lisp.origin.geometry.obb)
+(in-package #:origin.geometry.obb)
 
 (declaim (inline %obb))
 (defstruct (obb

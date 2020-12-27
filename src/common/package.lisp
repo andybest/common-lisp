@@ -1,8 +1,8 @@
 (in-package #:cl-user)
 
-(defpackage #:net.mfiano.lisp.origin.common
+(defpackage #:origin.common
   (:local-nicknames
-   (#:u #:net.mfiano.lisp.golden-utils))
+   (#:u #:golden-utils))
   (:use #:cl)
   (:shadow
    #:=)

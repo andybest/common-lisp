@@ -1,14 +1,14 @@
 (in-package #:cl-user)
 
-(defpackage #:net.mfiano.lisp.origin.dvec4
+(defpackage #:origin.dvec4
   (:local-nicknames
-   (#:com #:net.mfiano.lisp.origin.common)
-   (#:const #:net.mfiano.lisp.origin.constants)
-   (#:dv2 #:net.mfiano.lisp.origin.dvec2)
-   (#:dv3 #:net.mfiano.lisp.origin.dvec3)
+   (#:com #:origin.common)
+   (#:const #:origin.constants)
+   (#:dv2 #:origin.dvec2)
+   (#:dv3 #:origin.dvec3)
    (#:ss #:specialization-store)
-   (#:u #:net.mfiano.lisp.golden-utils)
-   (#:v4 #:net.mfiano.lisp.origin.vec4))
+   (#:u #:golden-utils)
+   (#:v4 #:origin.vec4))
   (:use #:cl)
   (:shadow
    #:=
@@ -124,7 +124,7 @@
    #:atan!
    #:atan))
 
-(in-package #:net.mfiano.lisp.origin.dvec4)
+(in-package #:origin.dvec4)
 
 (deftype vec () '(simple-array u:f64 (4)))
 

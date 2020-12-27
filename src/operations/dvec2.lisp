@@ -1,4 +1,4 @@
-(in-package #:net.mfiano.lisp.origin.dvec2)
+(in-package #:origin.dvec2)
 
 (u:fn-> = (vec vec &key (:rel u:f64) (:abs u:f64)) boolean)
 (declaim (inline =))

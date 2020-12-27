@@ -1,11 +1,11 @@
 (in-package #:cl-user)
 
-(defpackage #:net.mfiano.lisp.origin.vec2
+(defpackage #:origin.vec2
   (:local-nicknames
-   (#:com #:net.mfiano.lisp.origin.common)
-   (#:const #:net.mfiano.lisp.origin.constants)
+   (#:com #:origin.common)
+   (#:const #:origin.constants)
    (#:ss #:specialization-store)
-   (#:u #:net.mfiano.lisp.golden-utils))
+   (#:u #:golden-utils))
   (:use #:cl)
   (:shadow
    #:=
@@ -125,7 +125,7 @@
    #:velocity!
    #:velocity))
 
-(in-package #:net.mfiano.lisp.origin.vec2)
+(in-package #:origin.vec2)
 
 (deftype vec () '(simple-array u:f32 (2)))
 

@@ -1,4 +1,4 @@
-(in-package #:net.mfiano.lisp.origin.mat4)
+(in-package #:origin.mat4)
 
 (u:fn-> = (mat mat &key (:rel u:f32) (:abs u:f32)) boolean)
 (declaim (inline =))

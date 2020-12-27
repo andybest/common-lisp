@@ -1,13 +1,13 @@
 (in-package #:cl-user)
 
-(defpackage #:net.mfiano.lisp.origin.mat3
+(defpackage #:origin.mat3
   (:local-nicknames
-   (#:com #:net.mfiano.lisp.origin.common)
-   (#:m2 #:net.mfiano.lisp.origin.mat2)
+   (#:com #:origin.common)
+   (#:m2 #:origin.mat2)
    (#:ss #:specialization-store)
-   (#:u #:net.mfiano.lisp.golden-utils)
-   (#:v2 #:net.mfiano.lisp.origin.vec2)
-   (#:v3 #:net.mfiano.lisp.origin.vec3))
+   (#:u #:golden-utils)
+   (#:v2 #:origin.vec2)
+   (#:v3 #:origin.vec3))
   (:use #:cl)
   (:shadow
    #:=
@@ -89,7 +89,7 @@
    #:anti-diagonal!
    #:anti-diagonal))
 
-(in-package #:net.mfiano.lisp.origin.mat3)
+(in-package #:origin.mat3)
 
 (deftype mat () '(simple-array u:f32 (9)))
 

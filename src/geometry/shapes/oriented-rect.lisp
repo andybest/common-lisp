@@ -3,13 +3,13 @@
 ;;;; A 2D oriented rectangle primitive. The oriented rectangle is represented as
 ;;;; a center origin point, and half-extents.
 
-(defpackage #:net.mfiano.lisp.origin.geometry.oriented-rect
+(defpackage #:origin.geometry.oriented-rect
   (:local-nicknames
-   (#:m2 #:net.mfiano.lisp.origin.mat2)
-   (#:point2d #:net.mfiano.lisp.origin.geometry.point2d)
-   (#:rect #:net.mfiano.lisp.origin.geometry.rect)
-   (#:u #:net.mfiano.lisp.golden-utils)
-   (#:v2 #:net.mfiano.lisp.origin.vec2))
+   (#:m2 #:origin.mat2)
+   (#:point2d #:origin.geometry.point2d)
+   (#:rect #:origin.geometry.rect)
+   (#:u #:golden-utils)
+   (#:v2 #:origin.vec2))
   (:use #:cl)
   (:export
    #:angle
@@ -18,7 +18,7 @@
    #:rect
    #:rect-p))
 
-(in-package #:net.mfiano.lisp.origin.geometry.oriented-rect)
+(in-package #:origin.geometry.oriented-rect)
 
 (declaim (inline %rect))
 (defstruct (rect

@@ -1,15 +1,15 @@
 (in-package #:cl-user)
 
-(defpackage #:net.mfiano.lisp.origin.dquat
+(defpackage #:origin.dquat
   (:local-nicknames
-   (#:com #:net.mfiano.lisp.origin.common)
-   (#:dm3 #:net.mfiano.lisp.origin.dmat3)
-   (#:dm4 #:net.mfiano.lisp.origin.dmat4)
-   (#:dv3 #:net.mfiano.lisp.origin.dvec3)
-   (#:dv4 #:net.mfiano.lisp.origin.dvec4)
-   (#:q #:net.mfiano.lisp.origin.quat)
+   (#:com #:origin.common)
+   (#:dm3 #:origin.dmat3)
+   (#:dm4 #:origin.dmat4)
+   (#:dv3 #:origin.dvec3)
+   (#:dv4 #:origin.dvec4)
+   (#:q #:origin.quat)
    (#:ss #:specialization-store)
-   (#:u #:net.mfiano.lisp.golden-utils))
+   (#:u #:golden-utils))
   (:use #:cl)
   (:shadow
    #:=
@@ -79,7 +79,7 @@
    #:from-velocity!
    #:from-velocity))
 
-(in-package #:net.mfiano.lisp.origin.dquat)
+(in-package #:origin.dquat)
 
 (deftype quat () '(simple-array u:f64 (4)))
 

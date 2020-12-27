@@ -1,9 +1,9 @@
 (in-package #:cl-user)
 
-(defpackage #:net.mfiano.lisp.origin.shaping
+(defpackage #:origin.shaping
   (:local-nicknames
-   (#:const #:net.mfiano.lisp.origin.constants)
-   (#:u #:net.mfiano.lisp.golden-utils))
+   (#:const #:origin.constants)
+   (#:u #:golden-utils))
   (:use #:cl)
   ;; shaping
   (:export
@@ -41,7 +41,7 @@
    #:hermite-curve
    #:quintic-curve))
 
-(in-package #:net.mfiano.lisp.origin.shaping)
+(in-package #:origin.shaping)
 
 (u:fn-> linear (u:f32) u:f32)
 (declaim (inline linear))

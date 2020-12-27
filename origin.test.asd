@@ -1,14 +1,13 @@
-(asdf:defsystem #:net.mfiano.lisp.origin.test
+(asdf:defsystem #:origin.test
   :description "Tests for origin."
   :author "Michael Fiano <mail@mfiano.net>"
   :license "MIT"
-  :depends-on (#:net.mfiano.lisp.origin
+  :depends-on (#:origin
                #:parachute)
   :pathname "test"
   :serial t
   :perform (asdf:test-op (o c)
-                         (uiop:symbol-call
-                          '#:parachute '#:test '#:net.mfiano.lisp.origin.test))
+                         (uiop:symbol-call '#:parachute '#:test '#:origin.test))
   :components
   ((:file "package")
    (:file "vec2")

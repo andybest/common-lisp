@@ -5,11 +5,11 @@
 ;;;; two different representations: an origin and size with RECT, and a minimum
 ;;;; and maximum point with RECT-FROM-MIN/MAX.
 
-(defpackage #:net.mfiano.lisp.origin.geometry.rect
+(defpackage #:origin.geometry.rect
   (:local-nicknames
-   (#:point2d #:net.mfiano.lisp.origin.geometry.point2d)
-   (#:u #:net.mfiano.lisp.golden-utils)
-   (#:v2 #:net.mfiano.lisp.origin.vec2))
+   (#:point2d #:origin.geometry.point2d)
+   (#:u #:golden-utils)
+   (#:v2 #:origin.vec2))
   (:use #:cl)
   (:shadow
    #:max
@@ -23,7 +23,7 @@
    #:rect-p
    #:size))
 
-(in-package #:net.mfiano.lisp.origin.geometry.rect)
+(in-package #:origin.geometry.rect)
 
 (declaim (inline %rect))
 (defstruct (rect

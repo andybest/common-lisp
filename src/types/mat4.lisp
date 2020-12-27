@@ -1,14 +1,14 @@
 (in-package #:cl-user)
 
-(defpackage #:net.mfiano.lisp.origin.mat4
+(defpackage #:origin.mat4
   (:local-nicknames
-   (#:com #:net.mfiano.lisp.origin.common)
-   (#:m2 #:net.mfiano.lisp.origin.mat2)
-   (#:m3 #:net.mfiano.lisp.origin.mat3)
+   (#:com #:origin.common)
+   (#:m2 #:origin.mat2)
+   (#:m3 #:origin.mat3)
    (#:ss #:specialization-store)
-   (#:u #:net.mfiano.lisp.golden-utils)
-   (#:v3 #:net.mfiano.lisp.origin.vec3)
-   (#:v4 #:net.mfiano.lisp.origin.vec4))
+   (#:u #:golden-utils)
+   (#:v3 #:origin.vec3)
+   (#:v4 #:origin.vec4))
   (:use #:cl)
   (:shadow
    #:=
@@ -103,7 +103,7 @@
    #:perspective!
    #:perspective))
 
-(in-package #:net.mfiano.lisp.origin.mat4)
+(in-package #:origin.mat4)
 
 (deftype mat () '(simple-array u:f32 (16)))
 

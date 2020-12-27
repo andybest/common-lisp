@@ -1,10 +1,10 @@
 (in-package #:cl-user)
 
-(defpackage #:net.mfiano.lisp.origin.geometry.ray
+(defpackage #:origin.geometry.ray
   (:local-nicknames
-   (#:point3d #:net.mfiano.lisp.origin.geometry.point3d)
-   (#:u #:net.mfiano.lisp.golden-utils)
-   (#:v3 #:net.mfiano.lisp.origin.vec3))
+   (#:point3d #:origin.geometry.point3d)
+   (#:u #:golden-utils)
+   (#:v3 #:origin.vec3))
   (:use #:cl)
   (:export
    #:direction
@@ -12,7 +12,7 @@
    #:ray
    #:ray-from-points))
 
-(in-package #:net.mfiano.lisp.origin.geometry.ray)
+(in-package #:origin.geometry.ray)
 
 (declaim (inline %ray))
 (defstruct (ray

@@ -15,12 +15,12 @@
 ;;;; other shape sets, points, lines, and other primitives with a single
 ;;;; function call.
 
-(defpackage #:net.mfiano.lisp.origin.geometry.shape-set-2d
+(defpackage #:origin.geometry.shape-set-2d
   (:local-nicknames
-   (#:circle #:net.mfiano.lisp.origin.geometry.circle)
-   (#:orect #:net.mfiano.lisp.origin.geometry.oriented-rect)
-   (#:rect #:net.mfiano.lisp.origin.geometry.rect)
-   (#:u #:net.mfiano.lisp.golden-utils))
+   (#:circle #:origin.geometry.circle)
+   (#:orect #:origin.geometry.oriented-rect)
+   (#:rect #:origin.geometry.rect)
+   (#:u #:golden-utils))
   (:use #:cl)
   (:export
    #:circles
@@ -28,7 +28,7 @@
    #:rects
    #:shape-set))
 
-(in-package #:net.mfiano.lisp.origin.geometry.shape-set-2d)
+(in-package #:origin.geometry.shape-set-2d)
 
 (declaim (inline %shape-set))
 (defstruct (shape-set

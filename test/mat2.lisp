@@ -1,4 +1,4 @@
-(in-package #:net.mfiano.lisp.origin.test)
+(in-package #:origin.test)
 
 (define-test m2/identity
   (let ((m (m2:zero))

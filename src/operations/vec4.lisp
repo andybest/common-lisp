@@ -1,4 +1,4 @@
-(in-package #:net.mfiano.lisp.origin.vec4)
+(in-package #:origin.vec4)
 
 (u:fn-> = (vec vec &key (:rel u:f32) (:abs u:f32)) boolean)
 (declaim (inline =))

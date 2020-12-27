@@ -1,4 +1,4 @@
-(in-package #:net.mfiano.lisp.origin.quat)
+(in-package #:origin.quat)
 
 (u:fn-> = (quat quat &key (:rel u:f32) (:abs u:f32)) boolean)
 (declaim (inline =))
