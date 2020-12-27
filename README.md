@@ -12,7 +12,7 @@ flac-parser.
 ## Install
 
 ```lisp
-(ql:quickload :net.mfiano.lisp.flac-metadata)
+(ql:quickload :flac-metadata)
 ```
 
 ## Usage

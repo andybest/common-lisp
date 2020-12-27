@@ -1,9 +1,9 @@
 (in-package #:cl-user)
 
-(defpackage #:net.mfiano.lisp.flac-metadata
+(defpackage #:flac-metadata
   (:local-nicknames
-   (#:parse #:net.mfiano.lisp.parsley)
-   (#:u #:net.mfiano.lisp.golden-utils))
+   (#:parse #:parsley)
+   (#:u #:golden-utils))
   (:use #:cl)
   (:export
    #:load-file

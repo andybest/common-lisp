@@ -1,4 +1,4 @@
-(in-package #:net.mfiano.lisp.flac-metadata)
+(in-package #:flac-metadata)
 
 (defclass seek-point ()
   ((%sample :initarg :sample)
