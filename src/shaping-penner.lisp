@@ -1,4 +1,4 @@
-(in-package #:net.mfiano.lisp.umbra.shaping)
+(in-package #:umbra.shaping)
 
 ;;;; Shaping functions
 ;;;; Various functions to modify a signal or interpolate a value non-linearly.

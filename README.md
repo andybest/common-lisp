@@ -10,7 +10,7 @@ written with [Shadow](https://github.com/mfiano/shadow).
 ## Install
 
 ```lisp
-(ql:quickload :net.mfiano.lisp.umbra)
+(ql:quickload :umbra)
 ```
 
 ## Usage

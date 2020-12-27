@@ -1,4 +1,4 @@
-(in-package #:net.mfiano.lisp.umbra.color)
+(in-package #:umbra.color)
 
 ;;;; Color space conversion
 ;;;; Credits:

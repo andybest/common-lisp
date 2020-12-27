@@ -1,4 +1,4 @@
-(in-package #:net.mfiano.lisp.umbra.noise)
+(in-package #:umbra.noise)
 
 ;;;; Hermite noise
 

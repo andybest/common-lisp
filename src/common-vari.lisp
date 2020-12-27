@@ -1,4 +1,4 @@
-(in-package #:net.mfiano.lisp.umbra.common)
+(in-package #:umbra.common)
 
 (locally (declare #+sbcl (sb-ext:muffle-conditions style-warning))
   (cl:defmacro emit ((&key point-size) &body data)

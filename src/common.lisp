@@ -1,4 +1,4 @@
-(in-package #:net.mfiano.lisp.umbra.common)
+(in-package #:umbra.common)
 
 (defmacro mvlet* ((&rest bindings) &body body)
   (destructuring-bind (&optional car . cdr) bindings

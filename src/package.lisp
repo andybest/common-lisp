@@ -1,9 +1,9 @@
 (in-package #:cl-user)
 
-(defpackage #:net.mfiano.lisp.umbra.common
+(defpackage #:umbra.common
   (:local-nicknames
-   (#:u #:net.mfiano.lisp.golden-utils))
-  (:use #:net.mfiano.lisp.shadow.glsl)
+   (#:u #:golden-utils))
+  (:use #:shadow.glsl)
   ;; structs
   (:export
    #:mesh-attrs
@@ -27,10 +27,10 @@
    #:saturate
    #:map-domain))
 
-(defpackage #:net.mfiano.lisp.umbra.shaping
+(defpackage #:umbra.shaping
   (:use
-   #:net.mfiano.lisp.shadow.glsl
-   #:net.mfiano.lisp.umbra.common)
+   #:shadow.glsl
+   #:umbra.common)
   ;; penner
   (:export
    #:linear
@@ -101,10 +101,10 @@
    #:falloff-squared-c1
    #:falloff-squared-c2))
 
-(defpackage #:net.mfiano.lisp.umbra.color
+(defpackage #:umbra.color
   (:use
-   #:net.mfiano.lisp.shadow.glsl
-   #:net.mfiano.lisp.umbra.common)
+   #:shadow.glsl
+   #:umbra.common)
   ;; color space conversion
   (:export
    #:rgb->grayscale
@@ -141,23 +141,23 @@
    #:tone-map/uncharted2
    #:tone-map/aces))
 
-(defpackage #:net.mfiano.lisp.umbra.effects
-  (:use #:net.mfiano.lisp.shadow.glsl
-        #:net.mfiano.lisp.umbra.common)
+(defpackage #:umbra.effects
+  (:use #:shadow.glsl
+        #:umbra.common)
   (:export
    #:window-rain))
 
-(defpackage #:net.mfiano.lisp.umbra.graphing
+(defpackage #:umbra.graphing
   (:use
-   #:net.mfiano.lisp.shadow.glsl
-   #:net.mfiano.lisp.umbra.common)
+   #:shadow.glsl
+   #:umbra.common)
   (:export
    #:graph))
 
-(defpackage #:net.mfiano.lisp.umbra.hashing
+(defpackage #:umbra.hashing
   (:use
-   #:net.mfiano.lisp.shadow.glsl
-   #:net.mfiano.lisp.umbra.common)
+   #:shadow.glsl
+   #:umbra.common)
   (:export
    #:blum-blum-shub
    #:blum-blum-shub/hq
@@ -172,13 +172,13 @@
    #:fast32-2
    #:fast32-2/4-per-corner))
 
-(defpackage #:net.mfiano.lisp.umbra.noise
+(defpackage #:umbra.noise
   (:local-nicknames
-   (#:hash #:net.mfiano.lisp.umbra.hashing)
-   (#:shape #:net.mfiano.lisp.umbra.shaping))
+   (#:hash #:umbra.hashing)
+   (#:shape #:umbra.shaping))
   (:use
-   #:net.mfiano.lisp.shadow.glsl
-   #:net.mfiano.lisp.umbra.common)
+   #:shadow.glsl
+   #:umbra.common)
   (:export
    #:perlin
    #:perlin/derivs
@@ -203,10 +203,10 @@
    #:cubist
    #:stars))
 
-(defpackage #:net.mfiano.lisp.umbra.sdf
+(defpackage #:umbra.sdf
   (:use
-   #:net.mfiano.lisp.shadow.glsl
-   #:net.mfiano.lisp.umbra.common)
+   #:shadow.glsl
+   #:umbra.common)
   (:export
    #:difference
    #:difference/smooth
@@ -241,9 +241,9 @@
    #:union
    #:union/smooth))
 
-(defpackage #:net.mfiano.lisp.umbra.sprite
+(defpackage #:umbra.sprite
   (:use
-   #:net.mfiano.lisp.shadow.glsl
-   #:net.mfiano.lisp.umbra.common)
+   #:shadow.glsl
+   #:umbra.common)
   (:export
    #:sprite))

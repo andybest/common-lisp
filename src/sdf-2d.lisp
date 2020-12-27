@@ -1,4 +1,4 @@
-(in-package #:net.mfiano.lisp.umbra.sdf)
+(in-package #:umbra.sdf)
 
 ;;; Operations functions
 

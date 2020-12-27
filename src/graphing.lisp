@@ -1,4 +1,4 @@
-(in-package #:net.mfiano.lisp.umbra.graphing)
+(in-package #:umbra.graphing)
 
 ;;;; Graphing
 ;;;; Credits:

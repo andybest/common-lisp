@@ -1,4 +1,4 @@
-(in-package #:net.mfiano.lisp.umbra.sprite)
+(in-package #:umbra.sprite)
 
 (defstruct sprite-data
   (sampler :sampler-2d :accessor sampler)
