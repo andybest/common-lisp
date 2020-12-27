@@ -1,4 +1,4 @@
-(in-package #:net.mfiano.lisp.patchwork)
+(in-package #:patchwork)
 
 (defclass rect (bin:rect)
   ((file :reader file

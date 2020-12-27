@@ -1,4 +1,4 @@
-(asdf:defsystem #:net.mfiano.lisp.patchwork
+(asdf:defsystem #:patchwork
   :description "A spritesheet packer for games."
   :author "Michael Fiano <mail@mfiano.net>"
   :license "MIT"

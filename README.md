@@ -11,7 +11,7 @@ game development. It uses the 'maxrects' algorithm as described
 ## Install
 
 ```lisp
-(ql:quickload :net.mfiano.lisp.patchwork)
+(ql:quickload :patchwork)
 ```
 
 ## Usage

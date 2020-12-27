@@ -1,6 +1,6 @@
 (in-package #:cl-user)
 
-(defpackage #:net.mfiano.lisp.patchwork
+(defpackage #:patchwork
   (:local-nicknames
    (#:bin #:binpack))
   (:use #:cl)
