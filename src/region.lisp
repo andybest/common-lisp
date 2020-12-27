@@ -1,4 +1,4 @@
-(in-package #:net.mfiano.lisp.dungen)
+(in-package #:dungen)
 
 (defun make-region ()
   (incf (state-current-region *state*)))

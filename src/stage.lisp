@@ -1,4 +1,4 @@
-(in-package #:net.mfiano.lisp.dungen)
+(in-package #:dungen)
 
 (defstruct (stage (:constructor %make-stage)
                   (:copier nil)

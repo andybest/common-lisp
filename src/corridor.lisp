@@ -1,4 +1,4 @@
-(in-package #:net.mfiano.lisp.dungen)
+(in-package #:dungen)
 
 (defun filter-carvable (kernel)
   (not (kernel-detect kernel #'carved-p)))

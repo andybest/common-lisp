@@ -1,4 +1,4 @@
-(asdf:defsystem #:net.mfiano.lisp.dungen
+(asdf:defsystem #:dungen
   :description "A procedural game map generator."
   :author ("Michael Fiano <mail@mfiano.net>")
   :license "MIT"
@@ -7,8 +7,8 @@
   :bug-tracker "https://github.com/mfiano/dungen/issues"
   :encoding :utf-8
   :depends-on (#:cl-pcg
-               #:graph
-               #:net.mfiano.lisp.golden-utils)
+               #:golden-utils
+               #:graph)
   :pathname "src"
   :serial t
   :components

@@ -1,4 +1,4 @@
-(in-package #:net.mfiano.lisp.dungen)
+(in-package #:dungen)
 
 (defun filter-connectable (kernel)
   (and (not (carved-p (select kernel 0 0)))

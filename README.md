@@ -5,7 +5,7 @@ A procedural dungeon generator.
 ## Install
 
 ```lisp
-(ql:quickload :net.mfiano.lisp.dungen)
+(ql:quickload :dungen)
 ```
 
 ## License
