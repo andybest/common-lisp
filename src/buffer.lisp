@@ -1,4 +1,4 @@
-(in-package #:net.mfiano.lisp.parsley)
+(in-package #:parsley)
 
 (defvar *buffer*)
 

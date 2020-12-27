@@ -1,6 +1,6 @@
 (in-package #:cl-user)
 
-(defpackage #:net.mfiano.lisp.parsley
+(defpackage #:parsley
   (:use #:cl)
   (:export
    #:*buffer*

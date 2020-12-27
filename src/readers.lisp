@@ -1,4 +1,4 @@
-(in-package #:net.mfiano.lisp.parsley)
+(in-package #:parsley)
 
 (defun octets= (octet-vector octet-list)
   (equalp octet-vector (fast-io:octets-from octet-list)))

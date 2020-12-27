@@ -1,4 +1,4 @@
-(asdf:defsystem #:net.mfiano.lisp.parsley
+(asdf:defsystem #:parsley
   :description "A toolset for parsing binary data formats."
   :author ("Michael Fiano <mail@mfiano.net>")
   :license "MIT"

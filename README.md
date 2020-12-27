@@ -11,7 +11,7 @@ drastically at any time.
 ## Install
 
 ```lisp
-(ql:quickload :net.mfiano.lisp.parsley)
+(ql:quickload :parsley)
 ```
 
 ## License
