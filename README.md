@@ -5,7 +5,7 @@ A utility for reading metadata embedded in FLAC audio files.
 ## Overview
 
 This utility was created as an alternative to
-[flac-parser](https://github.com/mfiano/flac-parser). They both do the same
+[flac-parser](https://git.mfiano.net/mfiano/flac-parser). They both do the same
 thing, but flac-metadata is faster, more concise, and I decided to abandon
 flac-parser.
 

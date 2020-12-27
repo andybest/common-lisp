@@ -3,8 +3,8 @@
   :author ("Michael Fiano <mail@mfiano.net>")
   :license "MIT"
   :homepage "https://mfiano.net/projects/flac-metadata"
-  :source-control (:git "https://github.com/mfiano/flac-metadata")
-  :bug-tracker "https://github.com/mfiano/flac-metadata/issues"
+  :source-control (:git "https://git.mfiano.net/mfiano/flac-metadata")
+  :bug-tracker "https://git.mfiano.net/mfiano/flac-metadata/issues"
   :encoding :utf-8
   :depends-on (#:golden-utils
                #:parsley)
