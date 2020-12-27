@@ -3,8 +3,8 @@
   :author "Michael Fiano <mail@mfiano.net>"
   :license "MIT"
   :homepage "https://mfiano.net/projects/patchwork"
-  :source-control (:git "https://github.com/mfiano/patchwork")
-  :bug-tracker "https://github.com/mfiano/patchwork/issues"
+  :source-control (:git "https://git.mfiano.net/mfiano/patchwork")
+  :bug-tracker "https://git.mfiano.net/mfiano/patchwork/issues"
   :encoding :utf-8
   :depends-on (#:binpack
                #:opticl
