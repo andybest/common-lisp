@@ -1,4 +1,4 @@
-(in-package #:net.mfiano.lisp.shadow)
+(in-package #:shadow)
 
 (defun stage-type (stage)
   (varjo:stage-kind stage))

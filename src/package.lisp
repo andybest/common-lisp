@@ -1,14 +1,14 @@
 (in-package #:cl-user)
 
-(defpackage #:net.mfiano.lisp.shadow
+(defpackage #:shadow
   (:local-nicknames
-   (#:u #:net.mfiano.lisp.golden-utils)
-   (#:m2 #:net.mfiano.lisp.origin.mat2)
-   (#:m3 #:net.mfiano.lisp.origin.mat3)
-   (#:m4 #:net.mfiano.lisp.origin.mat4)
-   (#:v2 #:net.mfiano.lisp.origin.vec2)
-   (#:v3 #:net.mfiano.lisp.origin.vec3)
-   (#:v4 #:net.mfiano.lisp.origin.vec4))
+   (#:u #:golden-utils)
+   (#:m2 #:origin.mat2)
+   (#:m3 #:origin.mat3)
+   (#:m4 #:origin.mat4)
+   (#:v2 #:origin.vec2)
+   (#:v3 #:origin.vec3)
+   (#:v4 #:origin.vec4))
   (:use #:cl)
   (:export
    #:bind-block
@@ -56,10 +56,10 @@
    #:with-shader
    #:write-buffer-path))
 
-(defpackage #:net.mfiano.lisp.shadow.glsl
+(defpackage #:shadow.glsl
   (:local-nicknames
-   (#:s #:net.mfiano.lisp.shadow)
-   (#:u #:net.mfiano.lisp.golden-utils))
+   (#:s #:shadow)
+   (#:u #:golden-utils))
   (:use #:cl #:vari)
   (:shadow
    #:defun

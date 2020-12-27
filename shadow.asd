@@ -1,4 +1,4 @@
-(asdf:defsystem #:net.mfiano.lisp.shadow
+(asdf:defsystem #:shadow
   :description "A management system for OpenGL shader programs and associated buffer objects."
   :author "Michael Fiano <mail@mfiano.net>"
   :license "MIT"
@@ -8,8 +8,8 @@
   :encoding :utf-8
   :depends-on (#:cl-opengl
                #:glsl-packing
-               #:net.mfiano.lisp.golden-utils
-               #:net.mfiano.lisp.origin
+               #:golden-utils
+               #:origin
                #:static-vectors
                #:varjo)
   :pathname "src"

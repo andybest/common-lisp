@@ -18,7 +18,7 @@ managing OpenGL shader programs and associated buffers.
 ## Install
 
 ``` lisp
-(ql:quickload :net.mfiano.lisp.shadow)
+(ql:quickload :shadow)
 ```
 
 ## Usage

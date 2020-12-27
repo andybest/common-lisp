@@ -1,4 +1,4 @@
-(in-package #:net.mfiano.lisp.shadow)
+(in-package #:shadow)
 
 (defvar *metadata* (u:dict #'eq))
 
@@ -62,9 +62,9 @@
       (meta :modify-hook) (constantly nil)
       (meta :shader-definitions) (u:dict #'eq))
 
-#+net.mfiano.lisp.shadow-track-dependencies-at-load
+#+shadow-track-dependencies-at-load
 (setf (meta :track-dependencies-p) t)
-#-net.mfiano.lisp.shadow-track-dependencies-at-load
+#-shadow-track-dependencies-at-load
 (setf (meta :track-dependencies-p) nil)
 
 (reset-program-state)

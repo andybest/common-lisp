@@ -1,4 +1,4 @@
-(in-package #:net.mfiano.lisp.shadow)
+(in-package #:shadow)
 
 (defgeneric get-uniform-data (type parts)
   (:method (type parts)

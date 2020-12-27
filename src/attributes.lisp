@@ -1,4 +1,4 @@
-(in-package #:net.mfiano.lisp.shadow)
+(in-package #:shadow)
 
 (defun store-attributes (program)
   (dolist (stage (translated-stages program))

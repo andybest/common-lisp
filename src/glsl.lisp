@@ -1,4 +1,4 @@
-(in-package #:net.mfiano.lisp.shadow.glsl)
+(in-package #:shadow.glsl)
 
 (cl:defmacro defun (name args &body body)
   "Define a GPU function."
