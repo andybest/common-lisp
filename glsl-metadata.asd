@@ -1,4 +1,4 @@
-(asdf:defsystem #:net.mfiano.lisp.glsl-metadata
+(asdf:defsystem #:glsl-metadata
   :description ""
   :author ("Michael Fiano <mail@mfiano.net>")
   :license "MIT"
@@ -6,7 +6,7 @@
   :source-control (:git "https://github.com/mfiano/glsl-metadata.git")
   :bug-tracker "https://github.com/mfiano/glsl-metadata/issues"
   :encoding :utf-8
-  :depends-on (#:net.mfiano.lisp.golden-utils
+  :depends-on (#:golden-utils
                #:uiop)
   :pathname "src"
   :serial t

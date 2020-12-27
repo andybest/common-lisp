@@ -9,7 +9,7 @@ TODO
 ## Install
 
 ```lisp
-(ql:quickload :net.mfiano.lisp.glsl-metadata)
+(ql:quickload :glsl-metadata)
 ```
 
 ## Usage
