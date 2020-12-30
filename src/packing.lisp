@@ -47,7 +47,7 @@
        ,(pack-block layout)))))
 
 (defun unpack-type (layout-type type)
-  (destructuring-bind ((spec x &optional (y 1) (z 1)) &key &allow-other-keys)
+  (destructuring-bind ((spec &optional x (y 1) (z 1)) &key &allow-other-keys)
       type
     (labels ((get-container (x)
                (unpack-type layout-type (list x)))
