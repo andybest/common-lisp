@@ -490,35 +490,39 @@ power of POWER."
   (declare (optimize speed))
   (sqrt! (zero) vec))
 
-(u:fn-> floor! (vec vec) vec)
+;; FIXME: This cannot be declared optimized until SBCL bug #1908130 is resolved.
+(u:fn-> floor! (vec vec &optional u:f64) vec)
 (declaim (inline floor!))
-(defun floor! (out vec)
+(defun floor! (out vec &optional (divisor 1d0))
   "Modify vector OUT to have the nearest integer less than or equal to each
 component of vector VEC."
-  (com:cwset 4 out vec (ffloor vec))
+  (com:cwset 4 out vec (ffloor vec divisor))
   out)
 
-(u:fn-> floor (vec) vec)
+;; FIXME: This cannot be declared optimized until SBCL bug #1908130 is resolved.
+(u:fn-> floor (vec &optional u:f64) vec)
 (declaim (inline floor))
-(defun floor (vec)
+(defun floor (vec &optional (divisor 1d0))
   "Construct a fresh vector that has the nearest integer less than or equal to
 each component of vector VEC."
-  (floor! (zero) vec))
+  (floor! (zero) vec divisor))
 
-(u:fn-> ceiling! (vec vec) vec)
+;; FIXME: This cannot be declared optimized until SBCL bug #1908130 is resolved.
+(u:fn-> ceiling! (vec vec &optional u:f64) vec)
 (declaim (inline ceiling!))
-(defun ceiling! (out vec)
+(defun ceiling! (out vec &optional (divisor 1d0))
   "Modify vector OUT to have the nearest integer greater than or equal to each
 component of vector VEC."
-  (com:cwset 4 out vec (fceiling vec))
+  (com:cwset 4 out vec (fceiling vec divisor))
   out)
 
-(u:fn-> ceiling (vec) vec)
+;; FIXME: This cannot be declared optimized until SBCL bug #1908130 is resolved.
+(u:fn-> ceiling (vec &optional u:f64) vec)
 (declaim (inline ceiling))
-(defun ceiling (vec)
+(defun ceiling (vec &optional (divisor 1d0))
   "Construct a fresh vector that has the nearest integer greater than or equal
 to each component of vector VEC."
-  (ceiling! (zero) vec))
+  (ceiling! (zero) vec divisor))
 
 (u:fn-> mod! (vec vec u:f64) vec)
 (declaim (inline mod!))

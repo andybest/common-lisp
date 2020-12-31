@@ -518,39 +518,39 @@ power of POWER."
   (declare (optimize speed))
   (sqrt! (zero) vec))
 
-(u:fn-> floor! (vec vec) vec)
+(u:fn-> floor! (vec vec &optional u:f32) vec)
 (declaim (inline floor!))
-(defun floor! (out vec)
+(defun floor! (out vec &optional (divisor 1.0))
   "Modify vector OUT to have the nearest integer less than or equal to each
 component of vector VEC."
   (declare (optimize speed))
-  (com:cwset 3 out vec (ffloor vec))
+  (com:cwset 3 out vec (ffloor vec divisor))
   out)
 
-(u:fn-> floor (vec) vec)
+(u:fn-> floor (vec &optional u:f32) vec)
 (declaim (inline floor))
-(defun floor (vec)
+(defun floor (vec &optional (divisor 1.0))
   "Construct a fresh vector that has the nearest integer less than or equal to
 each component of vector VEC."
   (declare (optimize speed))
-  (floor! (zero) vec))
+  (floor! (zero) vec divisor))
 
-(u:fn-> ceiling! (vec vec) vec)
+(u:fn-> ceiling! (vec vec &optional u:f32) vec)
 (declaim (inline ceiling!))
-(defun ceiling! (out vec)
+(defun ceiling! (out vec &optional (divisor 1.0))
   "Modify vector OUT to have the nearest integer greater than or equal to each
 component of vector VEC."
   (declare (optimize speed))
-  (com:cwset 3 out vec (fceiling vec))
+  (com:cwset 3 out vec (fceiling vec divisor))
   out)
 
-(u:fn-> ceiling (vec) vec)
+(u:fn-> ceiling (vec &optional u:f32) vec)
 (declaim (inline ceiling))
-(defun ceiling (vec)
+(defun ceiling (vec &optional (divisor 1.0))
   "Construct a fresh vector that has the nearest integer greater than or equal
 to each component of vector VEC."
   (declare (optimize speed))
-  (ceiling! (zero) vec))
+  (ceiling! (zero) vec divisor))
 
 (u:fn-> mod! (vec vec u:f32) vec)
 (declaim (inline mod!))
