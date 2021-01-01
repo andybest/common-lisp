@@ -15,6 +15,7 @@
   (:export
    #:distance
    #:distance-squared
+   #:find-min-max
    #:point
    #:translate
    #:x
@@ -47,3 +48,16 @@
 (defun distance (point1 point2)
   (declare (optimize speed))
   (sqrt (distance-squared point1 point2)))
+
+(u:fn-> find-min-max (simple-vector) (values point point))
+(defun find-min-max (points)
+  "Find the minimum and maximum points (extents) of a 2D point cloud vector."
+  (declare (optimize speed)
+           (simple-vector points))
+  (let ((min (v2:vec most-positive-single-float))
+        (max (v2:vec most-negative-single-float)))
+    (dotimes (i (length points))
+      (let ((x (svref points i)))
+        (v2:min! min min x)
+        (v2:max! max max x)))
+    (values min max)))

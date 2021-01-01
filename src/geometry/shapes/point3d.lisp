@@ -18,6 +18,7 @@
   (:export
    #:distance
    #:distance-squared
+   #:find-min-max
    #:point
    #:translate
    #:unproject
@@ -75,3 +76,16 @@
             (return-from unproject out))
           (v3:scale! out (v3:vec o) (/ ow)))))
     (values out t)))
+
+(u:fn-> find-min-max (simple-vector) (values point point))
+(defun find-min-max (points)
+  "Find the minimum and maximum points (extents) of a 3D point cloud vector."
+  (declare (optimize speed)
+           (simple-vector points))
+  (let ((min (v3:vec most-positive-single-float))
+        (max (v3:vec most-negative-single-float)))
+    (dotimes (i (length points))
+      (let ((x (svref points i)))
+        (v3:min! min min x)
+        (v3:max! max max x)))
+    (values min max)))
