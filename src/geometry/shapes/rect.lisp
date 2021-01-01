@@ -20,6 +20,7 @@
    #:origin
    #:rect
    #:rect-from-min/max
+   #:rect-from-half-extents
    #:rect-p
    #:size))
 
@@ -51,6 +52,13 @@ bottom-left corner and upper-right corner of the resulting rectangle,
 respectively."
   (declare (optimize speed))
   (%rect :origin min :size (v2:- max min)))
+
+(u:fn-> rect-from-half-extents (&key  (:half-extents v2:vec)) rect)
+(declaim (inline rect-from-half-extents))
+(defun rect-from-half-extents (&key (half-extents (v2:vec 0.5)))
+  (declare (optimize speed))
+  (%rect :origin (v2:negate half-extents)
+         :size (v2:scale half-extents 2.0)))
 
 (u:fn-> min (rect) point2d:point)
 (declaim (inline min))
