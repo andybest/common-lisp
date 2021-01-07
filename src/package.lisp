@@ -180,6 +180,12 @@
    #:shadow.glsl
    #:umbra.common)
   (:export
+   #:billow/cellular
+   #:billow/perlin
+   #:billow/simplex
+   #:fbm/cellular
+   #:fbm/perlin
+   #:fbm/simplex
    #:perlin
    #:perlin/derivs
    #:perlin-surflet
@@ -192,6 +198,9 @@
    #:polkadot-box
    #:hermite
    #:hermite/derivs
+   #:ridges/cellular
+   #:ridges/perlin
+   #:ridges/simplex
    #:simplex-perlin
    #:simplex-perlin/derivs
    #:simplex-cellular
