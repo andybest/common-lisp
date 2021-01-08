@@ -10,17 +10,16 @@
 
 (defun make-vertex-data ((sprite sprite-data)
                          (spritesheet spritesheet-data))
-  (let* ((tex-size (.xyxy (texture-size (sampler sprite) 0)))
-         (size (aref (size spritesheet) (index sprite)))
-         (a (aref (pos spritesheet) (index sprite)))
-         (b (+ a size))
-         (vertpos (vec4 (* size 0.5) (* size -0.5)))
-         (uv (/ (vec4 a b) tex-size)))
+  (let* ((texture-size (.xyxy (texture-size (sampler sprite) 0)))
+         (sprite-size (aref (size spritesheet) (index sprite)))
+         (sprite-pos (aref (pos spritesheet) (index sprite)))
+         (pos (vec4 (* sprite-size 0.5) (* sprite-size -0.5)))
+         (uv (vec4 sprite-pos (+ sprite-pos (1- sprite-size)))))
     (case gl-vertex-id
-      (0 (values (.xy vertpos) (.zw uv)))
-      (1 (values (.zy vertpos) (.xw uv)))
-      (2 (values (.xw vertpos) (.zy uv)))
-      (otherwise (values (.zw vertpos) (.xy uv))))))
+      (0 (values (.xy pos) (.zw uv)))
+      (1 (values (.zy pos) (.xw uv)))
+      (2 (values (.xw pos) (.zy uv)))
+      (otherwise (values (.zw pos) (.xy uv))))))
 
 (defun sprite/v (&uniforms
                  (model :mat4)
@@ -36,7 +35,8 @@
                  &uniforms
                  (sprite sprite-data)
                  (opacity :float))
-  (let ((color (texture (sampler sprite) uv)))
+  (let* ((texture-size (.xy (texture-size (sampler sprite) 0)))
+         (color (texture (sampler sprite) (/ (+ uv 0.5) texture-size))))
     (vec4 (.rgb color) (* (.a color) opacity))))
 
 (define-shader sprite (:primitive :triangle-strip)
