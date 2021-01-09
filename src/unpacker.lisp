@@ -19,13 +19,12 @@
     (when (and id x y w h)
       (let* ((atlas-width (array-dimension atlas 1))
              (atlas-height (array-dimension atlas 0))
-             (rect (make-instance
-                    'rect
-                    :id id
-                    :x (round (* atlas-width x))
-                    :y (round (* atlas-height y))
-                    :w (round (* atlas-width w))
-                    :h (round (* atlas-height h)))))
+             (rect (make-instance 'rect
+                                  :id id
+                                  :x (round (* atlas-width x))
+                                  :y (round (* atlas-height y))
+                                  :w (round (* atlas-width w))
+                                  :h (round (* atlas-height h)))))
         (when y-inverted
           (setf (bin:y rect) (- atlas-height (bin:y rect) (bin:h rect))))
         rect))))
@@ -36,7 +35,8 @@
 
 (defun write-sprite (atlas rect out-file)
   (binpack:with-rect (nil x y w h) rect
-    (let ((sprite (make-array (list* h w
+    (let ((sprite (make-array (list* h
+                                     w
                                      (when (> (array-rank atlas) 2)
                                        (list (array-dimension atlas 2))))
                               :element-type (array-element-type atlas))))
@@ -58,5 +58,5 @@
 OUT-PATH: A pathname specifying a directory to write all the sprite images to."
   (loop :with atlas = (opticl:read-image-file atlas-file)
         :with spec-file = (make-pathname :defaults atlas-file :type "spec")
-        :for data :in (uiop/stream:safe-read-file-form spec-file)
+        :for data :in (u:safe-read-file-form spec-file)
         :do (unpack-sprite atlas data out-path)))

@@ -2,7 +2,8 @@
 
 (defpackage #:patchwork
   (:local-nicknames
-   (#:bin #:binpack))
+   (#:bin #:binpack)
+   (#:u #:golden-utils))
   (:use #:cl)
   (:export
    #:make-atlas

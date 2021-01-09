@@ -1,8 +1,8 @@
 (in-package #:patchwork)
 
 (defclass rect (bin:rect)
-  ((file :reader file
-         :initarg :file)))
+  ((%file :reader file
+          :initarg :file)))
 
 (defmethod binpack:rect-initargs append ((r rect))
   (list :file (file r)))
@@ -27,22 +27,12 @@
        (uiop/pathname:ensure-directory-pathname (replace-tilde root)))
       :type nil))))
 
-(defun map-files (path effect &key (filter (constantly t)) (recursive t))
-  (labels ((maybe-affect (file)
-             (when (funcall filter file)
-               (funcall effect file)))
-           (process-files (dir)
-             (map nil #'maybe-affect (uiop/filesystem:directory-files dir))))
-    (uiop/filesystem:collect-sub*directories
-     (uiop/pathname:ensure-directory-pathname path)
-     t recursive #'process-files)))
-
 (defun collect-files (path &key recursive)
   (let ((files))
-    (map-files
+    (u:map-files
      path
      (lambda (x) (push (cons x (make-id path x)) files))
-     :recursive recursive)
+     :recursive-p recursive)
     (reverse files)))
 
 (defun make-rects (files)
@@ -96,16 +86,11 @@
 (defun write-metadata (data out-file)
   (let ((out-file (make-pathname :defaults out-file :type "spec"))
         (data (sort data #'string< :key (lambda (x) (getf x :id)))))
-    (with-open-file (out out-file
-                         :direction :output
-                         :if-exists :supersede
-                         :if-does-not-exist :create)
+    (u:with-file-output (out out-file)
       (write data :stream out))))
 
-(defun make-atlas (file-spec &key out-file
-                               (width :auto) (height :auto)
-                               normalize flip-y
-                               (padding 0) (optimize-pack nil)
+(defun make-atlas (file-spec &key out-file (width :auto) (height :auto)
+                               normalize flip-y (padding 0) (optimize-pack nil)
                                (auto-size-granularity-x 1)
                                (auto-size-granularity-y 1))
   "Pack the sprites defined by FILE-SPEC into a spritesheet.
@@ -137,30 +122,31 @@ from the files under a given filesystem path.
   (loop :with rects = (add-padding (make-rects file-spec) padding)
         :with (packed packed-width packed-height)
           = (multiple-value-list
-             (binpack:auto-pack
-              rects
-              :width width :height height
-              :auto-size-granularity-x auto-size-granularity-x
-              :auto-size-granularity-y auto-size-granularity-y
-              :optimize-pack optimize-pack))
+             (binpack:auto-pack rects
+                                :width width
+                                :height height
+                                :auto-size-granularity-x auto-size-granularity-x
+                                :auto-size-granularity-y auto-size-granularity-y
+                                :optimize-pack optimize-pack))
         :with atlas = (opticl:make-8-bit-rgba-image
                        (if (numberp height) height packed-height)
                        (if (numberp width) width packed-width))
         :for rect :in (remove-padding packed padding)
         :for sprite = (opticl:read-png-file (file rect))
-        :for coords = (make-coords rect packed-width packed-height
-                                   normalize flip-y)
+        :for coords = (make-coords rect
+                                   packed-width
+                                   packed-height
+                                   normalize
+                                   flip-y)
         :do (write-atlas atlas sprite rect)
         :collect `(:id ,(bin:id rect) ,@coords) :into data
         :finally (return
                    (values (write-metadata data out-file)
                            (opticl:write-image-file out-file atlas)))))
 
-(defun make-atlas-from-directory (path &key recursive out-file
-                                         (width :auto) (height :auto)
-                                         normalize flip-y
-                                         (padding 0)
-                                         (auto-size-granularity-x 1)
+(defun make-atlas-from-directory (path &key recursive out-file (width :auto)
+                                         (height :auto) normalize flip-y
+                                         (padding 0) (auto-size-granularity-x 1)
                                          (auto-size-granularity-y 1)
                                          (optimize-pack nil))
   "Pack the sprites located under the given filesystem path, PATH.
