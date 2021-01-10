@@ -7,6 +7,7 @@
   :bug-tracker "https://git.mfiano.net/mfiano/patchwork/issues"
   :encoding :utf-8
   :depends-on (#:binpack
+               #:golden-utils
                #:opticl
                #:pngload
                #:uiop)

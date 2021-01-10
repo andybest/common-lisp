@@ -8,23 +8,17 @@
 (defgeneric %make-atlas-coords (atlas data normalized))
 
 (defmethod %make-atlas-coords (atlas data (normalized (eql t)))
-  (destructuring-bind (&key id x y w h y-inverted &allow-other-keys) data
-    (when (and id x y w h)
+  (destructuring-bind (&key x y w h y-inverted &allow-other-keys) data
+    (when (and x y w h)
       (let* ((atlas-height (array-dimension atlas 0))
              (y (if y-inverted (- atlas-height y h) y)))
         (apply #'make-instance 'rect :y y data)))))
 
 (defmethod %make-atlas-coords (atlas data normalized)
   (destructuring-bind (&key id x y w h y-inverted &allow-other-keys) data
-    (when (and id x y w h)
-      (let* ((atlas-width (array-dimension atlas 1))
-             (atlas-height (array-dimension atlas 0))
-             (rect (make-instance 'rect
-                                  :id id
-                                  :x (round (* atlas-width x))
-                                  :y (round (* atlas-height y))
-                                  :w (round (* atlas-width w))
-                                  :h (round (* atlas-height h)))))
+    (when (and x y w h)
+      (let ((atlas-height (array-dimension atlas 0))
+            (rect (make-instance 'rect :id id :x x :y y :w w :h h)))
         (when y-inverted
           (setf (bin:y rect) (- atlas-height (bin:y rect) (bin:h rect))))
         rect))))
