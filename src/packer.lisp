@@ -83,19 +83,21 @@
       (setf (opticl:pixel atlas (+ i (bin:y rect)) (+ j (bin:x rect)))
             (opticl:pixel sprite i j)))))
 
-(defun write-metadata (data out-file)
-  (let ((out-file (make-pathname :defaults out-file :type "spec"))
-        (data (sort data #'string< :key (lambda (x) (getf x :id)))))
-    (u:with-file-output (out out-file)
+(defun write-metadata (data spec-path)
+  (let ((data (sort data #'string< :key (lambda (x) (getf x :id)))))
+    (u:with-file-output (out spec-path)
       (write data :stream out))))
 
-(defun make-atlas (file-spec &key out-file (width :auto) (height :auto)
+(defun make-atlas (file-spec &key out-file spec-file (width :auto) (height :auto)
                                normalize flip-y (padding 0) (optimize-pack nil)
                                (auto-size-granularity-x 1)
                                (auto-size-granularity-y 1))
   "Pack the sprites defined by FILE-SPEC into a spritesheet.
 
 OUT-FILE: A pathname specifying where to write the image file.
+
+SPEC-FILE: A pathname specifying where to write the metadata file. If
+unspecified, it is written to the same directory as OUT-FILE.
 
 WIDTH: The width in pixels of the spritesheet. :AUTO to calculate width
 automatically.
@@ -131,6 +133,8 @@ from the files under a given filesystem path.
         :with atlas = (opticl:make-8-bit-rgba-image
                        (if (numberp height) height packed-height)
                        (if (numberp width) width packed-width))
+        :with spec-file = (or spec-file
+                              (make-pathname :defaults out-file :type "spec"))
         :for rect :in (remove-padding packed padding)
         :for sprite = (opticl:read-png-file (file rect))
         :for coords = (make-coords rect
@@ -141,12 +145,13 @@ from the files under a given filesystem path.
         :do (write-atlas atlas sprite rect)
         :collect `(:id ,(bin:id rect) ,@coords) :into data
         :finally (return
-                   (values (write-metadata data out-file)
+                   (values (write-metadata data spec-file)
                            (opticl:write-image-file out-file atlas)))))
 
-(defun make-atlas-from-directory (path &key recursive out-file (width :auto)
-                                         (height :auto) normalize flip-y
-                                         (padding 0) (auto-size-granularity-x 1)
+(defun make-atlas-from-directory (path &key recursive out-file spec-file
+                                         (width :auto) (height :auto) normalize
+                                         flip-y (padding 0)
+                                         (auto-size-granularity-x 1)
                                          (auto-size-granularity-y 1)
                                          (optimize-pack nil))
   "Pack the sprites located under the given filesystem path, PATH.
@@ -154,6 +159,9 @@ from the files under a given filesystem path.
 RECURSIVE: Boolean specifying whether to scan recursively for files.
 
 OUT-FILE: A pathname specifying where to write the image file.
+
+SPEC-FILE: A pathname specifying where to write the metadata file. If
+unspecified, it is written to the same directory as OUT-FILE.
 
 WIDTH: The width in pixels of the spritesheet. :AUTO to calculate width
 automatically.
@@ -181,6 +189,7 @@ metadata file.
   (let ((file-spec (collect-files path :recursive recursive)))
     (make-atlas file-spec
                 :out-file out-file
+                :spec-file spec-file
                 :width width
                 :height height
                 :normalize normalize
