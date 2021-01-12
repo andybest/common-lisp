@@ -6,7 +6,8 @@
   :source-control (:git "https://git.mfiano.net/mfiano/shadow")
   :bug-tracker "https://git.mfiano.net/mfiano/shadow/issues"
   :encoding :utf-8
-  :depends-on (#:cl-opengl
+  :depends-on (#:cffi
+               #:cl-opengl
                #:glsl-packing
                #:golden-utils
                #:origin
