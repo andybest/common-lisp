@@ -77,9 +77,19 @@ PROGRAM-NAME."
       (remhash buffer-name (meta :buffers))
       %id)))
 
-(defun %write-buffer-member (target member value)
+(defun parse-buffer-path (path)
+  (let ((parts (split-sequence:split-sequence #\[ (symbol-name path))))
+    (destructuring-bind (path-part &optional index-part) parts
+      (values (u:make-keyword path-part)
+              (if index-part
+                  (or (parse-integer index-part :junk-allowed t) 0)
+                  0)))))
+
+(defun %write-buffer-member (target member index value)
   (with-slots (%element-type %offset %element-stride %byte-stride) member
-    (let ((count (length value)))
+    (let* ((count (length value))
+           (offset (+ %offset (* index %byte-stride)))
+           (size (* count %byte-stride)))
       (static-vectors:with-static-vector
           (sv (* count %element-stride)
               :element-type %element-type
@@ -93,12 +103,14 @@ PROGRAM-NAME."
                      (setf (aref sv i) x))
                  (incf i %element-stride))
                value)
-          (%gl:buffer-sub-data target %offset (* count %byte-stride) ptr))))))
+          (%gl:buffer-sub-data target offset size ptr))))))
 
-(defun %write-buffer-member/matrix (target member value)
+(defun %write-buffer-member/matrix (target member index value)
   (with-slots (%element-type %offset %element-stride %byte-stride %dimensions)
       member
-    (let ((count (length value)))
+    (let* ((count (length value))
+           (offset (+ %offset (* index %byte-stride)))
+           (size (* count %byte-stride)))
       (destructuring-bind (columns rows) %dimensions
         (static-vectors:with-static-vector
             (sv (* count columns %element-stride)
@@ -115,8 +127,7 @@ PROGRAM-NAME."
                               sv x :start1 j :start2 k :end2 (+ k rows)))
                    (incf i (* columns %element-stride)))
                  value)
-            (%gl:buffer-sub-data
-             target %offset (* count %byte-stride) ptr)))))))
+            (%gl:buffer-sub-data target offset size ptr)))))))
 
 (defun write-buffer-path (buffer-name path value)
   "Write VALUE to the buffer with the name BUFFER-NAME, starting at the given
@@ -129,12 +140,13 @@ Note: Writing to arrays which contain other aggregate types (other arrays or
 structures) is not possible. This is a design decision to allow this library to
 have a simple \"path-based\" buffer writing interface."
   (with-slots (%type %id %target %layout) (find-buffer buffer-name)
-    (let ((member (u:href (members %layout) path)))
+    (u:mvlet* ((path index (parse-buffer-path path))
+               (member (u:href (members %layout) path)))
       (check-type value sequence)
       (gl:bind-buffer %target %id)
-      (if (eq (object-type member) :mat)
-          (%write-buffer-member/matrix %target member value)
-          (%write-buffer-member %target member value))
+      (case (object-type member)
+        (:mat (%write-buffer-member/matrix %target member index value))
+        (t (%write-buffer-member %target member index value)))
       (gl:bind-buffer %target 0))))
 
 (defun %read-buffer-member/scalar (member data count)
@@ -179,11 +191,13 @@ have a simple \"path-based\" buffer writing interface."
                         :collect (make-matrix data index)))
               (error "Only square matrices are supported.")))))))
 
-(defun %read-buffer-member (target member &optional count)
+(defun %read-buffer-member (target member index &optional count)
   (with-slots (%type %dimensions %count %element-stride %element-type %offset
                %byte-stride)
       member
     (let* ((count (or count %count))
+           (offset (+ %offset (* index %byte-stride)))
+           (size (* count %byte-stride))
            (element-count (reduce #'* %dimensions))
            (stride (if (and (eq %type :vec)
                             (= element-count 3))
@@ -192,7 +206,7 @@ have a simple \"path-based\" buffer writing interface."
            (data (make-array (* stride (cadr %dimensions) count)
                              :element-type %element-type)))
       (cffi:with-pointer-to-vector-data (ptr data)
-        (%gl:get-buffer-sub-data target %offset (* count %byte-stride) ptr))
+        (%gl:get-buffer-sub-data target offset size ptr))
       (ecase %type
         (:scalar (%read-buffer-member/scalar member data count))
         (:vec (%read-buffer-member/vector member data count))
@@ -200,7 +214,8 @@ have a simple \"path-based\" buffer writing interface."
 
 (defun read-buffer-path (buffer-name path &optional count)
   (with-slots (%id %target %layout) (find-buffer buffer-name)
-    (let ((member (u:href (members %layout) path)))
+    (u:mvlet* ((path index (parse-buffer-path path))
+               (member (u:href (members %layout) path)))
       (gl:bind-buffer %target %id)
-      (unwind-protect (%read-buffer-member %target member count)
+      (unwind-protect (%read-buffer-member %target member index count)
         (gl:bind-buffer %target 0)))))
