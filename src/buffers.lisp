@@ -77,14 +77,6 @@ PROGRAM-NAME."
       (remhash buffer-name (meta :buffers))
       %id)))
 
-(defun parse-buffer-path (path)
-  (let ((parts (split-sequence:split-sequence #\[ (symbol-name path))))
-    (destructuring-bind (path-part &optional index-part) parts
-      (values (u:make-keyword path-part)
-              (if index-part
-                  (or (parse-integer index-part :junk-allowed t) 0)
-                  0)))))
-
 (defun %write-buffer-member (target member index value)
   (with-slots (%element-type %offset %element-stride %byte-stride) member
     (let* ((count (length value))
@@ -129,7 +121,7 @@ PROGRAM-NAME."
                  value)
             (%gl:buffer-sub-data target offset size ptr)))))))
 
-(defun write-buffer-path (buffer-name path value)
+(defun write-buffer-path (buffer-name &key path index value)
   "Write VALUE to the buffer with the name BUFFER-NAME, starting at the given
 PATH.
 PATH: A \"dot-separated\" keyword symbol, where each part denotes a member in
@@ -140,8 +132,9 @@ Note: Writing to arrays which contain other aggregate types (other arrays or
 structures) is not possible. This is a design decision to allow this library to
 have a simple \"path-based\" buffer writing interface."
   (with-slots (%type %id %target %layout) (find-buffer buffer-name)
-    (u:mvlet* ((path index (parse-buffer-path path))
-               (member (u:href (members %layout) path)))
+    (unless path
+      (error "Buffer path must be specified."))
+    (let ((member (u:href (members %layout) path)))
       (check-type value sequence)
       (when (> (+ index (length value)) (element-count member))
         (error "Buffer index out of bounds when writing path: ~s." path))
@@ -193,7 +186,7 @@ have a simple \"path-based\" buffer writing interface."
                         :collect (make-matrix data index)))
               (error "Only square matrices are supported.")))))))
 
-(defun %read-buffer-member (target member index &optional count)
+(defun %read-buffer-member (target member index count)
   (with-slots (%type %dimensions %count %element-stride %element-type %offset
                %byte-stride)
       member
@@ -214,10 +207,11 @@ have a simple \"path-based\" buffer writing interface."
         (:vec (%read-buffer-member/vector member data count))
         (:mat (%read-buffer-member/matrix member data count))))))
 
-(defun read-buffer-path (buffer-name path &optional count)
+(defun read-buffer-path (buffer-name &key path (index 0) count)
   (with-slots (%id %target %layout) (find-buffer buffer-name)
-    (u:mvlet* ((path index (parse-buffer-path path))
-               (member (u:href (members %layout) path)))
+    (unless path
+      (error "Buffer path must be specified."))
+    (let ((member (u:href (members %layout) path)))
       (when (> (+ index (or count 1)) (element-count member))
         (error "Buffer index out of bounds when reading path: ~s." path))
       (gl:bind-buffer %target %id)
