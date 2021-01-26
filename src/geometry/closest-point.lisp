@@ -44,10 +44,7 @@
   (declare (optimize speed))
   (let* ((start (line3d:start line))
          (vector (v3:- (line3d:end line) start))
-         (x (u:clamp (/ (v3:dot (v3:- point start) vector)
-                        (v3:length-squared vector))
-                     0.0
-                     1.0)))
+         (x (u:clamp (/ (v3:dot (v3:- point start) vector) (v3:length-squared vector)) 0.0 1.0)))
     (declare (dynamic-extent vector))
     (v3:scale! vector vector x)
     (v3:+ start vector)))
@@ -55,10 +52,9 @@
 (u:fn-> closest-point-ray (ray:ray point3d:point) point3d:point)
 (defun closest-point-ray (ray point)
   (declare (optimize speed))
-  ;; NOTE: This assumes that the ray direction is normalized, which is the case
-  ;; upon the construction of a ray. It is therefor important not to erroneously
-  ;; alter a ray's direction vector slot, at least not without re-normalizing
-  ;; it.
+  ;; NOTE: This assumes that the ray direction is normalized, which is the case upon the
+  ;; construction of a ray. It is therefor important not to erroneously alter a ray's direction
+  ;; vector slot, at least not without re-normalizing it.
   (let* ((origin (ray:origin ray))
          (direction (ray:direction ray))
          (vector (v3:- point origin)))

@@ -193,8 +193,7 @@
   (declare (optimize speed))
   (if (< x 0.5)
       (* 0.5 (- 1 (sqrt (the (single-float 0.0) (- 1 (* 4 x x))))))
-      (* 0.5 (1+ (sqrt (the (single-float 0.0)
-                            (- (* (- (* 2 x) 3) (1- (* 2 x))))))))))
+      (* 0.5 (1+ (sqrt (the (single-float 0.0) (- (* (- (* 2 x) 3) (1- (* 2 x))))))))))
 
 (u:fn-> back-out (u:f32) u:f32)
 (declaim (inline back-out))

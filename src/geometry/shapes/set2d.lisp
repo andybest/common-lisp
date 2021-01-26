@@ -6,14 +6,12 @@
 ;;;; rects, that can be tested against other primitives or shape sets for a
 ;;;; collision.
 
-;;;; Shape sets are useful because sometimes a minimum bounding shape is not
-;;;; accurate enough for the object which needs a collision region, or they can
-;;;; be used in a later phase of collision detection after the broad phase using
-;;;; a minimum bounding shape. With a shape set, there is a single object with
-;;;; multiple circles, rects and oriented rects to approximate the shape of a
-;;;; complex piece of geometry. This single shape set can be tested against
-;;;; other shape sets, points, lines, and other primitives with a single
-;;;; function call.
+;;;; Shape sets are useful because sometimes a minimum bounding shape is not accurate enough for the
+;;;; object which needs a collision region, or they can be used in a later phase of collision
+;;;; detection after the broad phase using a minimum bounding shape. With a shape set, there is a
+;;;; single object with multiple circles, rects and oriented rects to approximate the shape of a
+;;;; complex piece of geometry. This single shape set can be tested against other shape sets,
+;;;; points, lines, and other primitives with a single function call.
 
 (defpackage #:origin.geometry.shape-set-2d
   (:local-nicknames

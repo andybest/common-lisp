@@ -1,8 +1,8 @@
 (in-package #:cl-user)
 
-;;; NOTE: Line2d represents a 2D line segment, not an infinite line in the
-;;; mathematical sense. Since line segments are so common in physics, we have
-;;; chosen to use this convention (as many other game physics libraries do).
+;;; NOTE: Line2d represents a 2D line segment, not an infinite line in the mathematical sense. Since
+;;; line segments are so common in physics, we have chosen to use this convention (as many other
+;;; game physics libraries do).
 
 (defpackage #:origin.geometry.line2d
   (:local-nicknames

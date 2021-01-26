@@ -1,7 +1,7 @@
 (in-package #:cl-user)
 
-;;;; A 2D oriented rectangle primitive. The oriented rectangle is represented as
-;;;; a center origin point, and half-extents.
+;;;; A 2D oriented rectangle primitive. The oriented rectangle is represented as a center origin
+;;;; point, and half-extents.
 
 (defpackage #:origin.geometry.oriented-rect
   (:local-nicknames
@@ -29,25 +29,18 @@
   (half-extents (v2:vec 1) :type v2:vec)
   (angle 0.0 :type u:f32))
 
-(u:fn-> rect (&key (:origin point2d:point)
-                   (:half-extents v2:vec)
-                   (:angle u:f32))
-        rect)
+(u:fn-> rect (&key (:origin point2d:point) (:half-extents v2:vec) (:angle u:f32)) rect)
 (declaim (inline rect))
-(defun rect (&key
-               (origin (point2d:point))
-               (half-extents (v2:vec 1))
-               (angle 0.0))
-  "Construct a rect whose center point is origined at ORIGIN, which extends
-along both axes by half of HALF-EXTENTS, with an ANGLE of rotation in radians."
+(defun rect (&key (origin (point2d:point)) (half-extents (v2:vec 1)) (angle 0.0))
+  "Construct a rect whose center point is origined at ORIGIN, which extends along both axes by half
+of HALF-EXTENTS, with an ANGLE of rotation in radians."
   (declare (optimize speed))
   (%rect :origin origin :half-extents half-extents :angle angle))
 
 (u:fn-> interval (rect v2:vec) v2:vec)
 (defun interval (rect axis)
-  "Get the interval of the rect along the given AXIS. This is used to test if
-two intervals overlap in a separating axis theorem test. AXIS is expected to be
-normalized."
+  "Get the interval of the rect along the given AXIS. This is used to test if two intervals overlap
+in a separating axis theorem test. AXIS is expected to be normalized."
   (declare (optimize speed))
   (let* ((origin (origin rect))
          (half-extents (half-extents rect))

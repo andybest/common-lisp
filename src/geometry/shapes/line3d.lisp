@@ -1,8 +1,8 @@
 (in-package #:cl-user)
 
-;;; NOTE: Line3d represents a 3D line segment, not an infinite line in the
-;;; mathematical sense. Since line segments are so common in physics, we have
-;;; chosen to use this convention (as many other game physics libraries do).
+;;; NOTE: Line3d represents a 3D line segment, not an infinite line in the mathematical sense. Since
+;;; line segments are so common in physics, we have chosen to use this convention (as many other
+;;; game physics libraries do).
 
 (defpackage #:origin.geometry.line3d
   (:local-nicknames

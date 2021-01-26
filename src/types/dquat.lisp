@@ -95,7 +95,7 @@
             `(with-components ,rest ,@body)
             `(progn ,@body)))))
 
-;;; constructors
+;;; Constructors
 
 (u:fn-> %quat (u:f64 u:f64 u:f64 u:f64) quat)
 (declaim (inline %quat))
@@ -117,8 +117,7 @@
 (ss:defspecialization (quat :inline t) ((w real)) quat
   (%quat (float w 1d0) 0d0 0d0 0d0))
 
-(ss:defspecialization (quat :inline t) ((w real) (x real) (y real) (z real))
-    quat
+(ss:defspecialization (quat :inline t) ((w real) (x real) (y real) (z real)) quat
   (%quat (float w 1d0) (float x 1d0) (float y 1d0) (float z 1d0)))
 
 (ss:defspecialization (quat :inline t) ((quat q:quat)) quat
@@ -127,7 +126,7 @@
          (float (aref quat 2) 1d0)
          (float (aref quat 3) 1d0)))
 
-;;; accessors
+;;; Accessors
 
 (u:fn-> w (quat) u:f64)
 (declaim (inline w))
@@ -169,6 +168,6 @@
 (defun (setf z) (value quat)
   (setf (aref quat 3) value))
 
-;;; constants
+;;; Constants
 
 (u:define-constant +id+ (%quat 1d0 0d0 0d0 0d0) :test #'equalp)

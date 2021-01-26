@@ -147,11 +147,10 @@
             `(with-components ,rest ,@body)
             `(progn ,@body)))))
 
-;;; constructors
+;;; Constructors
 
-;; Low-level function for creating a vector. This is not exported, as it is
-;; requires passing a total set of scalars, which is not as convenient as the
-;; specializations that follow this definition.
+;; Low-level function for creating a vector. This is not exported, as it is requires passing a total
+;; set of scalars, which is not as convenient as the specializations that follow this definition.
 (u:fn-> %vec (u:f64 u:f64 u:f64) vec)
 (declaim (inline %vec))
 (u:eval-always
@@ -163,8 +162,7 @@
             (aref vec 2) z)
       vec)))
 
-;;; Define a set of specializations for creating vectors from a variety of
-;;; different inputs.
+;;; Define a set of specializations for creating vectors from a variety of different inputs.
 
 (ss:defstore vec (&rest args))
 
@@ -183,9 +181,7 @@
 (ss:defspecialization (vec :inline t) ((vec dv2:vec)) vec
   (%vec (aref vec 0) (aref vec 1) 0d0))
 
-(ss:defspecialization (vec :inline t)
-    ((vec (or (simple-array u:f64 (3))
-              (simple-array u:f64 (4)))))
+(ss:defspecialization (vec :inline t) ((vec (or (simple-array u:f64 (3)) (simple-array u:f64 (4)))))
     vec
   (%vec (aref vec 0) (aref vec 1) (aref vec 2)))
 
@@ -195,15 +191,13 @@
 (ss:defspecialization (vec :inline t) ((x real) (vec dv2:vec)) vec
   (%vec (float x 1d0) (aref vec 0) (aref vec 1)))
 
-(ss:defspecialization (vec :inline t)
-    ((vec (or (simple-array u:f32 (3))
-              (simple-array u:f32 (4)))))
+(ss:defspecialization (vec :inline t) ((vec (or (simple-array u:f32 (3)) (simple-array u:f32 (4)))))
     vec
   (%vec (float (aref vec 0) 1d0)
         (float (aref vec 1) 1d0)
         (float (aref vec 2) 1d0)))
 
-;;; accessors
+;;; Accessors
 
 (u:fn-> x (vec) u:f64)
 (declaim (inline x))
@@ -241,7 +235,7 @@
   "Write VALUE to the 'Z' component of vector VEC."
   (setf (aref vec 2) value))
 
-;; ;;; constants
+;;; Constants
 
 (u:define-constant +zero+ (%vec 0d0 0d0 0d0)
   :test #'equalp

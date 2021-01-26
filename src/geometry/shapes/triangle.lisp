@@ -23,9 +23,6 @@
 
 (u:fn-> triangle (&optional point3d:point point3d:point point3d:point) triangle)
 (declaim (inline triangle))
-(defun triangle (&optional
-                   (a (point3d:point))
-                   (b (point3d:point))
-                   (c (point3d:point)))
+(defun triangle (&optional (a (point3d:point)) (b (point3d:point)) (c (point3d:point)))
   (declare (optimize speed))
   (%triangle a b c))

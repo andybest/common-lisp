@@ -1,9 +1,8 @@
 (in-package #:cl-user)
 
-;;;; A 2D axis-aligned rectangle primitive. A rectangle can be represented a
-;;;; number of different ways. This package allows constructing a rect from
-;;;; two different representations: an origin and size with RECT, and a minimum
-;;;; and maximum point with RECT-FROM-MIN/MAX.
+;;;; A 2D axis-aligned rectangle primitive. A rectangle can be represented a number of different
+;;;; ways. This package allows constructing a rect from two different representations: an origin and
+;;;; size with RECT, and a minimum and maximum point with RECT-FROM-MIN/MAX.
 
 (defpackage #:origin.geometry.rect
   (:local-nicknames
@@ -37,19 +36,15 @@
 (u:fn-> rect (&key (:origin point2d:point) (:size v2:vec)) rect)
 (declaim (inline rect))
 (defun rect (&key (origin (point2d:point)) (size (v2:vec 1)))
-  "Construct a rect whose bottom-left corner is origined at ORIGIN, extending
-to SIZE units."
+  "Construct a rect whose bottom-left corner is origined at ORIGIN, extending to SIZE units."
   (declare (optimize speed))
   (%rect :origin origin :size size))
 
 (u:fn-> rect-from-min/max (&key (:min point2d:point) (:max point2d:point)) rect)
 (declaim (inline rect-from-min/max))
-(defun rect-from-min/max (&key
-                            (min (point2d:point -0.5))
-                            (max (point2d:point 0.5)))
-  "Construct a rect from a MINIMUM and MAXIMUM points. These correspond to the
-bottom-left corner and upper-right corner of the resulting rectangle,
-respectively."
+(defun rect-from-min/max (&key (min (point2d:point -0.5)) (max (point2d:point 0.5)))
+  "Construct a rect from a MINIMUM and MAXIMUM points. These correspond to the bottom-left corner
+and upper-right corner of the resulting rectangle, respectively."
   (declare (optimize speed))
   (%rect :origin min :size (v2:- max min)))
 
@@ -57,8 +52,7 @@ respectively."
 (declaim (inline rect-from-half-extents))
 (defun rect-from-half-extents (&key (half-extents (v2:vec 0.5)))
   (declare (optimize speed))
-  (%rect :origin (v2:negate half-extents)
-         :size (v2:scale half-extents 2.0)))
+  (%rect :origin (v2:negate half-extents) :size (v2:scale half-extents 2.0)))
 
 (u:fn-> min (rect) point2d:point)
 (declaim (inline min))
@@ -90,9 +84,8 @@ respectively."
 
 (u:fn-> interval (rect v2:vec) v2:vec)
 (defun interval (rect axis)
-  "Get the interval of the rect along the given AXIS. This is used to test if
-two intervals overlap in a separating axis theorem test. AXIS is expected to be
-normalized."
+  "Get the interval of the rect along the given AXIS. This is used to test if two intervals overlap
+in a separating axis theorem test. AXIS is expected to be normalized."
   (declare (optimize speed))
   (let ((vertices (vertices rect)))
     (declare (dynamic-extent vertices))

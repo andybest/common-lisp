@@ -1,7 +1,6 @@
 (in-package #:cl-user)
 
-;;; 2D points are just type aliased to be vec2, with a convenience constructor
-;;; function.
+;;; 2D points are just type aliased to be vec2, with a convenience constructor function.
 
 (defpackage #:origin.geometry.point2d
   (:local-nicknames

@@ -39,9 +39,7 @@
 
 (u:fn-> aabb-from-min/max (&key (:min point3d:point) (:max point3d:point)) aabb)
 (declaim (inline aabb-from-min/max))
-(defun aabb-from-min/max (&key
-                            (min (point3d:point -0.5))
-                            (max (point3d:point 0.5)))
+(defun aabb-from-min/max (&key (min (point3d:point -0.5)) (max (point3d:point 0.5)))
   "Construct an AABB from a MINIMUM and MAXIMUM points. "
   (declare (optimize speed))
   (let ((origin (v3:scale (v3:+ min max) 0.5))
@@ -92,9 +90,8 @@
 
 (u:fn-> interval (aabb v3:vec) v2:vec)
 (defun interval (aabb axis)
-  "Get the interval of the AABB along the given AXIS. This is used to test if
-  two intervals overlap in a separating axis theorem test. AXIS is expected to
-  be normalized."
+  "Get the interval of the AABB along the given AXIS. This is used to test if two intervals overlap
+in a separating axis theorem test. AXIS is expected to be normalized."
   (declare (optimize speed))
   (let ((vertices (vertices aabb)))
     (v2:with-components ((r (v2:vec (v3:dot axis (aref vertices 0)))))

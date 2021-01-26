@@ -90,7 +90,7 @@
   (with-components ((m matrix))
     (format stream "[~,6f, ~,6f~% ~,6f, ~,6f]" m00 m01 m10 m11)))
 
-;;; constructors
+;;; Constructors
 
 (u:fn-> %mat (u:f32 u:f32 u:f32 u:f32) mat)
 (declaim (inline %mat))
@@ -107,38 +107,31 @@
 (ss:defstore mat (&rest args))
 
 (ss:defspecialization (mat :inline t) () mat
-  (%mat 0.0 0.0
-        0.0 0.0))
+  (%mat 0.0 0.0 0.0 0.0))
 
 (ss:defspecialization (mat :inline t) ((x real)) mat
-  (%mat (float x 1.0) 0.0
-        0.0 (float x 1.0)))
+  (%mat (float x 1.0) 0.0 0.0 (float x 1.0)))
 
 (ss:defspecialization (mat :inline t) ((mat mat)) mat
-  (%mat (aref mat 0) (aref mat 1)
-        (aref mat 2) (aref mat 3)))
+  (%mat (aref mat 0) (aref mat 1) (aref mat 2) (aref mat 3)))
 
 (ss:defspecialization (mat :inline t) ((mat (simple-array u:f32 (9)))) mat
-  (%mat (aref mat 0) (aref mat 3)
-        (aref mat 1) (aref mat 4)))
+  (%mat (aref mat 0) (aref mat 3) (aref mat 1) (aref mat 4)))
 
 (ss:defspecialization (mat :inline t) ((mat (simple-array u:f32 (16)))) mat
-  (%mat (aref mat 0) (aref mat 4)
-        (aref mat 1) (aref mat 5)))
+  (%mat (aref mat 0) (aref mat 4) (aref mat 1) (aref mat 5)))
 
 (ss:defspecialization (mat :inline t) ((vec1 v2:vec) (vec2 v2:vec)) mat
-  (%mat (aref vec1 0) (aref vec1 1)
-        (aref vec2 0) (aref vec2 1)))
+  (%mat (aref vec1 0) (aref vec1 1) (aref vec2 0) (aref vec2 1)))
 
 (ss:defspecialization (mat :inline t) ((a real) (b real) (c real) (d real)) mat
-  (%mat (float a 1.0) (float b 1.0)
-        (float c 1.0) (float d 1.0)))
+  (%mat (float a 1.0) (float b 1.0) (float c 1.0) (float d 1.0)))
 
 (ss:defspecialization (mat :inline t) ((mat (simple-array  u:f64 (4)))) mat
   (%mat (float (aref mat 0) 1.0) (float (aref mat 1) 1.0)
         (float (aref mat 2) 1.0) (float (aref mat 3) 1.0)))
 
-;;; constants
+;;; Constants
 
 (u:define-constant +zero+ (%mat 0.0 0.0 0.0 0.0) :test #'equalp)
 

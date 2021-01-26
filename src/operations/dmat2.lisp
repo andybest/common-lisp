@@ -16,8 +16,7 @@
 (declaim (inline zero))
 (defun zero ()
   (declare (optimize speed))
-  (%mat 0d0 0d0
-        0d0 0d0))
+  (%mat 0d0 0d0 0d0 0d0))
 
 (u:fn-> zero-p (mat) boolean)
 (declaim (inline zero-p))
@@ -30,8 +29,7 @@
 (defun id! (mat)
   (declare (optimize speed))
   (with-components ((m mat))
-    (psetf m00 1d0 m01 0d0
-           m10 0d0 m11 1d0))
+    (psetf m00 1d0 m01 0d0 m10 0d0 m11 1d0))
   mat)
 
 (u:fn-> id () mat)

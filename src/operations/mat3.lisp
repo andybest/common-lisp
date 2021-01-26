@@ -16,9 +16,7 @@
 (declaim (inline zero))
 (defun zero ()
   (declare (optimize speed))
-  (%mat 0.0 0.0 0.0
-        0.0 0.0 0.0
-        0.0 0.0 0.0))
+  (%mat 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0))
 
 (u:fn-> zero-p (mat) boolean)
 (declaim (inline zero-p))

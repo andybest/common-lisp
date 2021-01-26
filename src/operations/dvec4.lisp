@@ -3,9 +3,8 @@
 (u:fn-> = (vec vec &key (:rel u:f64) (:abs u:f64)) boolean)
 (declaim (inline =))
 (defun = (vec1 vec2 &key (rel 1d-7) (abs rel))
-  "Compare vectors VEC1 and VEC2 for equality. REL and ABS are the relative and
-absolute tolerances to compare by, and should be tuned specially for the
-application domain."
+  "Compare vectors VEC1 and VEC2 for equality. REL and ABS are the relative and absolute tolerances
+to compare by, and should be tuned specially for the application domain."
   (declare (optimize speed))
   (com:cwcmp 4 (vec1 vec2) (com:= vec1 vec2 rel abs)))
 
@@ -34,8 +33,8 @@ application domain."
 (u:fn-> random! (vec u:f64 u:f64) vec)
 (declaim (inline random!))
 (defun random! (out min max)
-  "Modify vector VEC to have a random value for each of its components, The
-range of each component is bounded by MIN and MAX."
+  "Modify vector VEC to have a random value for each of its components, The range of each component
+is bounded by MIN and MAX."
   (declare (optimize speed))
   (let ((diff (cl:- max min)))
     (com:cwset 4 out nil (cl:+ min (cl:random diff))))
@@ -44,8 +43,8 @@ range of each component is bounded by MIN and MAX."
 (u:fn-> random (u:f64 u:f64) vec)
 (declaim (inline random))
 (defun random (min max)
-  "Construct a fresh vector with random elements. The range of each component is
-bounded by MIN and MAX."
+  "Construct a fresh vector with random elements. The range of each component is bounded by MIN and
+MAX."
   (declare (optimize speed))
   (random! (zero) min max))
 
@@ -67,8 +66,7 @@ bounded by MIN and MAX."
 (u:fn-> sign! (vec vec) vec)
 (declaim (inline sign!))
 (defun sign! (out vec)
-  "Modify vector OUT to have its components represent the sign of each component
-of vector VEC."
+  "Modify vector OUT to have its components represent the sign of each component of vector VEC."
   (declare (optimize speed))
   (com:cwset 4 out vec (signum vec))
   out)
@@ -76,31 +74,31 @@ of vector VEC."
 (u:fn-> sign (vec) vec)
 (declaim (inline sign))
 (defun sign (vec)
-  "Construct a fresh vector that has its components represent the sign of each
-component of vector VEC."
+  "Construct a fresh vector that has its components represent the sign of each component of vector
+VEC."
   (declare (optimize speed))
   (sign! (zero) vec))
 
 (u:fn-> fract! (vec vec) vec)
 (declaim (inline fract!))
 (defun fract! (out vec)
-  "Modify vector OUT to have its components contain the fractional portion of
-the components in vector VEC."
+  "Modify vector OUT to have its components contain the fractional portion of the components in
+vector VEC."
   (com:cwset 4 out vec (cl:- vec (ffloor vec)))
   out)
 
 (u:fn-> fract (vec) vec)
 (declaim (inline fract))
 (defun fract (vec)
-  "Construct a fresh vector that has its components contain the fractional
-portion of the components in vector VEC."
+  "Construct a fresh vector that has its components contain the fractional portion of the components
+in vector VEC."
   (fract! (zero) vec))
 
 (u:fn-> clamp! (vec vec vec vec) vec)
 (declaim (inline clamp!))
 (defun clamp! (out vec min max)
-  "Modify vector OUT to have its components represent the components of vector
-VEC, bounded by the components of vectors MIN and MAX."
+  "Modify vector OUT to have its components represent the components of vector VEC, bounded by the
+components of vectors MIN and MAX."
   (declare (optimize speed))
   (com:cwset 2 out (vec min max) (u:clamp vec min max))
   out)
@@ -108,16 +106,16 @@ VEC, bounded by the components of vectors MIN and MAX."
 (u:fn-> clamp (vec vec vec) vec)
 (declaim (inline clamp))
 (defun clamp (vec min max)
-  "Construct a fresh vector that has the components of vector VEC bounded by the
-  components of vectors MIN and MAX."
+  "Construct a fresh vector that has the components of vector VEC bounded by the components of
+vectors MIN and MAX."
   (declare (optimize speed))
   (clamp! (zero) vec min max))
 
 (u:fn-> clamp-range! (vec vec u:f64 u:f64) vec)
 (declaim (inline clamp-range!))
 (defun clamp-range! (out vec min max)
-  "Modify vector OUT to have its components represent the components of vector
-VEC, bounded by MIN and MAX."
+  "Modify vector OUT to have its components represent the components of vector VEC, bounded by MIN
+and MAX."
   (declare (optimize speed))
   (com:cwset 4 out vec (u:clamp vec min max))
   out)
@@ -125,16 +123,14 @@ VEC, bounded by MIN and MAX."
 (u:fn-> clamp-range (vec u:f64 u:f64) vec)
 (declaim (inline clamp-range))
 (defun clamp-range (vec min max)
-  "Construct a fresh vector that has the components of vector VEC bounded by MIN
-and MAX."
+  "Construct a fresh vector that has the components of vector VEC bounded by MIN and MAX."
   (declare (optimize speed))
   (clamp-range! (zero) vec min max))
 
 (u:fn-> +! (vec vec vec) vec)
 (declaim (inline +!))
 (defun +! (out vec1 vec2)
-  "Modify vector OUT by performing component-wise addition of vectors VEC1 and
-VEC2."
+  "Modify vector OUT by performing component-wise addition of vectors VEC1 and VEC2."
   (declare (optimize speed))
   (com:cwset 4 out (vec1 vec2) (cl:+ vec1 vec2))
   out)
@@ -142,16 +138,14 @@ VEC2."
 (u:fn-> + (vec vec) vec)
 (declaim (inline +))
 (defun + (vec1 vec2)
-  "Construct a fresh vector by performing component-wise addition of vectors
-VEC1 and VEC2."
+  "Construct a fresh vector by performing component-wise addition of vectors VEC1 and VEC2."
   (declare (optimize speed))
   (+! (zero) vec1 vec2))
 
 (u:fn-> -! (vec vec vec) vec)
 (declaim (inline -!))
 (defun -! (out vec1 vec2)
-  "Modify vector OUT by performing component-wise subtraction of vectors VEC1
-and VEC2."
+  "Modify vector OUT by performing component-wise subtraction of vectors VEC1 and VEC2."
   (declare (optimize speed))
   (com:cwset 4 out (vec1 vec2) (cl:- vec1 vec2))
   out)
@@ -159,16 +153,14 @@ and VEC2."
 (u:fn-> - (vec vec) vec)
 (declaim (inline -))
 (defun - (vec1 vec2)
-  "Construct a fresh vector by performing component-wise substraction of vectors
-VEC1 and VEC2."
+  "Construct a fresh vector by performing component-wise substraction of vectors VEC1 and VEC2."
   (declare (optimize speed))
   (-! (zero) vec1 vec2))
 
 (u:fn-> *! (vec vec vec) vec)
 (declaim (inline +!))
 (defun *! (out vec1 vec2)
-  "Modify vector OUT by performing component-wise multiplication of vectors VEC1
-and VEC2."
+  "Modify vector OUT by performing component-wise multiplication of vectors VEC1 and VEC2."
   (declare (optimize speed))
   (com:cwset 4 out (vec1 vec2) (cl:* vec1 vec2))
   out)
@@ -176,16 +168,14 @@ and VEC2."
 (u:fn-> * (vec vec) vec)
 (declaim (inline *))
 (defun * (vec1 vec2)
-  "Construct a fresh vector by performing component-wise multiplication of
-vectors VEC1 and VEC2."
+  "Construct a fresh vector by performing component-wise multiplication of vectors VEC1 and VEC2."
   (declare (optimize speed))
   (*! (zero) vec1 vec2))
 
 (u:fn-> /! (vec vec vec) vec)
 (declaim (inline /!))
 (defun /! (out vec1 vec2)
-  "Modify vector OUT by performing component-wise division of vectors VEC1 and
-VEC2."
+  "Modify vector OUT by performing component-wise division of vectors VEC1 and VEC2."
   (declare (optimize speed))
   (com:cwset 4 out (vec1 vec2) (if (zerop vec2) 0d0 (cl:/ vec1 vec2)))
   out)
@@ -193,16 +183,14 @@ VEC2."
 (u:fn-> / (vec vec) vec)
 (declaim (inline /))
 (defun / (vec1 vec2)
-  "Construct a fresh vector by performing component-wise division of vectors
-VEC1 and VEC2."
+  "Construct a fresh vector by performing component-wise division of vectors VEC1 and VEC2."
   (declare (optimize speed))
   (/! (zero) vec1 vec2))
 
 (u:fn-> scale! (vec vec u:f64) vec)
 (declaim (inline scale!))
 (defun scale! (out vec scalar)
-  "Modify vector OUT by adding the scalar SCALAR to each component of vector
-VEC."
+  "Modify vector OUT by adding the scalar SCALAR to each component of vector VEC."
   (declare (optimize speed))
   (com:cwset 4 out vec (cl:* vec scalar))
   out)
@@ -210,16 +198,14 @@ VEC."
 (u:fn-> scale (vec u:f64) vec)
 (declaim (inline scale))
 (defun scale (vec scalar)
-  "Construct a fresh vector by adding the scalar SCALAR to each component of
-vector VEC."
+  "Construct a fresh vector by adding the scalar SCALAR to each component of vector VEC."
   (declare (optimize speed))
   (scale! (zero) vec scalar))
 
 (u:fn-> invert! (vec vec) vec)
 (declaim (inline invert!))
 (defun invert! (out vec)
-  "Modify vector OUT to have each component be the inverted component of vector
-VEC."
+  "Modify vector OUT to have each component be the inverted component of vector VEC."
   (declare (optimize speed))
   (com:cwset 4 out vec (if (zerop vec) 0d0 (cl:/ vec)))
   out)
@@ -227,8 +213,7 @@ VEC."
 (u:fn-> invert (vec) vec)
 (declaim (inline invert))
 (defun invert (vec)
-  "Construct a fresh vector with each component being the inverted component of
-vector VEC."
+  "Construct a fresh vector with each component being the inverted component of vector VEC."
   (declare (optimize speed))
   (invert! (zero) vec))
 
@@ -255,8 +240,7 @@ vector VEC."
 (u:fn-> normalize! (vec vec) vec)
 (declaim (inline normalize!))
 (defun normalize! (out vec)
-  "Modify vector OUT to to be the result of normalizing vector VEC to be of unit
-length."
+  "Modify vector OUT to to be the result of normalizing vector VEC to be of unit length."
   (declare (optimize speed))
   (let ((length (length vec)))
     (unless (zerop length)
@@ -266,31 +250,29 @@ length."
 (u:fn-> normalize (vec) vec)
 (declaim (inline normalize))
 (defun normalize (vec)
-  "Construct a fresh vector that is the result of normalizing vector VEC to be
-of unit length."
+  "Construct a fresh vector that is the result of normalizing vector VEC to be of unit length."
   (declare (optimize speed))
   (normalize! (zero) vec))
 
 (u:fn-> round! (vec vec) vec)
 (declaim (inline round!))
 (defun round! (out vec)
-  "Modify vector OUT to have its components be the result of rounding the
-components of vector VEC to the nearest whole number."
+  "Modify vector OUT to have its components be the result of rounding the components of vector VEC
+to the nearest whole number."
   (com:cwset 4 out vec (fround vec))
   out)
 
 (u:fn-> round (vec) vec)
 (declaim (inline round))
 (defun round (vec)
-  "Construct a fresh vector that is the result of rounding the components of
-vector VEC to the nearest whole number."
+  "Construct a fresh vector that is the result of rounding the components of vector VEC to the
+nearest whole number."
   (round! (zero) vec))
 
 (u:fn-> abs! (vec vec) vec)
 (declaim (inline abs!))
 (defun abs! (out vec)
-  "Modify vector OUT to have the absolute value of each component of vector
-VEC."
+  "Modify vector OUT to have the absolute value of each component of vector VEC."
   (declare (optimize speed))
   (com:cwset 4 out vec (cl:abs vec))
   out)
@@ -298,24 +280,21 @@ VEC."
 (u:fn-> abs (vec) vec)
 (declaim (inline abs))
 (defun abs (vec)
-  "Construct a fresh vector to have the absolute value of each component of
-vector VEC."
+  "Construct a fresh vector to have the absolute value of each component of vector VEC."
   (declare (optimize speed))
   (abs! (zero) vec))
 
 (u:fn-> negate! (vec vec) vec)
 (declaim (inline negate!))
 (defun negate! (out vec)
-  "Modify vector OUT to have the components of vector VEC with their signs
-negated."
+  "Modify vector OUT to have the components of vector VEC with their signs negated."
   (declare (optimize speed))
   (scale! out vec -1d0))
 
 (u:fn-> negate (vec) vec)
 (declaim (inline negate))
 (defun negate (vec)
-  "Construct a fresh vector with the components of vector VEC with their signs
-negated."
+  "Construct a fresh vector with the components of vector VEC with their signs negated."
   (declare (optimize speed))
   (negate! (zero) vec))
 
@@ -346,8 +325,8 @@ negated."
 (u:fn-> lerp! (vec vec vec u:f64) vec)
 (declaim (inline lerp!))
 (defun lerp! (out vec1 vec2 factor)
-  "Modify vector OUT with the result of linearly interpolating between vectors
-VEC1 and VEC2 by FACTOR."
+  "Modify vector OUT with the result of linearly interpolating between vectors VEC1 and VEC2 by
+FACTOR."
   (declare (optimize speed))
   (com:cwset 4 out (vec1 vec2) (u:lerp factor vec1 vec2))
   out)
@@ -355,48 +334,47 @@ VEC1 and VEC2 by FACTOR."
 (u:fn-> lerp (vec vec u:f64) vec)
 (declaim (inline lerp))
 (defun lerp (vec1 vec2 factor)
-  "Construct a fresh vector that is the result of linearly interpolating between
-vectors VEC1 and VEC2 by FACTOR."
+  "Construct a fresh vector that is the result of linearly interpolating between vectors VEC1 and
+VEC2 by FACTOR."
   (declare (optimize speed))
   (lerp! (zero) vec1 vec2 factor))
 
 (u:fn-> < (vec vec) boolean)
 (declaim (inline <))
 (defun < (vec1 vec2)
-  "Check whether or not each component of vector VEC1 is less than the
-respective components of vector VEC2."
+  "Check whether or not each component of vector VEC1 is less than the respective components of
+vector VEC2."
   (declare (optimize speed))
   (com:cwcmp 4 (vec1 vec2) (cl:< vec1 vec2)))
 
 (u:fn-> <= (vec vec) boolean)
 (declaim (inline <=))
 (defun <= (vec1 vec2)
-  "Check whether or not each component of vector VEC1 is less than or equal to
-  the respective components of vector VEC2."
+  "Check whether or not each component of vector VEC1 is less than or equal to the respective
+components of vector VEC2."
   (declare (optimize speed))
   (com:cwcmp 4 (vec1 vec2) (cl:<= vec1 vec2)))
 
 (u:fn-> > (vec vec) boolean)
 (declaim (inline >))
 (defun > (vec1 vec2)
-  "Check whether or not each component of vector VEC1 is greater than the
-  respective components of vector VEC2."
+  "Check whether or not each component of vector VEC1 is greater than the respective components of
+vector VEC2."
   (declare (optimize speed))
   (com:cwcmp 4 (vec1 vec2) (cl:> vec1 vec2)))
 
 (u:fn-> >= (vec vec) boolean)
 (declaim (inline >=))
 (defun >= (vec1 vec2)
-  "Check whether or not each component of vector VEC1 is greater than or equal
-  to the respective components of vector VEC2."
+  "Check whether or not each component of vector VEC1 is greater than or equal to the respective
+components of vector VEC2."
   (declare (optimize speed))
   (com:cwcmp 4 (vec1 vec2) (cl:>= vec1 vec2)))
 
 (u:fn-> min! (vec vec vec) vec)
 (declaim (inline min!))
 (defun min! (out vec1 vec2)
-  "Modify vector OUT to have the minimum value for each component in vectors
-VEC1 and VEC2."
+  "Modify vector OUT to have the minimum value for each component in vectors VEC1 and VEC2."
   (declare (optimize speed))
   (com:cwset 4 out (vec1 vec2) (cl:min vec1 vec2))
   out)
@@ -404,16 +382,14 @@ VEC1 and VEC2."
 (u:fn-> min (vec vec) vec)
 (declaim (inline min))
 (defun min (vec1 vec2)
-  "Construct a fresh vector which has the minimum value of each component in
-vectors VEC1 and VEC2."
+  "Construct a fresh vector which has the minimum value of each component in vectors VEC1 and VEC2."
   (declare (optimize speed))
   (min! (zero) vec1 vec2))
 
 (u:fn-> max! (vec vec vec) vec)
 (declaim (inline max!))
 (defun max! (out vec1 vec2)
-  "Modify vector OUT to have the maximum value for each component in vectors
-VEC1 and VEC2."
+  "Modify vector OUT to have the maximum value for each component in vectors VEC1 and VEC2."
   (declare (optimize speed))
   (com:cwset 4 out (vec1 vec2) (cl:max vec1 vec2))
   out)
@@ -421,16 +397,15 @@ VEC1 and VEC2."
 (u:fn-> max (vec vec) vec)
 (declaim (inline max))
 (defun max (vec1 vec2)
-  "Construct a fresh vector which has the maximum value of each component in
-vectors VEC1 and VEC2."
+  "Construct a fresh vector which has the maximum value of each component in vectors VEC1 and VEC2."
   (declare (optimize speed))
   (max! (zero) vec1 vec2))
 
 (u:fn-> radians! (vec vec) vec)
 (declaim (inline radians!))
 (defun radians! (out vec)
-  "Modify vector OUT to convert the components in vector VEC, which are assumed
-to be in degree units, to radian units."
+  "Modify vector OUT to convert the components in vector VEC, which are assumed to be in degree
+units, to radian units."
   (declare (optimize speed))
   (com:cwset 4 out vec (cl:* vec const:+deg/double+))
   out)
@@ -438,16 +413,16 @@ to be in degree units, to radian units."
 (u:fn-> radians (vec) vec)
 (declaim (inline radians))
 (defun radians (vec)
-  "Construct a fresh vector with the components in vector VEC, which are assumed
-to be in degree units, converted to radian units."
+  "Construct a fresh vector with the components in vector VEC, which are assumed to be in degree
+units, converted to radian units."
   (declare (optimize speed))
   (radians! (zero) vec))
 
 (u:fn-> degrees! (vec vec) vec)
 (declaim (inline degrees!))
 (defun degrees! (out vec)
-  "Modify vector OUT to convert the components in vector VEC, which are assumed
-to be in radian units, to degree units."
+  "Modify vector OUT to convert the components in vector VEC, which are assumed to be in radian
+units, to degree units."
   (declare (optimize speed))
   (com:cwset 4 out vec (cl:* vec const:+rad/double+))
   out)
@@ -455,24 +430,22 @@ to be in radian units, to degree units."
 (u:fn-> degrees (vec) vec)
 (declaim (inline degrees))
 (defun degrees (vec)
-  "Construct a fresh vector with the components in vector VEC, which are assumed
-to be in radian units, converted to degree units."
+  "Construct a fresh vector with the components in vector VEC, which are assumed to be in radian
+units, converted to degree units."
   (declare (optimize speed))
   (degrees! (zero) vec))
 
 (u:fn-> expt! (vec vec real) vec)
 (declaim (inline expt!))
 (defun expt! (out vec power)
-  "Modify vector OUT to be the components in vector VEC raised to the power of
-POWER."
+  "Modify vector OUT to be the components in vector VEC raised to the power of POWER."
   (com:cwset 4 out vec (cl:expt vec power))
   out)
 
 (u:fn-> expt (vec real) vec)
 (declaim (inline expt))
 (defun expt (vec power)
-  "Construct a fresh vector with the components in vector VEC raised to the
-power of POWER."
+  "Construct a fresh vector with the components in vector VEC raised to the power of POWER."
   (expt! (zero) vec power))
 
 (u:fn-> sqrt! (vec vec) vec)
@@ -494,8 +467,8 @@ power of POWER."
 (u:fn-> floor! (vec vec &optional u:f64) vec)
 (declaim (inline floor!))
 (defun floor! (out vec &optional (divisor 1d0))
-  "Modify vector OUT to have the nearest integer less than or equal to each
-component of vector VEC."
+  "Modify vector OUT to have the nearest integer less than or equal to each component of vector
+VEC."
   (com:cwset 4 out vec (ffloor vec divisor))
   out)
 
@@ -503,16 +476,16 @@ component of vector VEC."
 (u:fn-> floor (vec &optional u:f64) vec)
 (declaim (inline floor))
 (defun floor (vec &optional (divisor 1d0))
-  "Construct a fresh vector that has the nearest integer less than or equal to
-each component of vector VEC."
+  "Construct a fresh vector that has the nearest integer less than or equal to each component of
+vector VEC."
   (floor! (zero) vec divisor))
 
 ;; FIXME: This cannot be declared optimized until SBCL bug #1908130 is resolved.
 (u:fn-> ceiling! (vec vec &optional u:f64) vec)
 (declaim (inline ceiling!))
 (defun ceiling! (out vec &optional (divisor 1d0))
-  "Modify vector OUT to have the nearest integer greater than or equal to each
-component of vector VEC."
+  "Modify vector OUT to have the nearest integer greater than or equal to each component of vector
+VEC."
   (com:cwset 4 out vec (fceiling vec divisor))
   out)
 
@@ -520,8 +493,8 @@ component of vector VEC."
 (u:fn-> ceiling (vec &optional u:f64) vec)
 (declaim (inline ceiling))
 (defun ceiling (vec &optional (divisor 1d0))
-  "Construct a fresh vector that has the nearest integer greater than or equal
-to each component of vector VEC."
+  "Construct a fresh vector that has the nearest integer greater than or equal to each component of
+vector VEC."
   (ceiling! (zero) vec divisor))
 
 (u:fn-> mod! (vec vec u:f64) vec)
@@ -534,15 +507,14 @@ to each component of vector VEC."
 (u:fn-> mod (vec real) vec)
 (declaim (inline mod))
 (defun mod (vec divisor)
-  "Construct a fresh vector that has each component of vector VEC modulo
-DIVISOR."
+  "Construct a fresh vector that has each component of vector VEC modulo DIVISOR."
   (mod! (zero) vec divisor))
 
 (u:fn-> sin! (vec vec) vec)
 (declaim (inline sin!))
 (defun sin! (out vec)
-  "Modify vector OUT to have the trigonometric sine function applied to each
-component of vector VEC."
+  "Modify vector OUT to have the trigonometric sine function applied to each component of vector
+VEC."
   (declare (optimize speed))
   (com:cwset 4 out vec (cl:sin vec))
   out)
@@ -550,16 +522,16 @@ component of vector VEC."
 (u:fn-> sin (vec) vec)
 (declaim (inline sin))
 (defun sin (vec)
-  "Construct a fresh vector which has the trigonometric sine function applied to
-each component of vector VEC."
+  "Construct a fresh vector which has the trigonometric sine function applied to each component of
+vector VEC."
   (declare (optimize speed))
   (sin! (zero) vec))
 
 (u:fn-> cos! (vec vec) vec)
 (declaim (inline cos!))
 (defun cos! (out vec)
-  "Modify vector OUT to have the trigonometric cosine function applied to each
-component of vector VEC."
+  "Modify vector OUT to have the trigonometric cosine function applied to each component of vector
+VEC."
   (declare (optimize speed))
   (com:cwset 4 out vec (cl:cos vec))
   out)
@@ -567,16 +539,16 @@ component of vector VEC."
 (u:fn-> cos (vec) vec)
 (declaim (inline cos))
 (defun cos (vec)
-  "Construct a fresh vector which has the trigonometric cosine function applied
-to each component of vector VEC."
+  "Construct a fresh vector which has the trigonometric cosine function applied to each component of
+vector VEC."
   (declare (optimize speed))
   (cos! (zero) vec))
 
 (u:fn-> tan! (vec vec) vec)
 (declaim (inline tan!))
 (defun tan! (out vec)
-  "Modify vector OUT to have the trigonometric tangent function applied to each
-component of vector VEC."
+  "Modify vector OUT to have the trigonometric tangent function applied to each component of vector
+VEC."
   (declare (optimize speed))
   (com:cwset 4 out vec (cl:tan vec))
   out)
@@ -584,16 +556,16 @@ component of vector VEC."
 (u:fn-> tan (vec) vec)
 (declaim (inline tan))
 (defun tan (vec)
-  "Construct a fresh vector which has the trigonometric tangent function applied
-to each component of vector VEC."
+  "Construct a fresh vector which has the trigonometric tangent function applied to each component
+of vector VEC."
   (declare (optimize speed))
   (tan! (zero) vec))
 
 (u:fn-> asin! (vec vec) vec)
 (declaim (inline asin!))
 (defun asin! (out vec)
-  "Modify vector OUT to have the trigonometric arcsine function applied to each
-component of vector VEC."
+  "Modify vector OUT to have the trigonometric arcsine function applied to each component of vector
+VEC."
   (declare (optimize speed))
   (com:cwset 4 out vec (cl:asin (the (double-float -1d0 1d0) vec)))
   out)
@@ -601,16 +573,16 @@ component of vector VEC."
 (u:fn-> asin (vec) vec)
 (declaim (inline asin))
 (defun asin (vec)
-  "Construct a fresh vector which has the trigonometric arcsine function applied
-to each component of vector VEC."
+  "Construct a fresh vector which has the trigonometric arcsine function applied to each component
+of vector VEC."
   (declare (optimize speed))
   (asin! (zero) vec))
 
 (u:fn-> acos! (vec vec) vec)
 (declaim (inline acos!))
 (defun acos! (out vec)
-  "Modify vector OUT to have the trigonometric arccosine function applied to
-each component of vector VEC."
+  "Modify vector OUT to have the trigonometric arccosine function applied to each component of
+vector VEC."
   (declare (optimize speed))
   (com:cwset 4 out vec (cl:acos (the (double-float -1d0 1d0) vec)))
   out)
@@ -618,16 +590,16 @@ each component of vector VEC."
 (u:fn-> acos (vec) vec)
 (declaim (inline acos))
 (defun acos (vec)
-  "Construct a fresh vector which has the trigonometric arccosine function
-applied to each component of vector VEC."
+  "Construct a fresh vector which has the trigonometric arccosine function applied to each component
+of vector VEC."
   (declare (optimize speed))
   (acos! (zero) vec))
 
 (u:fn-> atan! (vec vec) vec)
 (declaim (inline atan!))
 (defun atan! (out vec)
-  "Modify vector OUT to have the trigonometric arctangent function applied to
-each component of vector VEC."
+  "Modify vector OUT to have the trigonometric arctangent function applied to each component of
+vector VEC."
   (declare (optimize speed))
   (com:cwset 4 out vec (cl:atan vec))
   out)
@@ -635,7 +607,7 @@ each component of vector VEC."
 (u:fn-> atan (vec) vec)
 (declaim (inline atan))
 (defun atan (vec)
-  "Construct a fresh vector which has the trigonometric arctangent function
-applied to each component of vector VEC."
+  "Construct a fresh vector which has the trigonometric arctangent function applied to each
+component of vector VEC."
   (declare (optimize speed))
   (atan! (zero) vec))

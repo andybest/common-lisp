@@ -30,10 +30,7 @@
 
 (u:fn-> obb (&key (:origin point3d:point) (:size v3:vec) (:rotation m3:mat)) obb)
 (declaim (inline obb))
-(defun obb (&key
-              (origin (point3d:point))
-              (size (v3:vec 1))
-              (rotation (m3:mat 1)))
+(defun obb (&key (origin (point3d:point)) (size (v3:vec 1)) (rotation (m3:mat 1)))
   (declare (optimize speed))
   (%obb :origin origin :size size :rotation rotation))
 
@@ -76,9 +73,8 @@
 
 (u:fn-> interval (obb v3:vec) v2:vec)
 (defun interval (obb axis)
-  "Get the interval of the OBB along the given AXIS. This is used to test if two
-  intervals overlap in a separating axis theorem test. AXIS is expected to be
-  normalized."
+  "Get the interval of the OBB along the given AXIS. This is used to test if two intervals overlap
+in a separating axis theorem test. AXIS is expected to be normalized."
   (declare (optimize speed))
   (let ((vertices (vertices obb)))
     (v2:with-components ((r (v2:vec (v3:dot axis (aref vertices 0)))))

@@ -140,10 +140,10 @@
                      ~,6f, ~,6f, ~,6f, ~,6f]"
             m00 m01 m02 m03 m10 m11 m12 m13 m20 m21 m22 m23 m30 m31 m32 m33)))
 
-;;; constructors
+;;; Constructors
 
-(u:fn-> %mat (u:f64 u:f64 u:f64 u:f64 u:f64 u:f64 u:f64 u:f64 u:f64 u:f64 u:f64
-                    u:f64 u:f64 u:f64 u:f64 u:f64)
+(u:fn-> %mat (u:f64 u:f64 u:f64 u:f64 u:f64 u:f64 u:f64 u:f64 u:f64 u:f64 u:f64 u:f64 u:f64 u:f64
+                    u:f64 u:f64)
         mat)
 (declaim (inline %mat))
 (u:eval-always
@@ -171,10 +171,7 @@
 (ss:defstore mat (&rest args))
 
 (ss:defspecialization (mat :inline t) () mat
-  (%mat 0d0 0d0 0d0 0d0
-        0d0 0d0 0d0 0d0
-        0d0 0d0 0d0 0d0
-        0d0 0d0 0d0 0d0))
+  (%mat 0d0 0d0 0d0 0d0 0d0 0d0 0d0 0d0 0d0 0d0 0d0 0d0 0d0 0d0 0d0 0d0))
 
 (ss:defspecialization (mat :inline t) ((x real)) mat
   (%mat (float x 1d0) 0d0 0d0 0d0
@@ -236,7 +233,7 @@
         (float (aref mat 14) 1d0)
         (float (aref mat 15) 1d0)))
 
-;;; constants
+;;; Constants
 
 (u:define-constant +zero+
     (%mat 0d0 0d0 0d0 0d0 0d0 0d0 0d0 0d0 0d0 0d0 0d0 0d0 0d0 0d0 0d0 0d0)

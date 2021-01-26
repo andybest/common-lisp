@@ -1,7 +1,6 @@
 (in-package #:cl-user)
 
-;;; 3D points are just type aliased to be vec3, with a convenience constructor
-;;; function.
+;;; 3D points are just type aliased to be vec3, with a convenience constructor function.
 
 (defpackage #:origin.geometry.point3d
   (:local-nicknames

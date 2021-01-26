@@ -139,11 +139,10 @@
             `(with-components ,rest ,@body)
             `(progn ,@body)))))
 
-;;; constructors
+;;; Constructors
 
-;; Low-level function for creating a vector. This is not exported, as it is
-;; requires passing a total set of scalars, which is not as convenient as the
-;; specializations that follow this definition.
+;; Low-level function for creating a vector. This is not exported, as it is requires passing a total
+;; set of scalars, which is not as convenient as the specializations that follow this definition.
 (u:fn-> %vec (u:f32 u:f32 u:f32 u:f32) vec)
 (declaim (inline %vec))
 (u:eval-always
@@ -156,8 +155,7 @@
             (aref vec 3) w)
       vec)))
 
-;;; Define a set of specializations for creating vectors from a variety of
-;;; different inputs.
+;;; Define a set of specializations for creating vectors from a variety of different inputs.
 
 (ss:defstore vec (&rest args))
 
@@ -215,7 +213,7 @@
         (float (aref vec 2) 1.0)
         (float (aref vec 3) 1.0)))
 
-;;; accessors
+;;; Accessors
 
 (u:fn-> x (vec) u:f32)
 (declaim (inline x))
@@ -273,7 +271,7 @@
   (declare (optimize speed))
   (setf (aref vec 3) value))
 
-;;; constants
+;;; Constants
 
 (u:define-constant +zero+ (%vec 0.0 0.0 0.0 0.0)
   :test #'equalp

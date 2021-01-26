@@ -115,7 +115,7 @@
     (format stream "[~,6f, ~,6f, ~,6f~% ~,6f, ~,6f, ~,6f~% ~,6f, ~,6f, ~,6f]"
             m00 m01 m02 m10 m11 m12 m20 m21 m22)))
 
-;;; constructors
+;;; Constructors
 
 (u:fn-> %mat (u:f32 u:f32 u:f32 u:f32 u:f32 u:f32 u:f32 u:f32 u:f32) mat)
 (declaim (inline %mat))
@@ -137,19 +137,13 @@
 (ss:defstore mat (&rest args))
 
 (ss:defspecialization (mat :inline t) () mat
-  (%mat 0.0 0.0 0.0
-        0.0 0.0 0.0
-        0.0 0.0 0.0))
+  (%mat 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0))
 
 (ss:defspecialization (mat :inline t) ((x real)) mat
-  (%mat (float x 1.0) 0.0 0.0
-        0.0 (float x 1.0) 0.0
-        0.0 0.0 (float x 1.0)))
+  (%mat (float x 1.0) 0.0 0.0 0.0 (float x 1.0) 0.0 0.0 0.0 (float x 1.0)))
 
 (ss:defspecialization (mat :inline t) ((mat m2:mat)) mat
-  (%mat (aref mat 0) (aref mat 1) 0.0
-        (aref mat 2) (aref mat 3) 0.0
-        0.0 0.0 1.0))
+  (%mat (aref mat 0) (aref mat 1) 0.0 (aref mat 2) (aref mat 3) 0.0 0.0 0.0 1.0))
 
 (ss:defspecialization (mat :inline t) ((mat mat)) mat
   (%mat (aref mat 0) (aref mat 1) (aref mat 2)
@@ -176,19 +170,12 @@
         (float g 1.0) (float h 1.0) (float i 1.0)))
 
 (ss:defspecialization (mat :inline t) ((mat (simple-array u:f64 (9)))) mat
-  (%mat (float (aref mat 0) 1.0)
-        (float (aref mat 1) 1.0)
-        (float (aref mat 2) 1.0)
-        (float (aref mat 3) 1.0)
-        (float (aref mat 4) 1.0)
-        (float (aref mat 5) 1.0)
-        (float (aref mat 6) 1.0)
-        (float (aref mat 7) 1.0)
-        (float (aref mat 8) 1.0)))
+  (%mat (float (aref mat 0) 1.0) (float (aref mat 1) 1.0) (float (aref mat 2) 1.0)
+        (float (aref mat 3) 1.0) (float (aref mat 4) 1.0) (float (aref mat 5) 1.0)
+        (float (aref mat 6) 1.0) (float (aref mat 7) 1.0) (float (aref mat 8) 1.0)))
 
-;;; constants
+;;; Constants
 
-(u:define-constant +zero+ (%mat 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0)
-  :test #'equalp)
+(u:define-constant +zero+ (%mat 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0) :test #'equalp)
 
 (u:define-constant +id+ (%mat 1.0 0.0 0.0 0.0 1.0 0.0 0.0 0.0 1.0) :test #'equalp)
