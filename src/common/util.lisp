@@ -25,3 +25,11 @@
                          body
                          (lambda (x) (and (symbolp x) (member x (u:ensure-list subst))))
                          (lambda (x) `(aref ,x ,i)))))))
+
+(defmacro cwcmp-or (count subst &body body)
+  `(or
+    ,@(loop :for i :below count
+            :append `(,@(u:tree-leaves
+                         body
+                         (lambda (x) (and (symbolp x) (member x (u:ensure-list subst))))
+                         (lambda (x) `(aref ,x ,i)))))))

@@ -347,37 +347,45 @@ VEC2 by FACTOR."
   (declare (optimize speed))
   (lerp! (zero) vec1 vec2 factor))
 
-(u:fn-> < (vec vec) boolean)
+(u:fn-> < (vec vec &optional (member :and :or)) boolean)
 (declaim (inline <))
-(defun < (vec1 vec2)
+(defun < (vec1 vec2 &optional (op :and))
   "Check whether or not each component of vector VEC1 is less than the respective components of
 vector VEC2."
   (declare (optimize speed))
-  (com:cwcmp 2 (vec1 vec2) (cl:< vec1 vec2)))
+  (if (eq op :and)
+      (com:cwcmp 2 (vec1 vec2) (cl:< vec1 vec2))
+      (com:cwcmp-or 2 (vec1 vec2) (cl:< vec1 vec2))))
 
-(u:fn-> <= (vec vec) boolean)
+(u:fn-> <= (vec vec &optional (member :and :or)) boolean)
 (declaim (inline <=))
-(defun <= (vec1 vec2)
+(defun <= (vec1 vec2 &optional (op :and))
   "Check whether or not each component of vector VEC1 is less than or equal to the respective
 components of vector VEC2."
   (declare (optimize speed))
-  (com:cwcmp 2 (vec1 vec2) (cl:<= vec1 vec2)))
+  (if (eq op :and)
+      (com:cwcmp 2 (vec1 vec2) (cl:<= vec1 vec2))
+      (com:cwcmp-or 2 (vec1 vec2) (cl:<= vec1 vec2))))
 
-(u:fn-> > (vec vec) boolean)
+(u:fn-> > (vec vec &optional (member :and :or)) boolean)
 (declaim (inline >))
-(defun > (vec1 vec2)
+(defun > (vec1 vec2 &optional (op :and))
   "Check whether or not each component of vector VEC1 is greater than the respective components of
 vector VEC2."
   (declare (optimize speed))
-  (com:cwcmp 2 (vec1 vec2) (cl:> vec1 vec2)))
+  (if (eq op :and)
+      (com:cwcmp 2 (vec1 vec2) (cl:> vec1 vec2))
+      (com:cwcmp-or 2 (vec1 vec2) (cl:> vec1 vec2))))
 
-(u:fn-> >= (vec vec) boolean)
+(u:fn-> >= (vec vec &optional (member :and :or)) boolean)
 (declaim (inline >=))
-(defun >= (vec1 vec2)
+(defun >= (vec1 vec2 &optional (op :and))
   "Check whether or not each component of vector VEC1 is greater than or equal to the respective
 components of vector VEC2."
   (declare (optimize speed))
-  (com:cwcmp 2 (vec1 vec2) (cl:>= vec1 vec2)))
+  (if (eq op :and)
+      (com:cwcmp 2 (vec1 vec2) (cl:>= vec1 vec2))
+      (com:cwcmp-or 2 (vec1 vec2) (cl:>= vec1 vec2))))
 
 (u:fn-> min! (vec vec vec) vec)
 (declaim (inline min!))

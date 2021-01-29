@@ -9,5 +9,6 @@
   (:export
    #:=
    #:cwcmp
+   #:cwcmp-or
    #:cwset
    #:make-accessor-symbol))
