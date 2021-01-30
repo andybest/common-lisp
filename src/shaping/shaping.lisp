@@ -113,36 +113,36 @@
   (declare (optimize speed))
   (1+ (* (expt (1- x) 3) (- 1 x))))
 
-;; TODO: Cannot optimize until SBCL issue 1908830 is resolved.
 (u:fn-> quartic-in (u:f32) u:f32)
 (declaim (inline quartic-in))
 (defun quartic-in (x)
+  (declare (optimize speed))
   (expt x 4))
 
-;; TODO: Cannot optimize until SBCL issue 1908830 is resolved.
 (u:fn-> quartic-in-out (u:f32) u:f32)
 (declaim (inline quartic-in-out))
 (defun quartic-in-out (x)
+  (declare (optimize speed))
   (if (< x 0.5)
       (* (expt x 4) 8)
       (1+ (* -8 (expt (1- x) 4)))))
 
-;; TODO: Cannot optimize until SBCL issue 1908830 is resolved.
 (u:fn-> quintic-out (u:f32) u:f32)
 (declaim (inline quintic-out))
 (defun quintic-out (x)
+  (declare (optimize speed))
   (1+ (expt (1- x) 5)))
 
-;; TODO: Cannot optimize until SBCL issue 1908830 is resolved.
 (u:fn-> quintic-in (u:f32) u:f32)
 (declaim (inline quintic-in))
 (defun quintic-in (x)
+  (declare (optimize speed))
   (expt x 5))
 
-;; TODO: Cannot optimize until SBCL issue 1908830 is resolved.
 (u:fn-> quintic-in-out (u:f32) u:f32)
 (declaim (inline quintic-in-out))
 (defun quintic-in-out (x)
+  (declare (optimize speed))
   (if (< x 0.5)
       (* (expt x 5) 16)
       (1+ (* 0.5 (expt (- (* x 2) 2) 5)))))
