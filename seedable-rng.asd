@@ -12,6 +12,6 @@
   :serial t
   :components
   ((:file "package")
-   (:file "conditions")
    (:file "dictionary")
-   (:file "generator")))
+   (:file "generator")
+   (:file "conditions")))
