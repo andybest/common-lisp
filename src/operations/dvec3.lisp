@@ -84,6 +84,7 @@ VEC."
 (defun fract! (out vec)
   "Modify vector OUT to have its components contain the fractional portion of the components in
 vector VEC."
+  (declare (optimize speed))
   (com:cwset 3 out vec (cl:- vec (ffloor vec)))
   out)
 
@@ -92,6 +93,7 @@ vector VEC."
 (defun fract (vec)
   "Construct a fresh vector that has its components contain the fractional portion of the components
 in vector VEC."
+  (declare (optimize speed))
   (fract! (zero) vec))
 
 (u:fn-> clamp! (vec vec vec vec) vec)
