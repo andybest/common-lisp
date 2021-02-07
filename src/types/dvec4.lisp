@@ -45,6 +45,7 @@
    #:w
    #:with-components
    #:+zero+
+   #:+ones+
    #:zero
    #:zero!
    #:zero-p
@@ -269,3 +270,7 @@
 (u:define-constant +zero+ (%vec 0d0 0d0 0d0 0d0)
   :test #'equalp
   :documentation "Constant representing a 4D zero vector.")
+
+(u:define-constant +ones+ (%vec 1d0 1d0 1d0 1d0)
+  :test #'equalp
+  :documentation "Constant representing a 4D vector with each component being 1.")

@@ -40,6 +40,7 @@
    #:y
    #:with-components
    #:+zero+
+   #:+ones+
    #:+up+
    #:+down+
    #:+left+
@@ -215,6 +216,10 @@
 (u:define-constant +zero+ (%vec 0.0 0.0)
   :test #'equalp
   :documentation "Constant representing a 2D zero vector.")
+
+(u:define-constant +ones+ (%vec 1.0 1.0)
+  :test #'equalp
+  :documentation "Constant representing a 2D vector with each component being 1.")
 
 (u:define-constant +up+ (%vec 0.0 1.0)
   :test #'equalp

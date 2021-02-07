@@ -42,6 +42,7 @@
    #:z
    #:with-components
    #:+zero+
+   #:+ones+
    #:+up+
    #:+down+
    #:+left+
@@ -245,6 +246,10 @@
 (u:define-constant +zero+ (%vec 0.0 0.0 0.0)
   :test #'equalp
   :documentation "Constant representing a 3D zero vector.")
+
+(u:define-constant +ones+ (%vec 1.0 1.0 1.0)
+  :test #'equalp
+  :documentation "Constant representing a 3D vector with each component being 1.")
 
 (u:define-constant +up+ (%vec 0.0 1.0 0.0)
   :test #'equalp
