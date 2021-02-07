@@ -9,8 +9,8 @@
   (seed "" :type string))
 
 (defun make-seed ()
-  (let (words)
-    (setf *random-state* (make-random-state t))
+  (let ((*random-state* (make-random-state t))
+        (words nil))
     (dotimes (i 5)
       (push (u:random-elt +dictionary+) words))
     (format nil "~{~a~^-~}" words)))
