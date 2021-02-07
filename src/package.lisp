@@ -4,7 +4,8 @@
   (:local-nicknames
    (#:u #:golden-utils))
   (:use #:cl)
-  (:shadow #:float)
+  (:shadow
+   #:float)
   (:export
    #:bool
    #:die

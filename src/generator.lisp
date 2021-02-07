@@ -79,8 +79,9 @@ bound denoted by `min` and `max`."
 (defun element (generator sequence)
   "Randomly choose a single element from the given sequence."
   (let ((length (length sequence)))
-    (when (plusp length)
-      (elt sequence (pcg:pcg-random (kernel generator) length)))))
+    (when (zerop length)
+      (error 'empty-sequence :sequence sequence))
+    (elt sequence (pcg:pcg-random (kernel generator) length))))
 
 (u:fn-> shuffle (generator sequence) sequence)
 (defun shuffle (generator sequence)
