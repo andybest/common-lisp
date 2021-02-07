@@ -63,7 +63,7 @@ deterministic results."
 `min` and `max`. If `inclusive-p` is non-NIL (the default), then the range is inclusive."
   (declare (optimize speed))
   (when (> min max)
-    (error 'invalid-range :min min :max max))
+    (error 'invalid-range :generator generator :min min :max max))
   (values (pcg:pcg-random (kernel generator) min max inclusive-p)))
 
 (u:fn-> float (generator u:f32 u:f32) u:f32)
@@ -72,7 +72,7 @@ deterministic results."
 bound denoted by `min` and `max`."
   (declare (optimize speed))
   (when (> min max)
-    (error 'invalid-range :min min :max max))
+    (error 'invalid-range :generator generator :min min :max max))
   (values (pcg:pcg-random (kernel generator) min max)))
 
 (u:fn-> element (generator sequence) t)
@@ -80,7 +80,7 @@ bound denoted by `min` and `max`."
   "Randomly choose a single element from the given sequence."
   (let ((length (length sequence)))
     (when (zerop length)
-      (error 'empty-sequence :sequence sequence))
+      (error 'empty-sequence :generator generator))
     (elt sequence (pcg:pcg-random (kernel generator) length))))
 
 (u:fn-> shuffle (generator sequence) sequence)
