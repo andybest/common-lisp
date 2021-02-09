@@ -48,6 +48,12 @@ generator supplied. In this way, you can have distinct nested generators giving 
 deterministic results.
 
 ```lisp
+(get-seed generator)
+```
+Return the seed string of `generator`. In case an integer is needed, one is provided as a secondary
+return value.
+
+```lisp
 (bool generator &optional (probability 0.5))
 ```
 Randomly generate a boolean value, with `probability` chance of a true result.

@@ -6,6 +6,7 @@
             (:predicate nil)
             (:copier nil))
   (kernel (pcg:make-pcg) :type pcg:pcg)
+  (internal-seed 0 :type u:ub64)
   (seed "" :type string))
 
 (defun make-seed ()
@@ -21,17 +22,19 @@
       (push (element generator +dictionary+) words))
     (format nil "~{~a~^-~}" words)))
 
-(defun make-internal-seed (phrase)
+(defun make-internal-seed (seed-string)
   (ldb (byte 128 64)
        (ironclad:octets-to-integer
         (ironclad:produce-digest
          (ironclad:update-digest
           (ironclad:make-digest :md5)
-          (ironclad:ascii-string-to-byte-array phrase))))))
+          (ironclad:ascii-string-to-byte-array seed-string))))))
 
 (defun %make-generator (seed)
   (let ((internal-seed (make-internal-seed seed)))
-    (%%make-generator :kernel (pcg:make-pcg :seed internal-seed) :seed seed)))
+    (%%make-generator :kernel (pcg:make-pcg :seed internal-seed)
+                      :seed seed
+                      :internal-seed internal-seed)))
 
 (defun make-generator (&optional source)
   "Construct a generator suitable for generating random numbers. The type of `source` determines how
@@ -50,6 +53,12 @@ deterministic results."
     (null (%make-generator (make-seed)))
     (string (%make-generator source))
     (generator (%make-generator (make-inherited-seed source)))))
+
+(defun get-seed (generator)
+  "Return the seed string of `generator`. In case an integer is needed, one is provided as a
+secondary return value."
+  (values (seed generator)
+          (ash (internal-seed generator) -32)))
 
 (u:fn-> bool (generator &optional u:f32) boolean)
 (defun bool (generator &optional (probability 0.5f0))

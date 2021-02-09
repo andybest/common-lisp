@@ -12,8 +12,8 @@
    #:element
    #:float
    #:generator
+   #:get-seed
    #:int
    #:invalid-range
    #:make-generator
-   #:seed
    #:shuffle))
