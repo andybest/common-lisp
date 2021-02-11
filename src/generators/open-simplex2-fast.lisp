@@ -1,5 +1,7 @@
 (in-package #:coherent-noise/internal)
 
+;;; 2D OpenSimplex2F
+
 (u:define-constant +open-simplex2-fast-2d/gradients+
     (let ((gradients #(#(13.031324456287654d0 98.98273633310245d0)
                        #(38.20591014244875d0 92.23722642870753d0)
@@ -38,6 +40,27 @@
       (make-array 8 :element-type 'u:f64 :initial-contents data))
   :test #'equalp)
 
+(u:fn-> open-simplex2-fast-2d/permute (rng:generator)
+        (values (simple-array u:f64 (4096))
+                (simple-array u:b16 (2048))))
+(defun open-simplex2-fast-2d/permute (rng)
+  (declare (optimize speed))
+  (let ((source (make-array 2048 :element-type 'u:b16 :initial-element 0))
+        (table (make-array 2048 :element-type 'u:b16 :initial-element 0))
+        (gradients (make-array 4096 :element-type 'u:f64)))
+    (dotimes (i 2048)
+      (setf (aref source i) i))
+    (loop :for i :from 2047 :downto 0
+          :for r = (mod (+ (rng:int rng 0 #.(1- (expt 2 32)) nil) 31) (1+ i))
+          :for x = (aref source r)
+          :for pgi = (ash i 1)
+          :for gi = (ash x 1)
+          :do (setf (aref table i) x
+                    (aref gradients pgi) (aref +open-simplex2-fast-2d/gradients+ gi)
+                    (aref gradients (1+ pgi)) (aref +open-simplex2-fast-2d/gradients+ (1+ gi))
+                    (aref source r) (aref source i)))
+    (values gradients table)))
+
 (u:fn-> %open-simplex2-fast-2d ((simple-array u:f64 (4096)) (simple-array u:b16 (2048)) f50 f50)
         u:f32)
 (declaim (inline %open-simplex2-fast-2d))
@@ -51,14 +74,14 @@
              (ssi (* (+ xsi ysi) -0.211324865405187d0))
              (xi (+ xsi ssi))
              (yi (+ ysi ssi)))
-    (declare (type u:f64 value))
+    (declare (u:f64 value))
     (dotimes (i 3 (float value 1f0))
       (block nil
         (let* ((lpx (* (+ index i) 2))
                (lpy (1+ lpx))
                (dx (+ xi (aref +open-simplex2-fast-2d/lookup+ lpx)))
                (dy (+ yi (aref +open-simplex2-fast-2d/lookup+ lpy)))
-               (attn (expt (- 0.5 (expt dx 2) (expt dy 2)) 2)))
+               (attn (- 0.5 (expt dx 2) (expt dy 2))))
           (when (minusp attn)
             (return))
           (let* ((pxm (logand (+ xsb (ldb (byte 1 lpx) #b10110001)) 2047))
@@ -66,10 +89,9 @@
                  (grad-index (ash (logxor (aref table pxm) pym) 1))
                  (grad-x (aref gradients grad-index))
                  (grad-y (aref gradients (1+ grad-index))))
+            (setf attn (expt attn 2))
             (incf value (* (expt attn 2) (+ (* grad-x dx) (* grad-y dy))))))))))
 
-(u:fn-> open-simplex2-fast-2d/permute (rng:generator)
-        (values (simple-array u:f64 (4096))
                 (simple-array u:b16 (2048))))
 (defun open-simplex2-fast-2d/permute (rng)
   (declare (optimize speed))
