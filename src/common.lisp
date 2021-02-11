@@ -27,3 +27,10 @@
     (error 'invalid-seed :seed seed))
   (let ((rng (rng:make-generator seed)))
     (values rng (nth-value 1 (rng:get-seed rng)))))
+
+(defun check-modifier-input (modifier-type input-argument input-value)
+  (unless (functionp input-value)
+    (error 'invalid-modifier-input
+           :modifier-type modifier-type
+           :input-argument (symbol-name input-argument)
+           :input-value input-value)))

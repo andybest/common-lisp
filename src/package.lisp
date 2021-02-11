@@ -38,6 +38,7 @@
    #:invalid-cellular-distance-method
    #:invalid-cellular-jitter
    #:invalid-cellular-output-type
+   #:invalid-modifier-input
    #:invalid-seed))
 
 (defpackage #:coherent-noise/modifiers

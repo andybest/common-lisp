@@ -11,6 +11,20 @@
    (lambda (condition stream)
      (format stream "Invalid seed: ~s.~%~%Seed must be a string." (seed condition)))))
 
+(define-condition invalid-modifier-input (coherent-noise-error)
+  ((%input-argument :reader input-argument
+                    :initarg :input-argument)
+   (%input-value :reader input-value
+                 :initarg :input-value)
+   (%modifier-type :reader modifier-type
+                   :initarg :modifier-type))
+  (:report
+   (lambda (condition stream)
+     (format stream "Argument ~a for modifier ~s is not a sampler.~%~%Value: ~s."
+             (input-argument condition)
+             (modifier-type condition)
+             (input-value condition)))))
+
 (define-condition invalid-cellular-distance-method (coherent-noise-error)
   ((%distance-method :reader distance-method
                      :initarg :distance-method)
