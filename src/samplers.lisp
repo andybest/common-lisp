@@ -138,4 +138,4 @@
     (%checkered x y z)))
 
 (defun constant (value)
-  (constantly value))
+  (constantly (u:lerp (u:clamp value 0 1) -1.0 1.0)))
