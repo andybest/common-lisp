@@ -103,9 +103,9 @@
     (dxr 0d0 :type u:f64)
     (dyr 0d0 :type u:f64)
     (dzr 0d0 :type u:f64)
-    (xrv 0 :type u:ub32)
-    (yrv 0 :type u:ub32)
-    (zrv 0 :type u:ub32)
+    (xrv 0 :type u:b32)
+    (yrv 0 :type u:b32)
+    (zrv 0 :type u:b32)
     (next/fail nil :type (or open-simplex2-fast-3d-lattice-point null))
     (next/success nil :type (or open-simplex2-fast-3d-lattice-point null)))
 
