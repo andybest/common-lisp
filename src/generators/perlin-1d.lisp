@@ -1,0 +1,36 @@
+(in-package #:cl-user)
+
+(defpackage #:coherent-noise.generators.perlin-1d
+  (:local-nicknames
+   (#:int #:coherent-noise.internal)
+   (#:rng #:seedable-rng)
+   (#:u #:golden-utils))
+  (:use #:cl)
+  (:export #:perlin-1d))
+
+(in-package #:coherent-noise.generators.perlin-1d)
+
+(u:fn-> %sample ((simple-array u:ub8 (512)) int::f50) u:f32)
+(declaim (inline %sample))
+(defun %sample (table x)
+  (declare (optimize speed))
+  (flet ((grad (hash x)
+           (let* ((h (logand hash 15))
+                  (grad (1+ (logand h 7))))
+             (if (zerop (logand h 8))
+                 (* grad x)
+                 (* (- grad) x)))))
+    (u:mvlet* ((xi xf (truncate x))
+               (xi (logand xi 255)))
+      (float (* (u:lerp (int::interpolate/quintic xf)
+                        (grad (aref table xi) xf)
+                        (grad (aref table (1+ xi)) (1- xf)))
+                0.25)
+             1f0))))
+
+(defun perlin-1d (&key (seed "default"))
+  (let* ((rng (int::make-rng seed))
+         (table (rng:shuffle rng int::+perlin/permutation+)))
+    (lambda (x &optional y z w)
+      (declare (ignore y z w))
+      (%sample table x))))

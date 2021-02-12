@@ -1,46 +1,81 @@
-(in-package #:coherent-noise/modifiers)
+(in-package #:cl-user)
+
+(defpackage #:coherent-noise.modifiers
+  (:local-nicknames
+   (#:api #:coherent-noise.api)
+   (#:int #:coherent-noise.internal)
+   (#:perlin-3d #:coherent-noise.generators.perlin-3d)
+   (#:u #:golden-utils))
+  (:use #:cl)
+  (:shadow #:+ #:- #:* #:abs #:expt #:max #:min)
+  (:export
+   #:+
+   #:-
+   #:*
+   #:abs
+   #:billow
+   #:blend
+   #:clamp
+   #:displace
+   #:expt
+   #:fractal
+   #:invert
+   #:max
+   #:min
+   #:power
+   #:ridges
+   #:ridges2
+   #:rotate
+   #:scale
+   #:select
+   #:strengthen
+   #:translate
+   #:turbulence
+   #:uniform-scale))
+
+(in-package #:coherent-noise.modifiers)
 
 (defun + (sampler1 sampler2)
   "Sum the outputs of samplers `sampler1` and `sampler2`."
-  (cn::check-modifier-input '+ 'sampler1 sampler1)
-  (cn::check-modifier-input '+ 'sampler2 sampler2)
+  (int::check-modifier-input '+ 'sampler1 sampler1)
+  (int::check-modifier-input '+ 'sampler2 sampler2)
   (lambda (&rest args)
     (cl:+ (apply sampler1 args) (apply sampler2 args))))
 
 (defun - (sampler1 sampler2)
   "Subtract the output of `sampler2` from the output of `sampler1`."
-  (cn::check-modifier-input '- 'sampler1 sampler1)
-  (cn::check-modifier-input '- 'sampler2 sampler2)
+  (int::check-modifier-input '- 'sampler1 sampler1)
+  (int::check-modifier-input '- 'sampler2 sampler2)
   (lambda (&rest args)
     (cl:- (apply sampler1 args) (apply sampler2 args))))
 
 (defun * (sampler1 sampler2)
   "Multiply the output of `sampler1` by the output of `sampler2`."
-  (cn::check-modifier-input '* 'sampler1 sampler1)
-  (cn::check-modifier-input '* 'sampler2 sampler2)
+  (int::check-modifier-input '* 'sampler1 sampler1)
+  (int::check-modifier-input '* 'sampler2 sampler2)
   (lambda (&rest args)
     (cl:* (apply sampler1 args) (apply sampler2 args))))
 
 (defun min (sampler1 sampler2)
   "Return the smallest value of the outputs of `sampler1` and `sampler2`."
-  (cn::check-modifier-input 'min 'sampler1 sampler1)
-  (cn::check-modifier-input 'min 'sampler2 sampler2)
+  (int::check-modifier-input 'min 'sampler1 sampler1)
+  (int::check-modifier-input 'min 'sampler2 sampler2)
   (lambda (&rest args)
     (cl:min (apply sampler1 args) (apply sampler2 args))))
 
 (defun max (sampler1 sampler2)
   "Return the largest value of the outputs of `sampler1` and `sampler2`."
-  (cn::check-modifier-input 'max 'sampler1 sampler1)
-  (cn::check-modifier-input 'max 'sampler2 sampler2)
+  (int::check-modifier-input 'max 'sampler1 sampler1)
+  (int::check-modifier-input 'max 'sampler2 sampler2)
   (lambda (&rest args)
     (cl:max (apply sampler1 args) (apply sampler2 args))))
 
 (defun blend (sampler1 sampler2 control-sampler)
   "Blend the outputs of `sampler1` and `sampler2` together, using the output of `control-sampler`.
 This performs a linear interpolation."
-  (cn::check-modifier-input 'blend 'sampler1 sampler1)
-  (cn::check-modifier-input 'blend 'sampler2 sampler2)
-  (cn::check-modifier-input 'blend 'control-sampler control-sampler)
+  (int::check-modifier-input 'blend 'sampler1 sampler1)
+  (int::check-modifier-input 'blend 'sampler2 sampler2)
+  (int::check-modifier-input 'blend 'control-sampler control-sampler)
   (lambda (&rest args)
     (u:lerp (cl:* (1+ (apply control-sampler args)) 0.5)
             (apply sampler1 args)
@@ -53,9 +88,9 @@ Any output value of `control-sampler` that falls within the selection range defi
 select samples from `sampler2`. By default, there is a hard transition between adjacent samples
 selected from `sampler1` and `sampler2`. To smooth the transitions, increase the value of `falloff`,
 which should be a value between 0 and 1."
-  (cn::check-modifier-input 'select 'sampler1 sampler1)
-  (cn::check-modifier-input 'select 'sampler2 sampler2)
-  (cn::check-modifier-input 'select 'control-sampler control-sampler)
+  (int::check-modifier-input 'select 'sampler1 sampler1)
+  (int::check-modifier-input 'select 'sampler2 sampler2)
+  (int::check-modifier-input 'select 'control-sampler control-sampler)
   (lambda (&rest args)
     (let* ((half-size (cl:* (cl:- max min) 0.5))
            (falloff (if (> falloff half-size) half-size falloff))
@@ -69,14 +104,14 @@ which should be a value between 0 and 1."
             ((< control (cl:+ min falloff))
              (let* ((low (cl:- min falloff))
                     (high (cl:+ min falloff))
-                    (alpha (cn::interpolate/cubic (/ (cl:- control low) (cl:- high low)))))
+                    (alpha (int::interpolate/cubic (/ (cl:- control low) (cl:- high low)))))
                (u:lerp alpha sample1 sample2)))
             ((< control (cl:- max falloff))
              sample2)
             ((< control (cl:+ max falloff))
              (let* ((low (cl:- max falloff))
                     (high (cl:+ max falloff))
-                    (alpha (cn::interpolate/cubic (/ (cl:- control low) (cl:- high low)))))
+                    (alpha (int::interpolate/cubic (/ (cl:- control low) (cl:- high low)))))
                (u:lerp alpha sample2 sample1)))
             (t
              sample1))
@@ -86,20 +121,20 @@ which should be a value between 0 and 1."
 
 (defun abs (sampler)
   "Take the absolute value of the output of `sampler`."
-  (cn::check-modifier-input 'abs 'sampler sampler)
+  (int::check-modifier-input 'abs 'sampler sampler)
   (lambda (&rest args)
     (cl:abs (apply sampler args))))
 
 (defun expt (sampler &optional (power 1.0))
   "Raise the output of `sampler` to the power `power`."
-  (cn::check-modifier-input 'expt 'sampler sampler)
+  (int::check-modifier-input 'expt 'sampler sampler)
   (lambda (&rest args)
     (1- (cl:* (cl:expt (cl:abs (cl:* (1+ (apply sampler args)) 0.5)) power) 2))))
 
 (defun power (sampler1 sampler2)
   "Raise the output of `sampler1` to the power of the output of `sampler2`."
-  (cn::check-modifier-input 'power 'sampler1 sampler1)
-  (cn::check-modifier-input 'power 'sampler2 sampler2)
+  (int::check-modifier-input 'power 'sampler1 sampler1)
+  (int::check-modifier-input 'power 'sampler2 sampler2)
   (lambda (&rest args)
     (let ((sample1 (cl:abs (cl:* (1+ (apply sampler1 args)) 0.5)))
           (sample2 (cl:abs (cl:* (1+ (apply sampler2 args)) 0.5))))
@@ -107,13 +142,13 @@ which should be a value between 0 and 1."
 
 (defun clamp (sampler &key (min -1f0) (max 1f0))
   "Clamp the output of `sampler` to be within the range denoted by `min` and `max`."
-  (cn::check-modifier-input 'clamp 'sampler sampler)
+  (int::check-modifier-input 'clamp 'sampler sampler)
   (lambda (&rest args)
     (u:clamp (apply sampler args) min max)))
 
 (defun invert (sampler)
   "Invert the output of `sampler`."
-  (cn::check-modifier-input 'invert 'sampler sampler)
+  (int::check-modifier-input 'invert 'sampler sampler)
   (lambda (&rest args)
     (cl:- (apply sampler args))))
 
@@ -121,7 +156,7 @@ which should be a value between 0 and 1."
   "Scale the inputs of `sampler` by the given `scalars`. `scalars` is a list of floating point
 values that must match the dimensionality of the sampler, and correspond to the amount of scaling to
 apply to each of its axes."
-  (cn::check-modifier-input 'scale 'sampler sampler)
+  (int::check-modifier-input 'scale 'sampler sampler)
   (lambda (&rest args)
     (loop :for arg :in args
           :for scalar :in scalars
@@ -131,14 +166,14 @@ apply to each of its axes."
 (defun uniform-scale (sampler scalar)
   "Uniformly scale the inputs of `sampler` by `scalar`. NOTE: This is equivalent to `#'scale` called
 with identical scalars for each dimension."
-  (cn::check-modifier-input 'uniform-scale 'sampler sampler)
+  (int::check-modifier-input 'uniform-scale 'sampler sampler)
   (lambda (&rest args)
     (apply sampler (mapcar (lambda (x) (/ x scalar)) args))))
 
 (defun rotate (sampler &key (x 0.0) (y 0.0) (z 0.0))
   "Rotate the inputs of `sampler` around the origin by the supplied angles in radians supplied for
 the axes `x`, `y`, and `z`. This assumes a left-handed coordinate system."
-  (cn::check-modifier-input 'rotate 'sampler sampler)
+  (int::check-modifier-input 'rotate 'sampler sampler)
   (let* ((cx (cos x))
          (cy (cos y))
          (cz (cos z))
@@ -164,7 +199,7 @@ the axes `x`, `y`, and `z`. This assumes a left-handed coordinate system."
   "Translate the inputs of `sampler` by the given `offsets`. `offsets` is a list of floating point
 values that must match the dimensionality of the sampler, and correspond to the amount of
 translation to apply to each of its axes."
-  (cn::check-modifier-input 'translate 'sampler sampler)
+  (int::check-modifier-input 'translate 'sampler sampler)
   (lambda (&rest args)
     (loop :for arg :in args
           :for offset :in offsets
@@ -173,7 +208,7 @@ translation to apply to each of its axes."
 
 (defun strengthen (sampler strength &optional (bias 0.0))
   "Multiply the output of `sampler` by `strength`, then add `bias` to that."
-  (cn::check-modifier-input 'strengthen 'sampler sampler)
+  (int::check-modifier-input 'strengthen 'sampler sampler)
   (lambda (&rest args)
     (cl:+ (cl:* (apply sampler args) strength) bias)))
 
@@ -183,7 +218,7 @@ translation to apply to each of its axes."
 sampler, `sampler`. For each displacement sampler, the corresponding coordinate axis of the input
 coordinates of `sampler` is displaced by an amount equal to the result of sampling from the
 displacement sampler."
-  (cn::check-modifier-input 'displace 'sampler sampler)
+  (int::check-modifier-input 'displace 'sampler sampler)
   (lambda (&rest args)
     (loop :for arg :in args
           :for displace-sampler :in displacement-samplers
@@ -204,7 +239,7 @@ increased by multiplying it by `lacunarity`.
 
 `lacunarity`: A multiplier for the frequency of each successive octave. This should be a value of
 1.0 or larger."
-  (cn::check-modifier-input 'fractal 'sampler sampler)
+  (int::check-modifier-input 'fractal 'sampler sampler)
   (lambda (&rest args)
     (loop :with amplitude = 1.0
           :with args = (mapcar (lambda (x) (cl:* x frequency)) args)
@@ -219,7 +254,7 @@ increased by multiplying it by `lacunarity`.
                          (offset 1.0))
   "A fractal-based sampler like `#'fractal`, except uses the absolute value for successive octaves
 to give a ridged look."
-  (cn::check-modifier-input 'ridges 'sampler sampler)
+  (int::check-modifier-input 'ridges 'sampler sampler)
   (let ((weights (make-array octaves :element-type 'u:f32)))
     (loop :for i :below octaves
           :for frequency = 1.0 :then (cl:* frequency lacunarity)
@@ -237,7 +272,7 @@ to give a ridged look."
 
 (defun ridges2 (sampler &key (octaves 4) (frequency 1.0) (gain 0.5) (lacunarity 2.0))
   "A alternate version of the `#'ridges` fractal sampler, giving a different effect."
-  (cn::check-modifier-input 'ridges2 'sampler sampler)
+  (int::check-modifier-input 'ridges2 'sampler sampler)
   (lambda (&rest args)
     (let ((args (mapcar (lambda (x) (cl:* x frequency)) args))
           (amplitude 1.0)
@@ -252,7 +287,7 @@ to give a ridged look."
 (defun billow (sampler &key (octaves 4) (frequency 1.0) (gain 0.5) (lacunarity 2.0))
   "A fractal-based sampler like `#'fractal`, except generates a 'billowy' effect suitable for
 simulating clouds and rocks."
-  (cn::check-modifier-input 'billow 'sampler sampler)
+  (int::check-modifier-input 'billow 'sampler sampler)
   (lambda (&rest args)
     (loop :with amplitude = 1.0
           :with args = (mapcar (lambda (x) (cl:* x frequency)) args)
@@ -265,8 +300,8 @@ simulating clouds and rocks."
 
 (defun turbulence (sampler &key (frequency 1.0) (power 1.0) (roughness 3))
   "A sampler that randomly displaces the inputs of `sampler`."
-  (cn::check-modifier-input 'turbulence 'sampler sampler)
-  (let ((d (fractal (cn:perlin-3d) :octaves roughness :frequency frequency)))
+  (int::check-modifier-input 'turbulence 'sampler sampler)
+  (let ((d (fractal (perlin-3d:perlin-3d) :octaves roughness :frequency frequency)))
     (lambda (&rest args)
       (destructuring-bind (x &optional (y 0d0) (z 0d0) (w 0d0)) args
         (let* ((x0 (cl:+ x 0.1894226))
@@ -286,7 +321,7 @@ simulating clouds and rocks."
                (z3 (cl:+ z 0.69029343))
                (w3 (cl:+ w 0.17203021)))
           (funcall sampler
-                   (cl:+ x (cl:* (cn:sample d x0 y0 z0 w0) power))
-                   (cl:+ y (cl:* (cn:sample d x1 y1 z1 w1) power))
-                   (cl:+ z (cl:* (cn:sample d x2 y2 z2 w2) power))
-                   (cl:+ w (cl:* (cn:sample d x3 y3 z3 w3) power))))))))
+                   (cl:+ x (cl:* (api:sample d x0 y0 z0 w0) power))
+                   (cl:+ y (cl:* (api:sample d x1 y1 z1 w1) power))
+                   (cl:+ z (cl:* (api:sample d x2 y2 z2 w2) power))
+                   (cl:+ w (cl:* (api:sample d x3 y3 z3 w3) power))))))))

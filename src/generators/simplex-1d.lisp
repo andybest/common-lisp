@@ -1,0 +1,42 @@
+(in-package #:cl-user)
+
+(defpackage #:coherent-noise.generators.simplex-1d
+  (:local-nicknames
+   (#:int #:coherent-noise.internal)
+   (#:rng #:seedable-rng)
+   (#:u #:golden-utils))
+  (:use #:cl)
+  (:export #:simplex-1d))
+
+(in-package #:coherent-noise.generators.simplex-1d)
+
+(u:define-constant +scale+ 0.395d0)
+
+(u:fn-> %sample ((simple-array u:ub8 (512)) int::f50) u:f32)
+(declaim (inline %sample))
+(defun %sample (table x)
+  (declare (optimize speed))
+  (flet ((noise (hash x)
+           (let* ((s (- 1 (* x x)))
+                  (h (logand hash 15))
+                  (grad (if (zerop (logand h 8))
+                            (* (1+ (logand h 7)) x)
+                            (* (- (1+ (logand h 7))) x))))
+             (if (plusp s)
+                 (* (expt s 4) grad)
+                 0d0))))
+    (let* ((i1 (floor x))
+           (i2 (1+ i1))
+           (x1 (- x i1))
+           (x2 (1- x1)))
+      (float (* (+ (noise (int::lookup table i1) x1)
+                   (noise (int::lookup table i2) x2))
+                +scale+)
+             1f0))))
+
+(defun simplex-1d (&key (seed "default"))
+  (let* ((rng (int::make-rng seed))
+         (table (rng:shuffle rng int::+perlin/permutation+)))
+    (lambda (x &optional y z w)
+      (declare (ignore y z w))
+      (%sample table x))))

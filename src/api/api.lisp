@@ -1,4 +1,15 @@
-(in-package #:coherent-noise/internal)
+(in-package #:cl-user)
+
+(defpackage #:coherent-noise.api
+  (:local-nicknames
+   (#:lp #:lparallel)
+   (#:u #:golden-utils))
+  (:use #:cl)
+  (:export
+   #:sample
+   #:write-image))
+
+(in-package #:coherent-noise.api)
 
 (defun sample (sampler &rest coords)
   "Sample from `sampler` using the position denoted by `coords`. `coords` is a list of floating
