@@ -409,17 +409,43 @@
                     (aref source r) (aref source i)))
     (values gradients table)))
 
+(declaim (inline orient))
+(defun orient (orientation x y z w)
+  (ecase orientation
+    (:standard
+     (let ((s (* (+ x y z w) -0.138196601125011d0)))
+       (values (+ x s) (+ y s) (+ z s) (+ w s))))
+    (:xy/zw
+     (let ((s2 (+ (* (+ x y) -0.178275657951399372d0)
+                  (* (+ z w) 0.215623393288842828d0)))
+           (t2 (+ (* (+ z w) -0.403949762580207112d0)
+                  (* (+ x y) -0.375199083010075342d0))))
+       (values (+ x s2) (+ y s2) (+ z t2) (+ w t2))))
+    (:xz/yw
+     (let ((s2 (+ (* (+ x z) -0.178275657951399372d0)
+                  (* (+ y w) 0.215623393288842828d0)))
+           (t2 (+ (* (+ y w) -0.403949762580207112d0)
+                  (* (+ x z) -0.375199083010075342d0))))
+       (values (+ x s2) (+ y t2) (+ z s2) (+ w t2))))
+    (:xyz/w
+     (let* ((xyz (+ x y z))
+            (ww (* w 0.2236067977499788d0))
+            (s2 (+ (* xyz -0.16666666666666666d0) ww)))
+       (values (+ x s2) (+ y s2) (+ z s2) (+ (* xyz -0.5d0) ww))))))
+
 (u:fn-> sample
-        ((simple-array u:f64 (8192)) (simple-array u:b16 (2048)) int::f50 int::f50 int::f50 int::f50)
+        ((simple-array u:f64 (8192))
+         (simple-array u:b16 (2048))
+         keyword
+         int::f50
+         int::f50
+         int::f50
+         int::f50)
         u:f32)
-(defun sample (gradients table x y z w)
+(defun sample (gradients table orientation x y z w)
   (declare (optimize speed))
   (u:mvlet* ((value 0d0)
-             (s (* (+ x y z w) -0.138196601125011d0))
-             (xs (+ x s))
-             (ys (+ y s))
-             (zs (+ z s))
-             (ws (+ w s))
+             (xs ys zs ws (orient orientation x y z w))
              (xsb xsi (floor xs))
              (ysb ysi (floor ys))
              (zsb zsi (floor zs))
@@ -546,8 +572,13 @@
                  (setf vertex-index #b1000)))))))
       (float value 1f0))))
 
-(defun open-simplex2-4d (&key (seed "default"))
+(defun open-simplex2-4d (&key (seed "default") (orientation :standard))
+  (unless (member orientation '(:standard :xy/zw :xz/yw :xyz/w))
+    (error 'int:invalid-open-simplex2-orientation
+           :sampler-type 'open-simplex2-4d
+           :orientation orientation
+           :valid-orientations '(:standard :xy/zw :xz/yw :xyz/w)))
   (u:mvlet* ((rng (int::make-rng seed))
              (perm-grad perm (permute rng)))
     (lambda (x &optional (y 0d0) (z 0d0) (w 0d0))
-      (sample perm-grad perm x y z w))))
+      (sample perm-grad perm orientation x y z w))))

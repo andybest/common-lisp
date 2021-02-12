@@ -6,10 +6,6 @@
    (#:rng #:seedable-rng)
    (#:u #:golden-utils))
   (:use #:cl)
-  (:export
-   #:make-sampler
-   #:sample
-   #:write-image)
   ;; Conditions
   (:export
    #:coherent-noise-error
@@ -17,4 +13,5 @@
    #:invalid-cellular-jitter
    #:invalid-cellular-output-type
    #:invalid-modifier-input
+   #:invalid-open-simplex2-orientation
    #:invalid-seed))

@@ -4,6 +4,7 @@
   (:mix #:coherent-noise.modifiers #:cl)
   (:reexport #:coherent-noise.modifiers)
   (:mix-reexport
+   #:coherent-noise.internal
    #:coherent-noise.api
    #:coherent-noise.generators.perlin-1d
    #:coherent-noise.generators.perlin-2d

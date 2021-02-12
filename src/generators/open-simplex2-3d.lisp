@@ -153,15 +153,39 @@
                     (aref source r) (aref source i)))
     (values gradients table)))
 
-(u:fn-> sample ((simple-array u:f64 (6144)) (simple-array u:b16 (2048)) int::f50 int::f50 int::f50)
+(declaim (inline orient))
+(defun orient (orientation x y z)
+  (ecase orientation
+    (:standard
+     (let ((r (* (/ 2 3) (+ x y z))))
+       (values (- r x) (- r y) (- r z))))
+    (:xy/z
+     (let* ((xy (+ x y))
+            (s2 (* xy -0.211324865405187d0))
+            (zz (* z 0.577350269189626d0)))
+       (values (- (+ x s2) zz)
+               (- (+ y s2) zz)
+               (+ (* xy 0.577350269189626d0) zz))))
+    (:xz/y
+     (let* ((xz (+ x z))
+            (s2 (* xz -0.211324865405187d0))
+            (yy (* y 0.577350269189626d0)))
+       (values (- (+ x s2) yy)
+               (+ (* xz 0.577350269189626d0) yy)
+               (- (+ z s2) yy))))))
+
+(u:fn-> sample ((simple-array u:f64 (6144))
+                (simple-array u:b16 (2048))
+                keyword
+                int::f50
+                int::f50
+                int::f50)
         u:f32)
-(defun sample (gradients table x y z)
+(declaim (inline sample))
+(defun sample (gradients table orientation x y z)
   (declare (optimize speed))
   (u:mvlet* ((value 0d0)
-             (r (* (/ 2 3) (+ x y z)))
-             (xr (- r x))
-             (yr (- r y))
-             (zr (- r z))
+             (xr yr zr (orient orientation x y z))
              (xrb xri (floor xr))
              (yrb yri (floor yr))
              (zrb zri (floor zr))
@@ -190,9 +214,14 @@
               (incf value (* (expt attn 2) (+ (* grad-x dxr) (* grad-y dyr) (* grad-z dzr))))))))
     (float value 1f0)))
 
-(defun open-simplex2-3d (&key (seed "default"))
+(defun open-simplex2-3d (&key (seed "default") (orientation :standard))
+  (unless (member orientation '(:standard :xy/z :xz/y))
+    (error 'int:invalid-open-simplex2-orientation
+           :sampler-type 'open-simplex2-3d
+           :orientation orientation
+           :valid-orientations '(:standard :xy/z :xz/y)))
   (u:mvlet* ((rng (int::make-rng seed))
              (perm-grad perm (permute rng)))
     (lambda (x &optional (y 0d0) (z 0d0) w)
       (declare (ignore w))
-      (sample perm-grad perm x y z))))
+      (sample perm-grad perm orientation x y z))))

@@ -57,3 +57,16 @@
      (format stream "Invalid jitter ~s for sampler ~s.~%~%Jitter must be a real number."
              (jitter condition)
              (sampler-type condition)))))
+
+(define-condition invalid-open-simplex2-orientation (coherent-noise-error)
+  ((%orientation :reader orientation
+                 :initarg :orientation)
+   (%valid-orientations :reader valid-orientations
+                        :initarg :valid-orientations))
+  (:report
+   (lambda (condition stream)
+     (format stream "Invalid orientation ~s for sampler ~s.~%~% ~
+                     Valid orientations: ~{~s~^, ~}"
+             (orientation condition)
+             (sampler-type condition)
+             (valid-orientations condition)))))
