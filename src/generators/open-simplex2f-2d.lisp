@@ -1,14 +1,14 @@
 (in-package #:cl-user)
 
-(defpackage #:coherent-noise.generators.open-simplex2-2d
+(defpackage #:coherent-noise.generators.open-simplex2f-2d
   (:local-nicknames
    (#:int #:coherent-noise.internal)
    (#:rng #:seedable-rng)
    (#:u #:golden-utils))
   (:use #:cl)
-  (:export #:open-simplex2-2d))
+  (:export #:open-simplex2f-2d))
 
-(in-package #:coherent-noise.generators.open-simplex2-2d)
+(in-package #:coherent-noise.generators.open-simplex2f-2d)
 
 (u:define-constant +gradients+
     (let ((gradients #(#(13.031324456287654d0 98.98273633310245d0)
@@ -109,10 +109,10 @@
             (setf attn (expt attn 2))
             (incf value (* (expt attn 2) (+ (* grad-x dx) (* grad-y dy))))))))))
 
-(defun open-simplex2-2d (&key (seed "default") (orientation :standard))
+(defun open-simplex2f-2d (&key (seed "default") (orientation :standard))
   (unless (member orientation '(:standard :x/y))
     (error 'int:invalid-open-simplex2-orientation
-           :sampler-type 'open-simplex2-2d
+           :sampler-type 'open-simplex2f-2d
            :orientation orientation
            :valid-orientations '(:standard :x/y)))
   (u:mvlet* ((rng (int::make-rng seed))

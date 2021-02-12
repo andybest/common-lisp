@@ -1,14 +1,14 @@
 (in-package #:cl-user)
 
-(defpackage #:coherent-noise.generators.open-simplex2-4d
+(defpackage #:coherent-noise.generators.open-simplex2f-4d
   (:local-nicknames
    (#:int #:coherent-noise.internal)
    (#:rng #:seedable-rng)
    (#:u #:golden-utils))
   (:use #:cl)
-  (:export #:open-simplex2-4d))
+  (:export #:open-simplex2f-4d))
 
-(in-package #:coherent-noise.generators.open-simplex2-4d)
+(in-package #:coherent-noise.generators.open-simplex2f-4d)
 
 (u:eval-always
   (defstruct (lattice-point
@@ -572,10 +572,10 @@
                  (setf vertex-index #b1000)))))))
       (float value 1f0))))
 
-(defun open-simplex2-4d (&key (seed "default") (orientation :standard))
+(defun open-simplex2f-4d (&key (seed "default") (orientation :standard))
   (unless (member orientation '(:standard :xy/zw :xz/yw :xyz/w))
     (error 'int:invalid-open-simplex2-orientation
-           :sampler-type 'open-simplex2-4d
+           :sampler-type 'open-simplex2f-4d
            :orientation orientation
            :valid-orientations '(:standard :xy/zw :xz/yw :xyz/w)))
   (u:mvlet* ((rng (int::make-rng seed))
