@@ -15,7 +15,7 @@
 (defun sample (seed x y z)
   (declare (optimize speed))
   (labels ((in-range (x)
-             (logand x (1- (expt 2 32))))
+             (logand x #.(1- (expt 2 32))))
            (coord (seed x y z)
              (let ((hash (expt (in-range (* (logxor seed x y z) 668265261)) 2)))
                (* (in-range (logxor hash (ash hash -19)))
