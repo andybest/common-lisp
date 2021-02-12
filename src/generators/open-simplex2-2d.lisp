@@ -67,9 +67,9 @@
                     (aref source r) (aref source i)))
     (values gradients table)))
 
-(u:fn-> %sample ((simple-array u:f64 (4096)) (simple-array u:b16 (2048)) int::f50 int::f50) u:f32)
-(declaim (inline %sample))
-(defun %sample (gradients table x y)
+(u:fn-> sample ((simple-array u:f64 (4096)) (simple-array u:b16 (2048)) int::f50 int::f50) u:f32)
+(declaim (inline sample))
+(defun sample (gradients table x y)
   (declare (optimize speed))
   (u:mvlet* ((value 0d0)
              (s (* (+ x y) 0.366025403784439d0))
@@ -102,4 +102,4 @@
              (perm-grad perm (permute rng)))
     (lambda (x &optional (y 0d0) z w)
       (declare (ignore z w))
-      (%sample perm-grad perm x y))))
+      (sample perm-grad perm x y))))

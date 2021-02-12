@@ -591,8 +591,8 @@
              (dz6 state) dz5))
     (values)))
 
-(declaim (inline %sample))
-(defun %sample (table x y z)
+(declaim (inline sample))
+(defun sample (table x y z)
   (declare (optimize speed)
            (u:f64 x y z))
   (let ((state (make-state table x y z)))
@@ -614,4 +614,4 @@
          (table (rng:shuffle rng +permutation+)))
     (lambda (x &optional (y 0d0) (z 0d0) w)
       (declare (ignore w))
-      (%sample table x y z))))
+      (sample table x y z))))

@@ -10,9 +10,9 @@
 
 (in-package #:coherent-noise.generators.perlin-4d)
 
-(u:fn-> %sample ((simple-array u:ub8 (512)) int::f50 int::f50 int::f50 int::f50) u:f32)
-(declaim (inline %sample))
-(defun %sample (table x y z w)
+(u:fn-> sample ((simple-array u:ub8 (512)) int::f50 int::f50 int::f50 int::f50) u:f32)
+(declaim (inline sample))
+(defun sample (table x y z w)
   (declare (optimize speed))
   (flet ((grad (hash x y z w)
            (let* ((h (logand hash 31))
@@ -85,6 +85,6 @@
 
 (defun perlin-4d (&key (seed "default"))
   (let* ((rng (int::make-rng seed))
-         (table (rng:shuffle rng int::+perlin/permutation+)))
+         (table (rng:shuffle rng int::+perlin-permutation+)))
     (lambda (x &optional (y 0d0) (z 0d0) (w 0d0))
-      (%sample table x y z w))))
+      (sample table x y z w))))

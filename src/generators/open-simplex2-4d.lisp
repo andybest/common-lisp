@@ -409,10 +409,10 @@
                     (aref source r) (aref source i)))
     (values gradients table)))
 
-(u:fn-> %sample
+(u:fn-> sample
         ((simple-array u:f64 (8192)) (simple-array u:b16 (2048)) int::f50 int::f50 int::f50 int::f50)
         u:f32)
-(defun %sample (gradients table x y z w)
+(defun sample (gradients table x y z w)
   (declare (optimize speed))
   (u:mvlet* ((value 0d0)
              (s (* (+ x y z w) -0.138196601125011d0))
@@ -550,4 +550,4 @@
   (u:mvlet* ((rng (int::make-rng seed))
              (perm-grad perm (permute rng)))
     (lambda (x &optional (y 0d0) (z 0d0) (w 0d0))
-      (%sample perm-grad perm x y z w))))
+      (sample perm-grad perm x y z w))))

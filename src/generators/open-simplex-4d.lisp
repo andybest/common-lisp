@@ -34,7 +34,7 @@
             (:conc-name nil)
             (:predicate nil)
             (:copier nil))
-  (table int::+perlin/permutation+ :type (simple-array u:ub8 (512)))
+  (table int::+perlin-permutation+ :type (simple-array u:ub8 (512)))
   (stretch-offset 0d0 :type u:f64)
   (xsb 0 :type fixnum)
   (ysb 0 :type fixnum)
@@ -1486,7 +1486,7 @@
              (dw10 state) dw7))
     (values)))
 
-(defun %sample (table x y z w)
+(defun sample (table x y z w)
   (declare (optimize speed)
            (u:f64 x y z w))
   (let ((state (make-state table x y z w)))
@@ -1508,6 +1508,6 @@
 
 (defun open-simplex-4d (&key (seed "default"))
   (let* ((rng (int::make-rng seed))
-         (table (rng:shuffle rng int::+perlin/permutation+)))
+         (table (rng:shuffle rng int::+perlin-permutation+)))
     (lambda (x &optional (y 0d0) (z 0d0) (w 0d0))
-      (%sample table x y z w))))
+      (sample table x y z w))))

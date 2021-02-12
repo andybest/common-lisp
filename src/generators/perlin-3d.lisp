@@ -10,9 +10,9 @@
 
 (in-package #:coherent-noise.generators.perlin-3d)
 
-(u:fn-> %sample ((simple-array u:ub8 (512)) int::f50 int::f50 int::f50) u:f32)
-(declaim (inline %sample))
-(defun %sample (table x y z)
+(u:fn-> sample ((simple-array u:ub8 (512)) int::f50 int::f50 int::f50) u:f32)
+(declaim (inline sample))
+(defun sample (table x y z)
   (declare (optimize speed))
   (flet ((grad (hash x y z)
            (let* ((h (logand hash 15))
@@ -57,7 +57,7 @@
 
 (defun perlin-3d (&key (seed "default"))
   (let* ((rng (int::make-rng seed))
-         (table (rng:shuffle rng int::+perlin/permutation+)))
+         (table (rng:shuffle rng int::+perlin-permutation+)))
     (lambda (x &optional (y 0d0) (z 0d0) w)
       (declare (ignore w))
-      (%sample table x y z))))
+      (sample table x y z))))

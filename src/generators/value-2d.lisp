@@ -10,9 +10,9 @@
 
 (in-package #:coherent-noise.generators.value-2d)
 
-(u:fn-> %sample (u:ub32 int::f50 int::f50) u:f32)
-(declaim (inline %sample))
-(defun %sample (seed x y)
+(u:fn-> sample (u:ub32 int::f50 int::f50) u:f32)
+(declaim (inline sample))
+(defun sample (seed x y)
   (declare (optimize speed))
   (labels ((in-range (x)
              (logand x (1- (expt 2 32))))
@@ -38,4 +38,4 @@
   (u:mvlet ((rng seed (int::make-rng seed)))
     (lambda (x &optional (y 0d0) z w)
       (declare (ignore z w))
-      (%sample seed x y))))
+      (sample seed x y))))

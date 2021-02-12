@@ -139,9 +139,9 @@
                    closest-hash hash))))
        (setf xp (in-range (+ xp int::+prime-x+))))))
 
-(u:fn-> %sample (u:ub32 keyword keyword u:f32 int::f50 int::f50) u:f32)
-(declaim (inline %sample))
-(defun %sample (seed distance-method output-type jitter x y)
+(u:fn-> sample (u:ub32 keyword keyword u:f32 int::f50 int::f50) u:f32)
+(declaim (inline sample))
+(defun sample (seed distance-method output-type jitter x y)
   (declare (optimize speed))
   (flet ((in-range (x)
            (logand x #.(1- (expt 2 32)))))
@@ -196,4 +196,4 @@
             (jitter (u:clamp (float jitter 1f0) 0.0 1.0)))
     (lambda (x &optional (y 0d0) z w)
       (declare (ignore z w))
-      (%sample seed distance-method output-type jitter x y))))
+      (sample seed distance-method output-type jitter x y))))
