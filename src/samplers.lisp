@@ -88,6 +88,12 @@
       (declare (ignore w))
       (%open-simplex2-fast-3d perm-grad perm x y z))))
 
+(defun open-simplex2-fast-4d (&key (seed "default"))
+  (u:mvlet* ((rng (make-rng seed))
+             (perm-grad perm (open-simplex2-fast-4d/permute rng)))
+    (lambda (x &optional (y 0d0) (z 0d0) (w 0d0))
+      (%open-simplex2-fast-4d perm-grad perm x y z w))))
+
 (defun value-2d (&key (seed "default"))
   (u:mvlet ((rng seed (make-rng seed)))
     (lambda (x &optional (y 0d0) z w)

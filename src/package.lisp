@@ -22,6 +22,7 @@
    #:open-simplex-4d
    #:open-simplex2-fast-2d
    #:open-simplex2-fast-3d
+   #:open-simplex2-fast-4d
    #:perlin-1d
    #:perlin-2d
    #:perlin-3d
