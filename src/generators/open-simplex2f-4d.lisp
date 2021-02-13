@@ -542,7 +542,7 @@
               (let* ((pxm (aref table (logand xsb 2047)))
                      (pym (aref table (logxor pxm (logand ysb 2047))))
                      (pzm (aref table (logxor pym (logand zsb 2047))))
-                     (pwm (aref table (logxor pzm (logand wsb 2048))))
+                     (pwm (aref table (logxor pzm (logand wsb 2047))))
                      (grad-index (* pwm 4))
                      (grad-x (aref gradients grad-index))
                      (grad-y (aref gradients (+ grad-index 1)))
