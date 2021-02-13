@@ -21,6 +21,7 @@
    #:coherent-noise.generators.open-simplex2f-3d
    #:coherent-noise.generators.open-simplex2f-4d
    #:coherent-noise.generators.open-simplex2s-2d
+   #:coherent-noise.generators.open-simplex2s-3d
    #:coherent-noise.generators.value-2d
    #:coherent-noise.generators.value-3d
    #:coherent-noise.generators.cellular-2d
