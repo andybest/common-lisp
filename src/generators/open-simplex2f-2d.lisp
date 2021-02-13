@@ -104,10 +104,10 @@
           (let* ((pxm (logand (+ xsb (ldb (byte 1 lpx) #b10110001)) 2047))
                  (pym (logand (+ ysb (ldb (byte 1 lpy) #b10110001)) 2047))
                  (grad-index (* (logxor (aref table pxm) pym) 2))
-                 (grad-x (aref gradients grad-index))
-                 (grad-y (aref gradients (1+ grad-index))))
+                 (grad-x (* (aref gradients grad-index) dx))
+                 (grad-y (* (aref gradients (1+ grad-index)) dy)))
             (setf attn (expt attn 2))
-            (incf value (* (expt attn 2) (+ (* grad-x dx) (* grad-y dy))))))))))
+            (incf value (* (expt attn 2) (+ grad-x grad-y)))))))))
 
 (defun open-simplex2f-2d (&key (seed "default") (orientation :standard))
   (unless (member orientation '(:standard :x/y))
