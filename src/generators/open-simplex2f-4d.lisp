@@ -579,6 +579,6 @@
            :orientation orientation
            :valid-orientations '(:standard :xy/zw :xz/yw :xyz/w)))
   (u:mvlet* ((rng (int::make-rng seed))
-             (perm-grad perm (permute rng)))
+             (gradients table (permute rng)))
     (lambda (x &optional (y 0d0) (z 0d0) (w 0d0))
-      (sample perm-grad perm orientation x y z w))))
+      (sample gradients table orientation x y z w))))

@@ -73,8 +73,7 @@
                 (aref table i) c0)))
       table)))
 
-(u:define-constant +lookup+ (build-lattice-points)
-  :test #'equalp)
+(u:define-constant +lookup+ (build-lattice-points) :test #'equalp)
 
 (u:define-constant +gradients+
     (let ((gradients #(#(-72.97611190577304d0 -72.97611190577304d0 -32.80201376986577d0)
@@ -221,7 +220,7 @@
            :orientation orientation
            :valid-orientations '(:standard :xy/z :xz/y)))
   (u:mvlet* ((rng (int::make-rng seed))
-             (perm-grad perm (permute rng)))
+             (gradients table (permute rng)))
     (lambda (x &optional (y 0d0) (z 0d0) w)
       (declare (ignore w))
-      (sample perm-grad perm orientation x y z))))
+      (sample gradients table orientation x y z))))
