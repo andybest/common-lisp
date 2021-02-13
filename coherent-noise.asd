@@ -35,6 +35,7 @@
      (:file "open-simplex2f-4d")
      (:file "open-simplex2s-2d")
      (:file "open-simplex2s-3d")
+     (:file "open-simplex2s-4d")
      (:file "value-2d")
      (:file "value-3d")
      (:file "cellular-2d")
