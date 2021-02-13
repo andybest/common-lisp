@@ -17,6 +17,14 @@ point numbers corresponding to each dimension of `sampler`. If there are fewer c
 than the dimensionality of the sampler, any unspecified coordinates will be treated as zero."
   (apply sampler (mapcar (lambda (x) (float x 1d0)) coords)))
 
+(define-compiler-macro sample (sampler &rest coords)
+  `(funcall ,sampler
+            ,@(mapcar (lambda (x)
+                        (if (realp x)
+                            (float x 1d0)
+                            `(float ,x 1d0)))
+                      coords)))
+
 (defun write-image (out-file sampler &key (width 1024) (height 1024) (r 1.0) (g 1.0) (b 1.0))
   "Write out a PNG image file representation of `sampler` to the path `out-file`. `width` and
 `height` denote the image dimensions in pixels, and each of these pixels is fed into the sampler to
