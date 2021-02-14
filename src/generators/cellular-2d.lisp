@@ -167,14 +167,17 @@
         (setf min (sqrt min))
         (unless (eq output-type :min)
           (setf max (sqrt (abs max)))))
+      ;; TODO: The domain remapping here is kind of hacky and not exact, due to the algorithm. It
+      ;; may be best to rewrite cellular noise at some point or use a solver to figure out the
+      ;; actual domain.
       (ecase output-type
-        (:value (float (* closest-hash (/ 2147483648.0)) 1f0))
-        (:min (float (1- min) 1f0))
-        (:max (float (1- max) 1f0))
-        (:+ (float (1- (* (+ min max) 0.5)) 1f0))
-        (:- (float (- max min 1) 1f0))
-        (:* (float (1- (* min max 0.5)) 1f0))
-        (:/ (float (1- (/ min max)) 1f0))))))
+        (:value (float (1- (* closest-hash (/ 2147483648.0))) 1f0))
+        (:min (float (u:map-domain 0 1 -1 1 min) 1f0))
+        (:max (float (u:map-domain 0 1 -1 1 max) 1f0))
+        (:+ (float (u:map-domain 0 1 -1 1 (* (+ min max) 0.5)) 1f0))
+        (:- (float (u:map-domain 0 1 -1 1 (- max min)) 1f0))
+        (:* (float (u:map-domain 0 1 -1 1 (* min max)) 1f0))
+        (:/ (float (u:map-domain 0 1 -1 1 (/ min max)) 1f0))))))
 
 (defun cellular-2d (&key (seed "default") (distance-method :euclidean) (output-type :min)
                       (jitter 1.0))
