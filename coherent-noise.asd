@@ -9,8 +9,7 @@
                #:lparallel
                #:golden-utils
                #:seedable-rng
-               #:zpng
-               #:uiop)
+               #:zpng)
   :in-order-to ((asdf:test-op (asdf:test-op #:coherent-noise.test)))
   :pathname "src"
   :serial t
