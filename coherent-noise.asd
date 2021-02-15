@@ -3,7 +3,7 @@
   :author ("Michael Fiano <mail@mfiano.net>")
   :license "MIT"
   :homepage "https://mfiano.net/projects/coherent-noise"
-  :source-control (:git "https://github.com/mfiano/coherent-noise.git")
+  :source-control (:git "https://git.mfiano.net/mfiano/coherent-noise.git")
   :encoding :utf-8
   :depends-on (#:cl-cpus
                #:lparallel
