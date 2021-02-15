@@ -10,10 +10,23 @@
 
 (in-package #:coherent-noise.generators.value-3d)
 
-(u:fn-> sample (u:ub32 int::f50 int::f50 int::f50) u:f32)
-(declaim (inline sample))
-(defun sample (seed x y z)
-  (declare (optimize speed))
+(defstruct (value-3d
+            (:include int::sampler)
+            (:constructor %value-3d)
+            (:conc-name "")
+            (:predicate nil)
+            (:copier nil))
+  (seed 0 :type u:ub32))
+
+(defun value-3d (&key seed)
+  (u:mvlet ((rng seed (int::make-rng seed)))
+    (%value-3d :rng rng
+               :seed seed)))
+
+(defmethod int::sample ((sampler value-3d) x &optional (y 0d0) (z 0d0) (w 0d0))
+  (declare (ignore w)
+           (optimize speed)
+           (int::f50 x y z w))
   (labels ((in-range (x)
              (logand x #.(1- (expt 2 32))))
            (coord (seed x y z)
@@ -21,7 +34,8 @@
                (* (in-range (logxor hash (ash hash -19)))
                   (/ 2147483648.0)))))
     (declare (inline in-range coord))
-    (u:mvlet* ((x0 xs (floor x))
+    (u:mvlet* ((seed (seed sampler))
+               (x0 xs (floor x))
                (xs (int::interpolate/cubic xs))
                (x0 (in-range (* x0 int::+prime-x+)))
                (x1 (+ x0 int::+prime-x+))
@@ -42,9 +56,3 @@
                            (u:lerp xs (coord seed x0 y0 z1) (coord seed x1 y0 z1))
                            (u:lerp xs (coord seed x0 y1 z1) (coord seed x1 y1 z1)))))
        1f0))))
-
-(defun value-3d (&key (seed "default"))
-  (u:mvlet ((rng seed (int::make-rng seed)))
-    (lambda (x &optional (y 0d0) (z 0d0) w)
-      (declare (ignore w))
-      (sample seed x y z))))

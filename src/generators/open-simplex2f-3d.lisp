@@ -132,6 +132,16 @@
       table)
   :test #'equalp)
 
+(defstruct (open-simplex2f-3d
+            (:include int::sampler)
+            (:constructor %open-simplex2f-3d)
+            (:conc-name "")
+            (:predicate nil)
+            (:copier nil))
+  (gradients (make-array 6144 :element-type 'u:f64) :type (simple-array u:f64 (6144)))
+  (table (make-array 2048 :element-type 'u:b16) :type (simple-array u:b16 (2048)))
+  (orientation :standard :type (member :standard :xy/z :xz/y)))
+
 (u:fn-> permute (rng:generator) (values (simple-array u:f64 (6144)) (simple-array u:b16 (2048))))
 (defun permute (rng)
   (declare (optimize speed))
@@ -153,8 +163,8 @@
     (values gradients table)))
 
 (declaim (inline orient))
-(defun orient (orientation x y z)
-  (ecase orientation
+(defun orient (sampler x y z)
+  (ecase (orientation sampler)
     (:standard
      (let ((r (* (/ 2 3) (+ x y z))))
        (values (- r x) (- r y) (- r z))))
@@ -173,18 +183,22 @@
                (+ (* xz 0.577350269189626d0) yy)
                (- (+ z s2) yy))))))
 
-(u:fn-> sample ((simple-array u:f64 (6144))
-                (simple-array u:b16 (2048))
-                keyword
-                int::f50
-                int::f50
-                int::f50)
-        u:f32)
-(declaim (inline sample))
-(defun sample (gradients table orientation x y z)
-  (declare (optimize speed))
-  (u:mvlet* ((value 0d0)
-             (xr yr zr (orient orientation x y z))
+(defun open-simplex2f-3d (&key seed (orientation :standard))
+  (u:mvlet* ((rng (int::make-rng seed))
+             (gradients table (permute rng)))
+    (%open-simplex2f-3d :rng rng
+                        :gradients gradients
+                        :table table
+                        :orientation orientation)))
+
+(defmethod int::sample ((sampler open-simplex2f-3d) x &optional (y 0d0) (z 0d0) (w 0d0))
+  (declare (ignore w)
+           (optimize speed)
+           (int::f50 x y z w))
+  (u:mvlet* ((gradients (gradients sampler))
+             (table (table sampler))
+             (value 0d0)
+             (xr yr zr (orient sampler x y z))
              (xrb xri (floor xr))
              (yrb yri (floor yr))
              (zrb zri (floor zr))
@@ -212,15 +226,3 @@
                     c (next/success c))
               (incf value (* (expt attn 2) (+ grad-x grad-y grad-z)))))))
     (float value 1f0)))
-
-(defun open-simplex2f-3d (&key (seed "default") (orientation :standard))
-  (unless (member orientation '(:standard :xy/z :xz/y))
-    (error 'int:invalid-open-simplex2-orientation
-           :sampler-type 'open-simplex2f-3d
-           :orientation orientation
-           :valid-orientations '(:standard :xy/z :xz/y)))
-  (u:mvlet* ((rng (int::make-rng seed))
-             (gradients table (permute rng)))
-    (lambda (x &optional (y 0d0) (z 0d0) w)
-      (declare (ignore w))
-      (sample gradients table orientation x y z))))

@@ -117,6 +117,25 @@
       (make-array 512 :element-type 'int::f50 :initial-contents data))
   :test #'equalp)
 
+(defstruct (cellular-2d
+            (:include int::sampler)
+            (:constructor %cellular-2d)
+            (:conc-name "")
+            (:predicate nil)
+            (:copier nil))
+  (seed 0 :type u:ub32)
+  (distance-method :euclidean :type (member :euclidean :euclidean-squared :manhattan :hybrid))
+  (output-type :min :type (member :value :min :max :+ :- :* :/))
+  (jitter 1d0 :type u:f64))
+
+(defun cellular-2d (&key seed (distance-method :euclidean) (output-type :min) (jitter 1d0))
+  (u:mvlet ((rng seed (int::make-rng seed)))
+    (%cellular-2d :rng rng
+                  :seed seed
+                  :distance-method distance-method
+                  :output-type output-type
+                  :jitter jitter)))
+
 (defmacro with-distance (distance-method)
   `(dotimes (xi 3)
      (let ((yp yp-base))
@@ -139,19 +158,22 @@
                    closest-hash hash))))
        (setf xp (in-range (+ xp int::+prime-x+))))))
 
-(u:fn-> sample (u:ub32 keyword keyword u:f32 int::f50 int::f50) u:f32)
-(declaim (inline sample))
-(defun sample (seed distance-method output-type jitter x y)
-  (declare (optimize speed))
+(defmethod int::sample ((sampler cellular-2d) x &optional (y 0d0) (z 0d0) (w 0d0))
+  (declare (ignore z w)
+           (optimize speed)
+           (int::f50 x y z w))
   (flet ((in-range (x)
            (logand x #.(1- (expt 2 32)))))
     (declare (inline in-range))
-    (let* ((xr (1- (round x)))
+    (let* ((seed (seed sampler))
+           (distance-method (distance-method sampler))
+           (output-type (output-type sampler))
+           (xr (1- (round x)))
            (yr (1- (round y)))
            (min most-positive-double-float)
            (max most-positive-double-float)
            (closest-hash 0)
-           (jitter (* 0.43701595 jitter))
+           (jitter (* 0.43701595 (jitter sampler)))
            (xp (in-range (* xr int::+prime-x+)))
            (yp-base (in-range (* yr int::+prime-y+))))
       (declare (u:f64 min max))
@@ -172,31 +194,9 @@
       ;; actual domain.
       (ecase output-type
         (:value (float (1- (* closest-hash (/ 2147483648.0))) 1f0))
-        (:min (float (u:map-domain 0 1 -1 1 min) 1f0))
-        (:max (float (u:map-domain 0 1 -1 1 max) 1f0))
-        (:+ (float (u:map-domain 0 1 -1 1 (* (+ min max) 0.5)) 1f0))
-        (:- (float (u:map-domain 0 1 -1 1 (- max min)) 1f0))
-        (:* (float (u:map-domain 0 1 -1 1 (* min max)) 1f0))
-        (:/ (float (u:map-domain 0 1 -1 1 (/ min max)) 1f0))))))
-
-(defun cellular-2d (&key (seed "default") (distance-method :euclidean) (output-type :min)
-                      (jitter 1.0))
-  (unless (member distance-method '(:euclidean :euclidean-squared :manhattan :hybrid))
-    (error 'int::invalid-cellular-distance-method
-           :sampler-type 'cellular-2d
-           :distance-method distance-method
-           :valid-distance-methods '(:euclidean :euclidean-squared :manhattan :hybrid)))
-  (unless (member output-type '(:value :min :max :+ :- :* :/))
-    (error 'int::invalid-cellular-output-type
-           :sampler-type 'cellular-2d
-           :output-type output-type
-           :valid-output-types '(:value :min :max :+ :- :* :/)))
-  (unless (realp jitter)
-    (error 'int::invalid-cellular-jitter
-           :sampler-type 'cellular-2d
-           :jitter jitter))
-  (u:mvlet ((rng seed (int::make-rng seed))
-            (jitter (u:clamp (float jitter 1f0) 0.0 1.0)))
-    (lambda (x &optional (y 0d0) z w)
-      (declare (ignore z w))
-      (sample seed distance-method output-type jitter x y))))
+        (:min (float (1- (* min 2)) 1f0))
+        (:max (float (1- (* max 2)) 1f0))
+        (:+ (float (1- (+ min max)) 1f0))
+        (:- (float (1- (* (- max min) 2)) 1f0))
+        (:* (float (1- (* min max 2)) 1f0))
+        (:/ (float (1- (/ min max 0.5)) 1f0))))))

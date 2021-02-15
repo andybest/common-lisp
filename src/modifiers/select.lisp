@@ -20,18 +20,18 @@
   (source1 nil :type int::sampler)
   (source2 nil :type int::sampler)
   (control nil :type int::sampler)
-  (min -1d0 :type u:f64)
-  (max 1d0 :type u:f64)
-  (falloff 0d0 :type u:f64))
+  (min -1.0 :type u:f32)
+  (max 1.0 :type u:f32)
+  (falloff 0.0 :type u:f32))
 
-(defun select (source1 source2 control &key (min -1d0) (max 1d0) (falloff 0d0))
+(defun select (source1 source2 control &key (min -1.0) (max 1.0) (falloff 0.0))
   (%select :rng (int::sampler-rng source1)
            :source1 source1
            :source2 source2
            :control control
-           :min min
-           :max max
-           :falloff falloff))
+           :min (float min 1f0)
+           :max (float max 1f0)
+           :falloff (float falloff 1f0)))
 
 (defmethod int::sample ((sampler select) x &optional (y 0d0) (z 0d0) (w 0d0))
   (let* ((min (min sampler))

@@ -21,7 +21,7 @@
             (:copier nil))
   (source nil :type int::sampler)
   (displacement-source nil :type int::sampler)
-  (power 1d0 :type u:f64)
+  (power 1d0 :type u:f32)
   (x1 0f0 :type u:f32)
   (x2 0f0 :type u:f32)
   (x3 0f0 :type u:f32)
@@ -39,14 +39,14 @@
   (w3 0f0 :type u:f32)
   (w4 0f0 :type u:f32))
 
-(defun turbulence (source displacement-source &key (frequency 1d0) (power 1d0) (roughness 3))
+(defun turbulence (source displacement-source &key (frequency 1.0) (power 1.0) (roughness 3))
   (let ((rng (int::sampler-rng source)))
     (%turbulence :rng (int::sampler-rng source)
                  :source source
                  :displacement-source (fractal:fractal displacement-source
                                                        :octaves roughness
-                                                       :frequency frequency)
-                 :power power
+                                                       :frequency (float frequency 1f0))
+                 :power (float power 1f0)
                  :x1 (rng:float rng 0.0 1.0)
                  :x2 (rng:float rng 0.0 1.0)
                  :x3 (rng:float rng 0.0 1.0)

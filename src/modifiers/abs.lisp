@@ -24,4 +24,5 @@
         :source source))
 
 (defmethod int::sample ((sampler abs) x &optional (y 0d0) (z 0d0) (w 0d0))
-  (cl:abs (int::sample (source sampler) x y z w)))
+  (declare (optimize speed))
+  (cl:abs (the u:f32 (int::sample (source sampler) x y z w))))

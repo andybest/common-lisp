@@ -3,7 +3,6 @@
 (defun make-image (sampler)
   (let* ((width 128)
          (height 128)
-         (z 100.5) ; 2D/3D value noise are identical at z=0.
          (data (make-array (* width height) :element-type 'u:ub8))
          (png (make-instance 'zpng:png
                              :color-type :grayscale
@@ -12,7 +11,10 @@
                              :image-data data)))
     (dotimes (y height)
       (dotimes (x width)
-        (let ((sample (+ (* (cn:sample sampler x y z) 0.5) 0.5)))
+        (let* ((x-coord (float x 1d0))
+               (y-coord (float y 1d0))
+               (z-coord 100.5d0)
+               (sample (+ (* (cn:sample sampler x-coord y-coord z-coord) 0.5) 0.5)))
           (setf (aref data (+ x (* y width))) (u:clamp (floor (* sample 255)) 0 255)))))
     png))
 

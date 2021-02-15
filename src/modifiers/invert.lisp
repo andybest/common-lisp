@@ -23,4 +23,5 @@
            :source source))
 
 (defmethod int::sample ((sampler invert) x &optional (y 0d0) (z 0d0) (w 0d0))
-  (- (int::sample (source sampler) x y z w)))
+  (declare (optimize speed))
+  (- (the u:f32 (int::sample (source sampler) x y z w))))

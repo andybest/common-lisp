@@ -18,16 +18,17 @@
             (:predicate nil)
             (:copier nil))
   (source nil :type int::sampler)
-  (min -1d0 :type u:f64)
-  (max 1d0 :type u:f64))
+  (min -1f0 :type u:f32)
+  (max 1f0 :type u:f32))
 
 (defun clamp (source min max)
   (%clamp :rng (int::sampler-rng source)
           :source source
-          :min min
-          :max max))
+          :min (float min 1f0)
+          :max (float max 1f0)))
 
 (defmethod int::sample ((sampler clamp) x &optional (y 0d0) (z 0d0) (w 0d0))
-  (u:clamp (int::sample (source sampler) x y z w)
+  (declare (optimize speed))
+  (u:clamp (the u:f32 (int::sample (source sampler) x y z w))
            (min sampler)
            (max sampler)))

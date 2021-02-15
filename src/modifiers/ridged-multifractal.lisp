@@ -18,27 +18,27 @@
             (:copier nil))
   (source nil :type int::sampler)
   (octaves 4 :type (integer 1 32))
-  (frequency 1d0 :type u:f64)
-  (gain 2d0 :type u:f64)
-  (lacunarity 2d0 :type u:f64)
-  (exponent 1d0 :type u:f64)
-  (offset 1d0 :type u:f64)
-  (weights (make-array 0 :element-type 'u:f64) :type (simple-array u:f64 (*))))
+  (frequency 1.0 :type u:f32)
+  (gain 2.0 :type u:f32)
+  (lacunarity 2.0 :type u:f32)
+  (offset 1.0 :type u:f32)
+  (weights (make-array 0 :element-type 'u:f32) :type (simple-array u:f32 (*))))
 
-(defun ridged-multifractal (source &key (octaves 4) (frequency 1d0) (gain 2d0) (lacunarity 2d0)
-                                     (exponent 1d0) (offset 1d0))
-  (let ((weights (make-array octaves :element-type 'u:f64)))
+(defun ridged-multifractal (source &key (octaves 4) (frequency 1.0) (gain 2.0) (lacunarity 2.0)
+                                     (exponent 1.0) (offset 1.0))
+  (let ((weights (make-array octaves :element-type 'u:f32))
+        (frequency (float frequency 1.0))
+        (exponent (float exponent 1.0)))
     (loop :for i :below octaves
-          :for frequency = 1d0 :then (* frequency lacunarity)
+          :for frequency = 1.0 :then (* frequency lacunarity)
           :do (setf (aref weights i) (expt frequency (- exponent))))
     (%ridged-multifractal :rng (int::sampler-rng source)
                           :source source
                           :octaves octaves
                           :frequency frequency
-                          :gain gain
-                          :lacunarity lacunarity
-                          :exponent exponent
-                          :offset offset
+                          :gain (float gain 1.0)
+                          :lacunarity (float lacunarity 1.0)
+                          :offset (float offset 1.0)
                           :weights weights)))
 
 (defmethod int::sample ((sampler ridged-multifractal) x &optional (y 0d0) (z 0d0) (w 0d0))

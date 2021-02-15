@@ -28,6 +28,12 @@
 
 (u:define-constant +prime-z+ 1720413743)
 
+(defstruct (sampler
+            (:constructor nil)
+            (:predicate nil)
+            (:copier nil))
+  (rng nil :type (or rng:generator null)))
+
 (defmacro lookup (table &body (first . rest))
   (if rest
       `(aref ,table (logand (+ ,first (lookup ,table ,@rest)) 255))
@@ -51,11 +57,5 @@
            :modifier-type modifier-type
            :input-argument (symbol-name input-argument)
            :input-value input-value)))
-
-(defstruct (sampler
-            (:constructor nil)
-            (:predicate nil)
-            (:copier nil))
-  (rng nil :type (or rng:generator null)))
 
 (defgeneric sample (sampler x &optional y z w))

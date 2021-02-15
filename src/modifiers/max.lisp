@@ -26,5 +26,6 @@
         :source2 source2))
 
 (defmethod int::sample ((sampler max) x &optional (y 0d0) (z 0d0) (w 0d0))
-  (cl:max (int::sample (source1 sampler) x y z w)
-          (int::sample (source2 sampler) x y z w)))
+  (declare (optimize speed))
+  (cl:max (the u:f32 (int::sample (source1 sampler) x y z w))
+          (the u:f32 (int::sample (source2 sampler) x y z w))))

@@ -18,26 +18,27 @@
             (:predicate nil)
             (:copier nil))
   (source nil :type int::sampler)
-  (x 1d0 :type u:f64)
-  (y 1d0 :type u:f64)
-  (z 1d0 :type u:f64)
-  (w 1d0 :type u:f64))
+  (x 1.0 :type u:f32)
+  (y 1.0 :type u:f32)
+  (z 1.0 :type u:f32)
+  (w 1.0 :type u:f32))
 
-(defun scale (source &key (x 1d0) (y 1d0) (z 1d0) (w 1d0))
+(defun scale (source &key (x 1.0) (y 1.0) (z 1.0) (w 1.0))
   (%scale :rng (int::sampler-rng source)
           :source source
-          :x x
-          :y y
-          :z z
-          :w w))
+          :x (float x 1f0)
+          :y (float y 1f0)
+          :z (float z 1f0)
+          :w (float w 1f0)))
 
 (defun uniform-scale (source scalar)
-  (%scale :rng (int::sampler-rng source)
-          :source source
-          :x scalar
-          :y scalar
-          :z scalar
-          :w scalar))
+  (let ((scalar (float scalar 1f0)))
+    (%scale :rng (int::sampler-rng source)
+            :source source
+            :x scalar
+            :y scalar
+            :z scalar
+            :w scalar)))
 
 (defmethod int::sample ((sampler scale) x &optional (y 0d0) (z 0d0) (w 0d0))
   (int::sample (source sampler)
