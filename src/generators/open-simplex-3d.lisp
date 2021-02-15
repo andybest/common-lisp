@@ -135,10 +135,10 @@
   (let ((a (- 2 (* dx dx) (* dy dy) (* dz dz))))
     (when (plusp a)
       (incf (value state)
-            (* (expt a 4)
-               (extrapolate (table (sampler state)) xsb ysb zsb dx dy dz))))
+            (* a a a a (extrapolate (table (sampler state)) xsb ysb zsb dx dy dz))))
     (values)))
 
+(declaim (inline contribute1))
 (defun contribute1 (state)
   (let ((xsb (xsb state))
         (ysb (ysb state))
@@ -148,6 +148,7 @@
     (contribute state (dx2 state) (dy2 state) (dz2 state) xsb (1+ ysb) zsb)
     (contribute state (dx3 state) (dy3 state) (dz3 state) xsb ysb (1+ zsb))))
 
+(declaim (inline contribute2))
 (defun contribute2 (state)
   (let ((xsb (xsb state))
         (ysb (ysb state))
@@ -157,6 +158,7 @@
     (contribute state (dx1 state) (dy1 state) (dz1 state) xsb (1+ ysb) (1+ zsb))
     (contribute state (dx0 state) (dy0 state) (dz0 state) (1+ xsb) (1+ ysb) (1+ zsb))))
 
+(declaim (inline contribute3))
 (defun contribute3 (state)
   (let ((xsb (xsb state))
         (ysb (ysb state))
@@ -168,6 +170,7 @@
     (contribute state (dx5 state) (dy5 state) (dz5 state) (1+ xsb) ysb (1+ zsb))
     (contribute state (dx6 state) (dy6 state) (dz6 state) xsb (1+ ysb) (1+ zsb))))
 
+(declaim (inline contribute4))
 (defun contribute4 (state)
   (contribute state
               (dx-ext0 state)
@@ -184,6 +187,7 @@
               (ysv-ext1 state)
               (zsv-ext1 state)))
 
+(declaim (inline in1))
 (defun in1 (state)
   (let* ((point-a 1)
          (point-b 2)
@@ -298,6 +302,7 @@
              (dz3 state) (- dz0 1 sq)))
     (values)))
 
+(declaim (inline in2))
 (defun in2 (state)
   (let* ((point-a 6)
          (point-b 5)
@@ -412,6 +417,7 @@
              (dz0 state) (- dz0 1 sq3)))
     (values)))
 
+(declaim (inline in3))
 (defun in3 (state)
   (let* ((point-a 0)
          (point-b 0)

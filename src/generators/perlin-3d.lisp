@@ -27,7 +27,7 @@
   (declare (ignore w)
            (optimize speed)
            (int::f50 x y z w))
-  (flet ((grad (hash x y z)
+  (flet ((noise (hash x y z)
            (let* ((h (logand hash 15))
                   (u (if (< h 8) x y))
                   (v (case h
@@ -36,6 +36,7 @@
                        (t z))))
              (+ (if (zerop (logand h 1)) u (- u))
                 (if (zerop (logand h 2)) v (- v))))))
+    (declare (inline noise))
     (u:mvlet* ((table (table sampler))
                (xi xf (truncate x))
                (yi yf (truncate y))
@@ -54,17 +55,17 @@
         (u:lerp
          v
          (u:lerp u
-                 (grad (int::lookup table zi a) xf yf zf)
-                 (grad (int::lookup table zi b) (1- xf) yf zf))
+                 (noise (int::lookup table zi a) xf yf zf)
+                 (noise (int::lookup table zi b) (1- xf) yf zf))
          (u:lerp u
-                 (grad (int::lookup table zi (1+ a)) xf (1- yf) zf)
-                 (grad (int::lookup table zi (1+ b)) (1- xf) (1- yf) zf)))
+                 (noise (int::lookup table zi (1+ a)) xf (1- yf) zf)
+                 (noise (int::lookup table zi (1+ b)) (1- xf) (1- yf) zf)))
         (u:lerp
          v
          (u:lerp u
-                 (grad (int::lookup table (1+ zi) a) xf yf (1- zf))
-                 (grad (int::lookup table (1+ zi) b) (1- xf) yf (1- zf)))
+                 (noise (int::lookup table (1+ zi) a) xf yf (1- zf))
+                 (noise (int::lookup table (1+ zi) b) (1- xf) yf (1- zf)))
          (u:lerp u
-                 (grad (int::lookup table (1+ zi) (1+ a)) xf (1- yf) (1- zf))
-                 (grad (int::lookup table zi (1+ b)) (1- xf) (1- yf) (1- zf)))))
+                 (noise (int::lookup table (1+ zi) (1+ a)) xf (1- yf) (1- zf))
+                 (noise (int::lookup table zi (1+ b)) (1- xf) (1- yf) (1- zf)))))
        1f0))))

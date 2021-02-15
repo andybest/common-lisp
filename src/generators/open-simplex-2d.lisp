@@ -91,7 +91,7 @@
   (let ((a (- 2 (* dx dx) (* dy dy))))
     (when (plusp a)
       (incf (value state)
-            (* (expt a 4) (extrapolate (table (sampler state)) xsb ysb dx dy))))
+            (* a a a a (extrapolate (table (sampler state)) xsb ysb dx dy))))
     (values)))
 
 (declaim (inline contribute1))

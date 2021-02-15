@@ -27,12 +27,13 @@
   (declare (ignore z w)
            (optimize speed)
            (int::f50 x y z w))
-  (flet ((grad (hash x y)
+  (flet ((noise (hash x y)
            (let* ((h (logand hash 7))
                   (u (if (< h 4) x y))
                   (v (if (< h 4) y x)))
              (+ (if (zerop (logand h 1)) u (- u))
                 (if (zerop (logand h 2)) v (- v))))))
+    (declare (inline noise))
     (u:mvlet* ((table (table sampler))
                (xi xf (truncate x))
                (yi yf (truncate y))
@@ -44,9 +45,9 @@
       (float
        (u:lerp (int::interpolate/quintic yf)
                (u:lerp u
-                       (grad (int::lookup table (aref table a)) xf yf)
-                       (grad (int::lookup table (aref table b)) (1- xf) yf))
+                       (noise (int::lookup table (aref table a)) xf yf)
+                       (noise (int::lookup table (aref table b)) (1- xf) yf))
                (u:lerp u
-                       (grad (int::lookup table (aref table (1+ a))) xf (1- yf))
-                       (grad (int::lookup table (aref table (1+ b))) (1- xf) (1- yf))))
+                       (noise (int::lookup table (aref table (1+ a))) xf (1- yf))
+                       (noise (int::lookup table (aref table (1+ b))) (1- xf) (1- yf))))
        1f0))))

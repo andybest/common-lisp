@@ -26,7 +26,7 @@
 (defmethod int::sample ((sampler perlin-4d) x &optional (y 0d0) (z 0d0) (w 0d0))
   (declare (optimize speed)
            (int::f50 x y z w))
-  (flet ((grad (hash x y z w)
+  (flet ((noise (hash x y z w)
            (let* ((h (logand hash 31))
                   (u (if (< h 24) x y))
                   (v (if (< h 16) y z))
@@ -34,6 +34,7 @@
              (+ (if (zerop (logand h 1)) u (- u))
                 (if (zerop (logand h 2)) v (- v))
                 (if (zerop (logand h 4)) w (- w))))))
+    (declare (inline noise))
     (u:mvlet* ((table (table sampler))
                (xi xf (truncate x))
                (yi yf (truncate y))
@@ -63,35 +64,35 @@
          (u:lerp
           fr
           (u:lerp fq
-                  (grad (int::lookup table xi yi zi wi) xf yf zf wf)
-                  (grad (int::lookup table xi yi zi wi1) xf yf zf wf-1))
+                  (noise (int::lookup table xi yi zi wi) xf yf zf wf)
+                  (noise (int::lookup table xi yi zi wi1) xf yf zf wf-1))
           (u:lerp fq
-                  (grad (int::lookup table xi yi zi1 wi) xf yf zf-1 wf)
-                  (grad (int::lookup table xi yi zi1 wi1) xf yf zf-1 wf-1)))
+                  (noise (int::lookup table xi yi zi1 wi) xf yf zf-1 wf)
+                  (noise (int::lookup table xi yi zi1 wi1) xf yf zf-1 wf-1)))
          (u:lerp
           fr
           (u:lerp fq
-                  (grad (int::lookup table xi yi1 zi wi) xf yf-1 zf wf)
-                  (grad (int::lookup table xi yi1 zi wi1) xf yf-1 zf wf-1))
+                  (noise (int::lookup table xi yi1 zi wi) xf yf-1 zf wf)
+                  (noise (int::lookup table xi yi1 zi wi1) xf yf-1 zf wf-1))
           (u:lerp fq
-                  (grad (int::lookup table xi yi1 zi1 wi) xf yf-1 zf-1 wf)
-                  (grad (int::lookup table xi yi1 zi1 wi1) xf yf-1 zf-1 wf-1))))
+                  (noise (int::lookup table xi yi1 zi1 wi) xf yf-1 zf-1 wf)
+                  (noise (int::lookup table xi yi1 zi1 wi1) xf yf-1 zf-1 wf-1))))
         (u:lerp
          ft
          (u:lerp
           fr
           (u:lerp fq
-                  (grad (int::lookup table xi1 yi zi wi) xf-1 yf zf wf)
-                  (grad (int::lookup table xi1 yi zi wi1) xf-1 yf zf wf-1))
+                  (noise (int::lookup table xi1 yi zi wi) xf-1 yf zf wf)
+                  (noise (int::lookup table xi1 yi zi wi1) xf-1 yf zf wf-1))
           (u:lerp fq
-                  (grad (int::lookup table xi1 yi zi1 wi) xf-1 yf zf-1 wf)
-                  (grad (int::lookup table xi1 yi zi1 wi1) xf-1 yf zf-1 wf-1)))
+                  (noise (int::lookup table xi1 yi zi1 wi) xf-1 yf zf-1 wf)
+                  (noise (int::lookup table xi1 yi zi1 wi1) xf-1 yf zf-1 wf-1)))
          (u:lerp
           fr
           (u:lerp fq
-                  (grad (int::lookup table xi1 yi1 zi wi) xf-1 yf-1 zf wf)
-                  (grad (int::lookup table xi1 yi1 zi wi1) xf-1 yf-1 zf wf-1))
+                  (noise (int::lookup table xi1 yi1 zi wi) xf-1 yf-1 zf wf)
+                  (noise (int::lookup table xi1 yi1 zi wi1) xf-1 yf-1 zf wf-1))
           (u:lerp fq
-                  (grad (int::lookup table xi1 yi1 zi1 wi) xf-1 yf-1 zf-1 wf)
-                  (grad (int::lookup table xi1 yi1 zi1 wi1) xf-1 yf-1 zf-1 wf-1)))))
+                  (noise (int::lookup table xi1 yi1 zi1 wi) xf-1 yf-1 zf-1 wf)
+                  (noise (int::lookup table xi1 yi1 zi1 wi1) xf-1 yf-1 zf-1 wf-1)))))
        1f0))))

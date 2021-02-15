@@ -165,13 +165,14 @@
         (a (- 2 (* dx dx) (* dy dy) (* dz dz) (* dw dw))))
     (when (plusp a)
       (incf (value state)
-            (* (expt a 4)
+            (* a a a a
                (+ (* (aref +gradients+ index) dx)
                   (* (aref +gradients+ (+ index 1)) dy)
                   (* (aref +gradients+ (+ index 2)) dz)
                   (* (aref +gradients+ (+ index 3)) dw)))))
     (values)))
 
+(declaim (inline contribute1))
 (defun contribute1 (state)
   (let ((xsb (xsb state))
         (ysb (ysb state))
@@ -183,6 +184,7 @@
     (contribute state (dx3 state) (dy3 state) (dz3 state) (dw3 state) xsb ysb (1+ zsb) wsb)
     (contribute state (dx4 state) (dy4 state) (dz4 state) (dw4 state) xsb ysb zsb (1+ wsb))))
 
+(declaim (inline contribute2))
 (defun contribute2 (state)
   (let ((xsb (xsb state))
         (ysb (ysb state))
@@ -202,6 +204,7 @@
                 (1+ zsb)
                 (1+ wsb))))
 
+(declaim (inline contribute3))
 (defun contribute3 (state)
   (let ((xsb (xsb state))
         (ysb (ysb state))
@@ -226,6 +229,7 @@
                 (1+ zsb)
                 (1+ wsb))))
 
+(declaim (inline contribute4))
 (defun contribute4 (state)
   (let ((xsb (xsb state))
         (ysb (ysb state))
@@ -250,6 +254,7 @@
                 (1+ zsb)
                 (1+ wsb))))
 
+(declaim (inline contribute5))
 (defun contribute5 (state)
   (contribute state
               (dx-ext0 state)
@@ -279,6 +284,7 @@
               (zsv-ext2 state)
               (wsv-ext2 state)))
 
+(declaim (inline in1))
 (defun in1 (state)
   (let* ((point-a 1)
          (point-b 2)
@@ -502,6 +508,7 @@
              (dw4 state) (- dw0 1 sq)))
     (values)))
 
+(declaim (inline in2))
 (defun in2 (state)
   (let* ((point-a 14)
          (point-b 13)
@@ -734,6 +741,7 @@
              (dw0 state) (- dw0 1 sq4)))
     (values)))
 
+(declaim (inline in3))
 (defun in3 (state)
   (let* ((point-a 0)
          (point-b 0)
@@ -1117,6 +1125,7 @@
              (dw10 state) dw7))
     (values)))
 
+(declaim (inline in4))
 (defun in4 (state)
   (let* ((point-a 0)
          (point-b 0)
