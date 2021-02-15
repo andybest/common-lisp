@@ -15,7 +15,7 @@
   :pathname "src"
   :serial t
   :components
-  ((:file "package")
+  ((:file "package-internal")
    (:file "conditions")
    (:file "common")
    (:module "generators"
@@ -70,7 +70,4 @@
      (:file "subtract")
      (:file "translate")
      (:file "turbulence")))
-   (:module "api"
-    :components
-    ((:file "api")
-     (:file "package")))))
+   (:file "package-api")))

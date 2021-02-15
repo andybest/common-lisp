@@ -55,10 +55,10 @@
    #:checker-2d
    #:constant)
   ;; Modifiers
-  (:shadowing-import-from #:coherent-noise.modifiers.+ #:+)
-  (:shadowing-import-from #:coherent-noise.modifiers.- #:-)
-  (:shadowing-import-from #:coherent-noise.modifiers.* #:*)
-  (:shadowing-import-from #:coherent-noise.modifiers./ #:/)
+  (:shadowing-import-from #:coherent-noise.modifiers.add #:+)
+  (:shadowing-import-from #:coherent-noise.modifiers.subtract #:-)
+  (:shadowing-import-from #:coherent-noise.modifiers.multiply #:*)
+  (:shadowing-import-from #:coherent-noise.modifiers.divide #:/)
   (:shadowing-import-from #:coherent-noise.modifiers.abs #:abs)
   (:shadowing-import-from #:coherent-noise.modifiers.expt #:expt)
   (:shadowing-import-from #:coherent-noise.modifiers.max #:max)
@@ -104,8 +104,7 @@
    #:turbulence
    #:uniform-scale)
   ;; API
-  (:import-from #:coherent-noise.api #:write-image)
-  (:import-from #:coherent-noise.internal #:sample)
+  (:import-from #:coherent-noise.internal #:sample #:write-image)
   (:export
    #:sample
    #:write-image))
