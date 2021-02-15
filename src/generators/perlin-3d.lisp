@@ -10,10 +10,23 @@
 
 (in-package #:coherent-noise.generators.perlin-3d)
 
-(u:fn-> sample ((simple-array u:ub8 (512)) int::f50 int::f50 int::f50) u:f32)
-(declaim (inline sample))
-(defun sample (table x y z)
-  (declare (optimize speed))
+(defstruct (perlin-3d
+            (:include int::sampler)
+            (:constructor %perlin-3d)
+            (:conc-name nil)
+            (:predicate nil)
+            (:copier nil))
+  (table int::+perlin-permutation+ :type (simple-array u:ub8 (512))))
+
+(defun perlin-3d (&key seed)
+  (let* ((rng (int::make-rng seed))
+         (table (rng:shuffle rng int::+perlin-permutation+)))
+    (%perlin-3d :rng rng :table table)))
+
+(defmethod int::sample ((sampler perlin-3d) x &optional (y 0d0) (z 0d0) (w 0d0))
+  (declare (ignore w)
+           (optimize speed)
+           (int::f50 x y z w))
   (flet ((grad (hash x y z)
            (let* ((h (logand hash 15))
                   (u (if (< h 8) x y))
@@ -23,7 +36,8 @@
                        (t z))))
              (+ (if (zerop (logand h 1)) u (- u))
                 (if (zerop (logand h 2)) v (- v))))))
-    (u:mvlet* ((xi xf (truncate x))
+    (u:mvlet* ((table (table sampler))
+               (xi xf (truncate x))
                (yi yf (truncate y))
                (zi zf (truncate z))
                (xi (logand xi 255))
@@ -54,10 +68,3 @@
                  (grad (int::lookup table (1+ zi) (1+ a)) xf (1- yf) (1- zf))
                  (grad (int::lookup table zi (1+ b)) (1- xf) (1- yf) (1- zf)))))
        1f0))))
-
-(defun perlin-3d (&key (seed "default"))
-  (let* ((rng (int::make-rng seed))
-         (table (rng:shuffle rng int::+perlin-permutation+)))
-    (lambda (x &optional (y 0d0) (z 0d0) w)
-      (declare (ignore w))
-      (sample table x y z))))

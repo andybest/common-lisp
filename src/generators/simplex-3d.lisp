@@ -16,10 +16,23 @@
 
 (u:define-constant +scale+ 32d0)
 
-(u:fn-> sample ((simple-array u:ub8 (512)) int::f50 int::f50 int::f50) u:f32)
-(declaim (inline sample))
-(defun sample (table x y z)
-  (declare (optimize speed))
+(defstruct (simplex-3d
+            (:include int::sampler)
+            (:constructor %simplex-3d)
+            (:conc-name nil)
+            (:predicate nil)
+            (:copier nil))
+  (table int::+perlin-permutation+ :type (simple-array u:ub8 (512))))
+
+(defun simplex-3d (&key seed)
+  (let* ((rng (int::make-rng seed))
+         (table (rng:shuffle rng int::+perlin-permutation+)))
+    (%simplex-3d :rng rng :table table)))
+
+(defmethod int::sample ((sampler simplex-3d) x &optional (y 0d0) (z 0d0) (w 0d0))
+  (declare (ignore w)
+           (optimize speed)
+           (int::f50 x y z w))
   (flet ((get-simplex (x y z)
            (if (>= x y)
                (cond
@@ -43,7 +56,8 @@
              (if (plusp s)
                  (* (expt s 4) grad)
                  0d0))))
-    (u:mvlet* ((s (* (+ x y z) +skew-factor+))
+    (u:mvlet* ((table (table sampler))
+               (s (* (+ x y z) +skew-factor+))
                (i (floor (+ x s)))
                (j (floor (+ y s)))
                (k (floor (+ z s)))
@@ -67,10 +81,3 @@
                    (noise (int::lookup table (1+ i) (1+ j) (1+ k)) x4 y4 z4))
                 +scale+)
              1f0))))
-
-(defun simplex-3d (&key (seed "default"))
-  (let* ((rng (int::make-rng seed))
-         (table (rng:shuffle rng int::+perlin-permutation+)))
-    (lambda (x &optional (y 0d0) (z 0d0) w)
-      (declare (ignore w))
-      (sample table x y z))))

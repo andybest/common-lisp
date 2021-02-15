@@ -10,10 +10,22 @@
 
 (in-package #:coherent-noise.generators.perlin-4d)
 
-(u:fn-> sample ((simple-array u:ub8 (512)) int::f50 int::f50 int::f50 int::f50) u:f32)
-(declaim (inline sample))
-(defun sample (table x y z w)
-  (declare (optimize speed))
+(defstruct (perlin-4d
+            (:include int::sampler)
+            (:constructor %perlin-4d)
+            (:conc-name nil)
+            (:predicate nil)
+            (:copier nil))
+  (table int::+perlin-permutation+ :type (simple-array u:ub8 (512))))
+
+(defun perlin-4d (&key seed)
+  (let* ((rng (int::make-rng seed))
+         (table (rng:shuffle rng int::+perlin-permutation+)))
+    (%perlin-4d :rng rng :table table)))
+
+(defmethod int::sample ((sampler perlin-4d) x &optional (y 0d0) (z 0d0) (w 0d0))
+  (declare (optimize speed)
+           (int::f50 x y z w))
   (flet ((grad (hash x y z w)
            (let* ((h (logand hash 31))
                   (u (if (< h 24) x y))
@@ -22,7 +34,8 @@
              (+ (if (zerop (logand h 1)) u (- u))
                 (if (zerop (logand h 2)) v (- v))
                 (if (zerop (logand h 4)) w (- w))))))
-    (u:mvlet* ((xi xf (truncate x))
+    (u:mvlet* ((table (table sampler))
+               (xi xf (truncate x))
                (yi yf (truncate y))
                (zi zf (truncate z))
                (wi wf (truncate w))
@@ -82,9 +95,3 @@
                   (grad (int::lookup table xi1 yi1 zi1 wi) xf-1 yf-1 zf-1 wf)
                   (grad (int::lookup table xi1 yi1 zi1 wi1) xf-1 yf-1 zf-1 wf-1)))))
        1f0))))
-
-(defun perlin-4d (&key (seed "default"))
-  (let* ((rng (int::make-rng seed))
-         (table (rng:shuffle rng int::+perlin-permutation+)))
-    (lambda (x &optional (y 0d0) (z 0d0) (w 0d0))
-      (sample table x y z w))))

@@ -42,8 +42,6 @@
   (* x x x (+ (* x (- (* x 6.0) 15.0)) 10.0)))
 
 (defun make-rng (seed)
-  (unless (stringp seed)
-    (error 'invalid-seed :seed seed))
   (let ((rng (rng:make-generator seed)))
     (values rng (nth-value 1 (rng:get-seed rng)))))
 
@@ -53,3 +51,11 @@
            :modifier-type modifier-type
            :input-argument (symbol-name input-argument)
            :input-value input-value)))
+
+(defstruct (sampler
+            (:constructor nil)
+            (:predicate nil)
+            (:copier nil))
+  (rng nil :type (or rng:generator null)))
+
+(defgeneric sample (sampler x &optional y z w))

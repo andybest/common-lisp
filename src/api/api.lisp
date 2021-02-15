@@ -40,7 +40,7 @@ blue components in the range [0..1]."
                              :image-data data)))
     (lp:pdotimes (y height)
       (dotimes (x width)
-        (let ((sample (+ (* (sample sampler x y) 0.5) 0.5))
+        (let ((sample (+ (* (coherent-noise.internal::sample sampler x y) 0.5) 0.5))
               (i (* (+ x (* y width)) 3)))
           (setf (aref data (+ i 0)) (u:clamp (floor (* sample r 255)) 0 255)
                 (aref data (+ i 1)) (u:clamp (floor (* sample g 255)) 0 255)
