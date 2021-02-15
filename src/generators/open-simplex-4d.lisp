@@ -28,13 +28,21 @@
       (make-array 256 :element-type 'fixnum :initial-contents data))
   :test #'equalp)
 
+(defstruct (open-simplex-4d
+            (:include int::sampler)
+            (:constructor %open-simplex-4d)
+            (:conc-name "")
+            (:predicate nil)
+            (:copier nil))
+  (table int::+perlin-permutation+ :type (simple-array u:ub8 (512))))
+
 (declaim (inline %make-state))
 (defstruct (state
             (:constructor %make-state)
             (:conc-name nil)
             (:predicate nil)
             (:copier nil))
-  (table int::+perlin-permutation+ :type (simple-array u:ub8 (512)))
+  (sampler nil :type open-simplex-4d)
   (stretch-offset 0d0 :type u:f64)
   (xsb 0 :type fixnum)
   (ysb 0 :type fixnum)
@@ -116,7 +124,7 @@
   (value 0d0 :type u:f64))
 
 (declaim (inline make-state))
-(defun make-state (table x y z w)
+(defun make-state (sampler x y z w)
   (let* ((stretch-offset (* (+ x y z w) +stretch+))
          (xs (+ x stretch-offset))
          (ys (+ y stretch-offset))
@@ -136,7 +144,7 @@
          (zins (- zs zsb))
          (wins (- ws wsb)))
     (declare (int::f50 xs ys zs ws))
-    (%make-state :table table
+    (%make-state :sampler sampler
                  :xsb xsb
                  :ysb ysb
                  :zsb zsb
@@ -153,7 +161,7 @@
 
 (declaim (inline contribute))
 (defun contribute (state dx dy dz dw xsb ysb zsb wsb)
-  (let ((index (logand (int::lookup (table state) wsb zsb ysb xsb) 252))
+  (let ((index (logand (int::lookup (table (sampler state)) wsb zsb ysb xsb) 252))
         (a (- 2 (* dx dx) (* dy dy) (* dz dz) (* dw dw))))
     (when (plusp a)
       (incf (value state)
@@ -1486,10 +1494,15 @@
              (dw10 state) dw7))
     (values)))
 
-(defun sample (table x y z w)
+(defun open-simplex-4d (&key seed)
+  (let* ((rng (int::make-rng seed))
+         (table (rng:shuffle rng int::+perlin-permutation+)))
+    (%open-simplex-4d :rng rng :table table)))
+
+(defmethod int::sample ((sampler open-simplex-4d) x &optional (y 0d0) (z 0d0) (w 0d0))
   (declare (optimize speed)
-           (u:f64 x y z w))
-  (let ((state (make-state table x y z w)))
+           (int::f50 x y z w))
+  (let ((state (make-state sampler x y z w)))
     (cond
       ((<= (ins state) 1)
        (in1 state)
@@ -1505,9 +1518,3 @@
        (contribute4 state)))
     (contribute5 state)
     (float (* (value state) +scale+) 1f0)))
-
-(defun open-simplex-4d (&key (seed "default"))
-  (let* ((rng (int::make-rng seed))
-         (table (rng:shuffle rng int::+perlin-permutation+)))
-    (lambda (x &optional (y 0d0) (z 0d0) (w 0d0))
-      (sample table x y z w))))

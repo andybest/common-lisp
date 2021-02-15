@@ -39,7 +39,7 @@
 (defstruct (open-simplex-3d
             (:include int::sampler)
             (:constructor %open-simplex-3d)
-            (:conc-name nil)
+            (:conc-name "")
             (:predicate nil)
             (:copier nil))
   (table +permutation+ :type (simple-array u:ub8 (256))))
@@ -599,7 +599,7 @@
              (dz6 state) dz5))
     (values)))
 
-(defun open-simplex-2d (&key seed)
+(defun open-simplex-3d (&key seed)
   (let* ((rng (int::make-rng seed))
          (table (rng:shuffle rng +permutation+)))
     (%open-simplex-3d :rng rng :table table)))

@@ -13,7 +13,7 @@
 (defstruct (perlin-3d
             (:include int::sampler)
             (:constructor %perlin-3d)
-            (:conc-name nil)
+            (:conc-name "")
             (:predicate nil)
             (:copier nil))
   (table int::+perlin-permutation+ :type (simple-array u:ub8 (512))))

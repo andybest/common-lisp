@@ -13,7 +13,7 @@
 (defstruct (billow
             (:include int::sampler)
             (:constructor %billow)
-            (:conc-name nil)
+            (:conc-name "")
             (:predicate nil)
             (:copier nil))
   (source nil :type int::sampler)

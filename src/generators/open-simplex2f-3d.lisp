@@ -13,7 +13,7 @@
 (u:eval-always
   (defstruct (lattice-point
               (:constructor %make-lattice-point)
-              (:conc-name nil)
+              (:conc-name "")
               (:predicate nil)
               (:copier nil))
     (dxr 0d0 :type u:f64)

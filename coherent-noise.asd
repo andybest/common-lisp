@@ -30,7 +30,7 @@
      (:file "simplex-4d")
      (:file "open-simplex-2d")
      (:file "open-simplex-3d")
-     ;; (:file "open-simplex-4d")
+     (:file "open-simplex-4d")
      ;; (:file "open-simplex2f-2d")
      ;; (:file "open-simplex2f-3d")
      ;; (:file "open-simplex2f-4d")

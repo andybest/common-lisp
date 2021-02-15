@@ -16,7 +16,7 @@
 (defstruct (turbulence
             (:include int::sampler)
             (:constructor %turbulence)
-            (:conc-name nil)
+            (:conc-name "")
             (:predicate nil)
             (:copier nil))
   (source nil :type int::sampler)

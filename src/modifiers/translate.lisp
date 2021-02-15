@@ -13,7 +13,7 @@
 (defstruct (translate
             (:include int::sampler)
             (:constructor %translate)
-            (:conc-name nil)
+            (:conc-name "")
             (:predicate nil)
             (:copier nil))
   (source nil :type int::sampler)

@@ -32,7 +32,7 @@
 (defstruct (simplex-4d
             (:include int::sampler)
             (:constructor %simplex-4d)
-            (:conc-name nil)
+            (:conc-name "")
             (:predicate nil)
             (:copier nil))
   (table int::+perlin-permutation+ :type (simple-array u:ub8 (512))))

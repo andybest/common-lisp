@@ -13,7 +13,7 @@
 (defstruct (rotate
             (:include int::sampler)
             (:constructor %rotate)
-            (:conc-name nil)
+            (:conc-name "")
             (:predicate nil)
             (:copier nil))
   (source nil :type int::sampler)

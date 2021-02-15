@@ -14,7 +14,7 @@
 (defstruct (clamp
             (:include int::sampler)
             (:constructor %clamp)
-            (:conc-name nil)
+            (:conc-name "")
             (:predicate nil)
             (:copier nil))
   (source nil :type int::sampler)

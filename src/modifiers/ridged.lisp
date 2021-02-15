@@ -13,7 +13,7 @@
 (defstruct (ridged
             (:include int::sampler)
             (:constructor %ridged)
-            (:conc-name nil)
+            (:conc-name "")
             (:predicate nil)
             (:copier nil))
   (source nil :type int::sampler)

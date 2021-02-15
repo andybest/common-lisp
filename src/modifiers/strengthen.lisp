@@ -13,7 +13,7 @@
 (defstruct (strengthen
             (:include int::sampler)
             (:constructor %strengthen)
-            (:conc-name nil)
+            (:conc-name "")
             (:predicate nil)
             (:copier nil))
   (source nil :type int::sampler)

@@ -13,7 +13,7 @@
 (defstruct (power
             (:include int::sampler)
             (:constructor %power)
-            (:conc-name nil)
+            (:conc-name "")
             (:predicate nil)
             (:copier nil))
   (source1 nil :type int::sampler)

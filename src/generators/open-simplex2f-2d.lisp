@@ -48,6 +48,16 @@
       (make-array 8 :element-type 'u:f64 :initial-contents data))
   :test #'equalp)
 
+(defstruct (open-simplex-2f-2d
+            (:include int::sampler)
+            (:constructor %open-simplex-2f-2d)
+            (:conc-name "")
+            (:predicate nil)
+            (:copier nil))
+  (orientation :standard :type (member :standard :x/y))
+  (gradients (make-array 4096 :element-type 'u:f64) :type (simple-array u:f64 (4096)))
+  (table (make-array 2048 :element-type 'u:b16) :type (simple-array u:b16 (2048))))
+
 (u:fn-> permute (rng:generator) (values (simple-array u:f64 (4096)) (simple-array u:b16 (2048))))
 (defun permute (rng)
   (declare (optimize speed))

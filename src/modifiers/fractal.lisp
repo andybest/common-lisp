@@ -13,7 +13,7 @@
 (defstruct (fractal
             (:include int::sampler)
             (:constructor %fractal)
-            (:conc-name nil)
+            (:conc-name "")
             (:predicate nil)
             (:copier nil))
   (source nil :type int::sampler)

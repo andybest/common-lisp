@@ -13,7 +13,7 @@
 (defstruct (blend
             (:include int::sampler)
             (:constructor %blend)
-            (:conc-name nil)
+            (:conc-name "")
             (:predicate nil)
             (:copier nil))
   (source1 nil :type int::sampler)

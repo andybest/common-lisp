@@ -13,7 +13,7 @@
 (defstruct (ridged-multifractal
             (:include int::sampler)
             (:constructor %ridged-multifractal)
-            (:conc-name nil)
+            (:conc-name "")
             (:predicate nil)
             (:copier nil))
   (source nil :type int::sampler)

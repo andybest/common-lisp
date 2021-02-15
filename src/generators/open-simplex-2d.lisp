@@ -24,7 +24,7 @@
 (defstruct (open-simplex-2d
             (:include int::sampler)
             (:constructor %open-simplex-2d)
-            (:conc-name nil)
+            (:conc-name "")
             (:predicate nil)
             (:copier nil))
   (table int::+perlin-permutation+ :type (simple-array u:ub8 (512))))

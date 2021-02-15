@@ -14,7 +14,7 @@
 (defstruct (expt
             (:include int::sampler)
             (:constructor %expt)
-            (:conc-name nil)
+            (:conc-name "")
             (:predicate nil)
             (:copier nil))
   (source nil :type int::sampler)

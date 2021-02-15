@@ -14,7 +14,7 @@
 (defstruct (max
             (:include int::sampler)
             (:constructor %max)
-            (:conc-name nil)
+            (:conc-name "")
             (:predicate nil)
             (:copier nil))
   (source1 nil :type int::sampler)

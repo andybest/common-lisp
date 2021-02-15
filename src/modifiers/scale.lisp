@@ -14,7 +14,7 @@
 (defstruct (scale
             (:include int::sampler)
             (:constructor %scale)
-            (:conc-name nil)
+            (:conc-name "")
             (:predicate nil)
             (:copier nil))
   (source nil :type int::sampler)
