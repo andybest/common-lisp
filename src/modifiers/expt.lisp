@@ -23,7 +23,7 @@
              :source source
              :power (float power 1f0)))
 
-(defmethod int::sample ((sampler expt) x &optional (y 0d0) (z 0d0) (w 0d0))
+(defmethod int:sample ((sampler expt) x &optional (y 0d0) (z 0d0) (w 0d0))
   (declare (optimize speed))
-  (let ((sample (the u:f32 (int::sample (source sampler) x y z w))))
+  (let ((sample (the u:f32 (int:sample (source sampler) x y z w))))
     (1- (* (cl:expt (abs (* (1+ sample) 0.5)) (power sampler)) 2))))

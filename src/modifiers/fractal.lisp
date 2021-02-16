@@ -28,7 +28,7 @@
                 :gain (float gain 1f0)
                 :lacunarity (float lacunarity 1f0)))
 
-(defmethod int::sample ((sampler fractal) x &optional (y 0d0) (z 0d0) (w 0d0))
+(defmethod int:sample ((sampler fractal) x &optional (y 0d0) (z 0d0) (w 0d0))
   (loop :with source = (source sampler)
         :with frequency = (frequency sampler)
         :with gain = (gain sampler)
@@ -39,5 +39,5 @@
         :for fy = (* y frequency) :then (* fy lacunarity)
         :for fz = (* z frequency) :then (* fz lacunarity)
         :for fw = (* w frequency) :then (* fw lacunarity)
-        :for sample = (int::sample source fx fy fz fw)
+        :for sample = (int:sample source fx fy fz fw)
         :sum (* sample amplitude)))

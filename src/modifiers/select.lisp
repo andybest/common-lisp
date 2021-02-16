@@ -31,13 +31,13 @@
                :max (float max 1f0)
                :falloff (float falloff 1f0)))
 
-(defmethod int::sample ((sampler select) x &optional (y 0d0) (z 0d0) (w 0d0))
+(defmethod int:sample ((sampler select) x &optional (y 0d0) (z 0d0) (w 0d0))
   (let* ((min (min sampler))
          (max (max sampler))
          (falloff (cl:min (falloff sampler) (* (- max min) 0.5)))
-         (sample1 (int::sample (source1 sampler) x y z w))
-         (sample2 (int::sample (source2 sampler) x y z w))
-         (control (int::sample (control sampler) x y z w)))
+         (sample1 (int:sample (source1 sampler) x y z w))
+         (sample2 (int:sample (source2 sampler) x y z w))
+         (control (int:sample (control sampler) x y z w)))
     (if (plusp falloff)
         (cond
           ((< control (- min falloff))

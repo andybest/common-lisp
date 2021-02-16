@@ -22,8 +22,8 @@
               :source1 source1
               :source2 source2))
 
-(defmethod int::sample ((sampler power) x &optional (y 0d0) (z 0d0) (w 0d0))
+(defmethod int:sample ((sampler power) x &optional (y 0d0) (z 0d0) (w 0d0))
   (declare (optimize speed))
-  (let ((sample1 (abs (* (1+ (the u:f32 (int::sample (source1 sampler) x y z w))) 0.5)))
-        (sample2 (abs (* (1+ (the u:f32 (int::sample (source2 sampler) x y z w))) 0.5))))
+  (let ((sample1 (abs (* (1+ (the u:f32 (int:sample (source1 sampler) x y z w))) 0.5)))
+        (sample2 (abs (* (1+ (the u:f32 (int:sample (source2 sampler) x y z w))) 0.5))))
     (1- (* (expt sample1 sample2) 2))))

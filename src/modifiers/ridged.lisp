@@ -28,7 +28,7 @@
                :gain (float gain 1f0)
                :lacunarity (float lacunarity 1f0)))
 
-(defmethod int::sample ((sampler ridged) x &optional (y 0d0) (z 0d0) (w 0d0))
+(defmethod int:sample ((sampler ridged) x &optional (y 0d0) (z 0d0) (w 0d0))
   (loop :with source = (source sampler)
         :with frequency = (frequency sampler)
         :with gain = (gain sampler)
@@ -39,6 +39,6 @@
         :for fy = (* y frequency) :then (* fy lacunarity)
         :for fz = (* z frequency) :then (* fz lacunarity)
         :for fw = (* w frequency) :then (* fw lacunarity)
-        :for sample = (1+ (* (abs (int::sample source fx fy fz fw)) -2))
+        :for sample = (1+ (* (abs (int:sample source fx fy fz fw)) -2))
         :sum (* sample amplitude) :into value
         :finally (return (1- (* value 1.25)))))

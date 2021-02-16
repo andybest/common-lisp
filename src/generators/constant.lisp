@@ -22,7 +22,7 @@
   (%constant :rng (int::make-rng seed)
              :value (float (u:lerp (u:clamp value 0d0 1d0) -1d0 1d0) 1f0)))
 
-(defmethod int::sample ((sampler constant) x &optional (y 0d0) (z 0d0) (w 0d0))
+(defmethod int:sample ((sampler constant) x &optional (y 0d0) (z 0d0) (w 0d0))
   (declare (ignore x y z w)
            (optimize speed)
            (int::f50 x y z w))

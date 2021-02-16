@@ -22,7 +22,7 @@
   (%cylinders-3d :rng (int::make-rng seed)
                  :frequency frequency))
 
-(defmethod int::sample ((sampler cylinders-3d) x &optional (y 0d0) (z 0d0) (w 0d0))
+(defmethod int:sample ((sampler cylinders-3d) x &optional (y 0d0) (z 0d0) (w 0d0))
   (declare (ignore y w)
            (optimize speed)
            (int::f50 x y z w))

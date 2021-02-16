@@ -25,8 +25,8 @@
               :min (float min 1f0)
               :max (float max 1f0)))
 
-(defmethod int::sample ((sampler clamp) x &optional (y 0d0) (z 0d0) (w 0d0))
+(defmethod int:sample ((sampler clamp) x &optional (y 0d0) (z 0d0) (w 0d0))
   (declare (optimize speed))
-  (u:clamp (the u:f32 (int::sample (source sampler) x y z w))
+  (u:clamp (the u:f32 (int:sample (source sampler) x y z w))
            (min sampler)
            (max sampler)))

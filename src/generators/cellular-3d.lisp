@@ -227,7 +227,7 @@
            (setf yp (in-range (+ yp int::+prime-y+)))))
        (setf xp (in-range (+ xp int::+prime-x+))))))
 
-(defmethod int::sample ((sampler cellular-3d) x &optional (y 0d0) (z 0d0) (w 0d0))
+(defmethod int:sample ((sampler cellular-3d) x &optional (y 0d0) (z 0d0) (w 0d0))
   (declare (ignore w)
            (optimize speed)
            (int::f50 x y z w))

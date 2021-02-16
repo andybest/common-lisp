@@ -1508,7 +1508,7 @@
          (table (rng:shuffle rng int::+perlin-permutation+)))
     (%open-simplex-4d :rng rng :table table)))
 
-(defmethod int::sample ((sampler open-simplex-4d) x &optional (y 0d0) (z 0d0) (w 0d0))
+(defmethod int:sample ((sampler open-simplex-4d) x &optional (y 0d0) (z 0d0) (w 0d0))
   (declare (optimize speed)
            (int::f50 x y z w))
   (let ((state (make-state sampler x y z w)))

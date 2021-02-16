@@ -96,7 +96,7 @@
                         :table table
                         :orientation orientation)))
 
-(defmethod int::sample ((sampler open-simplex2f-2d) x &optional (y 0d0) (z 0d0) (w 0d0))
+(defmethod int:sample ((sampler open-simplex2f-2d) x &optional (y 0d0) (z 0d0) (w 0d0))
   (declare (ignore z w)
            (optimize speed)
            (int::f50 x y z w))

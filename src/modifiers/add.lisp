@@ -22,7 +22,7 @@
             :source1 source1
             :source2 source2))
 
-(defmethod int::sample ((sampler add) x &optional (y 0d0) (z 0d0) (w 0d0))
+(defmethod int:sample ((sampler add) x &optional (y 0d0) (z 0d0) (w 0d0))
   (declare (optimize speed))
-  (+ (the u:f32 (int::sample (source1 sampler) x y z w))
-     (the u:f32 (int::sample (source2 sampler) x y z w))))
+  (+ (the u:f32 (int:sample (source1 sampler) x y z w))
+     (the u:f32 (int:sample (source2 sampler) x y z w))))

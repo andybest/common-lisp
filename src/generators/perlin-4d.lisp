@@ -23,7 +23,7 @@
          (table (rng:shuffle rng int::+perlin-permutation+)))
     (%perlin-4d :rng rng :table table)))
 
-(defmethod int::sample ((sampler perlin-4d) x &optional (y 0d0) (z 0d0) (w 0d0))
+(defmethod int:sample ((sampler perlin-4d) x &optional (y 0d0) (z 0d0) (w 0d0))
   (declare (optimize speed)
            (int::f50 x y z w))
   (flet ((noise (hash x y z w)

@@ -24,8 +24,8 @@
                    :strength (float strength 1f0)
                    :bias (float bias 1f0)))
 
-(defmethod int::sample ((sampler strengthen) x &optional (y 0d0) (z 0d0) (w 0d0))
+(defmethod int:sample ((sampler strengthen) x &optional (y 0d0) (z 0d0) (w 0d0))
   (declare (optimize speed))
-  (+ (* (the u:f32 (int::sample (source sampler) x y z w))
+  (+ (* (the u:f32 (int:sample (source sampler) x y z w))
         (strength sampler))
      (bias sampler)))

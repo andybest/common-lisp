@@ -37,9 +37,9 @@
                 :z scalar
                 :w scalar)))
 
-(defmethod int::sample ((sampler scale) x &optional (y 0d0) (z 0d0) (w 0d0))
-  (int::sample (source sampler)
-               (/ x (x sampler))
-               (/ y (y sampler))
-               (/ z (z sampler))
-               (/ w (w sampler))))
+(defmethod int:sample ((sampler scale) x &optional (y 0d0) (z 0d0) (w 0d0))
+  (int:sample (source sampler)
+              (/ x (x sampler))
+              (/ y (y sampler))
+              (/ z (z sampler))
+              (/ w (w sampler))))

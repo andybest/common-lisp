@@ -24,8 +24,8 @@
               :source2 source2
               :control control))
 
-(defmethod int::sample ((sampler blend) x &optional (y 0d0) (z 0d0) (w 0d0))
+(defmethod int:sample ((sampler blend) x &optional (y 0d0) (z 0d0) (w 0d0))
   (declare (optimize speed))
-  (u:lerp (the u:f32 (int::sample (control sampler) x y z w))
-          (the u:f32 (int::sample (source1 sampler) x y z w))
-          (the u:f32 (int::sample (source2 sampler) x y z w))))
+  (u:lerp (the u:f32 (int:sample (control sampler) x y z w))
+          (the u:f32 (int:sample (source1 sampler) x y z w))
+          (the u:f32 (int:sample (source2 sampler) x y z w))))

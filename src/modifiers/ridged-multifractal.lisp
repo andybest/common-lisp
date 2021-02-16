@@ -39,7 +39,7 @@
                               :offset (float offset 1f0)
                               :weights weights)))
 
-(defmethod int::sample ((sampler ridged-multifractal) x &optional (y 0d0) (z 0d0) (w 0d0))
+(defmethod int:sample ((sampler ridged-multifractal) x &optional (y 0d0) (z 0d0) (w 0d0))
   (loop :with source = (source sampler)
         :with frequency = (frequency sampler)
         :with gain = (gain sampler)
@@ -52,6 +52,6 @@
         :for fz = (* z frequency) :then (* fz lacunarity)
         :for fw = (* w frequency) :then (* fw lacunarity)
         :for weight = 1.0 :then (u:clamp (* sample gain) 0.0 1.0)
-        :for sample = (* (expt (- offset (abs (int::sample source fx fy fz fw))) 2) weight)
+        :for sample = (* (expt (- offset (abs (int:sample source fx fy fz fw))) 2) weight)
         :sum (* sample (aref weights i)) :into value
         :finally (return (1- (* value 1.25)))))

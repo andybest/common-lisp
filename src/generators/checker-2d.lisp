@@ -20,7 +20,7 @@
 (defun gen:checker-2d (&key seed)
   (%checker-2d :rng (int::make-rng seed)))
 
-(defmethod int::sample ((sampler checker-2d) x &optional (y 0d0) (z 0d0) (w 0d0))
+(defmethod int:sample ((sampler checker-2d) x &optional (y 0d0) (z 0d0) (w 0d0))
   (declare (ignore w)
            (optimize speed)
            (int::f50 x y z w))
