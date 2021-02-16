@@ -15,7 +15,7 @@
   :pathname "src"
   :serial t
   :components
-  ((:file "package-internal")
+  ((:file "package")
    (:file "conditions")
    (:file "common")
    (:module "generators"
