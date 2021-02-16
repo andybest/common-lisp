@@ -3,17 +3,15 @@
 (defpackage #:coherent-noise.modifiers.select
   (:local-nicknames
    (#:int #:coherent-noise.internal)
+   (#:mod #:coherent-noise.modifiers)
    (#:u #:golden-utils))
   (:use #:cl)
-  (:shadow #:min #:max)
-  (:export
-   #:select))
+  (:shadow #:min #:max))
 
 (in-package #:coherent-noise.modifiers.select)
 
 (defstruct (select
             (:include int::sampler)
-            (:constructor %select)
             (:conc-name "")
             (:predicate nil)
             (:copier nil))
@@ -24,14 +22,14 @@
   (max 1.0 :type u:f32)
   (falloff 0.0 :type u:f32))
 
-(defun select (source1 source2 control &key (min -1.0) (max 1.0) (falloff 0.0))
-  (%select :rng (int::sampler-rng source1)
-           :source1 source1
-           :source2 source2
-           :control control
-           :min (float min 1f0)
-           :max (float max 1f0)
-           :falloff (float falloff 1f0)))
+(defun mod:select (source1 source2 control &key (min -1.0) (max 1.0) (falloff 0.0))
+  (make-select :rng (int::sampler-rng source1)
+               :source1 source1
+               :source2 source2
+               :control control
+               :min (float min 1f0)
+               :max (float max 1f0)
+               :falloff (float falloff 1f0)))
 
 (defmethod int::sample ((sampler select) x &optional (y 0d0) (z 0d0) (w 0d0))
   (let* ((min (min sampler))

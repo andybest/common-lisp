@@ -2,11 +2,11 @@
 
 (defpackage #:coherent-noise.generators.open-simplex2f-4d
   (:local-nicknames
+   (#:gen #:coherent-noise.generators)
    (#:int #:coherent-noise.internal)
    (#:rng #:seedable-rng)
    (#:u #:golden-utils))
-  (:use #:cl)
-  (:export #:open-simplex2f-4d))
+  (:use #:cl))
 
 (in-package #:coherent-noise.generators.open-simplex2f-4d)
 
@@ -442,7 +442,7 @@
             (s2 (+ (* xyz -0.16666666666666666d0) ww)))
        (values (+ x s2) (+ y s2) (+ z s2) (+ (* xyz -0.5d0) ww))))))
 
-(defun open-simplex2f-4d (&key seed (orientation :standard))
+(defun gen:open-simplex2f-4d (&key seed (orientation :standard))
   (u:mvlet* ((rng (int::make-rng seed))
              (gradients table (permute rng)))
     (%open-simplex2f-4d :rng rng

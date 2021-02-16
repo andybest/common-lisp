@@ -2,11 +2,11 @@
 
 (defpackage #:coherent-noise.generators.spheres-3d
   (:local-nicknames
+   (#:gen #:coherent-noise.generators)
    (#:int #:coherent-noise.internal)
    (#:rng #:seedable-rng)
    (#:u #:golden-utils))
-  (:use #:cl)
-  (:export #:spheres-3d))
+  (:use #:cl))
 
 (in-package #:coherent-noise.generators.spheres-3d)
 
@@ -18,7 +18,7 @@
             (:copier nil))
   (frequency 1d0 :type u:f64))
 
-(defun spheres-3d (&key seed (frequency 1d0))
+(defun gen:spheres-3d (&key seed (frequency 1d0))
   (%spheres-3d :rng (int::make-rng seed)
                :frequency frequency))
 

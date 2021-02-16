@@ -3,16 +3,14 @@
 (defpackage #:coherent-noise.modifiers.fractal
   (:local-nicknames
    (#:int #:coherent-noise.internal)
+   (#:mod #:coherent-noise.modifiers)
    (#:u #:golden-utils))
-  (:use #:cl)
-  (:export
-   #:fractal))
+  (:use #:cl))
 
 (in-package #:coherent-noise.modifiers.fractal)
 
 (defstruct (fractal
             (:include int::sampler)
-            (:constructor %fractal)
             (:conc-name "")
             (:predicate nil)
             (:copier nil))
@@ -22,13 +20,13 @@
   (gain 0.5 :type u:f32)
   (lacunarity 2.0 :type u:f32))
 
-(defun fractal (source &key (octaves 4) (frequency 1.0) (gain 0.5) (lacunarity 2.0))
-  (%fractal :rng (int::sampler-rng source)
-            :source source
-            :octaves octaves
-            :frequency (float frequency 1f0)
-            :gain (float gain 1f0)
-            :lacunarity (float lacunarity 1f0)))
+(defun mod:fractal (source &key (octaves 4) (frequency 1.0) (gain 0.5) (lacunarity 2.0))
+  (make-fractal :rng (int::sampler-rng source)
+                :source source
+                :octaves octaves
+                :frequency (float frequency 1f0)
+                :gain (float gain 1f0)
+                :lacunarity (float lacunarity 1f0)))
 
 (defmethod int::sample ((sampler fractal) x &optional (y 0d0) (z 0d0) (w 0d0))
   (loop :with source = (source sampler)

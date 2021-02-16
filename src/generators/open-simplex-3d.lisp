@@ -2,11 +2,11 @@
 
 (defpackage #:coherent-noise.generators.open-simplex-3d
   (:local-nicknames
+   (#:gen #:coherent-noise.generators)
    (#:int #:coherent-noise.internal)
    (#:rng #:seedable-rng)
    (#:u #:golden-utils))
-  (:use #:cl)
-  (:export #:open-simplex-3d))
+  (:use #:cl))
 
 (in-package #:coherent-noise.generators.open-simplex-3d)
 
@@ -605,7 +605,7 @@
              (dz6 state) dz5))
     (values)))
 
-(defun open-simplex-3d (&key seed)
+(defun gen:open-simplex-3d (&key seed)
   (let* ((rng (int::make-rng seed))
          (table (rng:shuffle rng +permutation+)))
     (%open-simplex-3d :rng rng :table table)))

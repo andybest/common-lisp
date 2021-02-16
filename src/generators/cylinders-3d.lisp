@@ -2,11 +2,11 @@
 
 (defpackage #:coherent-noise.generators.cylinders-3d
   (:local-nicknames
+   (#:gen #:coherent-noise.generators)
    (#:int #:coherent-noise.internal)
    (#:rng #:seedable-rng)
    (#:u #:golden-utils))
-  (:use #:cl)
-  (:export #:cylinders-3d))
+  (:use #:cl))
 
 (in-package #:coherent-noise.generators.cylinders-3d)
 
@@ -18,7 +18,7 @@
             (:copier nil))
   (frequency 1d0 :type u:f64))
 
-(defun cylinders-3d (&key seed (frequency 1d0))
+(defun gen:cylinders-3d (&key seed (frequency 1d0))
   (%cylinders-3d :rng (int::make-rng seed)
                  :frequency frequency))
 

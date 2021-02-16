@@ -3,16 +3,14 @@
 (defpackage #:coherent-noise.modifiers.displace
   (:local-nicknames
    (#:int #:coherent-noise.internal)
+   (#:mod #:coherent-noise.modifiers)
    (#:u #:golden-utils))
-  (:use #:cl)
-  (:export
-   #:displace))
+  (:use #:cl))
 
 (in-package #:coherent-noise.modifiers.displace)
 
 (defstruct (displace
             (:include int::sampler)
-            (:constructor %displace)
             (:conc-name "")
             (:predicate nil)
             (:copier nil))
@@ -22,13 +20,13 @@
   (z nil :type (or int::sampler null))
   (w nil :type (or int::sampler null)))
 
-(defun displace (source &key x y z w)
-  (%displace :rng (int::sampler-rng source)
-             :source source
-             :x x
-             :y y
-             :z z
-             :w w))
+(defun mod:displace (source &key x y z w)
+  (make-displace :rng (int::sampler-rng source)
+                 :source source
+                 :x x
+                 :y y
+                 :z z
+                 :w w))
 
 (defmethod int::sample ((sampler displace) x &optional (y 0d0) (z 0d0) (w 0d0))
   (let* ((dx (if (x sampler) (int::sample (x sampler) x y z w) 0.0))

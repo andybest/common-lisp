@@ -3,27 +3,25 @@
 (defpackage #:coherent-noise.modifiers.expt
   (:local-nicknames
    (#:int #:coherent-noise.internal)
+   (#:mod #:coherent-noise.modifiers)
    (#:u #:golden-utils))
   (:use #:cl)
-  (:shadow #:expt)
-  (:export
-   #:expt))
+  (:shadow #:expt))
 
 (in-package #:coherent-noise.modifiers.expt)
 
 (defstruct (expt
             (:include int::sampler)
-            (:constructor %expt)
             (:conc-name "")
             (:predicate nil)
             (:copier nil))
   (source nil :type int::sampler)
   (power 1.0 :type u:f32))
 
-(defun expt (source power)
-  (%expt :rng (int::sampler-rng source)
-         :source source
-         :power (float power 1f0)))
+(defun mod:expt (source power)
+  (make-expt :rng (int::sampler-rng source)
+             :source source
+             :power (float power 1f0)))
 
 (defmethod int::sample ((sampler expt) x &optional (y 0d0) (z 0d0) (w 0d0))
   (declare (optimize speed))

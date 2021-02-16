@@ -2,11 +2,11 @@
 
 (defpackage #:coherent-noise.generators.value-3d
   (:local-nicknames
+   (#:gen #:coherent-noise.generators)
    (#:int #:coherent-noise.internal)
    (#:rng #:seedable-rng)
    (#:u #:golden-utils))
-  (:use #:cl)
-  (:export #:value-3d))
+  (:use #:cl))
 
 (in-package #:coherent-noise.generators.value-3d)
 
@@ -18,7 +18,7 @@
             (:copier nil))
   (seed 0 :type u:ub32))
 
-(defun value-3d (&key seed)
+(defun gen:value-3d (&key seed)
   (u:mvlet ((rng seed (int::make-rng seed)))
     (%value-3d :rng rng
                :seed seed)))

@@ -3,17 +3,15 @@
 (defpackage #:coherent-noise.modifiers.clamp
   (:local-nicknames
    (#:int #:coherent-noise.internal)
+   (#:mod #:coherent-noise.modifiers)
    (#:u #:golden-utils))
   (:use #:cl)
-  (:shadow #:min #:max)
-  (:export
-   #:clamp))
+  (:shadow #:min #:max))
 
 (in-package #:coherent-noise.modifiers.clamp)
 
 (defstruct (clamp
             (:include int::sampler)
-            (:constructor %clamp)
             (:conc-name "")
             (:predicate nil)
             (:copier nil))
@@ -21,11 +19,11 @@
   (min -1f0 :type u:f32)
   (max 1f0 :type u:f32))
 
-(defun clamp (source min max)
-  (%clamp :rng (int::sampler-rng source)
-          :source source
-          :min (float min 1f0)
-          :max (float max 1f0)))
+(defun mod:clamp (source min max)
+  (make-clamp :rng (int::sampler-rng source)
+              :source source
+              :min (float min 1f0)
+              :max (float max 1f0)))
 
 (defmethod int::sample ((sampler clamp) x &optional (y 0d0) (z 0d0) (w 0d0))
   (declare (optimize speed))

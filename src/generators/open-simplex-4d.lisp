@@ -2,11 +2,11 @@
 
 (defpackage #:coherent-noise.generators.open-simplex-4d
   (:local-nicknames
+   (#:gen #:coherent-noise.generators)
    (#:int #:coherent-noise.internal)
    (#:rng #:seedable-rng)
    (#:u #:golden-utils))
-  (:use #:cl)
-  (:export #:open-simplex-4d))
+  (:use #:cl))
 
 (in-package #:coherent-noise.generators.open-simplex-4d)
 
@@ -1503,7 +1503,7 @@
              (dw10 state) dw7))
     (values)))
 
-(defun open-simplex-4d (&key seed)
+(defun gen:open-simplex-4d (&key seed)
   (let* ((rng (int::make-rng seed))
          (table (rng:shuffle rng int::+perlin-permutation+)))
     (%open-simplex-4d :rng rng :table table)))

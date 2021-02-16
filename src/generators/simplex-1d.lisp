@@ -2,11 +2,11 @@
 
 (defpackage #:coherent-noise.generators.simplex-1d
   (:local-nicknames
+   (#:gen #:coherent-noise.generators)
    (#:int #:coherent-noise.internal)
    (#:rng #:seedable-rng)
    (#:u #:golden-utils))
-  (:use #:cl)
-  (:export #:simplex-1d))
+  (:use #:cl))
 
 (in-package #:coherent-noise.generators.simplex-1d)
 
@@ -20,7 +20,7 @@
             (:copier nil))
   (table int::+perlin-permutation+ :type (simple-array u:ub8 (512))))
 
-(defun simplex-1d (&key seed)
+(defun gen:simplex-1d (&key seed)
   (let* ((rng (int::make-rng seed))
          (table (rng:shuffle rng int::+perlin-permutation+)))
     (%simplex-1d :rng rng :table table)))

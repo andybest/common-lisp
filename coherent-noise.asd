@@ -9,6 +9,7 @@
                #:lparallel
                #:golden-utils
                #:seedable-rng
+               #:uiop
                #:zpng)
   :in-order-to ((asdf:test-op (asdf:test-op #:coherent-noise.test)))
   :pathname "src"
@@ -19,7 +20,8 @@
    (:file "common")
    (:module "generators"
     :components
-    ((:file "perlin-1d")
+    ((:file "package")
+     (:file "perlin-1d")
      (:file "perlin-2d")
      (:file "perlin-3d")
      (:file "perlin-4d")
@@ -46,7 +48,8 @@
      (:file "constant")))
    (:module "modifiers"
     :components
-    ((:file "abs")
+    ((:file "package")
+     (:file "abs")
      (:file "add")
      (:file "billow")
      (:file "blend")

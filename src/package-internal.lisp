@@ -6,6 +6,10 @@
    (#:rng #:seedable-rng)
    (#:u #:golden-utils))
   (:use #:cl)
+  ;; API
+  (:export
+   #:sample
+   #:write-image)
   ;; Conditions
   (:export
    #:coherent-noise-error

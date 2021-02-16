@@ -3,16 +3,14 @@
 (defpackage #:coherent-noise.modifiers.billow
   (:local-nicknames
    (#:int #:coherent-noise.internal)
+   (#:mod #:coherent-noise.modifiers)
    (#:u #:golden-utils))
-  (:use #:cl)
-  (:export
-   #:billow))
+  (:use #:cl))
 
 (in-package #:coherent-noise.modifiers.billow)
 
 (defstruct (billow
             (:include int::sampler)
-            (:constructor %billow)
             (:conc-name "")
             (:predicate nil)
             (:copier nil))
@@ -22,13 +20,13 @@
   (gain 0.5 :type u:f32)
   (lacunarity 2.0 :type u:f32))
 
-(defun billow (source &key (octaves 4) (frequency 1.0) (gain 0.5) (lacunarity 2.0))
-  (%billow :rng (int::sampler-rng source)
-           :source source
-           :octaves octaves
-           :frequency (float frequency 1f0)
-           :gain (float gain 1f0)
-           :lacunarity (float lacunarity 1f0)))
+(defun mod:billow (source &key (octaves 4) (frequency 1.0) (gain 0.5) (lacunarity 2.0))
+  (make-billow :rng (int::sampler-rng source)
+               :source source
+               :octaves octaves
+               :frequency (float frequency 1f0)
+               :gain (float gain 1f0)
+               :lacunarity (float lacunarity 1f0)))
 
 (defmethod int::sample ((sampler billow) x &optional (y 0d0) (z 0d0) (w 0d0))
   (loop :with source = (source sampler)

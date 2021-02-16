@@ -2,11 +2,11 @@
 
 (defpackage #:coherent-noise.generators.checker-2d
   (:local-nicknames
+   (#:gen #:coherent-noise.generators)
    (#:int #:coherent-noise.internal)
    (#:rng #:seedable-rng)
    (#:u #:golden-utils))
-  (:use #:cl)
-  (:export #:checker-2d))
+  (:use #:cl))
 
 (in-package #:coherent-noise.generators.checker-2d)
 
@@ -17,7 +17,7 @@
             (:predicate nil)
             (:copier nil)))
 
-(defun checker-2d (&key seed)
+(defun gen:checker-2d (&key seed)
   (%checker-2d :rng (int::make-rng seed)))
 
 (defmethod int::sample ((sampler checker-2d) x &optional (y 0d0) (z 0d0) (w 0d0))

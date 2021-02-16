@@ -2,11 +2,11 @@
 
 (defpackage #:coherent-noise.generators.perlin-4d
   (:local-nicknames
+   (#:gen #:coherent-noise.generators)
    (#:int #:coherent-noise.internal)
    (#:rng #:seedable-rng)
    (#:u #:golden-utils))
-  (:use #:cl)
-  (:export #:perlin-4d))
+  (:use #:cl))
 
 (in-package #:coherent-noise.generators.perlin-4d)
 
@@ -18,7 +18,7 @@
             (:copier nil))
   (table int::+perlin-permutation+ :type (simple-array u:ub8 (512))))
 
-(defun perlin-4d (&key seed)
+(defun gen:perlin-4d (&key seed)
   (let* ((rng (int::make-rng seed))
          (table (rng:shuffle rng int::+perlin-permutation+)))
     (%perlin-4d :rng rng :table table)))

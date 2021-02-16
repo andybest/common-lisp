@@ -2,11 +2,11 @@
 
 (defpackage #:coherent-noise.generators.cellular-3d
   (:local-nicknames
+   (#:gen #:coherent-noise.generators)
    (#:int #:coherent-noise.internal)
    (#:rng #:seedable-rng)
    (#:u #:golden-utils))
-  (:use #:cl)
-  (:export #:cellular-3d))
+  (:use #:cl))
 
 (in-package #:coherent-noise.generators.cellular-3d)
 
@@ -193,7 +193,7 @@
   (output-type :min :type (member :value :min :max :+ :- :* :/))
   (jitter 1d0 :type u:f64))
 
-(defun cellular-3d (&key seed (distance-method :euclidean) (output-type :min) (jitter 1d0))
+(defun gen:cellular-3d (&key seed (distance-method :euclidean) (output-type :min) (jitter 1d0))
   (u:mvlet ((rng seed (int::make-rng seed)))
     (%cellular-3d :rng rng
                   :seed seed

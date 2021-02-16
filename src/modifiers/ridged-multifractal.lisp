@@ -3,16 +3,14 @@
 (defpackage #:coherent-noise.modifiers.ridged-multifractal
   (:local-nicknames
    (#:int #:coherent-noise.internal)
+   (#:mod #:coherent-noise.modifiers)
    (#:u #:golden-utils))
-  (:use #:cl)
-  (:export
-   #:ridged-multifractal))
+  (:use #:cl))
 
 (in-package #:coherent-noise.modifiers.ridged-multifractal)
 
 (defstruct (ridged-multifractal
             (:include int::sampler)
-            (:constructor %ridged-multifractal)
             (:conc-name "")
             (:predicate nil)
             (:copier nil))
@@ -24,22 +22,22 @@
   (offset 1.0 :type u:f32)
   (weights (make-array 0 :element-type 'u:f32) :type (simple-array u:f32 (*))))
 
-(defun ridged-multifractal (source &key (octaves 4) (frequency 1.0) (gain 2.0) (lacunarity 2.0)
-                                     (exponent 1.0) (offset 1.0))
+(defun mod:ridged-multifractal (source &key (octaves 4) (frequency 1.0) (gain 2.0) (lacunarity 2.0)
+                                         (exponent 1.0) (offset 1.0))
   (let ((weights (make-array octaves :element-type 'u:f32))
         (frequency (float frequency 1.0))
         (exponent (float exponent 1.0)))
     (loop :for i :below octaves
           :for frequency = 1.0 :then (* frequency lacunarity)
           :do (setf (aref weights i) (expt frequency (- exponent))))
-    (%ridged-multifractal :rng (int::sampler-rng source)
-                          :source source
-                          :octaves octaves
-                          :frequency frequency
-                          :gain (float gain 1.0)
-                          :lacunarity (float lacunarity 1.0)
-                          :offset (float offset 1.0)
-                          :weights weights)))
+    (make-ridged-multifractal :rng (int::sampler-rng source)
+                              :source source
+                              :octaves octaves
+                              :frequency frequency
+                              :gain (float gain 1f0)
+                              :lacunarity (float lacunarity 1f0)
+                              :offset (float offset 1f0)
+                              :weights weights)))
 
 (defmethod int::sample ((sampler ridged-multifractal) x &optional (y 0d0) (z 0d0) (w 0d0))
   (loop :with source = (source sampler)

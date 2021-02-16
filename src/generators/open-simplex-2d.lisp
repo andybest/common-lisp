@@ -2,11 +2,11 @@
 
 (defpackage #:coherent-noise.generators.open-simplex-2d
   (:local-nicknames
+   (#:gen #:coherent-noise.generators)
    (#:int #:coherent-noise.internal)
    (#:rng #:seedable-rng)
    (#:u #:golden-utils))
-  (:use #:cl)
-  (:export #:open-simplex-2d))
+  (:use #:cl))
 
 (in-package #:coherent-noise.generators.open-simplex-2d)
 
@@ -162,7 +162,7 @@
            (dy0 state) (- dy0 1 sq2))
     (values)))
 
-(defun open-simplex-2d (&key seed)
+(defun gen:open-simplex-2d (&key seed)
   (let* ((rng (int::make-rng seed))
          (table (rng:shuffle rng int::+perlin-permutation+)))
     (%open-simplex-2d :rng rng :table table)))

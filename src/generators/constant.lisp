@@ -2,11 +2,11 @@
 
 (defpackage #:coherent-noise.generators.constant
   (:local-nicknames
+   (#:gen #:coherent-noise.generators)
    (#:int #:coherent-noise.internal)
    (#:rng #:seedable-rng)
    (#:u #:golden-utils))
-  (:use #:cl)
-  (:export #:constant))
+  (:use #:cl))
 
 (in-package #:coherent-noise.generators.constant)
 
@@ -18,7 +18,7 @@
             (:copier nil))
   (value 0.5f0 :type u:f32))
 
-(defun constant (value &key seed)
+(defun gen:constant (value &key seed)
   (%constant :rng (int::make-rng seed)
              :value (float (u:lerp (u:clamp value 0d0 1d0) -1d0 1d0) 1f0)))
 
