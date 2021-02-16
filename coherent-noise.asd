@@ -20,8 +20,7 @@
    (:file "common")
    (:module "generators"
     :components
-    ((:file "package")
-     (:file "perlin-1d")
+    ((:file "perlin-1d")
      (:file "perlin-2d")
      (:file "perlin-3d")
      (:file "perlin-4d")
@@ -48,8 +47,7 @@
      (:file "constant")))
    (:module "modifiers"
     :components
-    ((:file "package")
-     (:file "abs")
+    ((:file "abs")
      (:file "add")
      (:file "billow")
      (:file "blend")
@@ -71,5 +69,4 @@
      (:file "strengthen")
      (:file "subtract")
      (:file "translate")
-     (:file "turbulence")))
-   (:file "package-api")))
+     (:file "turbulence")))))
