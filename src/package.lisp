@@ -74,6 +74,7 @@
    #:scale
    #:select
    #:strengthen
+   #:terrace
    #:translate
    #:turbulence
    #:uniform-scale))

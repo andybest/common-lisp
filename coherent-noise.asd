@@ -69,5 +69,6 @@
      (:file "select")
      (:file "strengthen")
      (:file "subtract")
+     (:file "terrace")
      (:file "translate")
      (:file "turbulence")))))
