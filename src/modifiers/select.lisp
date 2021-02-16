@@ -23,7 +23,7 @@
   (falloff 0.0 :type u:f32))
 
 (defun mod:select (source1 source2 control &key (min -1.0) (max 1.0) (falloff 0.0))
-  (make-select :rng (int:sampler-rng source1)
+  (make-select :rng (int::sampler-rng source1)
                :source1 source1
                :source2 source2
                :control control
@@ -45,14 +45,14 @@
           ((< control (+ min falloff))
            (let* ((low (- min falloff))
                   (high (+ min falloff))
-                  (alpha (int::interpolate/cubic (/ (- control low) (- high low)))))
+                  (alpha (int::cubic-curve (/ (- control low) (- high low)))))
              (u:lerp alpha sample1 sample2)))
           ((< control (- max falloff))
            sample2)
           ((< control (+ max falloff))
            (let* ((low (- max falloff))
                   (high (+ max falloff))
-                  (alpha (int::interpolate/cubic (/ (- control low) (- high low)))))
+                  (alpha (int::cubic-curve (/ (- control low) (- high low)))))
              (u:lerp alpha sample2 sample1)))
           (t
            sample1))

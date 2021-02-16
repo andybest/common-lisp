@@ -39,11 +39,11 @@
                (yi yf (truncate y))
                (xi (logand xi 255))
                (yi (logand yi 255))
-               (u (int::interpolate/quintic xf))
+               (u (int::quintic-curve xf))
                (a (+ (aref table xi) yi))
                (b (+ (aref table (1+ xi)) yi)))
       (float
-       (u:lerp (int::interpolate/quintic yf)
+       (u:lerp (int::quintic-curve yf)
                (u:lerp u
                        (noise (int::lookup table (aref table a)) xf yf)
                        (noise (int::lookup table (aref table b)) (1- xf) yf))

@@ -21,7 +21,7 @@
   (w 0.0 :type u:f32))
 
 (defun mod:translate (source &key (x 0.0) (y 0.0) (z 0.0) (w 0.0))
-  (make-translate :rng (int:sampler-rng source)
+  (make-translate :rng (int::sampler-rng source)
                   :source source
                   :x (float x 1f0)
                   :y (float y 1f0)

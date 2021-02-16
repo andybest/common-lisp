@@ -42,12 +42,21 @@
       `(aref ,table (logand (+ ,first (lookup ,table ,@rest)) 255))
       `(aref ,table (logand ,first 255))))
 
-(declaim (inline interpolate/cubic))
-(defun interpolate/cubic (x)
+(declaim (inline interpolate-cubic))
+(defun interpolate-cubic (a b c d alpha)
+  (declare (optimize speed)
+           (u:f32 a b c d alpha))
+  (let* ((x (- (- d c) (- a b)))
+         (y (- (- a b) x))
+         (z (- c a)))
+    (+ (* x alpha alpha alpha) (* y alpha alpha) (* z alpha) a)))
+
+(declaim (inline cubic-curve))
+(defun cubic-curve (x)
   (* x x (- 3.0 (* x 2.0))))
 
-(declaim (inline interpolate/quintic))
-(defun interpolate/quintic (x)
+(declaim (inline quintic-curve))
+(defun quintic-curve (x)
   (* x x x (+ (* x (- (* x 6.0) 15.0)) 10.0)))
 
 (defun make-rng (seed)

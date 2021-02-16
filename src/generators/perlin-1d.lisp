@@ -37,7 +37,7 @@
     (u:mvlet* ((table (table sampler))
                (xi xf (truncate x))
                (xi (logand xi 255)))
-      (float (* (u:lerp (int::interpolate/quintic xf)
+      (float (* (u:lerp (int::quintic-curve xf)
                         (noise (aref table xi) xf)
                         (noise (aref table (1+ xi)) (1- xf)))
                 0.25)

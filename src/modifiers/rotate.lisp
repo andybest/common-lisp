@@ -32,7 +32,7 @@
         (sx (float (sin x) 1f0))
         (sy (float (sin y) 1f0))
         (sz (float (sin z) 1f0)))
-    (make-rotate :rng (int:sampler-rng source)
+    (make-rotate :rng (int::sampler-rng source)
                  :source source
                  :rx1 (+ (* sx sy sz) (* cy cz))
                  :rx2 (- (* sx sy cz) (* cy sz))

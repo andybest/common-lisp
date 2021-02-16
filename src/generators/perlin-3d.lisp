@@ -44,9 +44,9 @@
                (xi (logand xi 255))
                (yi (logand yi 255))
                (zi (logand zi 255))
-               (u (int::interpolate/quintic xf))
-               (v (int::interpolate/quintic yf))
-               (w (int::interpolate/quintic zf))
+               (u (int::quintic-curve xf))
+               (v (int::quintic-curve yf))
+               (w (int::quintic-curve zf))
                (a (+ (aref table xi) yi))
                (b (+ (aref table (1+ xi)) yi)))
       (float

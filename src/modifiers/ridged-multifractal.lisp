@@ -30,7 +30,7 @@
     (loop :for i :below octaves
           :for frequency = 1.0 :then (* frequency lacunarity)
           :do (setf (aref weights i) (expt frequency (- exponent))))
-    (make-ridged-multifractal :rng (int:sampler-rng source)
+    (make-ridged-multifractal :rng (int::sampler-rng source)
                               :source source
                               :octaves octaves
                               :frequency frequency

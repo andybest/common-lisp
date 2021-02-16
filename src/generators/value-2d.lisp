@@ -36,11 +36,11 @@
     (declare (inline in-range coord))
     (u:mvlet* ((seed (seed sampler))
                (x0 xs (floor x))
-               (xs (int::interpolate/cubic xs))
+               (xs (int::cubic-curve xs))
                (x0 (in-range (* x0 int::+prime-x+)))
                (x1 (+ x0 int::+prime-x+))
                (y0 ys (floor y))
-               (ys (int::interpolate/cubic ys))
+               (ys (int::cubic-curve ys))
                (y0 (in-range (* y0 int::+prime-y+)))
                (y1 (+ y0 int::+prime-y+)))
       (float (1- (u:lerp ys

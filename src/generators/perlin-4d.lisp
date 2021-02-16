@@ -52,10 +52,10 @@
                (yf-1 (1- yf))
                (zf-1 (1- zf))
                (wf-1 (1- wf))
-               (fs (int::interpolate/quintic xf))
-               (ft (int::interpolate/quintic yf))
-               (fr (int::interpolate/quintic zf))
-               (fq (int::interpolate/quintic wf)))
+               (fs (int::quintic-curve xf))
+               (ft (int::quintic-curve yf))
+               (fr (int::quintic-curve zf))
+               (fq (int::quintic-curve wf)))
       (float
        (u:lerp
         fs
