@@ -49,7 +49,7 @@
   :test #'equalp)
 
 (defstruct (open-simplex2f-2d
-            (:include int::sampler)
+            (:include int:sampler)
             (:constructor %open-simplex2f-2d)
             (:conc-name "")
             (:predicate nil)

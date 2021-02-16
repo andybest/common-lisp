@@ -183,7 +183,7 @@
   :test #'equalp)
 
 (defstruct (cellular-3d
-            (:include int::sampler)
+            (:include int:sampler)
             (:constructor %cellular-3d)
             (:conc-name "")
             (:predicate nil)

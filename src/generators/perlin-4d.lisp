@@ -11,7 +11,7 @@
 (in-package #:coherent-noise.generators.perlin-4d)
 
 (defstruct (perlin-4d
-            (:include int::sampler)
+            (:include int:sampler)
             (:constructor %perlin-4d)
             (:conc-name "")
             (:predicate nil)

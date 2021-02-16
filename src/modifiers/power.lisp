@@ -10,12 +10,12 @@
 (in-package #:coherent-noise.modifiers.power)
 
 (defstruct (power
-            (:include int::sampler)
+            (:include int:sampler)
             (:conc-name "")
             (:predicate nil)
             (:copier nil))
-  (source1 nil :type int::sampler)
-  (source2 nil :type int::sampler))
+  (source1 nil :type int:sampler)
+  (source2 nil :type int:sampler))
 
 (defun mod:power (source1 source2)
   (make-power :rng (int::sampler-rng source1)

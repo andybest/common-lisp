@@ -10,11 +10,11 @@
 (in-package #:coherent-noise.modifiers.strengthen)
 
 (defstruct (strengthen
-            (:include int::sampler)
+            (:include int:sampler)
             (:conc-name "")
             (:predicate nil)
             (:copier nil))
-  (source nil :type int::sampler)
+  (source nil :type int:sampler)
   (strength 1.0 :type u:f32)
   (bias 0.0 :type u:f32))
 

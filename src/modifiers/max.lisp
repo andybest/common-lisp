@@ -11,12 +11,12 @@
 (in-package #:coherent-noise.modifiers.max)
 
 (defstruct (max
-            (:include int::sampler)
+            (:include int:sampler)
             (:conc-name "")
             (:predicate nil)
             (:copier nil))
-  (source1 nil :type int::sampler)
-  (source2 nil :type int::sampler))
+  (source1 nil :type int:sampler)
+  (source2 nil :type int:sampler))
 
 (defun mod:max (source1 source2)
   (make-max :rng (int::sampler-rng source1)

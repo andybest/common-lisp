@@ -11,7 +11,7 @@
 (in-package #:coherent-noise.generators.constant)
 
 (defstruct (constant
-            (:include int::sampler)
+            (:include int:sampler)
             (:constructor %constant)
             (:conc-name "")
             (:predicate nil)

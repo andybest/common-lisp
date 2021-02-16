@@ -10,11 +10,11 @@
 (in-package #:coherent-noise.modifiers.rotate)
 
 (defstruct (rotate
-            (:include int::sampler)
+            (:include int:sampler)
             (:conc-name "")
             (:predicate nil)
             (:copier nil))
-  (source nil :type int::sampler)
+  (source nil :type int:sampler)
   (rx1 0.0 :type u:f32)
   (rx2 0.0 :type u:f32)
   (rx3 0.0 :type u:f32)
@@ -32,7 +32,7 @@
         (sx (float (sin x) 1f0))
         (sy (float (sin y) 1f0))
         (sz (float (sin z) 1f0)))
-    (make-rotate :rng (int::sampler-rng source)
+    (make-rotate :rng (int:sampler-rng source)
                  :source source
                  :rx1 (+ (* sx sy sz) (* cy cz))
                  :rx2 (- (* sx sy cz) (* cy sz))

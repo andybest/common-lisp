@@ -118,7 +118,7 @@
   :test #'equalp)
 
 (defstruct (cellular-2d
-            (:include int::sampler)
+            (:include int:sampler)
             (:constructor %cellular-2d)
             (:conc-name "")
             (:predicate nil)

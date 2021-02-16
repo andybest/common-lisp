@@ -10,11 +10,11 @@
 (in-package #:coherent-noise.modifiers.scale)
 
 (defstruct (scale
-            (:include int::sampler)
+            (:include int:sampler)
             (:conc-name "")
             (:predicate nil)
             (:copier nil))
-  (source nil :type int::sampler)
+  (source nil :type int:sampler)
   (x 1.0 :type u:f32)
   (y 1.0 :type u:f32)
   (z 1.0 :type u:f32)

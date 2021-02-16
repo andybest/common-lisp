@@ -11,7 +11,7 @@
 (in-package #:coherent-noise.generators.value-2d)
 
 (defstruct (value-2d
-            (:include int::sampler)
+            (:include int:sampler)
             (:constructor %value-2d)
             (:conc-name "")
             (:predicate nil)

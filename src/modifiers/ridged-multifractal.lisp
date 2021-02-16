@@ -10,11 +10,11 @@
 (in-package #:coherent-noise.modifiers.ridged-multifractal)
 
 (defstruct (ridged-multifractal
-            (:include int::sampler)
+            (:include int:sampler)
             (:conc-name "")
             (:predicate nil)
             (:copier nil))
-  (source nil :type int::sampler)
+  (source nil :type int:sampler)
   (octaves 4 :type (integer 1 32))
   (frequency 1.0 :type u:f32)
   (gain 2.0 :type u:f32)
@@ -30,7 +30,7 @@
     (loop :for i :below octaves
           :for frequency = 1.0 :then (* frequency lacunarity)
           :do (setf (aref weights i) (expt frequency (- exponent))))
-    (make-ridged-multifractal :rng (int::sampler-rng source)
+    (make-ridged-multifractal :rng (int:sampler-rng source)
                               :source source
                               :octaves octaves
                               :frequency frequency

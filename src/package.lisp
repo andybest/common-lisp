@@ -9,6 +9,7 @@
   ;; API
   (:export
    #:sample
+   #:sampler
    #:write-image)
   ;; Conditions
   (:export

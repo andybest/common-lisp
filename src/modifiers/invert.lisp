@@ -10,11 +10,11 @@
 (in-package #:coherent-noise.modifiers.invert)
 
 (defstruct (invert
-            (:include int::sampler)
+            (:include int:sampler)
             (:conc-name "")
             (:predicate nil)
             (:copier nil))
-  (source nil :type int::sampler))
+  (source nil :type int:sampler))
 
 (defun mod:invert (source)
   (make-invert :rng (int::sampler-rng source)

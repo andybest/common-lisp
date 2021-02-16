@@ -156,7 +156,7 @@
   :test #'equalp)
 
 (defstruct (open-simplex2s-3d
-            (:include int::sampler)
+            (:include int:sampler)
             (:constructor %open-simplex2s-3d)
             (:conc-name "")
             (:predicate nil)

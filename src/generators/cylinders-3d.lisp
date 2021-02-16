@@ -11,7 +11,7 @@
 (in-package #:coherent-noise.generators.cylinders-3d)
 
 (defstruct (cylinders-3d
-            (:include int::sampler)
+            (:include int:sampler)
             (:constructor %cylinders-3d)
             (:conc-name "")
             (:predicate nil)

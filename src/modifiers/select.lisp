@@ -11,19 +11,19 @@
 (in-package #:coherent-noise.modifiers.select)
 
 (defstruct (select
-            (:include int::sampler)
+            (:include int:sampler)
             (:conc-name "")
             (:predicate nil)
             (:copier nil))
-  (source1 nil :type int::sampler)
-  (source2 nil :type int::sampler)
-  (control nil :type int::sampler)
+  (source1 nil :type int:sampler)
+  (source2 nil :type int:sampler)
+  (control nil :type int:sampler)
   (min -1.0 :type u:f32)
   (max 1.0 :type u:f32)
   (falloff 0.0 :type u:f32))
 
 (defun mod:select (source1 source2 control &key (min -1.0) (max 1.0) (falloff 0.0))
-  (make-select :rng (int::sampler-rng source1)
+  (make-select :rng (int:sampler-rng source1)
                :source1 source1
                :source2 source2
                :control control

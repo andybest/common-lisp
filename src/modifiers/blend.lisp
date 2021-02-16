@@ -10,13 +10,13 @@
 (in-package #:coherent-noise.modifiers.blend)
 
 (defstruct (blend
-            (:include int::sampler)
+            (:include int:sampler)
             (:conc-name "")
             (:predicate nil)
             (:copier nil))
-  (source1 nil :type int::sampler)
-  (source2 nil :type int::sampler)
-  (control nil :type int::sampler))
+  (source1 nil :type int:sampler)
+  (source2 nil :type int:sampler)
+  (control nil :type int:sampler))
 
 (defun mod:blend (source1 source2 control)
   (make-blend :rng (int::sampler-rng source1)

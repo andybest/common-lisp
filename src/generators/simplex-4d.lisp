@@ -31,7 +31,7 @@
     :test #'equalp))
 
 (defstruct (simplex-4d
-            (:include int::sampler)
+            (:include int:sampler)
             (:constructor %simplex-4d)
             (:conc-name "")
             (:predicate nil)

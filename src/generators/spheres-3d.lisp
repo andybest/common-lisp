@@ -11,7 +11,7 @@
 (in-package #:coherent-noise.generators.spheres-3d)
 
 (defstruct (spheres-3d
-            (:include int::sampler)
+            (:include int:sampler)
             (:constructor %spheres-3d)
             (:conc-name "")
             (:predicate nil)

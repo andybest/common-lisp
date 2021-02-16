@@ -23,7 +23,7 @@
     :test #'equalp))
 
 (defstruct (open-simplex-2d
-            (:include int::sampler)
+            (:include int:sampler)
             (:constructor %open-simplex-2d)
             (:conc-name "")
             (:predicate nil)

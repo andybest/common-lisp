@@ -11,7 +11,7 @@
 (in-package #:coherent-noise.generators.perlin-3d)
 
 (defstruct (perlin-3d
-            (:include int::sampler)
+            (:include int:sampler)
             (:constructor %perlin-3d)
             (:conc-name "")
             (:predicate nil)

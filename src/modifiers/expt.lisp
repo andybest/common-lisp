@@ -11,11 +11,11 @@
 (in-package #:coherent-noise.modifiers.expt)
 
 (defstruct (expt
-            (:include int::sampler)
+            (:include int:sampler)
             (:conc-name "")
             (:predicate nil)
             (:copier nil))
-  (source nil :type int::sampler)
+  (source nil :type int:sampler)
   (power 1.0 :type u:f32))
 
 (defun mod:expt (source power)

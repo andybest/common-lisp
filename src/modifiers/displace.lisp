@@ -10,15 +10,15 @@
 (in-package #:coherent-noise.modifiers.displace)
 
 (defstruct (displace
-            (:include int::sampler)
+            (:include int:sampler)
             (:conc-name "")
             (:predicate nil)
             (:copier nil))
-  (source nil :type int::sampler)
-  (x nil :type (or int::sampler null))
-  (y nil :type (or int::sampler null))
-  (z nil :type (or int::sampler null))
-  (w nil :type (or int::sampler null)))
+  (source nil :type int:sampler)
+  (x nil :type (or int:sampler null))
+  (y nil :type (or int:sampler null))
+  (z nil :type (or int:sampler null))
+  (w nil :type (or int:sampler null)))
 
 (defun mod:displace (source &key x y z w)
   (make-displace :rng (int::sampler-rng source)

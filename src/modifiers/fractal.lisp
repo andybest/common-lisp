@@ -10,11 +10,11 @@
 (in-package #:coherent-noise.modifiers.fractal)
 
 (defstruct (fractal
-            (:include int::sampler)
+            (:include int:sampler)
             (:conc-name "")
             (:predicate nil)
             (:copier nil))
-  (source nil :type int::sampler)
+  (source nil :type int:sampler)
   (octaves 4 :type (integer 1 32))
   (frequency 1.0 :type u:f32)
   (gain 0.5 :type u:f32)

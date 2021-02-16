@@ -92,7 +92,7 @@
 (u:define-constant +lookup+ (build-lattice-points) :test #'equalp)
 
 (defstruct (open-simplex2s-2d
-            (:include int::sampler)
+            (:include int:sampler)
             (:constructor %open-simplex2s-2d)
             (:conc-name "")
             (:predicate nil)

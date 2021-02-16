@@ -13,7 +13,7 @@
 (u:define-constant +scale+ 0.395d0)
 
 (defstruct (simplex-1d
-            (:include int::sampler)
+            (:include int:sampler)
             (:constructor %simplex-1d)
             (:conc-name "")
             (:predicate nil)

@@ -11,7 +11,7 @@
 (in-package #:coherent-noise.generators.checker-2d)
 
 (defstruct (checker-2d
-            (:include int::sampler)
+            (:include int:sampler)
             (:constructor %checker-2d)
             (:conc-name "")
             (:predicate nil)

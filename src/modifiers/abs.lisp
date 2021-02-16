@@ -11,11 +11,11 @@
 (in-package #:coherent-noise.modifiers.abs)
 
 (defstruct (abs
-            (:include int::sampler)
+            (:include int:sampler)
             (:conc-name "")
             (:predicate nil)
             (:copier nil))
-  (source nil :type int::sampler))
+  (source nil :type int:sampler))
 
 (defun mod:abs (source)
   (make-abs :rng (int::sampler-rng source)

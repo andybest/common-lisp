@@ -10,15 +10,15 @@
 (in-package #:coherent-noise.modifiers.divide)
 
 (defstruct (divide
-            (:include int::sampler)
+            (:include int:sampler)
             (:conc-name "")
             (:predicate nil)
             (:copier nil))
-  (source1 nil :type int::sampler)
-  (source2 nil :type int::sampler))
+  (source1 nil :type int:sampler)
+  (source2 nil :type int:sampler))
 
 (defun mod:/ (source1 source2)
-  (make-divide :rng (int::sampler-rng source1)
+  (make-divide :rng (int:sampler-rng source1)
                :source1 source1
                :source2 source2))
 

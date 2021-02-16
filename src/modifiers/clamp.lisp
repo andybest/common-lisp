@@ -11,11 +11,11 @@
 (in-package #:coherent-noise.modifiers.clamp)
 
 (defstruct (clamp
-            (:include int::sampler)
+            (:include int:sampler)
             (:conc-name "")
             (:predicate nil)
             (:copier nil))
-  (source nil :type int::sampler)
+  (source nil :type int:sampler)
   (min -1f0 :type u:f32)
   (max 1f0 :type u:f32))
 

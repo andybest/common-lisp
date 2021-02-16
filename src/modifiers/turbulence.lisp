@@ -12,12 +12,12 @@
 (in-package #:coherent-noise.modifiers.turbulence)
 
 (defstruct (turbulence
-            (:include int::sampler)
+            (:include int:sampler)
             (:conc-name "")
             (:predicate nil)
             (:copier nil))
-  (source nil :type int::sampler)
-  (displacement-source nil :type int::sampler)
+  (source nil :type int:sampler)
+  (displacement-source nil :type int:sampler)
   (power 1d0 :type u:f32)
   (x1 0f0 :type u:f32)
   (x2 0f0 :type u:f32)
