@@ -60,6 +60,7 @@
    #:billow
    #:blend
    #:clamp
+   #:curve
    #:displace
    #:expt
    #:fractal

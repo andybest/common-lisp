@@ -52,6 +52,7 @@
      (:file "billow")
      (:file "blend")
      (:file "clamp")
+     (:file "curve")
      (:file "displace")
      (:file "divide")
      (:file "expt")
