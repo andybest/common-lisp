@@ -51,6 +51,7 @@
      (:file "add")
      (:file "billow")
      (:file "blend")
+     (:file "cache")
      (:file "clamp")
      (:file "curve")
      (:file "displace")

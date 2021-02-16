@@ -59,6 +59,7 @@
    #:abs
    #:billow
    #:blend
+   #:cache
    #:clamp
    #:curve
    #:displace
