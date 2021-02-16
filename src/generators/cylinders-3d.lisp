@@ -12,15 +12,14 @@
 
 (defstruct (cylinders-3d
             (:include int:sampler)
-            (:constructor %cylinders-3d)
             (:conc-name "")
             (:predicate nil)
             (:copier nil))
   (frequency 1d0 :type u:f64))
 
 (defun gen:cylinders-3d (&key seed (frequency 1d0))
-  (%cylinders-3d :rng (int::make-rng seed)
-                 :frequency frequency))
+  (make-cylinders-3d :rng (int::make-rng seed)
+                     :frequency frequency))
 
 (defmethod int:sample ((sampler cylinders-3d) x &optional (y 0d0) (z 0d0) (w 0d0))
   (declare (ignore y w)

@@ -157,7 +157,6 @@
 
 (defstruct (open-simplex2s-3d
             (:include int:sampler)
-            (:constructor %open-simplex2s-3d)
             (:conc-name "")
             (:predicate nil)
             (:copier nil))
@@ -209,10 +208,10 @@
 (defun gen:open-simplex2s-3d (&key seed (orientation :standard))
   (u:mvlet* ((rng (int::make-rng seed))
              (gradients table (permute rng)))
-    (%open-simplex2s-3d :rng rng
-                        :gradients gradients
-                        :table table
-                        :orientation orientation)))
+    (make-open-simplex2s-3d :rng rng
+                            :gradients gradients
+                            :table table
+                            :orientation orientation)))
 
 (defmethod int:sample ((sampler open-simplex2s-3d) x &optional (y 0d0) (z 0d0) (w 0d0))
   (declare (ignore w)

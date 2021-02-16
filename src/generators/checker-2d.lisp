@@ -12,13 +12,12 @@
 
 (defstruct (checker-2d
             (:include int:sampler)
-            (:constructor %checker-2d)
             (:conc-name "")
             (:predicate nil)
             (:copier nil)))
 
 (defun gen:checker-2d (&key seed)
-  (%checker-2d :rng (int::make-rng seed)))
+  (make-checker-2d :rng (int::make-rng seed)))
 
 (defmethod int:sample ((sampler checker-2d) x &optional (y 0d0) (z 0d0) (w 0d0))
   (declare (ignore w)

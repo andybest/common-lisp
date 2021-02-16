@@ -12,7 +12,6 @@
 
 (defstruct (perlin-3d
             (:include int:sampler)
-            (:constructor %perlin-3d)
             (:conc-name "")
             (:predicate nil)
             (:copier nil))
@@ -21,7 +20,8 @@
 (defun gen:perlin-3d (&key seed)
   (let* ((rng (int::make-rng seed))
          (table (rng:shuffle rng int::+perlin-permutation+)))
-    (%perlin-3d :rng rng :table table)))
+    (make-perlin-3d :rng rng
+                    :table table)))
 
 (defmethod int:sample ((sampler perlin-3d) x &optional (y 0d0) (z 0d0) (w 0d0))
   (declare (ignore w)

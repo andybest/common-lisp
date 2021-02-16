@@ -19,7 +19,6 @@
 
 (defstruct (simplex-2d
             (:include int:sampler)
-            (:constructor %simplex-2d)
             (:conc-name "")
             (:predicate nil)
             (:copier nil))
@@ -28,7 +27,8 @@
 (defun gen:simplex-2d (&key seed)
   (let* ((rng (int::make-rng seed))
          (table (rng:shuffle rng int::+perlin-permutation+)))
-    (%simplex-2d :rng rng :table table)))
+    (make-simplex-2d :rng rng
+                     :table table)))
 
 (defmethod int:sample ((sampler simplex-2d) x &optional (y 0d0) (z 0d0) (w 0d0))
   (declare (ignore z w)

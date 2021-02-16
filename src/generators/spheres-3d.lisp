@@ -12,15 +12,14 @@
 
 (defstruct (spheres-3d
             (:include int:sampler)
-            (:constructor %spheres-3d)
             (:conc-name "")
             (:predicate nil)
             (:copier nil))
   (frequency 1d0 :type u:f64))
 
 (defun gen:spheres-3d (&key seed (frequency 1d0))
-  (%spheres-3d :rng (int::make-rng seed)
-               :frequency frequency))
+  (make-spheres-3d :rng (int::make-rng seed)
+                   :frequency frequency))
 
 (defmethod int:sample ((sampler spheres-3d) x &optional (y 0d0) (z 0d0) (w 0d0))
   (declare (ignore w)

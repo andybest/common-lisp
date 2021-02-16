@@ -119,7 +119,6 @@
 
 (defstruct (cellular-2d
             (:include int:sampler)
-            (:constructor %cellular-2d)
             (:conc-name "")
             (:predicate nil)
             (:copier nil))
@@ -130,11 +129,11 @@
 
 (defun gen:cellular-2d (&key seed (distance-method :euclidean) (output-type :min) (jitter 1d0))
   (u:mvlet ((rng seed (int::make-rng seed)))
-    (%cellular-2d :rng rng
-                  :seed seed
-                  :distance-method distance-method
-                  :output-type output-type
-                  :jitter jitter)))
+    (make-cellular-2d :rng rng
+                      :seed seed
+                      :distance-method distance-method
+                      :output-type output-type
+                      :jitter jitter)))
 
 (defmacro with-distance (distance-method)
   `(dotimes (xi 3)

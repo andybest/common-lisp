@@ -31,7 +31,6 @@
 
 (defstruct (open-simplex-4d
             (:include int:sampler)
-            (:constructor %open-simplex-4d)
             (:conc-name "")
             (:predicate nil)
             (:copier nil))
@@ -1507,7 +1506,8 @@
 (defun gen:open-simplex-4d (&key seed)
   (let* ((rng (int::make-rng seed))
          (table (rng:shuffle rng int::+perlin-permutation+)))
-    (%open-simplex-4d :rng rng :table table)))
+    (make-open-simplex-4d :rng rng
+                          :table table)))
 
 (defmethod int:sample ((sampler open-simplex-4d) x &optional (y 0d0) (z 0d0) (w 0d0))
   (declare (optimize speed)

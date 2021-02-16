@@ -393,7 +393,6 @@
 
 (defstruct (open-simplex2f-4d
             (:include int:sampler)
-            (:constructor %open-simplex2f-4d)
             (:conc-name "")
             (:predicate nil)
             (:copier nil))
@@ -449,10 +448,10 @@
 (defun gen:open-simplex2f-4d (&key seed (orientation :standard))
   (u:mvlet* ((rng (int::make-rng seed))
              (gradients table (permute rng)))
-    (%open-simplex2f-4d :rng rng
-                        :gradients gradients
-                        :table table
-                        :orientation orientation)))
+    (make-open-simplex2f-4d :rng rng
+                            :gradients gradients
+                            :table table
+                            :orientation orientation)))
 
 (defmethod int:sample ((sampler open-simplex2f-4d) x &optional (y 0d0) (z 0d0) (w 0d0))
   (declare (optimize speed)

@@ -12,7 +12,6 @@
 
 (defstruct (value-3d
             (:include int:sampler)
-            (:constructor %value-3d)
             (:conc-name "")
             (:predicate nil)
             (:copier nil))
@@ -20,8 +19,8 @@
 
 (defun gen:value-3d (&key seed)
   (u:mvlet ((rng seed (int::make-rng seed)))
-    (%value-3d :rng rng
-               :seed seed)))
+    (make-value-3d :rng rng
+                   :seed seed)))
 
 (defmethod int:sample ((sampler value-3d) x &optional (y 0d0) (z 0d0) (w 0d0))
   (declare (ignore w)
