@@ -10,16 +10,17 @@
 
 (in-package #:coherent-noise.generators.open-simplex-2d)
 
-(u:define-constant +stretch+ (/ (1- (/ (sqrt 3d0))) 2))
+(u:eval-always
+  (u:define-constant +stretch+ (/ (1- (/ (sqrt 3d0))) 2))
 
-(u:define-constant +squish+ (/ (1- (sqrt 3d0)) 2))
+  (u:define-constant +squish+ (/ (1- (sqrt 3d0)) 2))
 
-(u:define-constant +scale+ (/ 47d0))
+  (u:define-constant +scale+ (/ 47d0))
 
-(u:define-constant +gradients+
-    (let ((data '(5 2 2 5 -5 2 -2 5 5 -2 2 -5 -5 -2 -2 -5)))
-      (make-array 16 :element-type 'fixnum :initial-contents data))
-  :test #'equalp)
+  (u:define-constant +gradients+
+      (let ((data '(5 2 2 5 -5 2 -2 5 5 -2 2 -5 -5 -2 -2 -5)))
+        (make-array 16 :element-type 'fixnum :initial-contents data))
+    :test #'equalp))
 
 (defstruct (open-simplex-2d
             (:include int::sampler)

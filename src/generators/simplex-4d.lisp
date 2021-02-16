@@ -10,24 +10,25 @@
 
 (in-package #:coherent-noise.generators.simplex-4d)
 
-(u:define-constant +skew-factor+ (/ (1- (sqrt 5d0)) 4))
+(u:eval-always
+  (u:define-constant +skew-factor+ (/ (1- (sqrt 5d0)) 4))
 
-(u:define-constant +unskew-factor+ (/ (- 5 (sqrt 5d0)) 20))
+  (u:define-constant +unskew-factor+ (/ (- 5 (sqrt 5d0)) 20))
 
-(u:define-constant +scale+ 27d0)
+  (u:define-constant +scale+ 27d0)
 
-(u:define-constant +table+
-    (make-array 256
-                :element-type 'u:ub8
-                :initial-contents
-                '(0 1 2 3 0 1 3 2 0 0 0 0 0 2 3 1 0 0 0 0 0 0 0 0 0 0 0 0 1 2 3 0 0 2 1 3 0 0 0 0 0 3
-                  1 2 0 3 2 1 0 0 0 0 0 0 0 0 0 0 0 0 1 3 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-                  0 0 0 0 0 0 0 0 0 0 0 0 1 2 0 3 0 0 0 0 1 3 0 2 0 0 0 0 0 0 0 0 0 0 0 0 2 3 0 1 2 3
-                  1 0 1 0 2 3 1 0 3 2 0 0 0 0 0 0 0 0 0 0 0 0 2 0 3 1 0 0 0 0 2 1 3 0 0 0 0 0 0 0 0 0
-                  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 0 1 3 0 0 0 0 0 0 0 0 0 0 0 0 3 0
-                  1 2 3 0 2 1 0 0 0 0 3 1 2 0 2 1 0 3 0 0 0 0 0 0 0 0 0 0 0 0 3 1 0 2 0 0 0 0 3 2 0 1
-                  3 2 1 0))
-  :test #'equalp)
+  (u:define-constant +table+
+      (make-array 256
+                  :element-type 'u:ub8
+                  :initial-contents
+                  '(0 1 2 3 0 1 3 2 0 0 0 0 0 2 3 1 0 0 0 0 0 0 0 0 0 0 0 0 1 2 3 0 0 2 1 3 0 0 0 0 0 3
+                    1 2 0 3 2 1 0 0 0 0 0 0 0 0 0 0 0 0 1 3 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+                    0 0 0 0 0 0 0 0 0 0 0 0 1 2 0 3 0 0 0 0 1 3 0 2 0 0 0 0 0 0 0 0 0 0 0 0 2 3 0 1 2 3
+                    1 0 1 0 2 3 1 0 3 2 0 0 0 0 0 0 0 0 0 0 0 0 2 0 3 1 0 0 0 0 2 1 3 0 0 0 0 0 0 0 0 0
+                    0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 0 1 3 0 0 0 0 0 0 0 0 0 0 0 0 3 0
+                    1 2 3 0 2 1 0 0 0 0 3 1 2 0 2 1 0 3 0 0 0 0 0 0 0 0 0 0 0 0 3 1 0 2 0 0 0 0 3 2 0 1
+                    3 2 1 0))
+    :test #'equalp))
 
 (defstruct (simplex-4d
             (:include int::sampler)

@@ -25,6 +25,10 @@
     (next/fail nil :type (or lattice-point null))
     (next/success nil :type (or lattice-point null)))
 
+  (defmethod make-load-form ((object lattice-point) &optional environment)
+    (declare (ignore environment))
+    (make-load-form-saving-slots object))
+
   (defun make-lattice-point (xrv yrv zrv lattice)
     (let ((l1 (* lattice 0.5d0))
           (l2 (* lattice 1024)))

@@ -10,11 +10,12 @@
 
 (in-package #:coherent-noise.generators.simplex-2d)
 
-(u:define-constant +skew-factor+ (/ (1- (sqrt 3d0)) 2))
+(u:eval-always
+  (u:define-constant +skew-factor+ (/ (1- (sqrt 3d0)) 2))
 
-(u:define-constant +unskew-factor+ (/ (- 3 (sqrt 3d0)) 6))
+  (u:define-constant +unskew-factor+ (/ (- 3 (sqrt 3d0)) 6))
 
-(u:define-constant +scale+ 45.23065d0)
+  (u:define-constant +scale+ 45.23065d0))
 
 (defstruct (simplex-2d
             (:include int::sampler)

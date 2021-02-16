@@ -34,6 +34,9 @@
             (:copier nil))
   (rng nil :type (or rng:generator null)))
 
+(u:define-printer (sampler stream :type nil :identity t)
+  (format stream "~a" (class-name (class-of sampler))))
+
 (defmacro lookup (table &body (first . rest))
   (if rest
       `(aref ,table (logand (+ ,first (lookup ,table ,@rest)) 255))

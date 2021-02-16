@@ -25,6 +25,10 @@
     (dz 0d0 :type u:f64)
     (dw 0d0 :type u:f64))
 
+  (defmethod make-load-form ((object lattice-point) &optional environment)
+    (declare (ignore environment))
+    (make-load-form-saving-slots object))
+
   (defun make-lattice-point (xsv ysv zsv wsv)
     (let ((ssv (* (+ xsv ysv zsv wsv) -0.138196601125011d0)))
       (%make-lattice-point :xsv xsv
