@@ -18,9 +18,9 @@
           (setf (aref data (+ x (* y width))) (u:clamp (floor (* sample 255)) 0 255)))))
     png))
 
-(defun find-image (name)
+(defun find-file (name)
   (let ((path (make-pathname :defaults (string-downcase (symbol-name name))
-                             :directory '(:relative "test/data")
+                             :directory '(:relative "test" "data")
                              :type "png")))
     (asdf:system-relative-pathname :coherent-noise.test path)))
 
@@ -29,12 +29,12 @@
     (pngload:data (pngload:load-file file :flatten t))))
 
 (defun write-file (sampler name)
-  (let ((file (find-image name))
+  (let ((file (find-file name))
         (png (make-image sampler)))
     (zpng:write-png png file)))
 
 (defun compare (name sampler)
-  (u:when-let ((file (read-file (find-image name)))
+  (u:when-let ((file (read-file (find-file name)))
                (test-data (zpng:image-data (make-image sampler))))
     (values (equalp file test-data)
             t)))
