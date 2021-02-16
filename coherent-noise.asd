@@ -64,7 +64,7 @@
      (:file "multiply")
      (:file "power")
      (:file "ridged")
-     (:file "ridged-multifractal")
+     (:file "ridged-multi")
      (:file "rotate")
      (:file "scale")
      (:file "select")

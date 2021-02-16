@@ -70,7 +70,7 @@
    #:min
    #:power
    #:ridged
-   #:ridged-multifractal
+   #:ridged-multi
    #:rotate
    #:scale
    #:select

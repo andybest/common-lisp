@@ -195,7 +195,7 @@
   (finalize))
 
 (subtest "modifiers"
-  (plan 20)
+  (plan 23)
   (is-values (compare 'modify-abs
                       (cn:abs (cn:uniform-scale (cn:perlin-3d :seed "default") 10)))
              '(t t)
@@ -210,10 +210,22 @@
                                 (cn:uniform-scale (cn:open-simplex-3d :seed "default") 10)))
              '(t t)
              "blend")
+  (is-values (compare 'modify-blend
+                      (cn:cache
+                       (cn:blend (cn:uniform-scale (cn:perlin-3d :seed "default") 10)
+                                 (cn:uniform-scale (cn:simplex-2d :seed "default") 8)
+                                 (cn:uniform-scale (cn:open-simplex-3d :seed "default") 10))))
+             '(t t)
+             "cache")
   (is-values (compare 'modify-clamp
                       (cn:clamp (cn:uniform-scale (cn:perlin-3d :seed "default") 10) -0.2 0.4))
              '(t t)
              "clamp")
+  (is-values (compare 'modify-curve
+                      (cn:curve (cn:abs (cn:uniform-scale (cn:perlin-3d :seed "default") 50))
+                                :points '((0.1 . 0.43) (0.4 . 0.25) (0.6 . 0.4) (0.65 . 0.8))))
+             '(t t)
+             "curve")
   (is-values (compare 'modify-displace
                       (cn:displace (cn:uniform-scale (cn:perlin-3d :seed "default") 10)
                                    :x (cn:uniform-scale (cn:simplex-3d :seed "default") 8)
@@ -228,7 +240,7 @@
   (is-values (compare 'modify-fractal
                       (cn:fractal (cn:uniform-scale (cn:perlin-3d :seed "default") 10)))
              '(t t)
-             "fract")
+             "fractal")
   (is-values (compare 'modify-invert
                       (cn:invert (cn:uniform-scale (cn:perlin-3d :seed "default") 10)))
              '(t t)
@@ -252,10 +264,10 @@
                       (cn:ridged (cn:uniform-scale (cn:perlin-3d :seed "default") 10)))
              '(t t)
              "ridged")
-  (is-values (compare 'modify-ridged-multifractal
-                      (cn:ridged-multifractal (cn:uniform-scale (cn:perlin-3d :seed "default") 10)))
+  (is-values (compare 'modify-ridged-multi
+                      (cn:ridged-multi (cn:uniform-scale (cn:perlin-3d :seed "default") 10)))
              '(t t)
-             "ridged-multifractal")
+             "ridged-multi")
   (is-values (compare 'modify-rotate
                       (cn:rotate (cn:uniform-scale (cn:simplex-3d :seed "default") 10) :z (/ pi 4)))
              '(t t)
@@ -280,6 +292,12 @@
                        :bias 0.1))
              '(t t)
              "strengthen")
+  (is-values (compare 'modify-terrace
+                      (cn:terrace (cn:uniform-scale (cn:perlin-3d :seed "a") 50)
+                                  :invert-p t
+                                  :points '(0.04 0.28 0.4 0.6 0.7 1)))
+             '(t t)
+             "terrace")
   (is-values (compare 'modify-translate
                       (cn:translate (cn:uniform-scale (cn:perlin-3d :seed "default") 10)
                                     :x 5
