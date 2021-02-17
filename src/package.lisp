@@ -85,3 +85,8 @@
   (:reexport #:coherent-noise.modifiers)
   (:mix-reexport #:coherent-noise.generators
                  #:coherent-noise.internal))
+
+(defpackage #:coherent-noise.user
+  (:local-nicknames
+   (#:cn #:coherent-noise))
+  (:use #:cl))
