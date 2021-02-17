@@ -188,7 +188,7 @@
             (:predicate nil)
             (:copier nil))
   (seed 0 :type u:ub32)
-  (distance-method :euclidean :type (member :euclidean :euclidean-squared :manhattan :hybrid))
+  (distance-method :euclidean :type (member :euclidean :manhattan))
   (output-type :min :type (member :value :min :max :+ :- :* :/))
   (jitter 1d0 :type u:f64))
 
@@ -199,32 +199,6 @@
                       :distance-method distance-method
                       :output-type output-type
                       :jitter jitter)))
-
-(defmacro with-distance (distance-method)
-  `(dotimes (xi 3)
-     (let ((yp yp-base))
-       (dotimes (yi 3)
-         (let ((zp zp-base))
-           (dotimes (zi 3)
-             (let* ((hash (in-range (* (logxor seed xp yp zp) 668265261)))
-                    (index (logand hash 1023))
-                    (vx (+ (- (+ xr xi) x) (* (aref +random+ index) jitter)))
-                    (vy (+ (- (+ yr yi) y) (* (aref +random+ (logior index 1)) jitter)))
-                    (vz (+ (- (+ zr zi) z) (* (aref +random+ (logior index 2)) jitter)))
-                    (d ,(ecase distance-method
-                          (:euclidean
-                           `(+ (expt vx 2) (expt vy 2) (expt vz 2)))
-                          (:manhattan
-                           `(+ (abs vx) (abs vy) (abs vz)))
-                          (:hybrid
-                           `(+ (abs vx) (abs vy) (abs vz) (expt vx 2) (expt vy 2) (expt vz 2))))))
-               (setf max (max (min max d) min)
-                     zp (in-range (+ zp int::+prime-z+)))
-               (when (< d min)
-                 (setf min d
-                       closest-hash hash))))
-           (setf yp (in-range (+ yp int::+prime-y+)))))
-       (setf xp (in-range (+ xp int::+prime-x+))))))
 
 (defmethod int:sample ((sampler cellular-3d) x &optional (y 0d0) (z 0d0) (w 0d0))
   (declare (ignore w)
@@ -247,13 +221,30 @@
            (yp-base (in-range (* yr int::+prime-y+)))
            (zp-base (in-range (* zr int::+prime-z+))))
       (declare (u:f64 min max))
-      (ecase distance-method
-        ((:euclidean :euclidean-squared)
-         (with-distance :euclidean))
-        (:manhattan
-         (with-distance :manhattan))
-        (:hybrid
-         (with-distance :hybrid)))
+      (dotimes (xi 3)
+        (let ((xri (- (+ xr xi) x))
+              (yp yp-base))
+          (dotimes (yi 3)
+            (let ((yri (- (+ yr yi) y))
+                  (zp zp-base))
+              (dotimes (zi 3)
+                (let* ((hash (in-range (* (logxor seed xp yp zp) 668265261)))
+                       (index (logand hash 1023))
+                       (vx (+ xri (* (aref +random+ index) jitter)))
+                       (vy (+ yri (* (aref +random+ (logior index 1)) jitter)))
+                       (vz (+ (- (+ zr zi) z) (* (aref +random+ (logior index 2)) jitter)))
+                       (d (ecase distance-method
+                            (:euclidean
+                             (+ (* vx vx) (* vy vy) (* vz vz)))
+                            (:manhattan
+                             (+ (abs vx) (abs vy) (abs vz))))))
+                  (setf max (max (min max d) min)
+                        zp (in-range (+ zp int::+prime-z+)))
+                  (when (< d min)
+                    (setf min d
+                          closest-hash hash))))
+              (setf yp (in-range (+ yp int::+prime-y+)))))
+          (setf xp (in-range (+ xp int::+prime-x+)))))
       (when (and (eq distance-method :euclidean)
                  (not (eq output-type :value)))
         (setf min (sqrt min))
