@@ -44,7 +44,10 @@
      (:file "cylinders-3d")
      (:file "spheres-3d")
      (:file "checker-2d")
-     (:file "constant")))
+     (:file "constant")
+     (:file "fbm-2d")
+     (:file "fbm-3d")
+     (:file "fbm-4d")))
    (:module "modifiers"
     :components
     ((:file "abs")

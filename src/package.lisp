@@ -47,7 +47,10 @@
    #:cylinders-3d
    #:spheres-3d
    #:checker-2d
-   #:constant))
+   #:constant
+   #:fbm-2d
+   #:fbm-3d
+   #:fbm-4d))
 
 (defpackage #:coherent-noise.modifiers
   (:shadow #:+ #:- #:* #:/ #:abs #:expt #:max #:min)
