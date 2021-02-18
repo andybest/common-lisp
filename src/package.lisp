@@ -67,7 +67,7 @@
    #:curve
    #:displace
    #:expt
-   #:fractal
+   #:fbm
    #:invert
    #:max
    #:min

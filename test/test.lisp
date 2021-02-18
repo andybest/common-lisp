@@ -237,10 +237,10 @@
                       (cn:expt (cn:uniform-scale (cn:perlin-3d :seed "default") 10) 2))
              '(t t)
              "expt")
-  (is-values (compare 'modify-fractal
-                      (cn:fractal (cn:uniform-scale (cn:perlin-3d :seed "default") 10)))
+  (is-values (compare 'modify-fbm
+                      (cn:fbm (cn:uniform-scale (cn:perlin-3d :seed "default") 10)))
              '(t t)
-             "fractal")
+             "fbm")
   (is-values (compare 'modify-invert
                       (cn:invert (cn:uniform-scale (cn:perlin-3d :seed "default") 10)))
              '(t t)

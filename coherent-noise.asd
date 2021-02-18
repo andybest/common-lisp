@@ -60,7 +60,7 @@
      (:file "displace")
      (:file "divide")
      (:file "expt")
-     (:file "fractal")
+     (:file "fbm")
      (:file "invert")
      (:file "max")
      (:file "min")

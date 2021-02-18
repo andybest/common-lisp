@@ -40,9 +40,9 @@
   (let ((rng (int::sampler-rng source)))
     (make-turbulence :rng (int::sampler-rng source)
                      :source source
-                     :displacement-source (mod:fractal displacement-source
-                                                       :octaves roughness
-                                                       :frequency (float frequency 1f0))
+                     :displacement-source (mod:fbm displacement-source
+                                                   :octaves roughness
+                                                   :frequency (float frequency 1f0))
                      :power (float power 1f0)
                      :x1 (rng:float rng 0.0 1.0)
                      :x2 (rng:float rng 0.0 1.0)
