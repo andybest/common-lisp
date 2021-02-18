@@ -19,11 +19,11 @@
   (scale 1.0 :type u:f32)
   (octaves 4 :type (integer 1 32))
   (frequency 1.0 :type u:f32)
-  (lacunarity 2.0 :type u:f32)
+  (lacunarity int::+default-lacunarity+ :type u:f32)
   (persistence 0.5 :type u:f32))
 
 (defun gen:billow-4d (&key seed (generator #'gen:perlin-3d) (octaves 4) (frequency 1.0)
-                        (lacunarity 2.0) (persistence 0.5))
+                        (lacunarity int::+default-lacunarity+) (persistence 0.5))
   (let ((rng (int::make-rng seed)))
     (make-billow-4d :rng rng
                     :sources (int::make-fractal-sources generator rng octaves)

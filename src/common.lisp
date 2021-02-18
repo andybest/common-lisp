@@ -70,13 +70,6 @@
            :input-argument (symbol-name input-argument)
            :input-value input-value)))
 
-(defun make-fractal-sources (generator rng count)
-  (let ((sources (make-array count)))
-    (dotimes (i count)
-      (let ((rng (rng:make-generator rng)))
-        (setf (aref sources i) (funcall generator :seed (rng:get-seed rng)))))
-    sources))
-
 (defgeneric sample (sampler x &optional y z w))
 
 (defun write-image (out-file sampler &key (width 1024) (height 1024) (r 1.0) (g 1.0) (b 1.0))

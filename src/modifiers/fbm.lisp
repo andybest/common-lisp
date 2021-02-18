@@ -18,10 +18,11 @@
   (scale 1.0 :type u:f32)
   (octaves 4 :type (integer 1 32))
   (frequency 1.0 :type u:f32)
-  (lacunarity 2.0 :type u:f32)
+  (lacunarity int::+default-lacunarity+ :type u:f32)
   (persistence 0.5 :type u:f32))
 
-(defun mod:fbm (source &key (octaves 4) (frequency 1.0) (lacunarity 2.0) (persistence 0.5))
+(defun mod:fbm (source &key (octaves 4) (frequency 1.0) (lacunarity int::+default-lacunarity+)
+                         (persistence 0.5))
   (make-fbm :rng (int::sampler-rng source)
             :source source
             :scale (loop :for i :below octaves :sum (expt persistence i))

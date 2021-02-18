@@ -18,6 +18,7 @@
   ((:file "package")
    (:file "conditions")
    (:file "common")
+   (:file "fractal")
    (:module "generators"
     :components
     ((:file "perlin-1d")
