@@ -16,14 +16,18 @@
             (:predicate nil)
             (:copier nil))
   (source nil :type int:sampler)
-  (power 1.0 :type u:f32))
+  (power 1.0 :type u:f32)
+  (symmetric-p nil :type boolean))
 
-(defun mod:expt (source power)
+(defun mod:expt (source power &key symmetric-p)
   (make-expt :rng (int::sampler-rng source)
              :source source
-             :power (float power 1f0)))
+             :power (float power 1f0)
+             :symmetric-p symmetric-p))
 
 (defmethod int:sample ((sampler expt) x &optional (y 0d0) (z 0d0) (w 0d0))
   (declare (optimize speed))
   (let ((sample (the u:f32 (int:sample (source sampler) x y z w))))
-    (1- (* (cl:expt (abs (* (1+ sample) 0.5)) (power sampler)) 2))))
+    (if (symmetric-p sampler)
+        (* (signum sample) (cl:expt (abs sample) (power sampler)))
+        (1- (* (cl:expt (abs (* (1+ sample) 0.5)) (power sampler)) 2)))))
