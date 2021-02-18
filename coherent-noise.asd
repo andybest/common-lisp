@@ -51,7 +51,10 @@
      (:file "fbm-4d")
      (:file "billow-2d")
      (:file "billow-3d")
-     (:file "billow-4d")))
+     (:file "billow-4d")
+     (:file "multifractal-2d")
+     (:file "multifractal-3d")
+     (:file "multifractal-4d")))
    (:module "modifiers"
     :components
     ((:file "abs")

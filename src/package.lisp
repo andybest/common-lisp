@@ -53,7 +53,10 @@
    #:fbm-4d
    #:billow-2d
    #:billow-3d
-   #:billow-4d))
+   #:billow-4d
+   #:multifractal-2d
+   #:multifractal-3d
+   #:multifractal-4d))
 
 (defpackage #:coherent-noise.modifiers
   (:shadow #:+ #:- #:* #:/ #:abs #:expt #:max #:min)
