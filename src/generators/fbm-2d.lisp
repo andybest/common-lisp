@@ -27,7 +27,7 @@
   (let ((rng (int::make-rng seed)))
     (make-fbm-2d :rng rng
                  :sources (int::make-fractal-sources generator rng octaves)
-                 :scale (loop :for i :below octaves :sum (expt persistence i))
+                 :scale (int::calculate-fractal-scaling-factor octaves persistence)
                  :octaves octaves
                  :frequency (float frequency 1f0)
                  :lacunarity (float lacunarity 1f0)

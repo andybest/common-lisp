@@ -8,3 +8,7 @@
       (let ((rng (rng:make-generator rng)))
         (setf (aref sources i) (funcall generator :seed (rng:get-seed rng)))))
     sources))
+
+(defun calculate-fractal-scaling-factor (octaves persistence)
+  (loop :for i :below octaves
+        :sum (expt persistence i)))
