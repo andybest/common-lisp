@@ -188,7 +188,8 @@
             (:predicate nil)
             (:copier nil))
   (seed 0 :type u:ub32)
-  (distance-method :euclidean :type (member :euclidean :manhattan))
+  (distance-method :euclidean
+   :type (member :manhattan :euclidean :euclidean-squared :chebyshev :minkowski4))
   (output-type :min :type (member :value :min :max :+ :- :* :/))
   (jitter 1d0 :type u:f64))
 
@@ -234,10 +235,20 @@
                        (vy (+ yri (* (aref +random+ (logior index 1)) jitter)))
                        (vz (+ (- (+ zr zi) z) (* (aref +random+ (logior index 2)) jitter)))
                        (d (ecase distance-method
-                            (:euclidean
-                             (+ (* vx vx) (* vy vy) (* vz vz)))
                             (:manhattan
-                             (+ (abs vx) (abs vy) (abs vz))))))
+                             (+ (abs vx) (abs vy) (abs vz)))
+                            (:euclidean
+                             (sqrt (+ (* vx vx) (* vy vy) (* vz vz))))
+                            (:euclidean-squared
+                             (+ (* vx vx) (* vy vy) (* vz vz)))
+                            (:chebyshev
+                             (max (abs vx) (abs vy)))
+                            (:minkowski4
+                             (the (double-float 0d0)
+                                  (expt (the (double-float 0d0)
+                                             (+ (* vx vx vx vx)
+                                                (* vy vy vy vy)))
+                                        0.25d0))))))
                   (setf max (max (min max d) min)
                         zp (in-range (+ zp int::+prime-z+)))
                   (when (< d min)
@@ -245,11 +256,6 @@
                           closest-hash hash))))
               (setf yp (in-range (+ yp int::+prime-y+)))))
           (setf xp (in-range (+ xp int::+prime-x+)))))
-      (when (and (eq distance-method :euclidean)
-                 (not (eq output-type :value)))
-        (setf min (sqrt min))
-        (unless (eq output-type :min)
-          (setf max (sqrt (abs max)))))
       ;; TODO: The domain remapping here is kind of hacky and not exact, due to the algorithm. It
       ;; may be best to rewrite cellular noise at some point or use a solver to figure out the
       ;; actual domain.
