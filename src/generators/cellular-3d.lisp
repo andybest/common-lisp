@@ -190,7 +190,7 @@
   (seed 0 :type u:ub32)
   (distance-method :euclidean
    :type (member :manhattan :euclidean :euclidean-squared :chebyshev :minkowski4))
-  (output-type :min :type (member :value :min :max :+ :- :* :/))
+  (output-type :min :type (member :value :f1 :f2 :f1+f2 :f2-f1 :f1*f2 :f1/f2))
   (jitter 1d0 :type u:f64))
 
 (defun gen:cellular-3d (&key seed (distance-method :euclidean) (output-type :min) (jitter 1d0))
@@ -261,9 +261,9 @@
       ;; actual domain.
       (ecase output-type
         (:value (float (1- (* closest-hash (/ 2147483648.0))) 1f0))
-        (:min (float (1- (* min 2)) 1f0))
-        (:max (float (1- (* max 2)) 1f0))
-        (:+ (float (1- (+ min max)) 1f0))
-        (:- (float (1- (* (- max min) 2)) 1f0))
-        (:* (float (1- (* min max 2)) 1f0))
-        (:/ (float (1- (/ min max 0.5)) 1f0))))))
+        (:f1 (float (1- (* min 2)) 1f0))
+        (:f2 (float (1- (* max 2)) 1f0))
+        (:f1+f2 (float (1- (+ min max)) 1f0))
+        (:f2-f1 (float (1- (* (- max min) 2)) 1f0))
+        (:f1*f2 (float (1- (* min max 2)) 1f0))
+        (:f1/f2 (float (1- (/ min max 0.5)) 1f0))))))
