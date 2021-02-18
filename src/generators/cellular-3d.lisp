@@ -190,10 +190,10 @@
   (seed 0 :type u:ub32)
   (distance-method :euclidean
    :type (member :manhattan :euclidean :euclidean-squared :chebyshev :minkowski4))
-  (output-type :min :type (member :value :f1 :f2 :f1+f2 :f2-f1 :f1*f2 :f1/f2))
+  (output-type :f1 :type (member :value :f1 :f2 :f1+f2 :f2-f1 :f1*f2 :f1/f2))
   (jitter 1d0 :type u:f64))
 
-(defun gen:cellular-3d (&key seed (distance-method :euclidean) (output-type :min) (jitter 1d0))
+(defun gen:cellular-3d (&key seed (distance-method :euclidean) (output-type :f1) (jitter 1d0))
   (u:mvlet ((rng seed (int::make-rng seed)))
     (make-cellular-3d :rng rng
                       :seed seed
@@ -256,14 +256,11 @@
                           closest-hash hash))))
               (setf yp (in-range (+ yp int::+prime-y+)))))
           (setf xp (in-range (+ xp int::+prime-x+)))))
-      ;; TODO: The domain remapping here is kind of hacky and not exact, due to the algorithm. It
-      ;; may be best to rewrite cellular noise at some point or use a solver to figure out the
-      ;; actual domain.
       (ecase output-type
         (:value (float (1- (* closest-hash (/ 2147483648.0))) 1f0))
-        (:f1 (float (1- (* min 2)) 1f0))
-        (:f2 (float (1- (* max 2)) 1f0))
-        (:f1+f2 (float (1- (+ min max)) 1f0))
-        (:f2-f1 (float (1- (* (- max min) 2)) 1f0))
-        (:f1*f2 (float (1- (* min max 2)) 1f0))
-        (:f1/f2 (float (1- (/ min max 0.5)) 1f0))))))
+        (:f1 (float (1- min) 1f0))
+        (:f2 (float (1- max) 1f0))
+        (:f1+f2 (float (1- (* (+ min max) 0.5)) 1f0))
+        (:f2-f1 (float (- max min 1) 1f0))
+        (:f1*f2 (float (1- (* min max 0.5)) 1f0))
+        (:f1/f2 (float (1- (/ min max)) 1f0))))))
