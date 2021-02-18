@@ -67,5 +67,5 @@
                  (noise (int::lookup table (1+ zi) b) (1- xf) yf (1- zf)))
          (u:lerp u
                  (noise (int::lookup table (1+ zi) (1+ a)) xf (1- yf) (1- zf))
-                 (noise (int::lookup table zi (1+ b)) (1- xf) (1- yf) (1- zf)))))
+                 (noise (int::lookup table (1+ zi) (1+ b)) (1- xf) (1- yf) (1- zf)))))
        1f0))))

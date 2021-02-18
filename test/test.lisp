@@ -15,11 +15,11 @@
   (is-values (compare 'generate-perlin-3d
                       (cn:uniform-scale (cn:perlin-3d :seed "default") 10))
              '(t t)
-             "perlin-2d")
+             "perlin-3d")
   (is-values (compare 'generate-perlin-4d
                       (cn:uniform-scale (cn:perlin-4d :seed "default") 10))
              '(t t)
-             "perlin-2d")
+             "perlin-4d")
   (is-values (compare 'generate-simplex-1d
                       (cn:uniform-scale (cn:simplex-1d :seed "default") 10))
              '(t t)
@@ -293,7 +293,7 @@
              '(t t)
              "strengthen")
   (is-values (compare 'modify-terrace
-                      (cn:terrace (cn:uniform-scale (cn:perlin-3d :seed "a") 50)
+                      (cn:terrace (cn:uniform-scale (cn:perlin-3d :seed "default") 50)
                                   :invert-p t
                                   :points '(0.04 0.28 0.4 0.6 0.7 1)))
              '(t t)
