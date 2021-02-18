@@ -55,44 +55,28 @@
                (fs (int::quintic-curve xf))
                (ft (int::quintic-curve yf))
                (fr (int::quintic-curve zf))
-               (fq (int::quintic-curve wf)))
-      (float
-       (u:lerp
-        fs
-        (u:lerp
-         ft
-         (u:lerp
-          fr
-          (u:lerp fq
-                  (noise (int::lookup table xi yi zi wi) xf yf zf wf)
-                  (noise (int::lookup table xi yi zi wi1) xf yf zf wf-1))
-          (u:lerp fq
-                  (noise (int::lookup table xi yi zi1 wi) xf yf zf-1 wf)
-                  (noise (int::lookup table xi yi zi1 wi1) xf yf zf-1 wf-1)))
-         (u:lerp
-          fr
-          (u:lerp fq
-                  (noise (int::lookup table xi yi1 zi wi) xf yf-1 zf wf)
-                  (noise (int::lookup table xi yi1 zi wi1) xf yf-1 zf wf-1))
-          (u:lerp fq
-                  (noise (int::lookup table xi yi1 zi1 wi) xf yf-1 zf-1 wf)
-                  (noise (int::lookup table xi yi1 zi1 wi1) xf yf-1 zf-1 wf-1))))
-        (u:lerp
-         ft
-         (u:lerp
-          fr
-          (u:lerp fq
-                  (noise (int::lookup table xi1 yi zi wi) xf-1 yf zf wf)
-                  (noise (int::lookup table xi1 yi zi wi1) xf-1 yf zf wf-1))
-          (u:lerp fq
-                  (noise (int::lookup table xi1 yi zi1 wi) xf-1 yf zf-1 wf)
-                  (noise (int::lookup table xi1 yi zi1 wi1) xf-1 yf zf-1 wf-1)))
-         (u:lerp
-          fr
-          (u:lerp fq
-                  (noise (int::lookup table xi1 yi1 zi wi) xf-1 yf-1 zf wf)
-                  (noise (int::lookup table xi1 yi1 zi wi1) xf-1 yf-1 zf wf-1))
-          (u:lerp fq
-                  (noise (int::lookup table xi1 yi1 zi1 wi) xf-1 yf-1 zf-1 wf)
-                  (noise (int::lookup table xi1 yi1 zi1 wi1) xf-1 yf-1 zf-1 wf-1)))))
-       1f0))))
+               (fq (int::quintic-curve wf))
+               (r1 (noise (int::lookup table xi yi zi wi) xf yf zf wf))
+               (r2 (noise (int::lookup table xi yi zi wi1) xf yf zf wf-1))
+               (r3 (noise (int::lookup table xi yi zi1 wi) xf yf zf-1 wf))
+               (r4 (noise (int::lookup table xi yi zi1 wi1) xf yf zf-1 wf-1))
+               (r5 (noise (int::lookup table xi yi1 zi wi) xf yf-1 zf wf))
+               (r6 (noise (int::lookup table xi yi1 zi wi1) xf yf-1 zf wf-1))
+               (r7 (noise (int::lookup table xi yi1 zi1 wi) xf yf-1 zf-1 wf))
+               (r8 (noise (int::lookup table xi yi1 zi1 wi1) xf yf-1 zf-1 wf-1))
+               (r9 (noise (int::lookup table xi1 yi zi wi) xf-1 yf zf wf))
+               (r10 (noise (int::lookup table xi1 yi zi wi1) xf-1 yf zf wf-1))
+               (r11 (noise (int::lookup table xi1 yi zi1 wi) xf-1 yf zf-1 wf))
+               (r12 (noise (int::lookup table xi1 yi zi1 wi1) xf-1 yf zf-1 wf-1))
+               (r13 (noise (int::lookup table xi1 yi1 zi wi) xf-1 yf-1 zf wf))
+               (r14 (noise (int::lookup table xi1 yi1 zi wi1) xf-1 yf-1 zf wf-1))
+               (r15 (noise (int::lookup table xi1 yi1 zi1 wi) xf-1 yf-1 zf-1 wf))
+               (r16 (noise (int::lookup table xi1 yi1 zi1 wi1) xf-1 yf-1 zf-1 wf-1)))
+      (float (u:lerp fs
+                     (u:lerp ft
+                             (u:lerp fr (u:lerp fq r1 r2) (u:lerp fq r3 r4))
+                             (u:lerp fr (u:lerp fq r5 r6) (u:lerp fq r7 r8)))
+                     (u:lerp ft
+                             (u:lerp fr (u:lerp fq r9 r10) (u:lerp fq r11 r12))
+                             (u:lerp fr (u:lerp fq r13 r14) (u:lerp fq r15 r16))))
+             1f0))))

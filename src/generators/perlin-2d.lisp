@@ -41,13 +41,9 @@
                (yi (logand yi 255))
                (u (int::quintic-curve xf))
                (a (+ (aref table xi) yi))
-               (b (+ (aref table (1+ xi)) yi)))
-      (float
-       (u:lerp (int::quintic-curve yf)
-               (u:lerp u
-                       (noise (int::lookup table (aref table a)) xf yf)
-                       (noise (int::lookup table (aref table b)) (1- xf) yf))
-               (u:lerp u
-                       (noise (int::lookup table (aref table (1+ a))) xf (1- yf))
-                       (noise (int::lookup table (aref table (1+ b))) (1- xf) (1- yf))))
-       1f0))))
+               (b (+ (aref table (1+ xi)) yi))
+               (r1 (noise (int::lookup table (aref table a)) xf yf))
+               (r2 (noise (int::lookup table (aref table b)) (1- xf) yf))
+               (r3 (noise (int::lookup table (aref table (1+ a))) xf (1- yf)))
+               (r4 (noise (int::lookup table (aref table (1+ b))) (1- xf) (1- yf))))
+      (float (u:lerp (int::quintic-curve yf) (u:lerp u r1 r2) (u:lerp u r3 r4)) 1f0))))

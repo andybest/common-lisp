@@ -48,24 +48,16 @@
                (v (int::quintic-curve yf))
                (w (int::quintic-curve zf))
                (a (+ (aref table xi) yi))
-               (b (+ (aref table (1+ xi)) yi)))
-      (float
-       (u:lerp
-        w
-        (u:lerp
-         v
-         (u:lerp u
-                 (noise (int::lookup table zi a) xf yf zf)
-                 (noise (int::lookup table zi b) (1- xf) yf zf))
-         (u:lerp u
-                 (noise (int::lookup table zi (1+ a)) xf (1- yf) zf)
-                 (noise (int::lookup table zi (1+ b)) (1- xf) (1- yf) zf)))
-        (u:lerp
-         v
-         (u:lerp u
-                 (noise (int::lookup table (1+ zi) a) xf yf (1- zf))
-                 (noise (int::lookup table (1+ zi) b) (1- xf) yf (1- zf)))
-         (u:lerp u
-                 (noise (int::lookup table (1+ zi) (1+ a)) xf (1- yf) (1- zf))
-                 (noise (int::lookup table (1+ zi) (1+ b)) (1- xf) (1- yf) (1- zf)))))
-       1f0))))
+               (b (+ (aref table (1+ xi)) yi))
+               (r1 (noise (int::lookup table zi a) xf yf zf))
+               (r2 (noise (int::lookup table zi b) (1- xf) yf zf))
+               (r3 (noise (int::lookup table zi (1+ a)) xf (1- yf) zf))
+               (r4 (noise (int::lookup table zi (1+ b)) (1- xf) (1- yf) zf))
+               (r5 (noise (int::lookup table (1+ zi) a) xf yf (1- zf)))
+               (r6 (noise (int::lookup table (1+ zi) b) (1- xf) yf (1- zf)))
+               (r7 (noise (int::lookup table (1+ zi) (1+ a)) xf (1- yf) (1- zf)))
+               (r8 (noise (int::lookup table (1+ zi) (1+ b)) (1- xf) (1- yf) (1- zf))))
+      (float (u:lerp w
+                     (u:lerp v (u:lerp u r1 r2) (u:lerp u r3 r4))
+                     (u:lerp v (u:lerp u r5 r6) (u:lerp u r7 r8)))
+             1f0))))
