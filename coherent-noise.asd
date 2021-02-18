@@ -47,7 +47,10 @@
      (:file "constant")
      (:file "fbm-2d")
      (:file "fbm-3d")
-     (:file "fbm-4d")))
+     (:file "fbm-4d")
+     (:file "billow-2d")
+     (:file "billow-3d")
+     (:file "billow-4d")))
    (:module "modifiers"
     :components
     ((:file "abs")

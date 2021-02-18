@@ -50,7 +50,10 @@
    #:constant
    #:fbm-2d
    #:fbm-3d
-   #:fbm-4d))
+   #:fbm-4d
+   #:billow-2d
+   #:billow-3d
+   #:billow-4d))
 
 (defpackage #:coherent-noise.modifiers
   (:shadow #:+ #:- #:* #:/ #:abs #:expt #:max #:min)
