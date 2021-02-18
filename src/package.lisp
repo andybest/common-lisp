@@ -75,7 +75,6 @@
    #:max
    #:min
    #:power
-   #:ridged
    #:ridged-multi
    #:rotate
    #:scale

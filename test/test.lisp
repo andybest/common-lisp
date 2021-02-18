@@ -195,7 +195,7 @@
   (finalize))
 
 (subtest "modifiers"
-  (plan 23)
+  (plan 22)
   (is-values (compare 'modify-abs
                       (cn:abs (cn:uniform-scale (cn:perlin-3d :seed "default") 10)))
              '(t t)
@@ -260,10 +260,6 @@
                                 (cn:uniform-scale (cn:simplex-3d :seed "default") 10)))
              '(t t)
              "power")
-  (is-values (compare 'modify-ridged
-                      (cn:ridged (cn:uniform-scale (cn:perlin-3d :seed "default") 10)))
-             '(t t)
-             "ridged")
   (is-values (compare 'modify-ridged-multi
                       (cn:ridged-multi (cn:uniform-scale (cn:perlin-3d :seed "default") 10)))
              '(t t)

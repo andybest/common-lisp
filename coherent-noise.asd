@@ -69,7 +69,6 @@
      (:file "min")
      (:file "multiply")
      (:file "power")
-     (:file "ridged")
      (:file "ridged-multi")
      (:file "rotate")
      (:file "scale")
