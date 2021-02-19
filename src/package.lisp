@@ -89,10 +89,12 @@
    #:uniform-scale))
 
 (uiop:define-package #:coherent-noise
+  (:import-from #:arrow-macros #:->)
   (:mix #:coherent-noise.modifiers #:cl)
   (:reexport #:coherent-noise.modifiers)
   (:mix-reexport #:coherent-noise.generators
-                 #:coherent-noise.internal))
+                 #:coherent-noise.internal)
+  (:export #:->))
 
 (defpackage #:coherent-noise.user
   (:local-nicknames

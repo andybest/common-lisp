@@ -5,7 +5,8 @@
   :homepage "https://mfiano.net/projects/coherent-noise"
   :source-control (:git "https://git.mfiano.net/mfiano/coherent-noise.git")
   :encoding :utf-8
-  :depends-on (#:cl-cpus
+  :depends-on (#:arrow-macros
+               #:cl-cpus
                #:lparallel
                #:golden-utils
                #:seedable-rng
