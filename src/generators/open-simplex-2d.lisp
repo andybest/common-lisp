@@ -15,7 +15,7 @@
 
   (u:define-constant +squish+ (/ (1- (sqrt 3d0)) 2))
 
-  (u:define-constant +scale+ (/ 47d0))
+  (u:define-constant +scale+ (/ 40.7d0))
 
   (u:define-constant +gradients+
       (let ((data '(5 2 2 5 -5 2 -2 5 5 -2 2 -5 -5 -2 -2 -5)))
