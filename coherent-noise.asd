@@ -55,7 +55,13 @@
      (:file "billow-4d")
      (:file "multifractal-2d")
      (:file "multifractal-3d")
-     (:file "multifractal-4d")))
+     (:file "multifractal-4d")
+     (:file "hybrid-multifractal-2d")
+     (:file "hybrid-multifractal-3d")
+     (:file "hybrid-multifractal-4d")
+     (:file "ridged-multifractal-2d")
+     (:file "ridged-multifractal-3d")
+     (:file "ridged-multifractal-4d")))
    (:module "modifiers"
     :components
     ((:file "abs")

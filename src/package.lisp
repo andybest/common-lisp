@@ -56,7 +56,13 @@
    #:billow-4d
    #:multifractal-2d
    #:multifractal-3d
-   #:multifractal-4d))
+   #:multifractal-4d
+   #:hybrid-multifractal-2d
+   #:hybrid-multifractal-3d
+   #:hybrid-multifractal-4d
+   #:ridged-multifractal-2d
+   #:ridged-multifractal-3d
+   #:ridged-multifractal-4d))
 
 (defpackage #:coherent-noise.modifiers
   (:shadow #:+ #:- #:* #:/ #:abs #:expt #:max #:min)
