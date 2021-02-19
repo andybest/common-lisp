@@ -160,7 +160,7 @@
         (let* ((c (aref +lookup+ (+ index i)))
                (dx (+ xi (dx c)))
                (dy (+ yi (dy c)))
-               (attn (- (/ 2 3) (* dx dx) (* dy dy))))
+               (attn (- #.(/ 2 3) (* dx dx) (* dy dy))))
           (unless (plusp attn)
             (return))
           (let* ((pxm (logand (+ xsb (xsv c)) 2047))
