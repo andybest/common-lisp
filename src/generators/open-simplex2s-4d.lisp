@@ -738,7 +738,10 @@
                (dy (+ yi (dy c)))
                (dz (+ zi (dz c)))
                (dw (+ wi (dw c)))
-               (attn (- 0.8 (* dx dx) (* dy dy) (* dz dz) (* dw dw))))
+               ;; NOTE: This 0.77 constant is different from the reference implementation's 0.8
+               ;; because that results in the output domain being very out of range. 0.77 gives a
+               ;; range very close to [-1, 1].
+               (attn (- 0.77 (* dx dx) (* dy dy) (* dz dz) (* dw dw))))
           (when (plusp attn)
             (setf attn (* attn attn))
             (let* ((pxm (aref table (logand (+ xsb (xsv c)) 2047)))
