@@ -19,7 +19,6 @@
   ((:file "package")
    (:file "conditions")
    (:file "common")
-   (:file "fractal")
    (:module "generators"
     :components
     ((:file "perlin-1d")
@@ -66,7 +65,6 @@
     :components
     ((:file "abs")
      (:file "add")
-     (:file "billow")
      (:file "blend")
      (:file "cache")
      (:file "clamp")
@@ -74,13 +72,12 @@
      (:file "displace")
      (:file "divide")
      (:file "expt")
-     (:file "fbm")
+     (:file "fractalize")
      (:file "invert")
      (:file "max")
      (:file "min")
      (:file "multiply")
      (:file "power")
-     (:file "ridged-multi")
      (:file "rotate")
      (:file "scale")
      (:file "select")

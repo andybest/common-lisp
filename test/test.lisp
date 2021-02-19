@@ -195,15 +195,11 @@
   (finalize))
 
 (subtest "modifiers"
-  (plan 22)
+  (plan 24)
   (is-values (compare 'modify-abs
                       (cn:abs (cn:uniform-scale (cn:perlin-3d :seed "default") 10)))
              '(t t)
              "abs")
-  (is-values (compare 'modify-billow
-                      (cn:billow (cn:uniform-scale (cn:perlin-3d :seed "default") 10)))
-             '(t t)
-             "billow")
   (is-values (compare 'modify-blend
                       (cn:blend (cn:uniform-scale (cn:perlin-3d :seed "default") 10)
                                 (cn:uniform-scale (cn:simplex-2d :seed "default") 8)
@@ -237,10 +233,29 @@
                       (cn:expt (cn:uniform-scale (cn:perlin-3d :seed "default") 10) 2))
              '(t t)
              "expt")
-  (is-values (compare 'modify-fbm
-                      (cn:fbm (cn:uniform-scale (cn:perlin-3d :seed "default") 10)))
+  (is-values (compare 'modify-fractalize-billow
+                      (cn:fractalize (cn:uniform-scale (cn:perlin-3d :seed "default") 10) :billow))
              '(t t)
-             "fbm")
+             "fractalize-billow")
+  (is-values (compare 'modify-fractalize-fbm
+                      (cn:fractalize (cn:uniform-scale (cn:perlin-3d :seed "default") 10) :fbm))
+             '(t t)
+             "fractalize-fbm")
+  (is-values (compare 'modify-fractalize-hybrid-multi
+                      (cn:fractalize (cn:uniform-scale (cn:perlin-3d :seed "default") 10)
+                                     :hybrid-multi))
+             '(t t)
+             "fractalize-hybrid-multi")
+  (is-values (compare 'modify-fractalize-multi
+                      (cn:fractalize (cn:uniform-scale (cn:perlin-3d :seed "default") 10)
+                                     :multi))
+             '(t t)
+             "fractalize-multi")
+  (is-values (compare 'modify-fractalize-ridged-multi
+                      (cn:fractalize (cn:uniform-scale (cn:perlin-3d :seed "default") 10)
+                                     :ridged-multi))
+             '(t t)
+             "fractalize-ridged-multi")
   (is-values (compare 'modify-invert
                       (cn:invert (cn:uniform-scale (cn:perlin-3d :seed "default") 10)))
              '(t t)
@@ -260,10 +275,6 @@
                                 (cn:uniform-scale (cn:simplex-3d :seed "default") 10)))
              '(t t)
              "power")
-  (is-values (compare 'modify-ridged-multi
-                      (cn:ridged-multi (cn:uniform-scale (cn:perlin-3d :seed "default") 10)))
-             '(t t)
-             "ridged-multi")
   (is-values (compare 'modify-rotate
                       (cn:rotate (cn:uniform-scale (cn:simplex-3d :seed "default") 10) :z (/ pi 4)))
              '(t t)

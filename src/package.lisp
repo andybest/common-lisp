@@ -72,19 +72,17 @@
    #:*
    #:/
    #:abs
-   #:billow
    #:blend
    #:cache
    #:clamp
    #:curve
    #:displace
    #:expt
-   #:fbm
+   #:fractalize
    #:invert
    #:max
    #:min
    #:power
-   #:ridged-multi
    #:rotate
    #:scale
    #:select

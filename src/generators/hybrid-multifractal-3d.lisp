@@ -19,7 +19,7 @@
   (scale 1.0 :type u:f32)
   (octaves 4 :type (integer 1 32))
   (frequency 1.0 :type u:f32)
-  (lacunarity int::+default-lacunarity+ :type u:f32)
+  (lacunarity 2.0 :type u:f32)
   (persistence 0.25 :type u:f32))
 
 (defun get-scale-factor (octaves persistence)
@@ -31,10 +31,10 @@
         :for sample = amplitude
         :do (setf weight (* weight sample))
             (incf result weight)
-        :finally (return result)))
+        :finally (return (float result 1f0))))
 
 (defun gen:hybrid-multifractal-3d (&key seed (generator #'gen:perlin-3d) (octaves 4) (frequency 1.0)
-                                     (lacunarity int::+default-lacunarity+) (persistence 0.25))
+                                     (lacunarity 2.0) (persistence 0.25))
   (let ((rng (int::make-rng seed)))
     (make-hybrid-multifractal-3d :rng rng
                                  :sources (int::make-fractal-sources generator rng octaves)
