@@ -199,7 +199,7 @@
                       :seed seed
                       :distance-method distance-method
                       :output-type output-type
-                      :jitter jitter)))
+                      :jitter (float jitter 1d0))))
 
 (defmethod int:sample ((sampler cellular-3d) x &optional (y 0d0) (z 0d0) (w 0d0))
   (declare (ignore w)
