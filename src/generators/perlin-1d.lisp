@@ -35,7 +35,7 @@
                  (* (- grad) x)))))
     (declare (inline grad))
     (u:mvlet* ((table (table sampler))
-               (xi xf (truncate x))
+               (xi xf (floor x))
                (xi (logand xi 255))
                (r1 (grad (aref table xi) xf))
                (r2 (grad (aref table (1+ xi)) (1- xf))))
