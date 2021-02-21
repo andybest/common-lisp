@@ -4,7 +4,6 @@
   (:local-nicknames
    (#:int #:coherent-noise.internal)
    (#:mod #:coherent-noise.modifiers)
-   (#:perlin-3d #:coherent-noise.generators.perlin-3d)
    (#:rng #:seedable-rng)
    (#:u #:golden-utils))
   (:use #:cl))
@@ -36,12 +35,12 @@
   (w3 0f0 :type u:f32)
   (w4 0f0 :type u:f32))
 
-(defun mod:turbulence (source displacement-source &key (frequency 1.0) (power 1.0) (roughness 3))
+(defun mod:turbulence (source displacement &key (frequency 1.0) (power 1.0) (roughness 3))
   (let ((rng (int::sampler-rng source)))
     (make-turbulence :rng (int::sampler-rng source)
                      :source source
                      :displacement-source (mod:fractalize
-                                           displacement-source
+                                           displacement
                                            :fbm
                                            :octaves roughness
                                            :frequency (float frequency 1f0))
@@ -63,30 +62,26 @@
                      :w4 (rng:float rng 0.0 1.0))))
 
 (defmethod int:sample ((sampler turbulence) x &optional (y 0d0) (z 0d0) (w 0d0))
-  (let ((displacement-source (displacement-source sampler))
-        (power (power sampler)))
+  (let ((displacement (displacement-source sampler))
+        (power (power sampler))
+        (x1 (+ x (x1 sampler)))
+        (y1 (+ y (y1 sampler)))
+        (z1 (+ z (z1 sampler)))
+        (w1 (+ w (w1 sampler)))
+        (x2 (+ x (x2 sampler)))
+        (y2 (+ y (y2 sampler)))
+        (z2 (+ z (z2 sampler)))
+        (w2 (+ w (w2 sampler)))
+        (x3 (+ x (x3 sampler)))
+        (y3 (+ y (y3 sampler)))
+        (z3 (+ z (z3 sampler)))
+        (w3 (+ w (w3 sampler)))
+        (x4 (+ x (x4 sampler)))
+        (y4 (+ y (y4 sampler)))
+        (z4 (+ z (z4 sampler)))
+        (w4 (+ w (w4 sampler))))
     (int:sample (source sampler)
-                (+ x (* (int:sample displacement-source
-                                    (+ x (x1 sampler))
-                                    (+ y (y1 sampler))
-                                    (+ z (z1 sampler))
-                                    (+ w (w1 sampler)))
-                        power))
-                (+ y (* (int:sample displacement-source
-                                    (+ x (x2 sampler))
-                                    (+ y (y2 sampler))
-                                    (+ z (z2 sampler))
-                                    (+ w (w2 sampler)))
-                        power))
-                (+ z (* (int:sample displacement-source
-                                    (+ x (x3 sampler))
-                                    (+ y (y3 sampler))
-                                    (+ z (z3 sampler))
-                                    (+ w (w3 sampler)))
-                        power))
-                (+ x (* (int:sample displacement-source
-                                    (+ x (x4 sampler))
-                                    (+ y (y4 sampler))
-                                    (+ z (z4 sampler))
-                                    (+ w (w4 sampler)))
-                        power)))))
+                (+ x (* (int:sample displacement x1 y1 z1 w1) power))
+                (+ y (* (int:sample displacement x2 y2 z2 w2) power))
+                (+ z (* (int:sample displacement x3 y3 z3 w3) power))
+                (+ x (* (int:sample displacement x4 y4 z4 w4) power)))))
