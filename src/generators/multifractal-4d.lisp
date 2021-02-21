@@ -28,7 +28,7 @@
           :then (+ result (* result (expt persistence i)))
         :finally (return (float result 1f0))))
 
-(defun gen:multifractal-4d (&key seed (generator #'gen:perlin-2d) (octaves 4) (frequency 1.0)
+(defun gen:multifractal-4d (&key seed (generator #'gen:perlin-4d) (octaves 4) (frequency 1.0)
                               (lacunarity 2.0) (persistence 0.5))
   (let ((rng (int::make-rng seed)))
     (make-multifractal-4d :rng rng
