@@ -85,4 +85,10 @@
      (:file "subtract")
      (:file "terrace")
      (:file "translate")
-     (:file "turbulence")))))
+     (:file "turbulence")))
+   (:module "map"
+    :components
+    ((:file "color")
+     (:file "gradient")
+     (:file "image")
+     (:file "map")))))

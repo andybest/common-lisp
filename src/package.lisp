@@ -92,12 +92,34 @@
    #:turbulence
    #:uniform-scale))
 
+(defpackage #:coherent-noise.map
+  (:local-nicknames
+   (#:int #:coherent-noise.internal)
+   (#:lp #:lparallel)
+   (#:u #:golden-utils))
+  (:use #:cl)
+  (:shadow #:map)
+  (:export
+   #:define-gradient
+   #:get-image-pixel
+   #:image
+   #:image-height
+   #:image-width
+   #:image-data
+   #:make-map
+   #:map
+   #:map-data
+   #:map-height
+   #:map-value
+   #:map-width
+   #:render-map
+   #:write-image))
+
 (uiop:define-package #:coherent-noise
   (:import-from #:arrow-macros #:->)
-  (:mix #:coherent-noise.modifiers #:cl)
-  (:reexport #:coherent-noise.modifiers)
-  (:mix-reexport #:coherent-noise.generators
-                 #:coherent-noise.internal)
+  (:mix #:coherent-noise.modifiers #:coherent-noise.map #:cl)
+  (:reexport #:coherent-noise.modifiers #:coherent-noise.map)
+  (:mix-reexport #:coherent-noise.generators #:coherent-noise.internal)
   (:export #:->))
 
 (defpackage #:coherent-noise.user
