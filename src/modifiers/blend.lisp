@@ -19,10 +19,7 @@
   (control nil :type int:sampler))
 
 (defun mod:blend (source1 source2 control)
-  (make-blend :rng (int::sampler-rng source1)
-              :source1 source1
-              :source2 source2
-              :control control))
+  (make-blend :rng (int::sampler-rng source1) :source1 source1 :source2 source2 :control control))
 
 (defmethod int:sample ((sampler blend) x &optional (y 0d0) (z 0d0) (w 0d0))
   (declare (optimize speed))

@@ -31,9 +31,7 @@
         :finally (return (coerce (sort points #'< :key #'car) 'vector))))
 
 (defun mod:curve (source &key points)
-  (make-curve :rng (int::sampler-rng source)
-              :source source
-              :control-points (make-points points)))
+  (make-curve :rng (int::sampler-rng source) :source source :control-points (make-points points)))
 
 (defmethod int:sample ((sampler curve) x &optional (y 0d0) (z 0d0) (w 0d0))
   (let* ((control-points (control-points sampler))

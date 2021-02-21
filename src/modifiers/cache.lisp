@@ -23,8 +23,7 @@
   (w 0d0 :type u:f64))
 
 (defun mod:cache (source)
-  (make-cache :rng (int::sampler-rng source)
-              :source source))
+  (make-cache :rng (int::sampler-rng source) :source source))
 
 (defmethod int:sample ((sampler cache) x &optional (y 0d0) (z 0d0) (w 0d0))
   (declare (optimize speed)

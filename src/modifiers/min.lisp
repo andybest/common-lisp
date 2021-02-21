@@ -19,9 +19,7 @@
   (source2 nil :type int:sampler))
 
 (defun mod:min (source1 source2)
-  (make-min :rng (int::sampler-rng source1)
-            :source1 source1
-            :source2 source2))
+  (make-min :rng (int::sampler-rng source1) :source1 source1 :source2 source2))
 
 (defmethod int:sample ((sampler min) x &optional (y 0d0) (z 0d0) (w 0d0))
   (declare (optimize speed))

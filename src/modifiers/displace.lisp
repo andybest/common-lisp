@@ -21,12 +21,7 @@
   (w nil :type (or int:sampler null)))
 
 (defun mod:displace (source &key x y z w)
-  (make-displace :rng (int::sampler-rng source)
-                 :source source
-                 :x x
-                 :y y
-                 :z z
-                 :w w))
+  (make-displace :rng (int::sampler-rng source) :source source :x x :y y :z z :w w))
 
 (defmethod int:sample ((sampler displace) x &optional (y 0d0) (z 0d0) (w 0d0))
   (let* ((dx (if (x sampler) (int:sample (x sampler) x y z w) 0.0))

@@ -18,8 +18,7 @@
   (source nil :type int:sampler))
 
 (defun mod:abs (source)
-  (make-abs :rng (int::sampler-rng source)
-            :source source))
+  (make-abs :rng (int::sampler-rng source) :source source))
 
 (defmethod int:sample ((sampler abs) x &optional (y 0d0) (z 0d0) (w 0d0))
   (declare (optimize speed))

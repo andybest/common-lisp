@@ -18,9 +18,7 @@
   (source2 nil :type int:sampler))
 
 (defun mod:power (source1 source2)
-  (make-power :rng (int::sampler-rng source1)
-              :source1 source1
-              :source2 source2))
+  (make-power :rng (int::sampler-rng source1) :source1 source1 :source2 source2))
 
 (defmethod int:sample ((sampler power) x &optional (y 0d0) (z 0d0) (w 0d0))
   (declare (optimize speed))
