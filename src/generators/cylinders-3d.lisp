@@ -19,7 +19,7 @@
 
 (defun gen:cylinders-3d (&key seed (frequency 1d0))
   (make-cylinders-3d :rng (int::make-rng seed)
-                     :frequency frequency))
+                     :frequency (float frequency 1d0)))
 
 (defmethod int:sample ((sampler cylinders-3d) x &optional (y 0d0) (z 0d0) (w 0d0))
   (declare (ignore y w)
