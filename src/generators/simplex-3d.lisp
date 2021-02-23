@@ -17,7 +17,7 @@
 
   (u:define-constant +scale+ 32d0))
 
-(defstruct (simplex-3d
+(defstruct (gen:simplex-3d
             (:include int:sampler)
             (:conc-name "")
             (:predicate nil)
@@ -29,7 +29,7 @@
          (table (rng:shuffle rng int::+perlin-permutation+)))
     (make-simplex-3d :rng rng :table table)))
 
-(defmethod int:sample ((sampler simplex-3d) x &optional (y 0d0) (z 0d0) (w 0d0))
+(defmethod int:sample ((sampler gen:simplex-3d) x &optional (y 0d0) (z 0d0) (w 0d0))
   (declare (ignore w)
            (optimize speed)
            (int::f50 x y z w))

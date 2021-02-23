@@ -10,7 +10,7 @@
 
 (in-package #:%coherent-noise.modifiers.select)
 
-(defstruct (select
+(defstruct (mod:select
             (:include int:sampler)
             (:conc-name "")
             (:predicate nil)
@@ -61,7 +61,7 @@
                :max (float max 1d0)
                :falloff (float falloff 1d0)))
 
-(defmethod int:sample ((sampler select) x &optional (y 0d0) (z 0d0) (w 0d0))
+(defmethod int:sample ((sampler mod:select) x &optional (y 0d0) (z 0d0) (w 0d0))
   (let* ((min (min sampler))
          (max (max sampler))
          (falloff (cl:min (falloff sampler) (* (- max min) 0.5)))

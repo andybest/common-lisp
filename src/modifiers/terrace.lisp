@@ -9,7 +9,7 @@
 
 (in-package #:%coherent-noise.modifiers.terrace)
 
-(defstruct (terrace
+(defstruct (mod:terrace
             (:include int:sampler)
             (:conc-name "")
             (:predicate nil)
@@ -40,7 +40,7 @@
                 :control-points (make-points points)
                 :invert-p invert-p))
 
-(defmethod int:sample ((sampler terrace) x &optional (y 0d0) (z 0d0) (w 0d0))
+(defmethod int:sample ((sampler mod:terrace) x &optional (y 0d0) (z 0d0) (w 0d0))
   (let* ((control-points (control-points sampler))
          (count (length control-points))
          (count-1 (1- count))

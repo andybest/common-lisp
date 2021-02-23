@@ -30,7 +30,7 @@
                     3 2 1 0))
     :test #'equalp))
 
-(defstruct (simplex-4d
+(defstruct (gen:simplex-4d
             (:include int:sampler)
             (:conc-name "")
             (:predicate nil)
@@ -42,7 +42,7 @@
          (table (rng:shuffle rng int::+perlin-permutation+)))
     (make-simplex-4d :rng rng :table table)))
 
-(defmethod int:sample ((sampler simplex-4d) x &optional (y 0d0) (z 0d0) (w 0d0))
+(defmethod int:sample ((sampler gen:simplex-4d) x &optional (y 0d0) (z 0d0) (w 0d0))
   (declare (optimize speed)
            (int::f50 x y z w))
   (flet ((get-simplex (x y z w)

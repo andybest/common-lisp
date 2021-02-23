@@ -9,7 +9,7 @@
 
 (in-package #:%coherent-noise.modifiers.rotate)
 
-(defstruct (rotate
+(defstruct (mod:rotate
             (:include int:sampler)
             (:conc-name "")
             (:predicate nil)
@@ -64,7 +64,7 @@
                  :rz2 (- (* (- cy) sx cz) (* sy sz))
                  :rz3 (* cy cx))))
 
-(defmethod int:sample ((sampler rotate) x &optional (y 0d0) (z 0d0) (w 0d0))
+(defmethod int:sample ((sampler mod:rotate) x &optional (y 0d0) (z 0d0) (w 0d0))
   (let ((x (+ (* x (rx1 sampler)) (* y (ry1 sampler)) (* z (rz1 sampler))))
         (y (+ (* x (rx2 sampler)) (* y (ry2 sampler)) (* z (rz2 sampler))))
         (z (+ (* x (rx3 sampler)) (* y (ry3 sampler)) (* z (rz3 sampler)))))

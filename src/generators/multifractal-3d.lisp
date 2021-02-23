@@ -10,7 +10,7 @@
 
 (in-package #:%coherent-noise.generators.multifractal-3d)
 
-(defstruct (multifractal-3d
+(defstruct (gen:multifractal-3d
             (:include int:sampler)
             (:conc-name "")
             (:predicate nil)
@@ -58,7 +58,7 @@
                           :lacunarity (float lacunarity 1f0)
                           :persistence (float persistence 1f0))))
 
-(defmethod int:sample ((sampler multifractal-3d) x &optional (y 0d0) (z 0d0) (w 0d0))
+(defmethod int:sample ((sampler gen:multifractal-3d) x &optional (y 0d0) (z 0d0) (w 0d0))
   (declare (ignore w))
   (loop :with sources = (sources sampler)
         :with frequency = (frequency sampler)

@@ -10,7 +10,7 @@
 
 (in-package #:%coherent-noise.generators.spheres-3d)
 
-(defstruct (spheres-3d
+(defstruct (gen:spheres-3d
             (:include int:sampler)
             (:conc-name "")
             (:predicate nil)
@@ -26,7 +26,7 @@
   (make-spheres-3d :rng (int::make-rng seed)
                    :frequency (float frequency 1d0)))
 
-(defmethod int:sample ((sampler spheres-3d) x &optional (y 0d0) (z 0d0) (w 0d0))
+(defmethod int:sample ((sampler gen:spheres-3d) x &optional (y 0d0) (z 0d0) (w 0d0))
   (declare (ignore w)
            (optimize speed)
            (int::f50 x y z w))

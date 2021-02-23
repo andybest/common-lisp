@@ -10,7 +10,7 @@
 
 (in-package #:%coherent-noise.generators.cylinders-3d)
 
-(defstruct (cylinders-3d
+(defstruct (gen:cylinders-3d
             (:include int:sampler)
             (:conc-name "")
             (:predicate nil)
@@ -25,7 +25,7 @@
            :value frequency))
   (make-cylinders-3d :rng (int::make-rng seed) :frequency (float frequency 1d0)))
 
-(defmethod int:sample ((sampler cylinders-3d) x &optional (y 0d0) (z 0d0) (w 0d0))
+(defmethod int:sample ((sampler gen:cylinders-3d) x &optional (y 0d0) (z 0d0) (w 0d0))
   (declare (ignore y w)
            (optimize speed)
            (int::f50 x y z w))

@@ -136,7 +136,7 @@
       table)
   :test #'equalp)
 
-(defstruct (open-simplex2f-3d
+(defstruct (gen:open-simplex2f-3d
             (:include int:sampler)
             (:conc-name "")
             (:predicate nil)
@@ -199,7 +199,7 @@
                             :table table
                             :orientation orientation)))
 
-(defmethod int:sample ((sampler open-simplex2f-3d) x &optional (y 0d0) (z 0d0) (w 0d0))
+(defmethod int:sample ((sampler gen:open-simplex2f-3d) x &optional (y 0d0) (z 0d0) (w 0d0))
   (declare (ignore w)
            (optimize speed)
            (int::f50 x y z w))

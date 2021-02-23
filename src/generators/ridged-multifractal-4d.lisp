@@ -10,7 +10,7 @@
 
 (in-package #:%coherent-noise.generators.ridged-multifractal-4d)
 
-(defstruct (ridged-multifractal-4d
+(defstruct (gen:ridged-multifractal-4d
             (:include int:sampler)
             (:conc-name "")
             (:predicate nil)
@@ -67,7 +67,7 @@
                                  :persistence (float persistence 1f0)
                                  :attenuation (float attenuation 1f0))))
 
-(defmethod int:sample ((sampler ridged-multifractal-4d) x &optional (y 0d0) (z 0d0) (w 0d0))
+(defmethod int:sample ((sampler gen:ridged-multifractal-4d) x &optional (y 0d0) (z 0d0) (w 0d0))
   (loop :with sources = (sources sampler)
         :with frequency = (frequency sampler)
         :with lacunarity = (lacunarity sampler)

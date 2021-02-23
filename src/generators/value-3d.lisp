@@ -10,7 +10,7 @@
 
 (in-package #:%coherent-noise.generators.value-3d)
 
-(defstruct (value-3d
+(defstruct (gen:value-3d
             (:include int:sampler)
             (:conc-name "")
             (:predicate nil)
@@ -21,7 +21,7 @@
   (u:mvlet ((rng seed (int::make-rng seed)))
     (make-value-3d :rng rng :seed seed)))
 
-(defmethod int:sample ((sampler value-3d) x &optional (y 0d0) (z 0d0) (w 0d0))
+(defmethod int:sample ((sampler gen:value-3d) x &optional (y 0d0) (z 0d0) (w 0d0))
   (declare (ignore w)
            (optimize speed)
            (int::f50 x y z w))

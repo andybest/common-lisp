@@ -37,7 +37,7 @@
         (make-array 72 :element-type 'fixnum :initial-contents data))
     :test #'equalp))
 
-(defstruct (open-simplex-3d
+(defstruct (gen:open-simplex-3d
             (:include int:sampler)
             (:conc-name "")
             (:predicate nil)
@@ -50,7 +50,7 @@
             (:conc-name nil)
             (:predicate nil)
             (:copier nil))
-  (sampler nil :type open-simplex-3d)
+  (sampler nil :type gen:open-simplex-3d)
   (stretch-offset 0d0 :type u:f64)
   (xsb 0 :type fixnum)
   (ysb 0 :type fixnum)
@@ -610,7 +610,7 @@
          (table (rng:shuffle rng +permutation+)))
     (make-open-simplex-3d :rng rng :table table)))
 
-(defmethod int:sample ((sampler open-simplex-3d) x &optional (y 0d0) (z 0d0) (w 0d0))
+(defmethod int:sample ((sampler gen:open-simplex-3d) x &optional (y 0d0) (z 0d0) (w 0d0))
   (declare (ignore w)
            (optimize speed)
            (int::f50 x y z w))

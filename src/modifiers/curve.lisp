@@ -9,7 +9,7 @@
 
 (in-package #:%coherent-noise.modifiers.curve)
 
-(defstruct (curve
+(defstruct (mod:curve
             (:include int:sampler)
             (:conc-name "")
             (:predicate nil)
@@ -38,7 +38,7 @@
            :value source))
   (make-curve :rng (int::sampler-rng source) :source source :control-points (make-points points)))
 
-(defmethod int:sample ((sampler curve) x &optional (y 0d0) (z 0d0) (w 0d0))
+(defmethod int:sample ((sampler mod:curve) x &optional (y 0d0) (z 0d0) (w 0d0))
   (let* ((control-points (control-points sampler))
          (count (length control-points))
          (count-1 (1- count))

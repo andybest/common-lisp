@@ -9,7 +9,7 @@
 
 (in-package #:%coherent-noise.modifiers.displace)
 
-(defstruct (displace
+(defstruct (mod:displace
             (:include int:sampler)
             (:conc-name "")
             (:predicate nil)
@@ -48,7 +48,7 @@
            :value w))
   (make-displace :rng (int::sampler-rng source) :source source :x x :y y :z z :w w))
 
-(defmethod int:sample ((sampler displace) x &optional (y 0d0) (z 0d0) (w 0d0))
+(defmethod int:sample ((sampler mod:displace) x &optional (y 0d0) (z 0d0) (w 0d0))
   (let* ((dx (if (x sampler) (int:sample (x sampler) x y z w) 0.0))
          (dy (if (y sampler) (int:sample (y sampler) x y z w) 0.0))
          (dz (if (z sampler) (int:sample (z sampler) x y z w) 0.0))

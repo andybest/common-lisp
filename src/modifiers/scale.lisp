@@ -9,7 +9,7 @@
 
 (in-package #:%coherent-noise.modifiers.scale)
 
-(defstruct (scale
+(defstruct (mod:scale
             (:include int:sampler)
             (:conc-name "")
             (:predicate nil)
@@ -72,7 +72,7 @@
                 :z scalar
                 :w scalar)))
 
-(defmethod int:sample ((sampler scale) x &optional (y 0d0) (z 0d0) (w 0d0))
+(defmethod int:sample ((sampler mod:scale) x &optional (y 0d0) (z 0d0) (w 0d0))
   (int:sample (source sampler)
               (/ x (x sampler))
               (/ y (y sampler))

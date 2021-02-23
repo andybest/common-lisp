@@ -10,7 +10,7 @@
 
 (in-package #:%coherent-noise.generators.perlin-2d)
 
-(defstruct (perlin-2d
+(defstruct (gen:perlin-2d
             (:include int:sampler)
             (:conc-name "")
             (:predicate nil)
@@ -22,7 +22,7 @@
          (table (rng:shuffle rng int::+perlin-permutation+)))
     (make-perlin-2d :rng rng :table table)))
 
-(defmethod int:sample ((sampler perlin-2d) x &optional (y 0d0) (z 0d0) (w 0d0))
+(defmethod int:sample ((sampler gen:perlin-2d) x &optional (y 0d0) (z 0d0) (w 0d0))
   (declare (ignore z w)
            (optimize speed)
            (int::f50 x y z w))

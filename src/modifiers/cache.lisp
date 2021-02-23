@@ -9,7 +9,7 @@
 
 (in-package #:%coherent-noise.modifiers.cache)
 
-(defstruct (cache
+(defstruct (mod:cache
             (:include int:sampler)
             (:conc-name "")
             (:predicate nil)
@@ -30,7 +30,7 @@
            :value source))
   (make-cache :rng (int::sampler-rng source) :source source))
 
-(defmethod int:sample ((sampler cache) x &optional (y 0d0) (z 0d0) (w 0d0))
+(defmethod int:sample ((sampler mod:cache) x &optional (y 0d0) (z 0d0) (w 0d0))
   (declare (optimize speed)
            (u:f64 x y z w))
   (unless (and (cached-p sampler)

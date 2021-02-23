@@ -22,7 +22,7 @@
         (make-array 16 :element-type 'fixnum :initial-contents data))
     :test #'equalp))
 
-(defstruct (open-simplex-2d
+(defstruct (gen:open-simplex-2d
             (:include int:sampler)
             (:conc-name "")
             (:predicate nil)
@@ -35,7 +35,7 @@
             (:conc-name nil)
             (:predicate nil)
             (:copier nil))
-  (sampler nil :type open-simplex-2d)
+  (sampler nil :type gen:open-simplex-2d)
   (stretch-offset 0d0 :type u:f64)
   (xsb 0 :type fixnum)
   (ysb 0 :type fixnum)
@@ -167,7 +167,7 @@
          (table (rng:shuffle rng int::+perlin-permutation+)))
     (make-open-simplex-2d :rng rng :table table)))
 
-(defmethod int:sample ((sampler open-simplex-2d) x &optional (y 0d0) (z 0d0) (w 0d0))
+(defmethod int:sample ((sampler gen:open-simplex-2d) x &optional (y 0d0) (z 0d0) (w 0d0))
   (declare (ignore z w)
            (optimize speed)
            (int::f50 x y z w))

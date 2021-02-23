@@ -29,7 +29,7 @@
         (make-array 256 :element-type 'fixnum :initial-contents data))
     :test #'equalp))
 
-(defstruct (open-simplex-4d
+(defstruct (gen:open-simplex-4d
             (:include int:sampler)
             (:conc-name "")
             (:predicate nil)
@@ -42,7 +42,7 @@
             (:conc-name nil)
             (:predicate nil)
             (:copier nil))
-  (sampler nil :type open-simplex-4d)
+  (sampler nil :type gen:open-simplex-4d)
   (stretch-offset 0d0 :type u:f64)
   (xsb 0 :type fixnum)
   (ysb 0 :type fixnum)
@@ -1508,7 +1508,7 @@
          (table (rng:shuffle rng int::+perlin-permutation+)))
     (make-open-simplex-4d :rng rng :table table)))
 
-(defmethod int:sample ((sampler open-simplex-4d) x &optional (y 0d0) (z 0d0) (w 0d0))
+(defmethod int:sample ((sampler gen:open-simplex-4d) x &optional (y 0d0) (z 0d0) (w 0d0))
   (declare (optimize speed)
            (int::f50 x y z w))
   (let ((state (make-state sampler x y z w)))

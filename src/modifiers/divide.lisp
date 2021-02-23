@@ -9,7 +9,8 @@
 
 (in-package #:%coherent-noise.modifiers.divide)
 
-(defstruct (divide
+(defstruct (mod:/
+            (:constructor make-divide)
             (:include int:sampler)
             (:conc-name "")
             (:predicate nil)
@@ -30,7 +31,7 @@
            :value source2))
   (make-divide :rng (int::sampler-rng source1) :source1 source1 :source2 source2))
 
-(defmethod int:sample ((sampler divide) x &optional (y 0d0) (z 0d0) (w 0d0))
+(defmethod int:sample ((sampler mod:/) x &optional (y 0d0) (z 0d0) (w 0d0))
   (declare (optimize speed))
   (let ((sample1 (the u:f32 (int:sample (source1 sampler) x y z w)))
         (sample2 (the u:f32 (int:sample (source2 sampler) x y z w))))

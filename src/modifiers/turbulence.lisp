@@ -10,7 +10,7 @@
 
 (in-package #:%coherent-noise.modifiers.turbulence)
 
-(defstruct (turbulence
+(defstruct (mod:turbulence
             (:include int:sampler)
             (:conc-name "")
             (:predicate nil)
@@ -86,7 +86,7 @@
                      :w3 (float (rng:float rng 0.0 1.0) 1d0)
                      :w4 (float (rng:float rng 0.0 1.0) 1d0))))
 
-(defmethod int:sample ((sampler turbulence) x &optional (y 0.0) (z 0.0) (w 0.0))
+(defmethod int:sample ((sampler mod:turbulence) x &optional (y 0.0) (z 0.0) (w 0.0))
   (let ((displacement (displacement-source sampler))
         (power (power sampler))
         (x1 (+ x (x1 sampler)))

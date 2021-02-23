@@ -10,7 +10,7 @@
 
 (in-package #:%coherent-noise.generators.perlin-4d)
 
-(defstruct (perlin-4d
+(defstruct (gen:perlin-4d
             (:include int:sampler)
             (:conc-name "")
             (:predicate nil)
@@ -22,7 +22,7 @@
          (table (rng:shuffle rng int::+perlin-permutation+)))
     (make-perlin-4d :rng rng :table table)))
 
-(defmethod int:sample ((sampler perlin-4d) x &optional (y 0d0) (z 0d0) (w 0d0))
+(defmethod int:sample ((sampler gen:perlin-4d) x &optional (y 0d0) (z 0d0) (w 0d0))
   (declare (optimize speed)
            (int::f50 x y z w))
   (flet ((grad (hash x y z w)

@@ -9,7 +9,7 @@
 
 (in-package #:%coherent-noise.modifiers.invert)
 
-(defstruct (invert
+(defstruct (mod:invert
             (:include int:sampler)
             (:conc-name "")
             (:predicate nil)
@@ -24,6 +24,6 @@
            :value source))
   (make-invert :rng (int::sampler-rng source) :source source))
 
-(defmethod int:sample ((sampler invert) x &optional (y 0d0) (z 0d0) (w 0d0))
+(defmethod int:sample ((sampler mod:invert) x &optional (y 0d0) (z 0d0) (w 0d0))
   (declare (optimize speed))
   (- (the u:f32 (int:sample (source sampler) x y z w))))

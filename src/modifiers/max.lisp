@@ -10,7 +10,7 @@
 
 (in-package #:%coherent-noise.modifiers.max)
 
-(defstruct (max
+(defstruct (mod:max
             (:include int:sampler)
             (:conc-name "")
             (:predicate nil)
@@ -31,7 +31,7 @@
            :value source2))
   (make-max :rng (int::sampler-rng source1) :source1 source1 :source2 source2))
 
-(defmethod int:sample ((sampler max) x &optional (y 0d0) (z 0d0) (w 0d0))
+(defmethod int:sample ((sampler mod:max) x &optional (y 0d0) (z 0d0) (w 0d0))
   (declare (optimize speed))
   (cl:max (the u:f32 (int:sample (source1 sampler) x y z w))
           (the u:f32 (int:sample (source2 sampler) x y z w))))

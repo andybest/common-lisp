@@ -10,7 +10,7 @@
 
 (in-package #:%coherent-noise.generators.fbm-3d)
 
-(defstruct (fbm-3d
+(defstruct (gen:fbm-3d
             (:include int:sampler)
             (:conc-name "")
             (:predicate nil)
@@ -57,7 +57,7 @@
                  :lacunarity (float lacunarity 1f0)
                  :persistence (float persistence 1f0))))
 
-(defmethod int:sample ((sampler fbm-3d) x &optional (y 0d0) (z 0d0) (w 0d0))
+(defmethod int:sample ((sampler gen:fbm-3d) x &optional (y 0d0) (z 0d0) (w 0d0))
   (declare (ignore w))
   (loop :with sources = (sources sampler)
         :with frequency = (frequency sampler)

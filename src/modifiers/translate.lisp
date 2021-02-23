@@ -9,7 +9,7 @@
 
 (in-package #:%coherent-noise.modifiers.translate)
 
-(defstruct (translate
+(defstruct (mod:translate
             (:include int:sampler)
             (:conc-name "")
             (:predicate nil)
@@ -53,7 +53,7 @@
                   :z (float z 1f0)
                   :w (float w 1f0)))
 
-(defmethod int:sample ((sampler translate) x &optional (y 0d0) (z 0d0) (w 0d0))
+(defmethod int:sample ((sampler mod:translate) x &optional (y 0d0) (z 0d0) (w 0d0))
   (int:sample (source sampler)
               (+ x (x sampler))
               (+ y (y sampler))

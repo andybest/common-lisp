@@ -10,7 +10,7 @@
 
 (in-package #:%coherent-noise.modifiers.expt)
 
-(defstruct (expt
+(defstruct (mod:expt
             (:include int:sampler)
             (:conc-name "")
             (:predicate nil)
@@ -35,7 +35,7 @@
              :power (float power 1f0)
              :symmetric-p symmetric-p))
 
-(defmethod int:sample ((sampler expt) x &optional (y 0d0) (z 0d0) (w 0d0))
+(defmethod int:sample ((sampler mod:expt) x &optional (y 0d0) (z 0d0) (w 0d0))
   (declare (optimize speed))
   (let ((sample (the u:f32 (int:sample (source sampler) x y z w))))
     (if (symmetric-p sampler)

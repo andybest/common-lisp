@@ -10,7 +10,7 @@
 
 (in-package #:%coherent-noise.generators.checker-2d)
 
-(defstruct (checker-2d
+(defstruct (gen:checker-2d
             (:include int:sampler)
             (:conc-name "")
             (:predicate nil)
@@ -19,7 +19,7 @@
 (defun gen:checker-2d (&key seed)
   (make-checker-2d :rng (int::make-rng seed)))
 
-(defmethod int:sample ((sampler checker-2d) x &optional (y 0d0) (z 0d0) (w 0d0))
+(defmethod int:sample ((sampler gen:checker-2d) x &optional (y 0d0) (z 0d0) (w 0d0))
   (declare (ignore w)
            (optimize speed)
            (int::f50 x y z w))

@@ -182,7 +182,7 @@
       (make-array 1024 :element-type 'int::f50 :initial-contents data))
   :test #'equalp)
 
-(defstruct (cellular-3d
+(defstruct (gen:cellular-3d
             (:include int:sampler)
             (:conc-name "")
             (:predicate nil)
@@ -218,7 +218,7 @@
                       :output-type output-type
                       :jitter (float jitter 1d0))))
 
-(defmethod int:sample ((sampler cellular-3d) x &optional (y 0d0) (z 0d0) (w 0d0))
+(defmethod int:sample ((sampler gen:cellular-3d) x &optional (y 0d0) (z 0d0) (w 0d0))
   (declare (ignore w)
            (optimize speed)
            (int::f50 x y z w))
