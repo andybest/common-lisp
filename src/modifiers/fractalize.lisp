@@ -4,6 +4,7 @@
   (:local-nicknames
    (#:gen #:%coherent-noise.generators)
    (#:int #:%coherent-noise.internal)
+   (#:rng #:seedable-rng)
    (#:mod #:%coherent-noise.modifiers))
   (:use #:cl))
 
@@ -41,10 +42,11 @@
            :sampler-type 'fractalize
            :argument :attenuation
            :value attenuation))
-  (let ((fractal (ecase type
+  (let ((seed (rng:get-seed (int::sampler-rng source)))
+        (fractal (ecase type
                    (:fbm #'gen:fbm-4d)
                    (:billow #'gen:billow-4d)
                    (:multi #'gen:multifractal-4d)
                    (:hybrid-multi #'gen:hybrid-multifractal-4d)
                    (:ridged-multi #'gen:ridged-multifractal-4d))))
-    (apply fractal :generator (constantly source) :allow-other-keys t args)))
+    (apply fractal :seed seed :generator (constantly source) :allow-other-keys t args)))
