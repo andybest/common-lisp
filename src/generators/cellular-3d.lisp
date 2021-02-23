@@ -194,12 +194,12 @@
   (jitter 1d0 :type u:f64))
 
 (defun gen:cellular-3d (&key seed (distance-method :euclidean) (output-type :f1) (jitter 1d0))
-  (unless (member distance-method '(:manhattan :euclidean :euclidean-squared :chevyshev
+  (unless (member distance-method '(:manhattan :euclidean :euclidean-squared :chebyshev
                                     :minkowski4))
     (error 'int:invalid-cellular-distance-method
            :sampler-type 'cellular-3d
            :distance-method distance-method
-           :valid-distance-methods '(:manhattan :euclidean :euclidean-squared :chevyshev
+           :valid-distance-methods '(:manhattan :euclidean :euclidean-squared :chebyshev
                                      :minkowski4)))
   (unless (member output-type '(:value :f1 :f2 :f1+f2 :f2-f1 :f1*f2 :f1/f2))
     (error 'int:invalid-cellular-output-type
