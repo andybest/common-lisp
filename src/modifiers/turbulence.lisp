@@ -17,7 +17,7 @@
             (:copier nil))
   (source nil :type int:sampler)
   (displacement-source nil :type int:sampler)
-  (power 1d0 :type u:f64)
+  (power 1.0 :type u:f32)
   (x1 0d0 :type u:f64)
   (x2 0d0 :type u:f64)
   (x3 0d0 :type u:f64)
@@ -68,7 +68,7 @@
                                            :fbm
                                            :octaves roughness
                                            :frequency frequency)
-                     :power (float power 1d0)
+                     :power (float power 1f0)
                      :x1 (float (rng:float rng 0.0 1.0) 1d0)
                      :x2 (float (rng:float rng 0.0 1.0) 1d0)
                      :x3 (float (rng:float rng 0.0 1.0) 1d0)
@@ -80,12 +80,13 @@
                      :z1 (float (rng:float rng 0.0 1.0) 1d0)
                      :z2 (float (rng:float rng 0.0 1.0) 1d0)
                      :z3 (float (rng:float rng 0.0 1.0) 1d0)
+                     :z4 (float (rng:float rng 0.0 1.0) 1d0)
                      :w1 (float (rng:float rng 0.0 1.0) 1d0)
                      :w2 (float (rng:float rng 0.0 1.0) 1d0)
                      :w3 (float (rng:float rng 0.0 1.0) 1d0)
                      :w4 (float (rng:float rng 0.0 1.0) 1d0))))
 
-(defmethod int:sample ((sampler turbulence) x &optional (y 0d0) (z 0d0) (w 0d0))
+(defmethod int:sample ((sampler turbulence) x &optional (y 0.0) (z 0.0) (w 0.0))
   (let ((displacement (displacement-source sampler))
         (power (power sampler))
         (x1 (+ x (x1 sampler)))
@@ -108,4 +109,4 @@
                 (+ x (* (int:sample displacement x1 y1 z1 w1) power))
                 (+ y (* (int:sample displacement x2 y2 z2 w2) power))
                 (+ z (* (int:sample displacement x3 y3 z3 w3) power))
-                (+ x (* (int:sample displacement x4 y4 z4 w4) power)))))
+                (+ w (* (int:sample displacement x4 y4 z4 w4) power)))))
