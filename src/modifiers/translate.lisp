@@ -1,13 +1,13 @@
 (in-package #:cl-user)
 
-(defpackage #:coherent-noise.modifiers.translate
+(defpackage #:%coherent-noise.modifiers.translate
   (:local-nicknames
-   (#:int #:coherent-noise.internal)
-   (#:mod #:coherent-noise.modifiers)
+   (#:int #:%coherent-noise.internal)
+   (#:mod #:%coherent-noise.modifiers)
    (#:u #:golden-utils))
   (:use #:cl))
 
-(in-package #:coherent-noise.modifiers.translate)
+(in-package #:%coherent-noise.modifiers.translate)
 
 (defstruct (translate
             (:include int:sampler)

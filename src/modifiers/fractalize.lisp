@@ -1,13 +1,13 @@
 (in-package #:cl-user)
 
-(defpackage #:coherent-noise.modifiers.fractalize
+(defpackage #:%coherent-noise.modifiers.fractalize
   (:local-nicknames
-   (#:gen #:coherent-noise.generators)
-   (#:int #:coherent-noise.internal)
-   (#:mod #:coherent-noise.modifiers))
+   (#:gen #:%coherent-noise.generators)
+   (#:int #:%coherent-noise.internal)
+   (#:mod #:%coherent-noise.modifiers))
   (:use #:cl))
 
-(in-package #:coherent-noise.modifiers.fractalize)
+(in-package #:%coherent-noise.modifiers.fractalize)
 
 (defun mod:fractalize (source type &rest args
                        &key (octaves 4) (frequency 1.0) (lacunarity 2.0) (persistence 0.5)

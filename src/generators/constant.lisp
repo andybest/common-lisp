@@ -1,14 +1,14 @@
 (in-package #:cl-user)
 
-(defpackage #:coherent-noise.generators.constant
+(defpackage #:%coherent-noise.generators.constant
   (:local-nicknames
-   (#:gen #:coherent-noise.generators)
-   (#:int #:coherent-noise.internal)
+   (#:gen #:%coherent-noise.generators)
+   (#:int #:%coherent-noise.internal)
    (#:rng #:seedable-rng)
    (#:u #:golden-utils))
   (:use #:cl))
 
-(in-package #:coherent-noise.generators.constant)
+(in-package #:%coherent-noise.generators.constant)
 
 (defstruct (constant
             (:include int:sampler)

@@ -1,14 +1,14 @@
 (in-package #:cl-user)
 
-(defpackage #:coherent-noise.generators.cellular-3d
+(defpackage #:%coherent-noise.generators.cellular-3d
   (:local-nicknames
-   (#:gen #:coherent-noise.generators)
-   (#:int #:coherent-noise.internal)
+   (#:gen #:%coherent-noise.generators)
+   (#:int #:%coherent-noise.internal)
    (#:rng #:seedable-rng)
    (#:u #:golden-utils))
   (:use #:cl))
 
-(in-package #:coherent-noise.generators.cellular-3d)
+(in-package #:%coherent-noise.generators.cellular-3d)
 
 (u:define-constant +random+
     (let ((data #(-0.7292736885d0 -0.6618439697d0 0.1735581948d0 0d0 0.790292081d0 -0.5480887466d0

@@ -1,4 +1,4 @@
-(in-package #:coherent-noise.internal)
+(in-package #:%coherent-noise.internal)
 
 (define-condition coherent-noise-error (error)
   ((%sampler-type :reader sampler-type

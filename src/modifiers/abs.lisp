@@ -1,14 +1,14 @@
 (in-package #:cl-user)
 
-(defpackage #:coherent-noise.modifiers.abs
+(defpackage #:%coherent-noise.modifiers.abs
   (:local-nicknames
-   (#:int #:coherent-noise.internal)
-   (#:mod #:coherent-noise.modifiers)
+   (#:int #:%coherent-noise.internal)
+   (#:mod #:%coherent-noise.modifiers)
    (#:u #:golden-utils))
   (:use #:cl)
   (:shadow #:abs))
 
-(in-package #:coherent-noise.modifiers.abs)
+(in-package #:%coherent-noise.modifiers.abs)
 
 (defstruct (abs
             (:include int:sampler)

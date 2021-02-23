@@ -1,14 +1,14 @@
 (in-package #:cl-user)
 
-(defpackage #:coherent-noise.modifiers.clamp
+(defpackage #:%coherent-noise.modifiers.clamp
   (:local-nicknames
-   (#:int #:coherent-noise.internal)
-   (#:mod #:coherent-noise.modifiers)
+   (#:int #:%coherent-noise.internal)
+   (#:mod #:%coherent-noise.modifiers)
    (#:u #:golden-utils))
   (:use #:cl)
   (:shadow #:min #:max))
 
-(in-package #:coherent-noise.modifiers.clamp)
+(in-package #:%coherent-noise.modifiers.clamp)
 
 (defstruct (clamp
             (:include int:sampler)

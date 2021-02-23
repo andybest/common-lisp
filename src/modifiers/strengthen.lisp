@@ -1,13 +1,13 @@
 (in-package #:cl-user)
 
-(defpackage #:coherent-noise.modifiers.strengthen
+(defpackage #:%coherent-noise.modifiers.strengthen
   (:local-nicknames
-   (#:int #:coherent-noise.internal)
-   (#:mod #:coherent-noise.modifiers)
+   (#:int #:%coherent-noise.internal)
+   (#:mod #:%coherent-noise.modifiers)
    (#:u #:golden-utils))
   (:use #:cl))
 
-(in-package #:coherent-noise.modifiers.strengthen)
+(in-package #:%coherent-noise.modifiers.strengthen)
 
 (defstruct (strengthen
             (:include int:sampler)

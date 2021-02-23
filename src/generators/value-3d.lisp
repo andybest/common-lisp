@@ -1,14 +1,14 @@
 (in-package #:cl-user)
 
-(defpackage #:coherent-noise.generators.value-3d
+(defpackage #:%coherent-noise.generators.value-3d
   (:local-nicknames
-   (#:gen #:coherent-noise.generators)
-   (#:int #:coherent-noise.internal)
+   (#:gen #:%coherent-noise.generators)
+   (#:int #:%coherent-noise.internal)
    (#:rng #:seedable-rng)
    (#:u #:golden-utils))
   (:use #:cl))
 
-(in-package #:coherent-noise.generators.value-3d)
+(in-package #:%coherent-noise.generators.value-3d)
 
 (defstruct (value-3d
             (:include int:sampler)

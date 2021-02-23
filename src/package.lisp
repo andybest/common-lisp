@@ -1,6 +1,6 @@
 (in-package #:cl-user)
 
-(defpackage #:coherent-noise.internal
+(defpackage #:%coherent-noise.internal
   (:local-nicknames
    (#:lp #:lparallel)
    (#:rng #:seedable-rng)
@@ -22,7 +22,7 @@
    #:invalid-sampler-argument
    #:invalid-seed))
 
-(defpackage #:coherent-noise.generators
+(defpackage #:%coherent-noise.generators
   (:export
    #:perlin-1d
    #:perlin-2d
@@ -65,7 +65,7 @@
    #:ridged-multifractal-3d
    #:ridged-multifractal-4d))
 
-(defpackage #:coherent-noise.modifiers
+(defpackage #:%coherent-noise.modifiers
   (:shadow #:+ #:- #:* #:/ #:abs #:expt #:max #:min)
   (:export
    #:+
@@ -93,9 +93,9 @@
    #:turbulence
    #:uniform-scale))
 
-(defpackage #:coherent-noise.map
+(defpackage #:%coherent-noise.map
   (:local-nicknames
-   (#:int #:coherent-noise.internal)
+   (#:int #:%coherent-noise.internal)
    (#:lp #:lparallel)
    (#:u #:golden-utils))
   (:use #:cl)
@@ -118,12 +118,7 @@
 
 (uiop:define-package #:coherent-noise
   (:import-from #:arrow-macros #:->)
-  (:mix #:coherent-noise.modifiers #:coherent-noise.map #:cl)
-  (:reexport #:coherent-noise.modifiers #:coherent-noise.map)
-  (:mix-reexport #:coherent-noise.generators #:coherent-noise.internal)
+  (:mix #:%coherent-noise.modifiers #:%coherent-noise.map #:cl)
+  (:reexport #:%coherent-noise.modifiers #:%coherent-noise.map)
+  (:mix-reexport #:%coherent-noise.generators #:%coherent-noise.internal)
   (:export #:->))
-
-(defpackage #:coherent-noise.user
-  (:local-nicknames
-   (#:cn #:coherent-noise))
-  (:use #:cl))

@@ -1,13 +1,13 @@
 (in-package #:cl-user)
 
-(defpackage #:coherent-noise.modifiers.invert
+(defpackage #:%coherent-noise.modifiers.invert
   (:local-nicknames
-   (#:int #:coherent-noise.internal)
-   (#:mod #:coherent-noise.modifiers)
+   (#:int #:%coherent-noise.internal)
+   (#:mod #:%coherent-noise.modifiers)
    (#:u #:golden-utils))
   (:use #:cl))
 
-(in-package #:coherent-noise.modifiers.invert)
+(in-package #:%coherent-noise.modifiers.invert)
 
 (defstruct (invert
             (:include int:sampler)

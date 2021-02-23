@@ -1,4 +1,4 @@
-(in-package #:coherent-noise.map)
+(in-package #:%coherent-noise.map)
 
 (declaim (inline %make-map))
 (defstruct (map

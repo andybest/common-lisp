@@ -1,14 +1,14 @@
 (in-package #:cl-user)
 
-(defpackage #:coherent-noise.generators.fbm-2d
+(defpackage #:%coherent-noise.generators.fbm-2d
   (:local-nicknames
-   (#:gen #:coherent-noise.generators)
-   (#:int #:coherent-noise.internal)
+   (#:gen #:%coherent-noise.generators)
+   (#:int #:%coherent-noise.internal)
    (#:rng #:seedable-rng)
    (#:u #:golden-utils))
   (:use #:cl))
 
-(in-package #:coherent-noise.generators.fbm-2d)
+(in-package #:%coherent-noise.generators.fbm-2d)
 
 (defstruct (fbm-2d
             (:include int:sampler)

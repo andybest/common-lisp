@@ -1,14 +1,14 @@
 (in-package #:cl-user)
 
-(defpackage #:coherent-noise.modifiers.max
+(defpackage #:%coherent-noise.modifiers.max
   (:local-nicknames
-   (#:int #:coherent-noise.internal)
-   (#:mod #:coherent-noise.modifiers)
+   (#:int #:%coherent-noise.internal)
+   (#:mod #:%coherent-noise.modifiers)
    (#:u #:golden-utils))
   (:use #:cl)
   (:shadow #:max))
 
-(in-package #:coherent-noise.modifiers.max)
+(in-package #:%coherent-noise.modifiers.max)
 
 (defstruct (max
             (:include int:sampler)

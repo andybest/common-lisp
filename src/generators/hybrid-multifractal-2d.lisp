@@ -1,14 +1,14 @@
 (in-package #:cl-user)
 
-(defpackage #:coherent-noise.generators.hybrid-multifractal-2d
+(defpackage #:%coherent-noise.generators.hybrid-multifractal-2d
   (:local-nicknames
-   (#:gen #:coherent-noise.generators)
-   (#:int #:coherent-noise.internal)
+   (#:gen #:%coherent-noise.generators)
+   (#:int #:%coherent-noise.internal)
    (#:rng #:seedable-rng)
    (#:u #:golden-utils))
   (:use #:cl))
 
-(in-package #:coherent-noise.generators.hybrid-multifractal-2d)
+(in-package #:%coherent-noise.generators.hybrid-multifractal-2d)
 
 (defstruct (hybrid-multifractal-2d
             (:include int:sampler)

@@ -1,14 +1,14 @@
 (in-package #:cl-user)
 
-(defpackage #:coherent-noise.generators.simplex-1d
+(defpackage #:%coherent-noise.generators.simplex-1d
   (:local-nicknames
-   (#:gen #:coherent-noise.generators)
-   (#:int #:coherent-noise.internal)
+   (#:gen #:%coherent-noise.generators)
+   (#:int #:%coherent-noise.internal)
    (#:rng #:seedable-rng)
    (#:u #:golden-utils))
   (:use #:cl))
 
-(in-package #:coherent-noise.generators.simplex-1d)
+(in-package #:%coherent-noise.generators.simplex-1d)
 
 (u:define-constant +scale+ 0.395d0)
 

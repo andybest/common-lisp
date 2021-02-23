@@ -1,14 +1,14 @@
 (in-package #:cl-user)
 
-(defpackage #:coherent-noise.generators.open-simplex2s-2d
+(defpackage #:%coherent-noise.generators.open-simplex2s-2d
   (:local-nicknames
-   (#:gen #:coherent-noise.generators)
-   (#:int #:coherent-noise.internal)
+   (#:gen #:%coherent-noise.generators)
+   (#:int #:%coherent-noise.internal)
    (#:rng #:seedable-rng)
    (#:u #:golden-utils))
   (:use #:cl))
 
-(in-package #:coherent-noise.generators.open-simplex2s-2d)
+(in-package #:%coherent-noise.generators.open-simplex2s-2d)
 
 (u:eval-always
   (defstruct (lattice-point

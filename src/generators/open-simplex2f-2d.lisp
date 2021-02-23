@@ -1,14 +1,14 @@
 (in-package #:cl-user)
 
-(defpackage #:coherent-noise.generators.open-simplex2f-2d
+(defpackage #:%coherent-noise.generators.open-simplex2f-2d
   (:local-nicknames
-   (#:gen #:coherent-noise.generators)
-   (#:int #:coherent-noise.internal)
+   (#:gen #:%coherent-noise.generators)
+   (#:int #:%coherent-noise.internal)
    (#:rng #:seedable-rng)
    (#:u #:golden-utils))
   (:use #:cl))
 
-(in-package #:coherent-noise.generators.open-simplex2f-2d)
+(in-package #:%coherent-noise.generators.open-simplex2f-2d)
 
 (u:define-constant +gradients+
     (let ((gradients #(#(13.031324456287654d0 98.98273633310245d0)
