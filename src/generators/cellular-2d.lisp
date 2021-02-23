@@ -10,7 +10,7 @@
 
 (in-package #:%coherent-noise.generators.cellular-2d)
 
-(u:define-constant +random+
+(u:define-constant +table+
     (let ((data #(-0.2700222198d0 -0.9628540911d0 0.3863092627d0 -0.9223693152d0 0.04444859006d0
                   -0.999011673d0 -0.5992523158d0 -0.8005602176d0 -0.7819280288d0 0.6233687174d0
                   0.9464672271d0 0.3227999196d0 -0.6514146797d0 0.7587218957d0 0.9378472289d0
@@ -178,8 +178,8 @@
           (dotimes (yi 3)
             (let* ((hash (in-range (* (logxor seed xp yp) 668265261)))
                    (index (logand hash 511))
-                   (vx (+ xri (* (aref +random+ index) jitter)))
-                   (vy (+ (- (+ yr yi) y) (* (aref +random+ (logior index 1)) jitter)))
+                   (vx (+ xri (* (aref +table+ index) jitter)))
+                   (vy (+ (- (+ yr yi) y) (* (aref +table+ (logior index 1)) jitter)))
                    (d (ecase distance-method
                         (:manhattan
                          (+ (abs vx) (abs vy)))
