@@ -15,11 +15,16 @@
             (:conc-name "")
             (:predicate nil)
             (:copier nil))
-  (value 0.5f0 :type u:f32))
+  (value 0.5 :type u:f32))
 
 (defun gen:constant (value &key seed)
+  (unless (realp value)
+    (error 'int:invalid-real-argument
+           :sampler-type 'constant
+           :argument 'value
+           :value value))
   (make-constant :rng (int::make-rng seed)
-                 :value (float (u:lerp (u:clamp value 0d0 1d0) -1d0 1d0) 1f0)))
+                 :value (u:lerp (u:clamp (float value 1f0) 0.0 1.0) -1.0 1.0)))
 
 (defmethod int:sample ((sampler constant) x &optional (y 0d0) (z 0d0) (w 0d0))
   (declare (ignore x y z w)

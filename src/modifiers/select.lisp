@@ -23,6 +23,36 @@
   (falloff 0d0 :type u:f64))
 
 (defun mod:select (source1 source2 control &key (min -1.0) (max 1.0) (falloff 0.0))
+  (unless (typep source1 'int:sampler)
+    (error 'int:invalid-sampler-argument
+           :sampler-type 'select
+           :argument 'source1
+           :value source1))
+  (unless (typep source2 'int:sampler)
+    (error 'int:invalid-sampler-argument
+           :sampler-type 'select
+           :argument 'source2
+           :value source2))
+  (unless (typep control 'int:sampler)
+    (error 'int:invalid-sampler-argument
+           :sampler-type 'select
+           :argument 'control
+           :value control))
+  (unless (realp min)
+    (error 'int:invalid-real-argument
+           :sampler-type 'select
+           :argument :min
+           :value min))
+  (unless (realp max)
+    (error 'int:invalid-real-argument
+           :sampler-type 'select
+           :argument :max
+           :value max))
+  (unless (realp falloff)
+    (error 'int:invalid-real-argument
+           :sampler-type 'select
+           :argument :falloff
+           :value falloff))
   (make-select :rng (int::sampler-rng source1)
                :source1 source1
                :source2 source2

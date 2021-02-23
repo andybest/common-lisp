@@ -15,10 +15,11 @@
   (:export
    #:coherent-noise-error
    #:invalid-cellular-distance-method
-   #:invalid-cellular-jitter
    #:invalid-cellular-output-type
-   #:invalid-modifier-input
+   #:invalid-fractal-octave-count
    #:invalid-open-simplex2-orientation
+   #:invalid-real-argument
+   #:invalid-sampler-argument
    #:invalid-seed))
 
 (defpackage #:coherent-noise.generators

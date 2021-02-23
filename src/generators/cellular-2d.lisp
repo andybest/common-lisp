@@ -129,6 +129,23 @@
   (jitter 1d0 :type u:f64))
 
 (defun gen:cellular-2d (&key seed (distance-method :euclidean) (output-type :f1) (jitter 1d0))
+  (unless (member distance-method '(:manhattan :euclidean :euclidean-squared :chevyshev
+                                    :minkowski4))
+    (error 'int:invalid-cellular-distance-method
+           :sampler-type 'cellular-2d
+           :distance-method distance-method
+           :valid-distance-methods '(:manhattan :euclidean :euclidean-squared :chevyshev
+                                     :minkowski4)))
+  (unless (member output-type '(:value :f1 :f2 :f1+f2 :f2-f1 :f1*f2 :f1/f2))
+    (error 'int:invalid-cellular-output-type
+           :sampler-type 'cellular-2d
+           :output-type output-type
+           :valid-output-types '(:value :f1 :f2 :f1+f2 :f2-f1 :f1*f2 :f1/f2)))
+  (unless (realp jitter)
+    (error 'int:invalid-real-argument
+           :sampler-type 'cellular-2d
+           :argument :jitter
+           :value jitter))
   (u:mvlet ((rng seed (int::make-rng seed)))
     (make-cellular-2d :rng rng
                       :seed seed

@@ -18,6 +18,11 @@
   (frequency 1d0 :type u:f64))
 
 (defun gen:spheres-3d (&key seed (frequency 1d0))
+  (unless (realp frequency)
+    (error 'int:invalid-real-argument
+           :sampler-type 'spheres-3d
+           :argument :frequency
+           :value frequency))
   (make-spheres-3d :rng (int::make-rng seed)
                    :frequency (float frequency 1d0)))
 

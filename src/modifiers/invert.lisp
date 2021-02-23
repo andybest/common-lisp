@@ -17,6 +17,11 @@
   (source nil :type int:sampler))
 
 (defun mod:invert (source)
+  (unless (typep source 'int:sampler)
+    (error 'int:invalid-sampler-argument
+           :sampler-type 'invert
+           :argument 'source
+           :value source))
   (make-invert :rng (int::sampler-rng source) :source source))
 
 (defmethod int:sample ((sampler invert) x &optional (y 0d0) (z 0d0) (w 0d0))

@@ -29,6 +29,25 @@
 
 (defun gen:fbm-2d (&key seed (generator #'gen:perlin-2d) (octaves 4) (frequency 1.0)
                      (lacunarity 2.0) (persistence 0.5))
+  (unless (typep octaves '(integer 1 32))
+    (error 'int:invalid-fractal-octave-count
+           :sampler-type 'fbm-2d
+           :value octaves))
+  (unless (realp frequency)
+    (error 'int:invalid-real-argument
+           :sampler-type 'fbm-2d
+           :argument :frequency
+           :value frequency))
+  (unless (realp lacunarity)
+    (error 'int:invalid-real-argument
+           :sampler-type 'fbm-2d
+           :argument :lacunarity
+           :value lacunarity))
+  (unless (realp persistence)
+    (error 'int:invalid-real-argument
+           :sampler-type 'fbm-2d
+           :argument :persistence
+           :value persistence))
   (let ((rng (int::make-rng seed)))
     (make-fbm-2d :rng rng
                  :sources (int::make-fractal-sources generator rng octaves)

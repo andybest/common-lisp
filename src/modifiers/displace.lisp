@@ -21,6 +21,31 @@
   (w nil :type (or int:sampler null)))
 
 (defun mod:displace (source &key x y z w)
+  (unless (typep source 'int:sampler)
+    (error 'int:invalid-sampler-argument
+           :sampler-type 'displace
+           :argument 'source
+           :value source))
+  (unless (typep x '(or int:sampler null))
+    (error 'int:invalid-sampler-argument
+           :sampler-type 'displace
+           :argument :x
+           :value x))
+  (unless (typep y '(or int:sampler null))
+    (error 'int:invalid-sampler-argument
+           :sampler-type 'displace
+           :argument :y
+           :value y))
+  (unless (typep z '(or int:sampler null))
+    (error 'int:invalid-sampler-argument
+           :sampler-type 'displace
+           :argument :z
+           :value z))
+  (unless (typep w '(or int:sampler null))
+    (error 'int:invalid-sampler-argument
+           :sampler-type 'displace
+           :argument :w
+           :value w))
   (make-displace :rng (int::sampler-rng source) :source source :x x :y y :z z :w w))
 
 (defmethod int:sample ((sampler displace) x &optional (y 0d0) (z 0d0) (w 0d0))

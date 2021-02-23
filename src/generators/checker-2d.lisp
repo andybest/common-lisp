@@ -23,6 +23,8 @@
   (declare (ignore w)
            (optimize speed)
            (int::f50 x y z w))
-  (if (zerop (logxor (logand (floor x) 1) (logand (floor y) 1) (logand (floor z) 1)))
+  (if (zerop (logxor (logand (floor x) 1)
+                     (logand (floor y) 1)
+                     (logand (floor z) 1)))
       1.0
       -1.0))

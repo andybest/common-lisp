@@ -30,6 +30,11 @@
   (coerce (sort points #'<) 'vector))
 
 (defun mod:terrace (source &key points invert-p)
+  (unless (typep source 'int:sampler)
+    (error 'int:invalid-sampler-argument
+           :sampler-type 'terrace
+           :argument 'source
+           :value source))
   (make-terrace :rng (int::sampler-rng source)
                 :source source
                 :control-points (make-points points)

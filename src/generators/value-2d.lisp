@@ -19,8 +19,7 @@
 
 (defun gen:value-2d (&key seed)
   (u:mvlet ((rng seed (int::make-rng seed)))
-    (make-value-2d :rng rng
-                   :seed seed)))
+    (make-value-2d :rng rng :seed seed)))
 
 (defmethod int:sample ((sampler value-2d) x &optional (y 0d0) (z 0d0) (w 0d0))
   (declare (ignore z w)

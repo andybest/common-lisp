@@ -35,6 +35,25 @@
 
 (defun gen:hybrid-multifractal-4d (&key seed (generator #'gen:perlin-4d) (octaves 4) (frequency 1.0)
                                      (lacunarity 2.0) (persistence 0.25))
+  (unless (typep octaves '(integer 1 32))
+    (error 'int:invalid-fractal-octave-count
+           :sampler-type 'hybrid-multifractal-4d
+           :value octaves))
+  (unless (realp frequency)
+    (error 'int:invalid-real-argument
+           :sampler-type 'hybrid-multifractal-4d
+           :argument :frequency
+           :value frequency))
+  (unless (realp lacunarity)
+    (error 'int:invalid-real-argument
+           :sampler-type 'hybrid-multifractal-4d
+           :argument :lacunarity
+           :value lacunarity))
+  (unless (realp persistence)
+    (error 'int:invalid-real-argument
+           :sampler-type 'hybrid-multifractal-4d
+           :argument :persistence
+           :value persistence))
   (let ((rng (int::make-rng seed)))
     (make-hybrid-multifractal-4d :rng rng
                                  :sources (int::make-fractal-sources generator rng octaves)

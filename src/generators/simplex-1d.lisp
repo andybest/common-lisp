@@ -22,8 +22,7 @@
 (defun gen:simplex-1d (&key seed)
   (let* ((rng (int::make-rng seed))
          (table (rng:shuffle rng int::+perlin-permutation+)))
-    (make-simplex-1d :rng rng
-                     :table table)))
+    (make-simplex-1d :rng rng :table table)))
 
 (defmethod int:sample ((sampler simplex-1d) x &optional (y 0d0) (z 0d0) (w 0d0))
   (declare (ignore y z w)

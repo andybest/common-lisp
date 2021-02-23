@@ -33,6 +33,30 @@
 
 (defun gen:ridged-multifractal-4d (&key seed (generator #'gen:perlin-4d) (octaves 4) (frequency 1.0)
                                      (lacunarity 2.0) (persistence 1.0) (attenuation 2.0))
+  (unless (typep octaves '(integer 1 32))
+    (error 'int:invalid-fractal-octave-count
+           :sampler-type 'ridged-multifractal-4d
+           :value octaves))
+  (unless (realp frequency)
+    (error 'int:invalid-real-argument
+           :sampler-type 'ridged-multifractal-4d
+           :argument :frequency
+           :value frequency))
+  (unless (realp lacunarity)
+    (error 'int:invalid-real-argument
+           :sampler-type 'ridged-multifractal-4d
+           :argument :lacunarity
+           :value lacunarity))
+  (unless (realp persistence)
+    (error 'int:invalid-real-argument
+           :sampler-type 'ridged-multifractal-4d
+           :argument :persistence
+           :value persistence))
+  (unless (realp attenuation)
+    (error 'int:invalid-real-argument
+           :sampler-type 'ridged-multifractal-4d
+           :argument :attenuation
+           :value attenuation))
   (let ((rng (int::make-rng seed)))
     (make-ridged-multifractal-4d :rng rng
                                  :sources (int::make-fractal-sources generator rng octaves)

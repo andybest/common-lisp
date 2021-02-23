@@ -9,21 +9,54 @@
           :initarg :seed))
   (:report
    (lambda (condition stream)
-     (format stream "Invalid seed: ~s.~%~%Seed must be a string." (seed condition)))))
+     (format stream "Invalid seed: ~s.~%~%Seed must be a string or NIL." (seed condition)))))
 
-(define-condition invalid-modifier-input (coherent-noise-error)
-  ((%input-argument :reader input-argument
-                    :initarg :input-argument)
-   (%input-value :reader input-value
-                 :initarg :input-value)
-   (%modifier-type :reader modifier-type
-                   :initarg :modifier-type))
+(define-condition invalid-sampler-argument (coherent-noise-error)
+  ((%argument :reader argument
+              :initarg :argument)
+   (%value :reader value
+           :initarg :value))
   (:report
    (lambda (condition stream)
-     (format stream "Argument ~a for modifier ~s is not a sampler.~%~%Value: ~s."
-             (input-argument condition)
-             (modifier-type condition)
-             (input-value condition)))))
+     (format stream "Argument ~a for sampler type ~s is not a sampler.~%~%Value: ~s."
+             (argument condition)
+             (sampler-type condition)
+             (value condition)))))
+
+(define-condition invalid-fractal-octave-count (coherent-noise-error)
+  ((%value :reader value
+           :initarg :value))
+  (:report
+   (lambda (condition stream)
+     (format stream "Octave count for sampler ~s must be an integer between 1 and 32 ~
+                     inclusive.~%~%Value: ~s."
+             (sampler-type condition)
+             (value condition)))))
+
+(define-condition invalid-real-argument (coherent-noise-error)
+  ((%argument :reader argument
+              :initarg :argument)
+   (%value :reader value
+           :initarg :value))
+  (:report
+   (lambda (condition stream)
+     (format stream "Argument ~s for sampler ~s must be a real number.~%~%Value: ~s."
+             (argument condition)
+             (sampler-type condition)
+             (value condition)))))
+
+(define-condition invalid-open-simplex2-orientation (coherent-noise-error)
+  ((%orientation :reader orientation
+                 :initarg :orientation)
+   (%valid-orientations :reader valid-orientations
+                        :initarg :valid-orientations))
+  (:report
+   (lambda (condition stream)
+     (format stream "Invalid orientation ~s for sampler ~s.~%~% ~
+                     Valid orientations: ~{~s~^, ~}"
+             (orientation condition)
+             (sampler-type condition)
+             (valid-orientations condition)))))
 
 (define-condition invalid-cellular-distance-method (coherent-noise-error)
   ((%distance-method :reader distance-method
@@ -48,25 +81,3 @@
              (output-type condition)
              (sampler-type condition)
              (valid-output-types condition)))))
-
-(define-condition invalid-cellular-jitter (coherent-noise-error)
-  ((%jitter :reader jitter
-            :initarg :jitter))
-  (:report
-   (lambda (condition stream)
-     (format stream "Invalid jitter ~s for sampler ~s.~%~%Jitter must be a real number."
-             (jitter condition)
-             (sampler-type condition)))))
-
-(define-condition invalid-open-simplex2-orientation (coherent-noise-error)
-  ((%orientation :reader orientation
-                 :initarg :orientation)
-   (%valid-orientations :reader valid-orientations
-                        :initarg :valid-orientations))
-  (:report
-   (lambda (condition stream)
-     (format stream "Invalid orientation ~s for sampler ~s.~%~% ~
-                     Valid orientations: ~{~s~^, ~}"
-             (orientation condition)
-             (sampler-type condition)
-             (valid-orientations condition)))))

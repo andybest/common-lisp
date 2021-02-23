@@ -129,6 +129,11 @@
        (values (+ x y) (- y x))))))
 
 (defun gen:open-simplex2s-2d (&key seed (orientation :standard))
+  (unless (member orientation '(:standard :x/y))
+    (error 'int:invalid-open-simplex2-orientation
+           :sampler-type 'open-simplex2s-2d
+           :orientation orientation
+           :valid-orientations '(:standard :x/y)))
   (u:mvlet* ((rng (int::make-rng seed))
              (gradients table (permute rng)))
     (make-open-simplex2s-2d :rng rng

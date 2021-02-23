@@ -31,6 +31,11 @@
         :finally (return (coerce (sort points #'< :key #'car) 'vector))))
 
 (defun mod:curve (source &key points)
+  (unless (typep source 'int:sampler)
+    (error 'int:invalid-sampler-argument
+           :sampler-type 'curve
+           :argument 'source
+           :value source))
   (make-curve :rng (int::sampler-rng source) :source source :control-points (make-points points)))
 
 (defmethod int:sample ((sampler curve) x &optional (y 0d0) (z 0d0) (w 0d0))

@@ -19,6 +19,21 @@
   (control nil :type int:sampler))
 
 (defun mod:blend (source1 source2 control)
+  (unless (typep source1 'int:sampler)
+    (error 'int:invalid-sampler-argument
+           :sampler-type 'blend
+           :argument 'source1
+           :value source1))
+  (unless (typep source2 'int:sampler)
+    (error 'int:invalid-sampler-argument
+           :sampler-type 'blend
+           :argument 'source2
+           :value source2))
+  (unless (typep control 'int:sampler)
+    (error 'int:invalid-sampler-argument
+           :sampler-type 'blend
+           :argument 'control
+           :value control))
   (make-blend :rng (int::sampler-rng source1) :source1 source1 :source2 source2 :control control))
 
 (defmethod int:sample ((sampler blend) x &optional (y 0d0) (z 0d0) (w 0d0))

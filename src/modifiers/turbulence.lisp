@@ -36,6 +36,30 @@
   (w4 0d0 :type u:f64))
 
 (defun mod:turbulence (source displacement &key (frequency 1.0) (power 1.0) (roughness 3))
+  (unless (typep source 'int:sampler)
+    (error 'int:invalid-sampler-argument
+           :sampler-type 'turbulence
+           :argument 'source
+           :value source))
+  (unless (typep displacement 'int:sampler)
+    (error 'int:invalid-sampler-argument
+           :sampler-type 'turbulence
+           :argument 'displacement
+           :value displacement))
+  (unless (realp frequency)
+    (error 'int:invalid-real-argument
+           :sampler-type 'turbulence
+           :argument :frequency
+           :value frequency))
+  (unless (realp power)
+    (error 'int:invalid-real-argument
+           :sampler-type 'turbulence
+           :argument :power
+           :value power))
+  (unless (typep roughness '(integer 1 32))
+    (error 'int:invalid-fractal-octave-count
+           :sampler-type 'turbulence
+           :value roughness))
   (let ((rng (int::sampler-rng source)))
     (make-turbulence :rng (int::sampler-rng source)
                      :source source

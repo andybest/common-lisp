@@ -23,6 +23,11 @@
   (w 0d0 :type u:f64))
 
 (defun mod:cache (source)
+  (unless (typep source 'int:sampler)
+    (error 'int:invalid-sampler-argument
+           :sampler-type 'cache
+           :argument 'source
+           :value source))
   (make-cache :rng (int::sampler-rng source) :source source))
 
 (defmethod int:sample ((sampler cache) x &optional (y 0d0) (z 0d0) (w 0d0))

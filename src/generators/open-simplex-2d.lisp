@@ -165,8 +165,7 @@
 (defun gen:open-simplex-2d (&key seed)
   (let* ((rng (int::make-rng seed))
          (table (rng:shuffle rng int::+perlin-permutation+)))
-    (make-open-simplex-2d :rng rng
-                          :table table)))
+    (make-open-simplex-2d :rng rng :table table)))
 
 (defmethod int:sample ((sampler open-simplex-2d) x &optional (y 0d0) (z 0d0) (w 0d0))
   (declare (ignore z w)

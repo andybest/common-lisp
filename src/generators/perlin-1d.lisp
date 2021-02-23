@@ -20,8 +20,7 @@
 (defun gen:perlin-1d (&key seed)
   (let* ((rng (int::make-rng seed))
          (table (rng:shuffle rng int::+perlin-permutation+)))
-    (make-perlin-1d :rng rng
-                    :table table)))
+    (make-perlin-1d :rng rng :table table)))
 
 (defmethod int:sample ((sampler perlin-1d) x &optional (y 0d0) (z 0d0) (w 0d0))
   (declare (ignore y z w)
