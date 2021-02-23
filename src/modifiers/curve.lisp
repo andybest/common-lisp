@@ -15,7 +15,7 @@
             (:predicate nil)
             (:copier nil))
   (source nil :type int:sampler)
-  (control-points (vector) :type vector))
+  (control-points (make-array 0) :type simple-vector))
 
 (defun make-points (point-pairs)
   (unless (and (listp point-pairs)
@@ -26,9 +26,11 @@
   (unless (= (length (remove-duplicates point-pairs :key #'car :test #'=))
              (length point-pairs))
     (error "A curve modifier's control points must have unique input values."))
-  (loop :for (i . o) :in point-pairs
-        :collect (cons (float i 1f0) (float o 1f0)) :into points
-        :finally (return (coerce (sort points #'< :key #'car) 'vector))))
+  (loop :with result = (make-array (length point-pairs))
+        :for (in . out) :in point-pairs
+        :for i :from 0
+        :do (setf (aref result i) (cons (float in 1f0) (float out 1f0)))
+        :finally (return (sort result #'< :key #'car))))
 
 (defun mod:curve (source &key points)
   (unless (typep source 'int:sampler)
