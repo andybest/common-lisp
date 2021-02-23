@@ -17,7 +17,7 @@
             (:copier nil))
   (source nil :type int:sampler)
   (displacement-source nil :type int:sampler)
-  (power 1.0 :type u:f32)
+  (power 1d0 :type u:f64)
   (x1 0d0 :type u:f64)
   (x2 0d0 :type u:f64)
   (x3 0d0 :type u:f64)
@@ -68,7 +68,7 @@
                                            :fbm
                                            :octaves roughness
                                            :frequency frequency)
-                     :power (float power 1f0)
+                     :power (float power 1d0)
                      :x1 (float (rng:float rng 0.0 1.0) 1d0)
                      :x2 (float (rng:float rng 0.0 1.0) 1d0)
                      :x3 (float (rng:float rng 0.0 1.0) 1d0)
