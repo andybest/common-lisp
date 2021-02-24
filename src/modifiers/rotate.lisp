@@ -54,13 +54,13 @@
         (sz (float (sin z) 1d0)))
     (make-rotate :rng (int::sampler-rng source)
                  :source source
-                 :rx1 (+ (* sx sy sz) (* cy cz))
-                 :rx2 (- (* sx sy cz) (* cy sz))
+                 :rx1 (+ (* sy sx sz) (* cy cz))
+                 :rx2 (- (* sy sx cz) (* cy sz))
                  :rx3 (* (- sy) cx)
-                 :ry1 (* cy sz)
+                 :ry1 (* cx sz)
                  :ry2 (* cx cz)
                  :ry3 sx
-                 :rz1 (- (* sy cz) (* cy sy sz))
+                 :rz1 (- (* sy cz) (* cy sx sz))
                  :rz2 (- (* (- cy) sx cz) (* sy sz))
                  :rz3 (* cy cx))))
 
