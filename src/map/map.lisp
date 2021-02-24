@@ -48,7 +48,7 @@
         (write-map map source x-min x-delta y-min y-delta))
     map))
 
-(u:fn-> render-map (map &key (:gradient keyword)) image)
+(u:fn-> render-map (map &key (:gradient symbol)) image)
 (defun render-map (map &key (gradient :grayscale))
   (declare (optimize speed))
   (let* ((width (map-width map))
