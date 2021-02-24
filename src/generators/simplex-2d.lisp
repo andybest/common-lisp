@@ -22,12 +22,11 @@
             (:conc-name "")
             (:predicate nil)
             (:copier nil))
-  (table int::+perlin-permutation+ :type (simple-array u:ub8 (512))))
+  (table nil :type (simple-array u:ub8 (512))))
 
 (defun gen:simplex-2d (&key seed)
-  (let* ((rng (int::make-rng seed))
-         (table (rng:shuffle rng int::+perlin-permutation+)))
-    (make-simplex-2d :rng rng :table table)))
+  (let ((rng (int::make-rng seed)))
+    (make-simplex-2d :rng rng :table (int::perlin-permute rng))))
 
 (defmethod int:sample ((sampler gen:simplex-2d) x &optional (y 0d0) (z 0d0) (w 0d0))
   (declare (ignore z w)
