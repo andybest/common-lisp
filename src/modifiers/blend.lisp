@@ -1,5 +1,9 @@
 (in-package #:cl-user)
 
+;;;; Blend modifier
+;;;; This noise modifier blends the outputs of its two input samplers together using linear
+;;;; interpolation by the output value of its control sampler.
+
 (defpackage #:%coherent-noise.modifiers.blend
   (:local-nicknames
    (#:int #:%coherent-noise.internal)
@@ -19,21 +23,24 @@
   (control nil :type int:sampler))
 
 (defun mod:blend (source1 source2 control)
+  "Construct a sampler that, when sampled, outputs a blend between the outputs of `source1` and
+`source2`, by means of a linear interpolation using the output value of `control` as the
+interpolation parameter.
+
+If the output of `control` is negative, the blended output is weighted towards the output of
+`source1`. If the output of `control` is positive, the blended output is weighted towards the output
+of `source2`.
+
+`source1`: The sampler to weight towards if the output of `control` is negative (required).
+`source2`: The sampler to weight towards if the output of `control` is positive (required).
+`control`: The sampler that determines the weight of the blending operation (required).
+"
   (unless (typep source1 'int:sampler)
-    (error 'int:invalid-sampler-argument
-           :sampler-type 'blend
-           :argument 'source1
-           :value source1))
+    (error 'int:invalid-sampler-argument :sampler-type 'blend :argument 'source1 :value source1))
   (unless (typep source2 'int:sampler)
-    (error 'int:invalid-sampler-argument
-           :sampler-type 'blend
-           :argument 'source2
-           :value source2))
+    (error 'int:invalid-sampler-argument :sampler-type 'blend :argument 'source2 :value source2))
   (unless (typep control 'int:sampler)
-    (error 'int:invalid-sampler-argument
-           :sampler-type 'blend
-           :argument 'control
-           :value control))
+    (error 'int:invalid-sampler-argument :sampler-type 'blend :argument 'control :value control))
   (make-blend :rng (int::sampler-rng source1) :source1 source1 :source2 source2 :control control))
 
 (defmethod int:sample ((sampler mod:blend) x &optional (y 0d0) (z 0d0) (w 0d0))

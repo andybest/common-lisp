@@ -1,5 +1,8 @@
 (in-package #:cl-user)
 
+;;;; Curve modifier
+;;;; This noise modifier maps the output of the input sampler onto a curve.
+
 (defpackage #:%coherent-noise.modifiers.curve
   (:local-nicknames
    (#:int #:%coherent-noise.internal)
@@ -33,11 +36,22 @@
         :finally (return (sort result #'< :key #'car))))
 
 (defun mod:curve (source &key points)
+  "Construct a sampler that, when sampled, outputs the result of sampling from `source` after
+remapping to an arbitrary curve.
+
+The curve is defined by a list of point pairs given with `points`, with its format being a list of
+cons cells. Each cons cell in the list of points represents an input and an output number. The curve
+is a cubic spline, and so `points` must contain a list of four point pairs at a minimum.
+Additionally, no two point pairs can contain the same input point value.
+
+When sampling the input sampler `source`, the result is evaluated using the curve data, and maps it
+to a new output value.
+
+`source`: The input sampler to map onto the curve (required)
+`points`: A list of cons pairs denoting input (car) and output (cdr) control points of the curve
+(required)."
   (unless (typep source 'int:sampler)
-    (error 'int:invalid-sampler-argument
-           :sampler-type 'curve
-           :argument 'source
-           :value source))
+    (error 'int:invalid-sampler-argument :sampler-type 'curve :argument 'source :value source))
   (make-curve :rng (int::sampler-rng source) :source source :control-points (make-points points)))
 
 (defmethod int:sample ((sampler mod:curve) x &optional (y 0d0) (z 0d0) (w 0d0))

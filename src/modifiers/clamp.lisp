@@ -1,5 +1,8 @@
 (in-package #:cl-user)
 
+;;;; Clamp modifier
+;;;; This noise modifier clamps the output of its input sampler to the specified range.
+
 (defpackage #:%coherent-noise.modifiers.clamp
   (:local-nicknames
    (#:int #:%coherent-noise.internal)
@@ -20,21 +23,19 @@
   (max 1f0 :type u:f32))
 
 (defun mod:clamp (source min max)
+  "Construct a sampler that, when sampled, clamps the output of `source` to be within the range
+`min`..`max`. If the output of `source` is less than `min`, the result will be `min`. If the output
+of `source` is greater than `max`, the result will be `max`.
+
+`source`: The input sampler to clamp (required).
+`min`: A real number denoting the lower bound of the clamping range (required).
+`max`: A real number denoting the upper bound of the clamping range (required)."
   (unless (typep source 'int:sampler)
-    (error 'int:invalid-sampler-argument
-           :sampler-type 'clamp
-           :argument 'source
-           :value source))
+    (error 'int:invalid-sampler-argument :sampler-type 'clamp :argument 'source :value source))
   (unless (realp min)
-    (error 'int:invalid-real-argument
-           :sampler-type 'clamp
-           :argument 'min
-           :value min))
+    (error 'int:invalid-real-argument :sampler-type 'clamp :argument 'min :value min))
   (unless (realp max)
-    (error 'int:invalid-real-argument
-           :sampler-type 'clamp
-           :argument 'max
-           :value max))
+    (error 'int:invalid-real-argument :sampler-type 'clamp :argument 'max :value max))
   (make-clamp :rng (int::sampler-rng source)
               :source source
               :min (float min 1f0)

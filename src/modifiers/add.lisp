@@ -1,5 +1,8 @@
 (in-package #:cl-user)
 
+;;;; Addition (+) modifier
+;;;; This noise modifier outputs the sum of the outputs of both of its input samplers.
+
 (defpackage #:%coherent-noise.modifiers.add
   (:local-nicknames
    (#:int #:%coherent-noise.internal)
@@ -19,16 +22,15 @@
   (source2 nil :type int:sampler))
 
 (defun mod:+ (source1 source2)
+  "Construct a sampler that, when sampled, outputs the sum of the outputs of `source1` and
+`source2`.
+
+`source1`: The first input sampler (required).
+`source2`: The second input sampler (required)."
   (unless (typep source1 'int:sampler)
-    (error 'int:invalid-sampler-argument
-           :sampler-type '+
-           :argument 'source1
-           :value source1))
+    (error 'int:invalid-sampler-argument :sampler-type '+ :argument 'source1 :value source1))
   (unless (typep source2 'int:sampler)
-    (error 'int:invalid-sampler-argument
-           :sampler-type '+
-           :argument 'source2
-           :value source2))
+    (error 'int:invalid-sampler-argument :sampler-type '+ :argument 'source2 :value source2))
   (make-add :rng (int::sampler-rng source1) :source1 source1 :source2 source2))
 
 (defmethod int:sample ((sampler mod:+) x &optional (y 0d0) (z 0d0) (w 0d0))
