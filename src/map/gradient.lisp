@@ -16,6 +16,8 @@
   (setf (gradient-points gradient) (make-array 0)))
 
 (defgeneric build-gradient (gradient type)
+  (:method (gradient type)
+    (error "Gradient ~s is not defined." type))
   (:method :around (gradient type)
     (clear-gradient gradient)
     (call-next-method)
