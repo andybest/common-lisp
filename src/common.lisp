@@ -26,7 +26,12 @@
 
 (defmacro lookup (table &body (first . rest))
   (if rest
-      `(aref ,table (logand (+ ,first (lookup ,table ,@rest)) 255))
+      `(aref ,table (+ ,first (lookup ,table ,@rest)))
+      `(aref ,table ,first)))
+
+(defmacro lookup-wrap (table &body (first . rest))
+  (if rest
+      `(aref ,table (logand (+ ,first (lookup-wrap ,table ,@rest)) 255))
       `(aref ,table (logand ,first 255))))
 
 (declaim (inline interpolate-cubic))

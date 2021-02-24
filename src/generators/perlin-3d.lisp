@@ -54,8 +54,7 @@
                (r5 (grad (int::lookup table (1+ zi) a) xf yf (1- zf)))
                (r6 (grad (int::lookup table (1+ zi) b) (1- xf) yf (1- zf)))
                (r7 (grad (int::lookup table (1+ zi) (1+ a)) xf (1- yf) (1- zf)))
-               (r8 (grad (int::lookup table (1+ zi) (1+ b)) (1- xf) (1- yf) (1- zf))))
-      (float (u:lerp w
-                     (u:lerp v (u:lerp u r1 r2) (u:lerp u r3 r4))
-                     (u:lerp v (u:lerp u r5 r6) (u:lerp u r7 r8)))
-             1f0))))
+               (r8 (grad (int::lookup table (1+ zi) (1+ b)) (1- xf) (1- yf) (1- zf)))
+               (r9 (u:lerp v (u:lerp u r1 r2) (u:lerp u r3 r4)))
+               (r10 (u:lerp v (u:lerp u r5 r6) (u:lerp u r7 r8))))
+      (float (u:lerp w r9 r10) 1f0))))

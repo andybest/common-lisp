@@ -161,7 +161,7 @@
 
 (declaim (inline contribute))
 (defun contribute (state dx dy dz dw xsb ysb zsb wsb)
-  (let ((index (logand (int::lookup (table (sampler state)) wsb zsb ysb xsb) 252))
+  (let ((index (logand (int::lookup-wrap (table (sampler state)) wsb zsb ysb xsb) 252))
         (a (- 2 (* dx dx) (* dy dy) (* dz dz) (* dw dw))))
     (when (plusp a)
       (incf (value state)

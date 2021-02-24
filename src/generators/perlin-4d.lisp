@@ -69,12 +69,9 @@
                (r13 (grad (int::lookup table xi1 yi1 zi wi) xf-1 yf-1 zf wf))
                (r14 (grad (int::lookup table xi1 yi1 zi wi1) xf-1 yf-1 zf wf-1))
                (r15 (grad (int::lookup table xi1 yi1 zi1 wi) xf-1 yf-1 zf-1 wf))
-               (r16 (grad (int::lookup table xi1 yi1 zi1 wi1) xf-1 yf-1 zf-1 wf-1)))
-      (float (u:lerp fs
-                     (u:lerp ft
-                             (u:lerp fr (u:lerp fq r1 r2) (u:lerp fq r3 r4))
-                             (u:lerp fr (u:lerp fq r5 r6) (u:lerp fq r7 r8)))
-                     (u:lerp ft
-                             (u:lerp fr (u:lerp fq r9 r10) (u:lerp fq r11 r12))
-                             (u:lerp fr (u:lerp fq r13 r14) (u:lerp fq r15 r16))))
-             1f0))))
+               (r16 (grad (int::lookup table xi1 yi1 zi1 wi1) xf-1 yf-1 zf-1 wf-1))
+               (r17 (u:lerp fr (u:lerp fq r1 r2) (u:lerp fq r3 r4)))
+               (r18 (u:lerp fr (u:lerp fq r5 r6) (u:lerp fq r7 r8)))
+               (r19 (u:lerp fr (u:lerp fq r9 r10) (u:lerp fq r11 r12)))
+               (r20 (u:lerp fr (u:lerp fq r13 r14) (u:lerp fq r15 r16))))
+      (float (u:lerp fs (u:lerp ft r17 r18) (u:lerp ft r19 r20)) 1f0))))

@@ -125,7 +125,7 @@
 
 (declaim (inline extrapolate))
 (defun extrapolate (table xsb ysb zsb dx dy dz)
-  (let ((index (int::lookup table zsb ysb xsb)))
+  (let ((index (int::lookup-wrap table zsb ysb xsb)))
     (+ (* (aref +gradients+ index) dx)
        (* (aref +gradients+ (1+ index)) dy)
        (* (aref +gradients+ (+ index 2)) dz))))
