@@ -30,9 +30,7 @@
 (defun gen:billow-2d (&key seed (generator #'gen:perlin-2d) (octaves 4) (frequency 1.0)
                         (lacunarity 2.0) (persistence 0.5))
   (unless (typep octaves '(integer 1 32))
-    (error 'int:invalid-fractal-octave-count
-           :sampler-type 'billow-2d
-           :value octaves))
+    (error 'int:invalid-fractal-octave-count :sampler-type 'billow-2d :value octaves))
   (unless (realp frequency)
     (error 'int:invalid-real-argument
            :sampler-type 'billow-2d

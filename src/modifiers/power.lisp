@@ -19,15 +19,9 @@
 
 (defun mod:power (source1 source2)
   (unless (typep source1 'int:sampler)
-    (error 'int:invalid-sampler-argument
-           :sampler-type 'power
-           :argument 'source1
-           :value source1))
+    (error 'int:invalid-sampler-argument :sampler-type 'power :argument 'source1 :value source1))
   (unless (typep source2 'int:sampler)
-    (error 'int:invalid-sampler-argument
-           :sampler-type 'power
-           :argument 'source2
-           :value source2))
+    (error 'int:invalid-sampler-argument :sampler-type 'power :argument 'source2 :value source2))
   (make-power :rng (int::sampler-rng source1) :source1 source1 :source2 source2))
 
 (defmethod int:sample ((sampler mod:power) x &optional (y 0d0) (z 0d0) (w 0d0))

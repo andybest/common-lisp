@@ -207,10 +207,7 @@
            :output-type output-type
            :valid-output-types '(:value :f1 :f2 :f1+f2 :f2-f1 :f1*f2 :f1/f2)))
   (unless (realp jitter)
-    (error 'int:invalid-real-argument
-           :sampler-type 'cellular-3d
-           :argument :jitter
-           :value jitter))
+    (error 'int:invalid-real-argument :sampler-type 'cellular-3d :argument :jitter :value jitter))
   (u:mvlet ((rng seed (int::make-rng seed)))
     (make-cellular-3d :rng rng
                       :seed seed

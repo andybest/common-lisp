@@ -31,9 +31,7 @@
 (defun gen:multifractal-4d (&key seed (generator #'gen:perlin-4d) (octaves 4) (frequency 1.0)
                               (lacunarity 2.0) (persistence 0.5))
   (unless (typep octaves '(integer 1 32))
-    (error 'int:invalid-fractal-octave-count
-           :sampler-type 'multifractal-4d
-           :value octaves))
+    (error 'int:invalid-fractal-octave-count :sampler-type 'multifractal-4d :value octaves))
   (unless (realp frequency)
     (error 'int:invalid-real-argument
            :sampler-type 'multifractal-4d

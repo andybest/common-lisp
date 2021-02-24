@@ -142,10 +142,7 @@
            :output-type output-type
            :valid-output-types '(:value :f1 :f2 :f1+f2 :f2-f1 :f1*f2 :f1/f2)))
   (unless (realp jitter)
-    (error 'int:invalid-real-argument
-           :sampler-type 'cellular-2d
-           :argument :jitter
-           :value jitter))
+    (error 'int:invalid-real-argument :sampler-type 'cellular-2d :argument :jitter :value jitter))
   (u:mvlet ((rng seed (int::make-rng seed)))
     (make-cellular-2d :rng rng
                       :seed seed

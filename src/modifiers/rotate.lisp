@@ -27,25 +27,13 @@
 
 (defun mod:rotate (source &key (x 0.0) (y 0.0) (z 0.0))
   (unless (typep source 'int:sampler)
-    (error 'int:invalid-sampler-argument
-           :sampler-type 'rotate
-           :argument 'source
-           :value source))
+    (error 'int:invalid-sampler-argument :sampler-type 'rotate :argument 'source :value source))
   (unless (realp x)
-    (error 'int:invalid-real-argument
-           :sampler-type 'rotate
-           :argument :x
-           :value x))
+    (error 'int:invalid-real-argument :sampler-type 'rotate :argument :x :value x))
   (unless (realp y)
-    (error 'int:invalid-real-argument
-           :sampler-type 'rotate
-           :argument :y
-           :value y))
+    (error 'int:invalid-real-argument :sampler-type 'rotate :argument :y :value y))
   (unless (realp z)
-    (error 'int:invalid-real-argument
-           :sampler-type 'rotate
-           :argument :z
-           :value z))
+    (error 'int:invalid-real-argument :sampler-type 'rotate :argument :z :value z))
   (let ((cx (float (cos x) 1d0))
         (cy (float (cos y) 1d0))
         (cz (float (cos z) 1d0))

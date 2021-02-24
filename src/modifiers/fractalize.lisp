@@ -14,14 +14,9 @@
                        &key (octaves 4) (frequency 1.0) (lacunarity 2.0) (persistence 0.5)
                          (attenuation 2.0))
   (unless (typep source 'int:sampler)
-    (error 'int:invalid-sampler-argument
-           :sampler-type 'fractalize
-           :argument 'source
-           :value source))
+    (error 'int:invalid-sampler-argument :sampler-type 'fractalize :argument 'source :value source))
   (unless (typep octaves '(integer 1 32))
-    (error 'int:invalid-fractal-octave-count
-           :sampler-type 'fractalize
-           :value octaves))
+    (error 'int:invalid-fractal-octave-count :sampler-type 'fractalize :value octaves))
   (unless (realp frequency)
     (error 'int:invalid-real-argument
            :sampler-type 'fractalize

@@ -20,20 +20,14 @@
 
 (defun mod:strengthen (source strength &key (bias 0.0))
   (unless (typep source 'int:sampler)
-    (error 'int:invalid-sampler-argument
-           :sampler-type 'strengthen
-           :argument 'source
-           :value source))
+    (error 'int:invalid-sampler-argument :sampler-type 'strengthen :argument 'source :value source))
   (unless (realp strength)
     (error 'int:invalid-real-argument
            :sampler-type 'strengthen
            :argument 'strength
            :value strength))
   (unless (realp bias)
-    (error 'int:invalid-real-argument
-           :sampler-type 'strengthen
-           :argument :bias
-           :value bias))
+    (error 'int:invalid-real-argument :sampler-type 'strengthen :argument :bias :value bias))
   (make-strengthen :rng (int::sampler-rng source)
                    :source source
                    :strength (float strength 1f0)

@@ -22,30 +22,15 @@
 
 (defun mod:scale (source &key (x 1.0) (y 1.0) (z 1.0) (w 1.0))
   (unless (typep source 'int:sampler)
-    (error 'int:invalid-sampler-argument
-           :sampler-type 'scale
-           :argument 'source
-           :value source))
+    (error 'int:invalid-sampler-argument :sampler-type 'scale :argument 'source :value source))
   (unless (realp x)
-    (error 'int:invalid-real-argument
-           :sampler-type 'scale
-           :argument :x
-           :value x))
+    (error 'int:invalid-real-argument :sampler-type 'scale :argument :x :value x))
   (unless (realp y)
-    (error 'int:invalid-real-argument
-           :sampler-type 'scale
-           :argument :y
-           :value y))
+    (error 'int:invalid-real-argument :sampler-type 'scale :argument :y :value y))
   (unless (realp z)
-    (error 'int:invalid-real-argument
-           :sampler-type 'scale
-           :argument :z
-           :value z))
+    (error 'int:invalid-real-argument :sampler-type 'scale :argument :z :value z))
   (unless (realp w)
-    (error 'int:invalid-real-argument
-           :sampler-type 'scale
-           :argument :w
-           :value w))
+    (error 'int:invalid-real-argument :sampler-type 'scale :argument :w :value w))
   (make-scale :rng (int::sampler-rng source)
               :source source
               :x (float x 1d0)
@@ -60,10 +45,7 @@
            :argument 'source
            :value source))
   (unless (realp scalar)
-    (error 'int:invalid-real-argument
-           :sampler-type 'scale
-           :argument 'scalar
-           :value scalar))
+    (error 'int:invalid-real-argument :sampler-type 'uniform-scale :argument 'scalar :value scalar))
   (let ((scalar (float scalar 1d0)))
     (make-scale :rng (int::sampler-rng source)
                 :source source

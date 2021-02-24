@@ -34,9 +34,7 @@
 (defun gen:ridged-multifractal-2d (&key seed (generator #'gen:perlin-2d) (octaves 4) (frequency 1.0)
                                      (lacunarity 2.0) (persistence 1.0) (attenuation 2.0))
   (unless (typep octaves '(integer 1 32))
-    (error 'int:invalid-fractal-octave-count
-           :sampler-type 'ridged-multifractal-2d
-           :value octaves))
+    (error 'int:invalid-fractal-octave-count :sampler-type 'ridged-multifractal-2d :value octaves))
   (unless (realp frequency)
     (error 'int:invalid-real-argument
            :sampler-type 'ridged-multifractal-2d

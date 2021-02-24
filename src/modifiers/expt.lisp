@@ -1,5 +1,7 @@
 (in-package #:cl-user)
 
+;;;; Exponent modifier
+
 (defpackage #:%coherent-noise.modifiers.expt
   (:local-nicknames
    (#:int #:%coherent-noise.internal)
@@ -21,15 +23,9 @@
 
 (defun mod:expt (source power &key symmetric-p)
   (unless (typep source 'int:sampler)
-    (error 'int:invalid-sampler-argument
-           :sampler-type 'expt
-           :argument 'source
-           :value source))
+    (error 'int:invalid-sampler-argument :sampler-type 'expt :argument 'source :value source))
   (unless (realp power)
-    (error 'int:invalid-real-argument
-           :sampler-type 'expt
-           :argument 'power
-           :value power))
+    (error 'int:invalid-real-argument :sampler-type 'expt :argument 'power :value power))
   (make-expt :rng (int::sampler-rng source)
              :source source
              :power (float power 1f0)
