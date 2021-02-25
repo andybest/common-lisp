@@ -18,9 +18,9 @@
   (source1 nil :type int:sampler)
   (source2 nil :type int:sampler)
   (control nil :type int:sampler)
-  (min -1d0 :type u:f64)
-  (max 1d0 :type u:f64)
-  (falloff 0d0 :type u:f64))
+  (min -1.0 :type u:f32)
+  (max 1.0 :type u:f32)
+  (falloff 0.0 :type u:f32))
 
 (defun mod:select (source1 source2 control &key (min -1.0) (max 1.0) (falloff 0.0))
   (unless (typep source1 'int:sampler)
@@ -39,9 +39,9 @@
                :source1 source1
                :source2 source2
                :control control
-               :min (float min 1d0)
-               :max (float max 1d0)
-               :falloff (float falloff 1d0)))
+               :min (float min 1f0)
+               :max (float max 1f0)
+               :falloff (float falloff 1f0)))
 
 (defmethod int:sample ((sampler mod:select) x &optional (y 0d0) (z 0d0) (w 0d0))
   (let* ((min (min sampler))
