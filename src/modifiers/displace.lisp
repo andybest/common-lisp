@@ -32,9 +32,13 @@ coordinates, `source` is then sampled with the new input coordinate set. Any dis
 that are not specified will not displace the corresponding axis of the input sampler.
 
 `source`: The input sampler to displace (required).
+
 `x`: A sampler that is evaluated and added to the X axis input coordinate of `source` (optional).
+
 `y`: A sampler that is evaluated and added to the Y axis input coordinate of `source` (optional).
+
 `z`: A sampler that is evaluated and added to the Z axis input coordinate of `source` (optional).
+
 `w`: A sampler that is evaluated and added to the W axis input coordinate of `source` (optional)."
   (unless (typep source 'int:sampler)
     (error 'int:invalid-sampler-argument :sampler-type 'displace :argument 'source :value source))

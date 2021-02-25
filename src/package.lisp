@@ -80,9 +80,9 @@
    #:displace
    #:expt
    #:fractalize
-   #:invert
    #:max
    #:min
+   #:negate
    #:power
    #:rotate
    #:scale

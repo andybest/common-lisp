@@ -47,7 +47,8 @@ Additionally, no two point pairs can contain the same input point value.
 When sampling the input sampler `source`, the result is evaluated using the curve data, and maps it
 to a new output value.
 
-`source`: The input sampler to map onto the curve (required)
+`source`: The input sampler to map onto the curve (required).
+
 `points`: A list of cons pairs denoting input (car) and output (cdr) control points of the curve
 (required)."
   (unless (typep source 'int:sampler)

@@ -1,5 +1,9 @@
 (in-package #:cl-user)
 
+;;;; Power modifier
+;;;; This noise modifier raises the the output of its first input sampler to the power of the output
+;;;; of its second input sampler.
+
 (defpackage #:%coherent-noise.modifiers.power
   (:local-nicknames
    (#:int #:%coherent-noise.internal)
@@ -18,6 +22,12 @@
   (source2 nil :type int:sampler))
 
 (defun mod:power (source1 source2)
+  "Construct a sampler that, when sampled, raises the output of `source1` to the power of the output
+of `source2`.
+
+`source1`: The first input sampler (required).
+
+`source2`: The second input sampler (required)."
   (unless (typep source1 'int:sampler)
     (error 'int:invalid-sampler-argument :sampler-type 'power :argument 'source1 :value source1))
   (unless (typep source2 'int:sampler)

@@ -32,9 +32,10 @@ If the output of `control` is negative, the blended output is weighted towards t
 of `source2`.
 
 `source1`: The sampler to weight towards if the output of `control` is negative (required).
+
 `source2`: The sampler to weight towards if the output of `control` is positive (required).
-`control`: The sampler that determines the weight of the blending operation (required).
-"
+
+`control`: The sampler that determines the weight of the blending operation (required)."
   (unless (typep source1 'int:sampler)
     (error 'int:invalid-sampler-argument :sampler-type 'blend :argument 'source1 :value source1))
   (unless (typep source2 'int:sampler)

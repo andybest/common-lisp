@@ -1,5 +1,8 @@
 (in-package #:cl-user)
 
+;;;; Minimum modifier
+;;;; This noise modifier takes the minimum output value of its two input samplers.
+
 (defpackage #:%coherent-noise.modifiers.min
   (:local-nicknames
    (#:int #:%coherent-noise.internal)
@@ -19,6 +22,12 @@
   (source2 nil :type int:sampler))
 
 (defun mod:min (source1 source2)
+  "Construct a sampler that, when sampled, outputs the minimum of the outputs of its two input
+samplers.
+
+`source1`: The first input sampler (required).
+
+`source2`: The second input sampler (required)."
   (unless (typep source1 'int:sampler)
     (error 'int:invalid-sampler-argument :sampler-type 'min :argument 'source1 :value source1))
   (unless (typep source2 'int:sampler)

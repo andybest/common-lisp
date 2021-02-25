@@ -256,10 +256,10 @@
                                      :ridged-multi))
              '(t t)
              "fractalize-ridged-multi")
-  (is-values (compare 'modify-invert
-                      (cn:invert (cn:uniform-scale (cn:perlin-3d :seed "default") 10)))
+  (is-values (compare 'modify-negate
+                      (cn:negate (cn:uniform-scale (cn:perlin-3d :seed "default") 10)))
              '(t t)
-             "invert")
+             "negate")
   (is-values (compare 'modify-max
                       (cn:max (cn:uniform-scale (cn:perlin-3d :seed "default") 10)
                               (cn:uniform-scale (cn:simplex-3d :seed "default") 10)))

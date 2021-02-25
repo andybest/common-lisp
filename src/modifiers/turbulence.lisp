@@ -1,5 +1,9 @@
 (in-package #:cl-user)
 
+;;;; Turbulence modifier
+;;;; This noise modifier randomly displaces the input coordinates of its input sampler before
+;;;; sampling from it.
+
 (defpackage #:%coherent-noise.modifiers.turbulence
   (:local-nicknames
    (#:int #:%coherent-noise.internal)
@@ -36,6 +40,22 @@
   (w4 0d0 :type u:f64))
 
 (defun mod:turbulence (source displacement &key (frequency 1.0) (power 1.0) (roughness 3))
+  "Construct a sampler that, when sampled, displaces the input coordinates of its `source` input
+sampler before sampling from it. The displacement values come from the result of sampling a
+fractional Brownian motion application of the supplied `displacement` sampler, along with randomly
+generated values retrieved using the random number generator of `source`.
+
+`source`: The input sampler whose input coordinates are displaced (required).
+
+`displacement`: A sampler that has `roughness` octaves of fractional Brownian motion applied to it
+to determine the random displacement (required).
+
+`frequency`: The frequency of the fractional Brownian motion displacement (optional, default 1.0).
+
+`power`: A scaling factor that is applied to the displacement amount (optional, default: 1.0).
+
+`roughness`: The number of octaves to apply for the displacement fractional Brownian motion
+(optional, default: 3)."
   (unless (typep source 'int:sampler)
     (error 'int:invalid-sampler-argument :sampler-type 'turbulence :argument 'source :value source))
   (unless (typep displacement 'int:sampler)

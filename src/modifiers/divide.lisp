@@ -1,6 +1,6 @@
 (in-package #:cl-user)
 
-;;;; Divide (/) modifier
+;;;; Division (/) modifier
 ;;;; This noise modifier outputs the result of dividing the output of its first input sampler by its
 ;;;; second input sampler.
 
@@ -27,6 +27,7 @@
 the output of `source2`.
 
 `source1`: The first input sampler (required).
+
 `source2`: The second input sampler (required)."
   (unless (typep source1 'int:sampler)
     (error 'int:invalid-sampler-argument :sampler-type '/ :argument :source1 :value source1))

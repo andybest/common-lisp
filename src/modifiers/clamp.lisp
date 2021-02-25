@@ -28,7 +28,9 @@
 of `source` is greater than `max`, the result will be `max`.
 
 `source`: The input sampler to clamp (required).
+
 `min`: A real number denoting the lower bound of the clamping range (required).
+
 `max`: A real number denoting the upper bound of the clamping range (required)."
   (unless (typep source 'int:sampler)
     (error 'int:invalid-sampler-argument :sampler-type 'clamp :argument 'source :value source))
