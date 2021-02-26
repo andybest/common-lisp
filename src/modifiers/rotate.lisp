@@ -1,5 +1,8 @@
 (in-package #:cl-user)
 
+;;;; Rotate modifier
+;;;; This noise modifier rotates the input coordinates of its input sampler.
+
 (defpackage #:%coherent-noise.modifiers.rotate
   (:local-nicknames
    (#:int #:%coherent-noise.internal)
@@ -26,6 +29,17 @@
   (rz3 0d0 :type u:f64))
 
 (defun mod:rotate (source &key (x 0.0) (y 0.0) (z 0.0))
+  "Construct a sampler that, when sampled, rotates the input coordinates around the origin before
+sampling from it. The coordinate system is assumed to be left-handed. The angle of rotation around
+each of the `x`, `y`, and `z` axes can be set individually.
+
+`source`: The input sampler (required).
+
+`x`: The angle in radians to rotate around the X axis (optional, default: 0.0).
+
+`y`: The angle in radians to rotate around the Y axis (optional, default: 0.0).
+
+`z`: The angle in radians to rotate around the Z axis (optional, default: 0.0)."
   (unless (typep source 'int:sampler)
     (error 'int:invalid-sampler-argument :sampler-type 'rotate :argument 'source :value source))
   (unless (realp x)

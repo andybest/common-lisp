@@ -1,5 +1,8 @@
 (in-package #:cl-user)
 
+;;;; Scale modifier
+;;;; This noise modifier scales the input coordinates of its input sampler.
+
 (defpackage #:%coherent-noise.modifiers.scale
   (:local-nicknames
    (#:int #:%coherent-noise.internal)
@@ -21,6 +24,19 @@
   (w 1d0 :type u:f64))
 
 (defun mod:scale (source &key (x 1.0) (y 1.0) (z 1.0) (w 1.0))
+  "Construct a sampler that, when sampled, scales the input coordinates of `source` down (increases
+the wavelength, and decreases the frequency), by the amounts given for each of the `x`, `y`, `z`,
+and `w` axes.
+
+`source`: The input sampler (required).
+
+`x`: The amount to scale along the X axis (optional, default: 1.0).
+
+`y`: The amount to scale along the Y axis (optional, default: 1.0).
+
+`z`: The amount to scale along the Z axis (optional, default: 1.0).
+
+`w`: The amount to scale along the W axis (optional, default: 1.0)."
   (unless (typep source 'int:sampler)
     (error 'int:invalid-sampler-argument :sampler-type 'scale :argument 'source :value source))
   (unless (realp x)

@@ -1,5 +1,8 @@
 (in-package #:cl-user)
 
+;;;; Terrace modifier
+;;;; This noise modifier maps the output of its input sampler onto a terrace-forming curve.
+
 (defpackage #:%coherent-noise.modifiers.terrace
   (:local-nicknames
    (#:int #:%coherent-noise.internal)
@@ -34,6 +37,15 @@
         :finally (return (sort result #'<))))
 
 (defun mod:terrace (source &key points invert-p)
+  "Construct a sampler that, when sampled, maps the output of its input sampler onto a
+terrace-forming curve, defined by the list of `points`. `points` is a list of at least 2 real
+numbers, each with a unique value.
+
+`source`: The input sampler (required).
+
+`points`: A list of at least two control points that define the curve (required).
+
+`invert-p`: Whether the curve is inverted between the control points (optional, default: nil)."
   (unless (typep source 'int:sampler)
     (error 'int:invalid-sampler-argument :sampler-type 'terrace :argument 'source :value source))
   (make-terrace :rng (int::sampler-rng source)

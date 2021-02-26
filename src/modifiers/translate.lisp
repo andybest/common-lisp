@@ -1,5 +1,9 @@
 (in-package #:cl-user)
 
+;;;; Translate modifier
+;;;; This noise modifier translates the input coordinates of its input sampler before sampling from
+;;;; it.
+
 (defpackage #:%coherent-noise.modifiers.translate
   (:local-nicknames
    (#:int #:%coherent-noise.internal)
@@ -21,6 +25,18 @@
   (w 0.0 :type u:f32))
 
 (defun mod:translate (source &key (x 0.0) (y 0.0) (z 0.0) (w 0.0))
+  "Construct a sampler that, when sampled, offsets the input coordinates of `source` by the amounts
+supplied each of the `x`, `y`, `z`, and `w` axes, before sampling from it.
+
+`source`: The input sampler (required).
+
+`x`: The amount to offset along the X axis (optional, default: 0.0).
+
+`y`: The amount to offset along the Y axis (optional, default: 0.0).
+
+`z`: The amount to offset along the Z axis (optional, default: 0.0).
+
+`w`: The amount to offset along the W axis (optional, default: 0.0)."
   (unless (typep source 'int:sampler)
     (error 'int:invalid-sampler-argument :sampler-type 'translate :argument 'source :value source))
   (unless (realp x)

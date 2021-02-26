@@ -1,5 +1,8 @@
 (in-package #:cl-user)
 
+;;;; Strengthen modifier
+;;;; This noise modifier applies a scaling factor and a bias to the output of its input sampler.
+
 (defpackage #:%coherent-noise.modifiers.strengthen
   (:local-nicknames
    (#:int #:%coherent-noise.internal)
@@ -19,6 +22,14 @@
   (bias 0.0 :type u:f32))
 
 (defun mod:strengthen (source strength &key (bias 0.0))
+  "Construct a sampler that, when sampled, modifies the output value of `source` by multiplying it
+by `strength`, and optionally adding `bias` afterwards.
+
+`source`: The input sampler (required).
+
+`strength`: A multiplier to apply to the output of `source` (required).
+
+`bias`: An additional bias amount to add to the result (optional, default: 0.0)."
   (unless (typep source 'int:sampler)
     (error 'int:invalid-sampler-argument :sampler-type 'strengthen :argument 'source :value source))
   (unless (realp strength)
