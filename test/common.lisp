@@ -14,7 +14,7 @@
         (let* ((x-coord (float x 1d0))
                (y-coord (float y 1d0))
                (z-coord 100.5d0)
-               (sample (+ (* (cn:sample sampler x-coord y-coord z-coord) 0.5) 0.5)))
+               (sample (+ (* (c:sample sampler x-coord y-coord z-coord) 0.5) 0.5)))
           (setf (aref data (+ x (* y width))) (u:clamp (floor (* sample 255)) 0 255)))))
     png))
 
