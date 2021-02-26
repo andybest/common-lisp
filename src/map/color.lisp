@@ -1,4 +1,4 @@
-(in-package #:%coherent-noise.map)
+(in-package #:%cricket.map)
 
 (deftype color () '(simple-array u:ub8 (4)))
 

@@ -2,15 +2,15 @@
 
 ;;;; 1-dimensional Simplex noise generator
 
-(defpackage #:%coherent-noise.generators.simplex-1d
+(defpackage #:%cricket.generators.simplex-1d
   (:local-nicknames
-   (#:gen #:%coherent-noise.generators)
-   (#:int #:%coherent-noise.internal)
+   (#:gen #:%cricket.generators)
+   (#:int #:%cricket.internal)
    (#:rng #:seedable-rng)
    (#:u #:golden-utils))
   (:use #:cl))
 
-(in-package #:%coherent-noise.generators.simplex-1d)
+(in-package #:%cricket.generators.simplex-1d)
 
 (u:define-constant +scale+ 0.395d0)
 

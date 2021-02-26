@@ -2,15 +2,15 @@
 
 ;;;; 4-dimensional "billow" fractal noise generator
 
-(defpackage #:%coherent-noise.generators.billow-4d
+(defpackage #:%cricket.generators.billow-4d
   (:local-nicknames
-   (#:gen #:%coherent-noise.generators)
-   (#:int #:%coherent-noise.internal)
+   (#:gen #:%cricket.generators)
+   (#:int #:%cricket.internal)
    (#:rng #:seedable-rng)
    (#:u #:golden-utils))
   (:use #:cl))
 
-(in-package #:%coherent-noise.generators.billow-4d)
+(in-package #:%cricket.generators.billow-4d)
 
 (defstruct (gen:billow-4d
             (:include int:sampler)

@@ -4,14 +4,14 @@
 ;;;; This noise modifier raises the the output of its first input sampler to the power of the output
 ;;;; of its second input sampler.
 
-(defpackage #:%coherent-noise.modifiers.power
+(defpackage #:%cricket.modifiers.power
   (:local-nicknames
-   (#:int #:%coherent-noise.internal)
-   (#:mod #:%coherent-noise.modifiers)
+   (#:int #:%cricket.internal)
+   (#:mod #:%cricket.modifiers)
    (#:u #:golden-utils))
   (:use #:cl))
 
-(in-package #:%coherent-noise.modifiers.power)
+(in-package #:%cricket.modifiers.power)
 
 (defstruct (mod:power
             (:include int:sampler)

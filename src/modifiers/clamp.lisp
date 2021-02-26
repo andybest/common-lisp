@@ -3,15 +3,15 @@
 ;;;; Clamp modifier
 ;;;; This noise modifier clamps the output of its input sampler to the specified range.
 
-(defpackage #:%coherent-noise.modifiers.clamp
+(defpackage #:%cricket.modifiers.clamp
   (:local-nicknames
-   (#:int #:%coherent-noise.internal)
-   (#:mod #:%coherent-noise.modifiers)
+   (#:int #:%cricket.internal)
+   (#:mod #:%cricket.modifiers)
    (#:u #:golden-utils))
   (:use #:cl)
   (:shadow #:min #:max))
 
-(in-package #:%coherent-noise.modifiers.clamp)
+(in-package #:%cricket.modifiers.clamp)
 
 (defstruct (mod:clamp
             (:include int:sampler)

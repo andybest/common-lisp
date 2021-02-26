@@ -2,15 +2,15 @@
 
 ;;;; Constant value generator
 
-(defpackage #:%coherent-noise.generators.constant
+(defpackage #:%cricket.generators.constant
   (:local-nicknames
-   (#:gen #:%coherent-noise.generators)
-   (#:int #:%coherent-noise.internal)
+   (#:gen #:%cricket.generators)
+   (#:int #:%cricket.internal)
    (#:rng #:seedable-rng)
    (#:u #:golden-utils))
   (:use #:cl))
 
-(in-package #:%coherent-noise.generators.constant)
+(in-package #:%cricket.generators.constant)
 
 (defstruct (gen:constant
             (:include int:sampler)

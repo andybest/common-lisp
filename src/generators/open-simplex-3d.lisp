@@ -2,15 +2,15 @@
 
 ;;;; 3-dimensional OpenSimplex noise generator
 
-(defpackage #:%coherent-noise.generators.open-simplex-3d
+(defpackage #:%cricket.generators.open-simplex-3d
   (:local-nicknames
-   (#:gen #:%coherent-noise.generators)
-   (#:int #:%coherent-noise.internal)
+   (#:gen #:%cricket.generators)
+   (#:int #:%cricket.internal)
    (#:rng #:seedable-rng)
    (#:u #:golden-utils))
   (:use #:cl))
 
-(in-package #:%coherent-noise.generators.open-simplex-3d)
+(in-package #:%cricket.generators.open-simplex-3d)
 
 (u:eval-always
   (u:define-constant +stretch+ (/ -6d0))

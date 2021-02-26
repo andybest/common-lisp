@@ -1,4 +1,4 @@
-(in-package #:%coherent-noise.map)
+(in-package #:%cricket.map)
 
 (defstruct (gradient-point
             (:predicate nil)

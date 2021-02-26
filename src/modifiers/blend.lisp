@@ -4,14 +4,14 @@
 ;;;; This noise modifier blends the outputs of its two input samplers together using linear
 ;;;; interpolation by the output value of its control sampler.
 
-(defpackage #:%coherent-noise.modifiers.blend
+(defpackage #:%cricket.modifiers.blend
   (:local-nicknames
-   (#:int #:%coherent-noise.internal)
-   (#:mod #:%coherent-noise.modifiers)
+   (#:int #:%cricket.internal)
+   (#:mod #:%cricket.modifiers)
    (#:u #:golden-utils))
   (:use #:cl))
 
-(in-package #:%coherent-noise.modifiers.blend)
+(in-package #:%cricket.modifiers.blend)
 
 (defstruct (mod:blend
             (:include int:sampler)

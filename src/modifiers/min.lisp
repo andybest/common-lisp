@@ -3,15 +3,15 @@
 ;;;; Minimum modifier
 ;;;; This noise modifier takes the minimum output value of its two input samplers.
 
-(defpackage #:%coherent-noise.modifiers.min
+(defpackage #:%cricket.modifiers.min
   (:local-nicknames
-   (#:int #:%coherent-noise.internal)
-   (#:mod #:%coherent-noise.modifiers)
+   (#:int #:%cricket.internal)
+   (#:mod #:%cricket.modifiers)
    (#:u #:golden-utils))
   (:use #:cl)
   (:shadow #:min))
 
-(in-package #:%coherent-noise.modifiers.min)
+(in-package #:%cricket.modifiers.min)
 
 (defstruct (mod:min
             (:include int:sampler)

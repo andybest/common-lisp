@@ -3,14 +3,14 @@
 ;;;; Addition (+) modifier
 ;;;; This noise modifier outputs the adding the outputs of both of its input samplers.
 
-(defpackage #:%coherent-noise.modifiers.add
+(defpackage #:%cricket.modifiers.add
   (:local-nicknames
-   (#:int #:%coherent-noise.internal)
-   (#:mod #:%coherent-noise.modifiers)
+   (#:int #:%cricket.internal)
+   (#:mod #:%cricket.modifiers)
    (#:u #:golden-utils))
   (:use #:cl))
 
-(in-package #:%coherent-noise.modifiers.add)
+(in-package #:%cricket.modifiers.add)
 
 (defstruct (mod:+
             (:constructor make-add)

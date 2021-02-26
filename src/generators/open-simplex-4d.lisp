@@ -2,15 +2,15 @@
 
 ;;;; 4-dimensional OpenSimplex noise generator
 
-(defpackage #:%coherent-noise.generators.open-simplex-4d
+(defpackage #:%cricket.generators.open-simplex-4d
   (:local-nicknames
-   (#:gen #:%coherent-noise.generators)
-   (#:int #:%coherent-noise.internal)
+   (#:gen #:%cricket.generators)
+   (#:int #:%cricket.internal)
    (#:rng #:seedable-rng)
    (#:u #:golden-utils))
   (:use #:cl))
 
-(in-package #:%coherent-noise.generators.open-simplex-4d)
+(in-package #:%cricket.generators.open-simplex-4d)
 
 (u:eval-always
   (u:define-constant +stretch+ (/ (1- (/ (sqrt 5d0))) 4))

@@ -3,14 +3,14 @@
 ;;;; Negate modifier
 ;;;; This noise modifier negates the output of its input sampler.
 
-(defpackage #:%coherent-noise.modifiers.negate
+(defpackage #:%cricket.modifiers.negate
   (:local-nicknames
-   (#:int #:%coherent-noise.internal)
-   (#:mod #:%coherent-noise.modifiers)
+   (#:int #:%cricket.internal)
+   (#:mod #:%cricket.modifiers)
    (#:u #:golden-utils))
   (:use #:cl))
 
-(in-package #:%coherent-noise.modifiers.negate)
+(in-package #:%cricket.modifiers.negate)
 
 (defstruct (mod:negate
             (:include int:sampler)

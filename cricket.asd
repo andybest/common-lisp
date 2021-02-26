@@ -1,9 +1,9 @@
-(asdf:defsystem #:coherent-noise
+(asdf:defsystem #:cricket
   :description ""
   :author ("Michael Fiano <mail@mfiano.net>")
   :license "MIT"
-  :homepage "https://mfiano.net/projects/coherent-noise"
-  :source-control (:git "https://git.mfiano.net/mfiano/coherent-noise.git")
+  :homepage "https://mfiano.net/projects/cricket"
+  :source-control (:git "https://git.mfiano.net/mfiano/cricket.git")
   :encoding :utf-8
   :depends-on (#:arrow-macros
                #:cl-cpus
@@ -12,7 +12,7 @@
                #:seedable-rng
                #:uiop
                #:zpng)
-  :in-order-to ((asdf:test-op (asdf:test-op #:coherent-noise.test)))
+  :in-order-to ((asdf:test-op (asdf:test-op #:cricket.test)))
   :pathname "src"
   :serial t
   :components

@@ -1,17 +1,17 @@
-(in-package #:%coherent-noise.internal)
+(in-package #:%cricket.internal)
 
-(define-condition coherent-noise-error (error)
+(define-condition cricket-error (error)
   ((%sampler-type :reader sampler-type
                   :initarg :sampler-type)))
 
-(define-condition invalid-seed (coherent-noise-error)
+(define-condition invalid-seed (cricket-error)
   ((%seed :reader seed
           :initarg :seed))
   (:report
    (lambda (condition stream)
      (format stream "Invalid seed: ~s.~%~%Seed must be a string or NIL." (seed condition)))))
 
-(define-condition invalid-sampler-argument (coherent-noise-error)
+(define-condition invalid-sampler-argument (cricket-error)
   ((%argument :reader argument
               :initarg :argument)
    (%value :reader value
@@ -23,7 +23,7 @@
              (sampler-type condition)
              (value condition)))))
 
-(define-condition invalid-fractal-octave-count (coherent-noise-error)
+(define-condition invalid-fractal-octave-count (cricket-error)
   ((%value :reader value
            :initarg :value))
   (:report
@@ -33,7 +33,7 @@
              (sampler-type condition)
              (value condition)))))
 
-(define-condition invalid-real-argument (coherent-noise-error)
+(define-condition invalid-real-argument (cricket-error)
   ((%argument :reader argument
               :initarg :argument)
    (%value :reader value
@@ -45,7 +45,7 @@
              (sampler-type condition)
              (value condition)))))
 
-(define-condition invalid-open-simplex2-orientation (coherent-noise-error)
+(define-condition invalid-open-simplex2-orientation (cricket-error)
   ((%orientation :reader orientation
                  :initarg :orientation)
    (%valid-orientations :reader valid-orientations
@@ -58,7 +58,7 @@
              (sampler-type condition)
              (valid-orientations condition)))))
 
-(define-condition invalid-cellular-distance-method (coherent-noise-error)
+(define-condition invalid-cellular-distance-method (cricket-error)
   ((%distance-method :reader distance-method
                      :initarg :distance-method)
    (%valid-distance-methods :reader valid-distance-methods
@@ -70,7 +70,7 @@
              (sampler-type condition)
              (valid-distance-methods condition)))))
 
-(define-condition invalid-cellular-output-type (coherent-noise-error)
+(define-condition invalid-cellular-output-type (cricket-error)
   ((%output-type :reader output-type
                  :initarg :output-type)
    (%valid-output-types :reader valid-output-types

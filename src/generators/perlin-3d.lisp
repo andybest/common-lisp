@@ -2,15 +2,15 @@
 
 ;;;; 3-dimensional Perlin ("Improved") noise generator
 
-(defpackage #:%coherent-noise.generators.perlin-3d
+(defpackage #:%cricket.generators.perlin-3d
   (:local-nicknames
-   (#:gen #:%coherent-noise.generators)
-   (#:int #:%coherent-noise.internal)
+   (#:gen #:%cricket.generators)
+   (#:int #:%cricket.internal)
    (#:rng #:seedable-rng)
    (#:u #:golden-utils))
   (:use #:cl))
 
-(in-package #:%coherent-noise.generators.perlin-3d)
+(in-package #:%cricket.generators.perlin-3d)
 
 (defstruct (gen:perlin-3d
             (:include int:sampler)

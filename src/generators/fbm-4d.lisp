@@ -2,15 +2,15 @@
 
 ;;;; 4-dimensional fractional Brownian motion noise generator
 
-(defpackage #:%coherent-noise.generators.fbm-4d
+(defpackage #:%cricket.generators.fbm-4d
   (:local-nicknames
-   (#:gen #:%coherent-noise.generators)
-   (#:int #:%coherent-noise.internal)
+   (#:gen #:%cricket.generators)
+   (#:int #:%cricket.internal)
    (#:rng #:seedable-rng)
    (#:u #:golden-utils))
   (:use #:cl))
 
-(in-package #:%coherent-noise.generators.fbm-4d)
+(in-package #:%cricket.generators.fbm-4d)
 
 (defstruct (gen:fbm-4d
             (:include int:sampler)

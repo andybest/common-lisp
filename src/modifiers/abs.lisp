@@ -3,15 +3,15 @@
 ;;;; ABS modifier
 ;;;; This noise modifier outputs the absolute value of its input sampler's output.
 
-(defpackage #:%coherent-noise.modifiers.abs
+(defpackage #:%cricket.modifiers.abs
   (:local-nicknames
-   (#:int #:%coherent-noise.internal)
-   (#:mod #:%coherent-noise.modifiers)
+   (#:int #:%cricket.internal)
+   (#:mod #:%cricket.modifiers)
    (#:u #:golden-utils))
   (:use #:cl)
   (:shadow #:abs))
 
-(in-package #:%coherent-noise.modifiers.abs)
+(in-package #:%cricket.modifiers.abs)
 
 (defstruct (mod:abs
             (:include int:sampler)

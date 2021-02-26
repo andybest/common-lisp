@@ -2,15 +2,15 @@
 
 ;;;; 2-dimensional Simplex noise generator
 
-(defpackage #:%coherent-noise.generators.simplex-2d
+(defpackage #:%cricket.generators.simplex-2d
   (:local-nicknames
-   (#:gen #:%coherent-noise.generators)
-   (#:int #:%coherent-noise.internal)
+   (#:gen #:%cricket.generators)
+   (#:int #:%cricket.internal)
    (#:rng #:seedable-rng)
    (#:u #:golden-utils))
   (:use #:cl))
 
-(in-package #:%coherent-noise.generators.simplex-2d)
+(in-package #:%cricket.generators.simplex-2d)
 
 (u:eval-always
   (u:define-constant +skew-factor+ (/ (1- (sqrt 3d0)) 2))

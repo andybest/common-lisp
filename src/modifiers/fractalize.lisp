@@ -3,15 +3,15 @@
 ;;;; Fractalize modifier
 ;;;; This noise modifier outputs a fractal of its input sampler's output.
 
-(defpackage #:%coherent-noise.modifiers.fractalize
+(defpackage #:%cricket.modifiers.fractalize
   (:local-nicknames
-   (#:gen #:%coherent-noise.generators)
-   (#:int #:%coherent-noise.internal)
+   (#:gen #:%cricket.generators)
+   (#:int #:%cricket.internal)
    (#:rng #:seedable-rng)
-   (#:mod #:%coherent-noise.modifiers))
+   (#:mod #:%cricket.modifiers))
   (:use #:cl))
 
-(in-package #:%coherent-noise.modifiers.fractalize)
+(in-package #:%cricket.modifiers.fractalize)
 
 (defun mod:fractalize (source type &rest args
                        &key (octaves 4) (frequency 1.0) (lacunarity 2.0) (persistence 0.5)
@@ -21,9 +21,13 @@ output over an arbitrary number of octaves. `type` may be a keyword denoting any
 generator fractal types:
 
 `:fbm`: Fractional Brownian motion.
+
 `:billow`: Creates billowy cloud or rock-like formations.
+
 `:multi`: Multifractal whose fractal dimensions vary.
+
 `:hybrid-multi`: Multifractal noise that results in valleys having smooth bottoms.
+
 `:ridged-multi`: Creates ridges suitable for terrain generation.
 
 The parameters supplied to this modifier are consistent with the behaviors they provide for the

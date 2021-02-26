@@ -2,15 +2,15 @@
 
 ;;;; 3-dimensional concentric cylinders generator
 
-(defpackage #:%coherent-noise.generators.cylinders-3d
+(defpackage #:%cricket.generators.cylinders-3d
   (:local-nicknames
-   (#:gen #:%coherent-noise.generators)
-   (#:int #:%coherent-noise.internal)
+   (#:gen #:%cricket.generators)
+   (#:int #:%cricket.internal)
    (#:rng #:seedable-rng)
    (#:u #:golden-utils))
   (:use #:cl))
 
-(in-package #:%coherent-noise.generators.cylinders-3d)
+(in-package #:%cricket.generators.cylinders-3d)
 
 (defstruct (gen:cylinders-3d
             (:include int:sampler)

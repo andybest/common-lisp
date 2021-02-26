@@ -3,14 +3,14 @@
 ;;;; Terrace modifier
 ;;;; This noise modifier maps the output of its input sampler onto a terrace-forming curve.
 
-(defpackage #:%coherent-noise.modifiers.terrace
+(defpackage #:%cricket.modifiers.terrace
   (:local-nicknames
-   (#:int #:%coherent-noise.internal)
-   (#:mod #:%coherent-noise.modifiers)
+   (#:int #:%cricket.internal)
+   (#:mod #:%cricket.modifiers)
    (#:u #:golden-utils))
   (:use #:cl))
 
-(in-package #:%coherent-noise.modifiers.terrace)
+(in-package #:%cricket.modifiers.terrace)
 
 (defstruct (mod:terrace
             (:include int:sampler)

@@ -2,15 +2,15 @@
 
 ;;;; 3-dimensional "hybrid" multifractal fractal noise generator
 
-(defpackage #:%coherent-noise.generators.hybrid-multifractal-3d
+(defpackage #:%cricket.generators.hybrid-multifractal-3d
   (:local-nicknames
-   (#:gen #:%coherent-noise.generators)
-   (#:int #:%coherent-noise.internal)
+   (#:gen #:%cricket.generators)
+   (#:int #:%cricket.internal)
    (#:rng #:seedable-rng)
    (#:u #:golden-utils))
   (:use #:cl))
 
-(in-package #:%coherent-noise.generators.hybrid-multifractal-3d)
+(in-package #:%cricket.generators.hybrid-multifractal-3d)
 
 (defstruct (gen:hybrid-multifractal-3d
             (:include int:sampler)

@@ -2,15 +2,15 @@
 
 ;;;; 3-dimensional value noise generator
 
-(defpackage #:%coherent-noise.generators.value-3d
+(defpackage #:%cricket.generators.value-3d
   (:local-nicknames
-   (#:gen #:%coherent-noise.generators)
-   (#:int #:%coherent-noise.internal)
+   (#:gen #:%cricket.generators)
+   (#:int #:%cricket.internal)
    (#:rng #:seedable-rng)
    (#:u #:golden-utils))
   (:use #:cl))
 
-(in-package #:%coherent-noise.generators.value-3d)
+(in-package #:%cricket.generators.value-3d)
 
 (defstruct (gen:value-3d
             (:include int:sampler)

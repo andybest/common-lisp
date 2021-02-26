@@ -4,14 +4,14 @@
 ;;;; This noise modifier translates the input coordinates of its input sampler before sampling from
 ;;;; it.
 
-(defpackage #:%coherent-noise.modifiers.translate
+(defpackage #:%cricket.modifiers.translate
   (:local-nicknames
-   (#:int #:%coherent-noise.internal)
-   (#:mod #:%coherent-noise.modifiers)
+   (#:int #:%cricket.internal)
+   (#:mod #:%cricket.modifiers)
    (#:u #:golden-utils))
   (:use #:cl))
 
-(in-package #:%coherent-noise.modifiers.translate)
+(in-package #:%cricket.modifiers.translate)
 
 (defstruct (mod:translate
             (:include int:sampler)

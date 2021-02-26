@@ -3,15 +3,15 @@
 ;;;; Maximum modifier
 ;;;; This noise modifier takes the maximum output value of its two input samplers.
 
-(defpackage #:%coherent-noise.modifiers.max
+(defpackage #:%cricket.modifiers.max
   (:local-nicknames
-   (#:int #:%coherent-noise.internal)
-   (#:mod #:%coherent-noise.modifiers)
+   (#:int #:%cricket.internal)
+   (#:mod #:%cricket.modifiers)
    (#:u #:golden-utils))
   (:use #:cl)
   (:shadow #:max))
 
-(in-package #:%coherent-noise.modifiers.max)
+(in-package #:%cricket.modifiers.max)
 
 (defstruct (mod:max
             (:include int:sampler)

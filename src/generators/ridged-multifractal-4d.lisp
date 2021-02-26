@@ -2,15 +2,15 @@
 
 ;;;; 4-dimensional "ridged" multifractal fractal noise generator
 
-(defpackage #:%coherent-noise.generators.ridged-multifractal-4d
+(defpackage #:%cricket.generators.ridged-multifractal-4d
   (:local-nicknames
-   (#:gen #:%coherent-noise.generators)
-   (#:int #:%coherent-noise.internal)
+   (#:gen #:%cricket.generators)
+   (#:int #:%cricket.internal)
    (#:rng #:seedable-rng)
    (#:u #:golden-utils))
   (:use #:cl))
 
-(in-package #:%coherent-noise.generators.ridged-multifractal-4d)
+(in-package #:%cricket.generators.ridged-multifractal-4d)
 
 (defstruct (gen:ridged-multifractal-4d
             (:include int:sampler)

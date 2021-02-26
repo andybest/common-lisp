@@ -4,14 +4,14 @@
 ;;;; This noise modifier outputs the result of multiplying the outputs of both of its input
 ;;;; samplers.
 
-(defpackage #:%coherent-noise.modifiers.multiply
+(defpackage #:%cricket.modifiers.multiply
   (:local-nicknames
-   (#:int #:%coherent-noise.internal)
-   (#:mod #:%coherent-noise.modifiers)
+   (#:int #:%cricket.internal)
+   (#:mod #:%cricket.modifiers)
    (#:u #:golden-utils))
   (:use #:cl))
 
-(in-package #:%coherent-noise.modifiers.multiply)
+(in-package #:%cricket.modifiers.multiply)
 
 (defstruct (mod:*
             (:constructor make-multiply)

@@ -4,14 +4,14 @@
 ;;;; This noise modifier outputs the result of subtracting the output of its second input sampler
 ;;;; from its first input sampler.
 
-(defpackage #:%coherent-noise.modifiers.subtract
+(defpackage #:%cricket.modifiers.subtract
   (:local-nicknames
-   (#:int #:%coherent-noise.internal)
-   (#:mod #:%coherent-noise.modifiers)
+   (#:int #:%cricket.internal)
+   (#:mod #:%cricket.modifiers)
    (#:u #:golden-utils))
   (:use #:cl))
 
-(in-package #:%coherent-noise.modifiers.subtract)
+(in-package #:%cricket.modifiers.subtract)
 
 (defstruct (mod:-
             (:constructor make-subtract)

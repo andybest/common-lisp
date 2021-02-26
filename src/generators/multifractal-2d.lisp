@@ -2,15 +2,15 @@
 
 ;;;; 2-dimensional multifractal fractal noise generator
 
-(defpackage #:%coherent-noise.generators.multifractal-2d
+(defpackage #:%cricket.generators.multifractal-2d
   (:local-nicknames
-   (#:gen #:%coherent-noise.generators)
-   (#:int #:%coherent-noise.internal)
+   (#:gen #:%cricket.generators)
+   (#:int #:%cricket.internal)
    (#:rng #:seedable-rng)
    (#:u #:golden-utils))
   (:use #:cl))
 
-(in-package #:%coherent-noise.generators.multifractal-2d)
+(in-package #:%cricket.generators.multifractal-2d)
 
 (defstruct (gen:multifractal-2d
             (:include int:sampler)

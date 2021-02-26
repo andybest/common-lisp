@@ -1,4 +1,4 @@
-(in-package #:coherent-noise.test)
+(in-package #:cricket.test)
 
 (plan 3)
 

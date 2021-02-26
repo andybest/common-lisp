@@ -4,14 +4,14 @@
 ;;;; This noise modifier modifies the input coordinates of its input sampler using up to four
 ;;;; displacement samplers corresponding to each axis of the source that should be offset.
 
-(defpackage #:%coherent-noise.modifiers.displace
+(defpackage #:%cricket.modifiers.displace
   (:local-nicknames
-   (#:int #:%coherent-noise.internal)
-   (#:mod #:%coherent-noise.modifiers)
+   (#:int #:%cricket.internal)
+   (#:mod #:%cricket.modifiers)
    (#:u #:golden-utils))
   (:use #:cl))
 
-(in-package #:%coherent-noise.modifiers.displace)
+(in-package #:%cricket.modifiers.displace)
 
 (defstruct (mod:displace
             (:include int:sampler)

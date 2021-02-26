@@ -3,14 +3,14 @@
 ;;;; Rotate modifier
 ;;;; This noise modifier rotates the input coordinates of its input sampler.
 
-(defpackage #:%coherent-noise.modifiers.rotate
+(defpackage #:%cricket.modifiers.rotate
   (:local-nicknames
-   (#:int #:%coherent-noise.internal)
-   (#:mod #:%coherent-noise.modifiers)
+   (#:int #:%cricket.internal)
+   (#:mod #:%cricket.modifiers)
    (#:u #:golden-utils))
   (:use #:cl))
 
-(in-package #:%coherent-noise.modifiers.rotate)
+(in-package #:%cricket.modifiers.rotate)
 
 (defstruct (mod:rotate
             (:include int:sampler)

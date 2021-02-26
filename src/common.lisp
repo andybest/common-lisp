@@ -1,4 +1,4 @@
-(in-package #:%coherent-noise.internal)
+(in-package #:%cricket.internal)
 
 (deftype f50 () '(double-float #.(- (expt 2d0 50)) #.(expt 2d0 50)))
 

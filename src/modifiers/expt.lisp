@@ -3,15 +3,15 @@
 ;;;; Exponent modifier
 ;;;; This noise modifier raises the power of the output of its input sampler to the given scalar.
 
-(defpackage #:%coherent-noise.modifiers.expt
+(defpackage #:%cricket.modifiers.expt
   (:local-nicknames
-   (#:int #:%coherent-noise.internal)
-   (#:mod #:%coherent-noise.modifiers)
+   (#:int #:%cricket.internal)
+   (#:mod #:%cricket.modifiers)
    (#:u #:golden-utils))
   (:use #:cl)
   (:shadow #:expt))
 
-(in-package #:%coherent-noise.modifiers.expt)
+(in-package #:%cricket.modifiers.expt)
 
 (defstruct (mod:expt
             (:include int:sampler)

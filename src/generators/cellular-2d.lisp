@@ -2,15 +2,15 @@
 
 ;;;; 2-dimensional cellular noise generator
 
-(defpackage #:%coherent-noise.generators.cellular-2d
+(defpackage #:%cricket.generators.cellular-2d
   (:local-nicknames
-   (#:gen #:%coherent-noise.generators)
-   (#:int #:%coherent-noise.internal)
+   (#:gen #:%cricket.generators)
+   (#:int #:%cricket.internal)
    (#:rng #:seedable-rng)
    (#:u #:golden-utils))
   (:use #:cl))
 
-(in-package #:%coherent-noise.generators.cellular-2d)
+(in-package #:%cricket.generators.cellular-2d)
 
 (u:define-constant +table+
     (let ((data #(-0.2700222198d0 -0.9628540911d0 0.3863092627d0 -0.9223693152d0 0.04444859006d0

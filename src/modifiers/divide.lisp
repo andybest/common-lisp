@@ -4,14 +4,14 @@
 ;;;; This noise modifier outputs the result of dividing the output of its first input sampler by its
 ;;;; second input sampler.
 
-(defpackage #:%coherent-noise.modifiers.divide
+(defpackage #:%cricket.modifiers.divide
   (:local-nicknames
-   (#:int #:%coherent-noise.internal)
-   (#:mod #:%coherent-noise.modifiers)
+   (#:int #:%cricket.internal)
+   (#:mod #:%cricket.modifiers)
    (#:u #:golden-utils))
   (:use #:cl))
 
-(in-package #:%coherent-noise.modifiers.divide)
+(in-package #:%cricket.modifiers.divide)
 
 (defstruct (mod:/
             (:constructor make-divide)

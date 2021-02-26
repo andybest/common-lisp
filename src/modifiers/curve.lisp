@@ -3,14 +3,14 @@
 ;;;; Curve modifier
 ;;;; This noise modifier maps the output of the input sampler onto a curve.
 
-(defpackage #:%coherent-noise.modifiers.curve
+(defpackage #:%cricket.modifiers.curve
   (:local-nicknames
-   (#:int #:%coherent-noise.internal)
-   (#:mod #:%coherent-noise.modifiers)
+   (#:int #:%cricket.internal)
+   (#:mod #:%cricket.modifiers)
    (#:u #:golden-utils))
   (:use #:cl))
 
-(in-package #:%coherent-noise.modifiers.curve)
+(in-package #:%cricket.modifiers.curve)
 
 (defstruct (mod:curve
             (:include int:sampler)

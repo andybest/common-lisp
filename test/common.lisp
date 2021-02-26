@@ -1,4 +1,4 @@
-(in-package #:coherent-noise.test)
+(in-package #:cricket.test)
 
 (defun make-image (sampler)
   (let* ((width 128)
@@ -22,7 +22,7 @@
   (let ((path (make-pathname :defaults (string-downcase (symbol-name name))
                              :directory '(:relative "test" "data")
                              :type "png")))
-    (asdf:system-relative-pathname :coherent-noise.test path)))
+    (asdf:system-relative-pathname :cricket.test path)))
 
 (defun read-file (file)
   (when (uiop:file-exists-p file)

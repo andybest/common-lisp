@@ -4,15 +4,15 @@
 ;;;; This noise modifier outputs one of its two input samplers, decided based upon the output of a
 ;;;; control sampler.
 
-(defpackage #:%coherent-noise.modifiers.select
+(defpackage #:%cricket.modifiers.select
   (:local-nicknames
-   (#:int #:%coherent-noise.internal)
-   (#:mod #:%coherent-noise.modifiers)
+   (#:int #:%cricket.internal)
+   (#:mod #:%cricket.modifiers)
    (#:u #:golden-utils))
   (:use #:cl)
   (:shadow #:min #:max))
 
-(in-package #:%coherent-noise.modifiers.select)
+(in-package #:%cricket.modifiers.select)
 
 (defstruct (mod:select
             (:include int:sampler)

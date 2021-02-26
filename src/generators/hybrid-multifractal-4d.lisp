@@ -2,15 +2,15 @@
 
 ;;;; 4-dimensional "hybrid" multifractal fractal noise generator
 
-(defpackage #:%coherent-noise.generators.hybrid-multifractal-4d
+(defpackage #:%cricket.generators.hybrid-multifractal-4d
   (:local-nicknames
-   (#:gen #:%coherent-noise.generators)
-   (#:int #:%coherent-noise.internal)
+   (#:gen #:%cricket.generators)
+   (#:int #:%cricket.internal)
    (#:rng #:seedable-rng)
    (#:u #:golden-utils))
   (:use #:cl))
 
-(in-package #:%coherent-noise.generators.hybrid-multifractal-4d)
+(in-package #:%cricket.generators.hybrid-multifractal-4d)
 
 (defstruct (gen:hybrid-multifractal-4d
             (:include int:sampler)

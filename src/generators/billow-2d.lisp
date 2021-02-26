@@ -2,15 +2,15 @@
 
 ;;;; 2-dimensional "billow" fractal noise generator
 
-(defpackage #:%coherent-noise.generators.billow-2d
+(defpackage #:%cricket.generators.billow-2d
   (:local-nicknames
-   (#:gen #:%coherent-noise.generators)
-   (#:int #:%coherent-noise.internal)
+   (#:gen #:%cricket.generators)
+   (#:int #:%cricket.internal)
    (#:rng #:seedable-rng)
    (#:u #:golden-utils))
   (:use #:cl))
 
-(in-package #:%coherent-noise.generators.billow-2d)
+(in-package #:%cricket.generators.billow-2d)
 
 (defstruct (gen:billow-2d
             (:include int:sampler)

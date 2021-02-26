@@ -1,13 +1,13 @@
 (in-package #:cl-user)
 
-(defpackage #:coherent-noise.test
+(defpackage #:cricket.test
   (:local-nicknames
-   (#:cn #:coherent-noise)
+   (#:cn #:cricket)
    (#:u #:golden-utils))
   (:use #:cl
         #:prove))
 
-(in-package #:coherent-noise.test)
+(in-package #:cricket.test)
 
 (setf *enable-colors* nil)
 

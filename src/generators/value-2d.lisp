@@ -2,15 +2,15 @@
 
 ;;;; 2-dimensional value noise generator
 
-(defpackage #:%coherent-noise.generators.value-2d
+(defpackage #:%cricket.generators.value-2d
   (:local-nicknames
-   (#:gen #:%coherent-noise.generators)
-   (#:int #:%coherent-noise.internal)
+   (#:gen #:%cricket.generators)
+   (#:int #:%cricket.internal)
    (#:rng #:seedable-rng)
    (#:u #:golden-utils))
   (:use #:cl))
 
-(in-package #:%coherent-noise.generators.value-2d)
+(in-package #:%cricket.generators.value-2d)
 
 (defstruct (gen:value-2d
             (:include int:sampler)

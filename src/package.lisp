@@ -1,6 +1,6 @@
 (in-package #:cl-user)
 
-(defpackage #:%coherent-noise.internal
+(defpackage #:%cricket.internal
   (:local-nicknames
    (#:lp #:lparallel)
    (#:rng #:seedable-rng)
@@ -13,7 +13,7 @@
    #:write-image)
   ;; Conditions
   (:export
-   #:coherent-noise-error
+   #:cricket-error
    #:invalid-cellular-distance-method
    #:invalid-cellular-output-type
    #:invalid-fractal-octave-count
@@ -22,7 +22,7 @@
    #:invalid-sampler-argument
    #:invalid-seed))
 
-(defpackage #:%coherent-noise.generators
+(defpackage #:%cricket.generators
   (:export
    #:perlin-1d
    #:perlin-2d
@@ -65,7 +65,7 @@
    #:ridged-multifractal-3d
    #:ridged-multifractal-4d))
 
-(defpackage #:%coherent-noise.modifiers
+(defpackage #:%cricket.modifiers
   (:shadow #:+ #:- #:* #:/ #:abs #:expt #:max #:min)
   (:export
    #:+
@@ -93,9 +93,9 @@
    #:turbulence
    #:uniform-scale))
 
-(defpackage #:%coherent-noise.map
+(defpackage #:%cricket.map
   (:local-nicknames
-   (#:int #:%coherent-noise.internal)
+   (#:int #:%cricket.internal)
    (#:lp #:lparallel)
    (#:u #:golden-utils))
   (:use #:cl)
@@ -116,9 +116,9 @@
    #:render-map
    #:write-image))
 
-(uiop:define-package #:coherent-noise
+(uiop:define-package #:cricket
   (:import-from #:arrow-macros #:->)
-  (:mix #:%coherent-noise.modifiers #:%coherent-noise.map #:cl)
-  (:reexport #:%coherent-noise.modifiers #:%coherent-noise.map)
-  (:mix-reexport #:%coherent-noise.generators #:%coherent-noise.internal)
+  (:mix #:%cricket.modifiers #:%cricket.map #:cl)
+  (:reexport #:%cricket.modifiers #:%cricket.map)
+  (:mix-reexport #:%cricket.generators #:%cricket.internal)
   (:export #:->))

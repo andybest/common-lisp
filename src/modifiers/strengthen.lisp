@@ -3,14 +3,14 @@
 ;;;; Strengthen modifier
 ;;;; This noise modifier applies a scaling factor and a bias to the output of its input sampler.
 
-(defpackage #:%coherent-noise.modifiers.strengthen
+(defpackage #:%cricket.modifiers.strengthen
   (:local-nicknames
-   (#:int #:%coherent-noise.internal)
-   (#:mod #:%coherent-noise.modifiers)
+   (#:int #:%cricket.internal)
+   (#:mod #:%cricket.modifiers)
    (#:u #:golden-utils))
   (:use #:cl))
 
-(in-package #:%coherent-noise.modifiers.strengthen)
+(in-package #:%cricket.modifiers.strengthen)
 
 (defstruct (mod:strengthen
             (:include int:sampler)

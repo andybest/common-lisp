@@ -3,14 +3,14 @@
 ;;;; Cache modifier
 ;;;; This noise modifier caches the last output of its input sampler.
 
-(defpackage #:%coherent-noise.modifiers.cache
+(defpackage #:%cricket.modifiers.cache
   (:local-nicknames
-   (#:int #:%coherent-noise.internal)
-   (#:mod #:%coherent-noise.modifiers)
+   (#:int #:%cricket.internal)
+   (#:mod #:%cricket.modifiers)
    (#:u #:golden-utils))
   (:use #:cl))
 
-(in-package #:%coherent-noise.modifiers.cache)
+(in-package #:%cricket.modifiers.cache)
 
 (defstruct (mod:cache
             (:include int:sampler)

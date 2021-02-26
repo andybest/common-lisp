@@ -4,15 +4,15 @@
 ;;;; This noise modifier randomly displaces the input coordinates of its input sampler before
 ;;;; sampling from it.
 
-(defpackage #:%coherent-noise.modifiers.turbulence
+(defpackage #:%cricket.modifiers.turbulence
   (:local-nicknames
-   (#:int #:%coherent-noise.internal)
-   (#:mod #:%coherent-noise.modifiers)
+   (#:int #:%cricket.internal)
+   (#:mod #:%cricket.modifiers)
    (#:rng #:seedable-rng)
    (#:u #:golden-utils))
   (:use #:cl))
 
-(in-package #:%coherent-noise.modifiers.turbulence)
+(in-package #:%cricket.modifiers.turbulence)
 
 (defstruct (mod:turbulence
             (:include int:sampler)

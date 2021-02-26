@@ -3,14 +3,14 @@
 ;;;; Scale modifier
 ;;;; This noise modifier scales the input coordinates of its input sampler.
 
-(defpackage #:%coherent-noise.modifiers.scale
+(defpackage #:%cricket.modifiers.scale
   (:local-nicknames
-   (#:int #:%coherent-noise.internal)
-   (#:mod #:%coherent-noise.modifiers)
+   (#:int #:%cricket.internal)
+   (#:mod #:%cricket.modifiers)
    (#:u #:golden-utils))
   (:use #:cl))
 
-(in-package #:%coherent-noise.modifiers.scale)
+(in-package #:%cricket.modifiers.scale)
 
 (defstruct (mod:scale
             (:include int:sampler)
