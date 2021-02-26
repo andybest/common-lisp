@@ -1,5 +1,5 @@
 (asdf:defsystem #:cricket
-  :description ""
+  :description "A library for generating and manipulating coherent noise"
   :author ("Michael Fiano <mail@mfiano.net>")
   :license "MIT"
   :homepage "https://mfiano.net/projects/cricket"
