@@ -1,5 +1,7 @@
 (in-package #:cl-user)
 
+;;;; 4-dimensional Simplex noise generator
+
 (defpackage #:%coherent-noise.generators.simplex-4d
   (:local-nicknames
    (#:gen #:%coherent-noise.generators)
@@ -38,6 +40,12 @@
   (table nil :type (simple-array u:ub8 (512))))
 
 (defun gen:simplex-4d (&key seed)
+  "Construct a sampler that, when sampled, outputs 4-dimensional Simplex noise values ranging from
+-1.0 to 1.0.
+
+`seed`: A string used to seed the random number generator for this sampler, or NIL. If a seed is not
+supplied, one will be generated automatically which will negatively affect the reproducibility of
+the noise (optional, default: NIL)."
   (let ((rng (int::make-rng seed)))
     (make-simplex-4d :rng rng :table (int::perlin-permute rng))))
 

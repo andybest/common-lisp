@@ -1,5 +1,7 @@
 (in-package #:cl-user)
 
+;;;; 3-dimensional OpenSimplex noise generator
+
 (defpackage #:%coherent-noise.generators.open-simplex-3d
   (:local-nicknames
    (#:gen #:%coherent-noise.generators)
@@ -606,6 +608,12 @@
     (values)))
 
 (defun gen:open-simplex-3d (&key seed)
+  "Construct a sampler that, when sampled, outputs 3-dimensional OpenSimplex noise values ranging
+from -1.0 to 1.0.
+
+`seed`: A string used to seed the random number generator for this sampler, or NIL. If a seed is not
+supplied, one will be generated automatically which will negatively affect the reproducibility of
+the noise (optional, default: NIL)."
   (let* ((rng (int::make-rng seed))
          (table (rng:shuffle rng +permutation+)))
     (make-open-simplex-3d :rng rng :table table)))

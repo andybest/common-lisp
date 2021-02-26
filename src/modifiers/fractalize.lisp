@@ -20,7 +20,7 @@
 output over an arbitrary number of octaves. `type` may be a keyword denoting any of the built-in
 generator fractal types:
 
-`:fbm`: Fractional brownian motion.
+`:fbm`: Fractional Brownian motion.
 `:billow`: Creates billowy cloud or rock-like formations.
 `:multi`: Multifractal whose fractal dimensions vary.
 `:hybrid-multi`: Multifractal noise that results in valleys having smooth bottoms.

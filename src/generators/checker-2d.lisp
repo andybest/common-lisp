@@ -1,5 +1,7 @@
 (in-package #:cl-user)
 
+;;;; 2-dimensional checkered pattern generator
+
 (defpackage #:%coherent-noise.generators.checker-2d
   (:local-nicknames
    (#:gen #:%coherent-noise.generators)
@@ -17,6 +19,12 @@
             (:copier nil)))
 
 (defun gen:checker-2d (&key seed)
+  "Construct a sampler that, when sampled, outputs a 2-dimensional checkered grid pattern, with
+values being either -1.0 or 1.0.
+
+`seed`: A string used to seed the random number generator for this sampler, or NIL. If a seed is not
+supplied, one will be generated automatically which will negatively affect the reproducibility of
+the noise (optional, default: NIL)."
   (make-checker-2d :rng (int::make-rng seed)))
 
 (defmethod int:sample ((sampler gen:checker-2d) x &optional (y 0d0) (z 0d0) (w 0d0))

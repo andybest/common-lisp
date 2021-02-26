@@ -1,5 +1,7 @@
 (in-package #:cl-user)
 
+;;;; 4-dimensional OpenSimplex2S noise generator
+
 (defpackage #:%coherent-noise.generators.open-simplex2s-4d
   (:local-nicknames
    (#:gen #:%coherent-noise.generators)
@@ -702,6 +704,17 @@
        (values (+ x s2) (+ y s2) (+ z s2) (+ (* xyz -0.5d0) ww))))))
 
 (defun gen:open-simplex2s-4d (&key seed (orientation :standard))
+  "Construct a sampler that, when sampled, outputs 4-dimensional OpenSimplex2S noise values ranging
+from -1.0 to 1.0.
+
+`seed`: A string used to seed the random number generator for this sampler, or NIL. If a seed is not
+supplied, one will be generated automatically which will negatively affect the reproducibility of
+the noise (optional, default: NIL).
+
+`orientation`: One of `:standard`, `:xy/zw`, `:xz/yw`, or `:xyz/w`, denoting the orientation of the
+lattice. `:xy/zw` is recommended for 3D terrain where X/Y or Z/W are horizontal. `:xz/yw` is
+recommended for 3D terrain where X/Z or Y/W are horizontal. `:xyz/w` is recommended for time-varied
+animations of 3D objects, where W is time (optional, default: `:standard`)."
   (unless (member orientation '(:standard :xy/zw :xz/yw :xyz/w))
     (error 'int:invalid-open-simplex2-orientation
            :sampler-type 'open-simplex2s-4d

@@ -1,5 +1,7 @@
 (in-package #:cl-user)
 
+;;;; 2-dimensional OpenSimplex2F noise generator
+
 (defpackage #:%coherent-noise.generators.open-simplex2f-2d
   (:local-nicknames
    (#:gen #:%coherent-noise.generators)
@@ -88,6 +90,16 @@
        (values (+ x y) (- y x))))))
 
 (defun gen:open-simplex2f-2d (&key seed (orientation :standard))
+  "Construct a sampler that, when sampled, outputs 2-dimensional OpenSimplex2F noise values ranging
+from -1.0 to 1.0.
+
+`seed`: A string used to seed the random number generator for this sampler, or NIL. If a seed is not
+supplied, one will be generated automatically which will negatively affect the reproducibility of
+the noise (optional, default: NIL).
+
+`orientation`: One of `:standard` or `:x/y`, denoting the orientation of the lattice. `:x/y` has the
+Y axis pointing down the main diagonal, which might be more suitable for a game where Y is
+vertical (optional, default: `:standard`)."
   (unless (member orientation '(:standard :x/y))
     (error 'int:invalid-open-simplex2-orientation
            :sampler-type 'open-simplex2f-2d

@@ -1,5 +1,7 @@
 (in-package #:cl-user)
 
+;;;; 3-dimensional concentric cylinders generator
+
 (defpackage #:%coherent-noise.generators.cylinders-3d
   (:local-nicknames
    (#:gen #:%coherent-noise.generators)
@@ -18,6 +20,15 @@
   (frequency 1d0 :type u:f64))
 
 (defun gen:cylinders-3d (&key seed (frequency 1d0))
+  "Construct a sampler that, when sampled, outputs 3-dimensional concentric cylinder values ranging
+from -1.0 to 1.0. The cylinders are oriented with their length along the Z axis.
+
+`seed`: A string used to seed the random number generator for this sampler, or NIL. If a seed is not
+supplied, one will be generated automatically which will negatively affect the reproducibility of
+the noise (optional, default: NIL).
+
+`frequency`: The frequency of the signal, which controls how small or large the cylinders are
+(optional, default: 1.0)."
   (unless (realp frequency)
     (error 'int:invalid-real-argument
            :sampler-type 'cylinders-3d

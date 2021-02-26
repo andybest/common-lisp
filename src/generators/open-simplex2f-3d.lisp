@@ -1,5 +1,7 @@
 (in-package #:cl-user)
 
+;;;; 3-dimensional OpenSimplex2F noise generator
+
 (defpackage #:%coherent-noise.generators.open-simplex2f-3d
   (:local-nicknames
    (#:gen #:%coherent-noise.generators)
@@ -187,6 +189,16 @@
                (- (+ z s2) yy))))))
 
 (defun gen:open-simplex2f-3d (&key seed (orientation :standard))
+  "Construct a sampler that, when sampled, outputs 3-dimensional OpenSimplex2F noise values ranging
+from -1.0 to 1.0.
+
+`seed`: A string used to seed the random number generator for this sampler, or NIL. If a seed is not
+supplied, one will be generated automatically which will negatively affect the reproducibility of
+the noise (optional, default: NIL).
+
+`orientation`: One of `:standard`, `:xy/z`, or `:xz/y`, denoting the orientation of the lattice.
+`:xy/z` has better visual isotropy in XY, and `:xz/y` has better visual isotropy in XZ (optional,
+default: `:standard`)."
   (unless (member orientation '(:standard :xy/z :xz/y))
     (error 'int:invalid-open-simplex2-orientation
            :sampler-type 'open-simplex2f-3d

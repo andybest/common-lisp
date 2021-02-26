@@ -1,5 +1,7 @@
 (in-package #:cl-user)
 
+;;;; 2-dimensional cellular noise generator
+
 (defpackage #:%coherent-noise.generators.cellular-2d
   (:local-nicknames
    (#:gen #:%coherent-noise.generators)
@@ -129,6 +131,21 @@
   (jitter 1d0 :type u:f64))
 
 (defun gen:cellular-2d (&key seed (distance-method :euclidean) (output-type :f1) (jitter 1d0))
+  "Construct a sampler that, when sampled, outputs 2-dimensional cellular noise values ranging from
+-1.0 to 1.0.
+
+`seed`: A string used to seed the random number generator for this sampler, or NIL. If a seed is not
+supplied, one will be generated automatically which will negatively affect the reproducibility of
+the noise (optional, default: NIL).
+
+`distance-method`: One of `:manhattan`, `:euclidean`, `:euclidean-squared`, `:chebyshev`, or
+`:minkowski4`, denoting the distance function to use (optional, default: `:euclidean`).
+
+`output-type`: One of `:value`, `:f1`, `:f2`, `:f1+f2`, `:f2-f1`, `:f1*f2`, or `:f1/f2` denoting the
+features to use (optional, default: `:f1`).
+
+`jitter`: A real number between 0.0 and 1.0, with values closer to one randomly distributing cells
+away from their grid alignment (optional, default: 1.0)."
   (unless (member distance-method '(:manhattan :euclidean :euclidean-squared :chebyshev
                                     :minkowski4))
     (error 'int:invalid-cellular-distance-method

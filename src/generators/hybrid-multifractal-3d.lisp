@@ -1,5 +1,7 @@
 (in-package #:cl-user)
 
+;;;; 3-dimensional "hybrid" multifractal fractal noise generator
+
 (defpackage #:%coherent-noise.generators.hybrid-multifractal-3d
   (:local-nicknames
    (#:gen #:%coherent-noise.generators)
@@ -35,6 +37,28 @@
 
 (defun gen:hybrid-multifractal-3d (&key seed (generator #'gen:perlin-3d) (octaves 4) (frequency 1.0)
                                      (lacunarity 2.0) (persistence 0.25))
+  "Construct a sampler that, when sampled, outputs the application of multiple octaves of a
+3-dimensional hybrid multifractal noise, using the supplied `generator` function to construct each
+octave's sampler.
+
+`seed`: A string used to seed the random number generator for this sampler, or NIL. If a seed is not
+supplied, one will be generated automatically which will negatively affect the reproducibility of
+the noise (optional, default: NIL).
+
+`generator`: a function object pointing to one of the built-in 3-dimensional generator samplers that
+is used to construct a different sampler, each with a different seed, for each octave (optional,
+default `#'perlin-3d`).
+
+`octaves`: An integer between 1 and 32, denoting the number of octaves to apply (optional, default:
+4).
+
+`frequency`: The frequency of the first octave's signal (optional, default: 1.0).
+
+`lacunarity`: A multiplier that determines how quickly the frequency increases for successive
+octaves (optional, default: 2.0).
+
+`persistence`: A multiplier that determines how quickly the amplitude diminishes for successive
+octaves (optional, default 0.25)."
   (unless (typep octaves '(integer 1 32))
     (error 'int:invalid-fractal-octave-count :sampler-type 'hybrid-multifractal-3d :value octaves))
   (unless (realp frequency)

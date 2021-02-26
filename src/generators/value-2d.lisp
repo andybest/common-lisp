@@ -1,5 +1,7 @@
 (in-package #:cl-user)
 
+;;;; 2-dimensional value noise generator
+
 (defpackage #:%coherent-noise.generators.value-2d
   (:local-nicknames
    (#:gen #:%coherent-noise.generators)
@@ -18,6 +20,12 @@
   (seed 0 :type u:ub32))
 
 (defun gen:value-2d (&key seed)
+  "Construct a sampler that, when sampled, outputs 2-dimensional value noise values ranging from
+-1.0 to 1.0.
+
+`seed`: A string used to seed the random number generator for this sampler, or NIL. If a seed is not
+supplied, one will be generated automatically which will negatively affect the reproducibility of
+the noise (optional, default: NIL)."
   (u:mvlet ((rng seed (int::make-rng seed)))
     (make-value-2d :rng rng :seed seed)))
 
