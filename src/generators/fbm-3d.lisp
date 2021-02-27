@@ -29,7 +29,7 @@
         :sum (expt persistence i) :into result
         :finally (return (float result 1f0))))
 
-(defun gen:fbm-3d (&key seed (generator #'gen:perlin-3d) (octaves 4) (frequency 1.0)
+(defun gen:fbm-3d (&key seed (generator #'gen:open-simplex2f-3d) (octaves 4) (frequency 1.0)
                      (lacunarity 2.0) (persistence 0.5))
   "Construct a sampler that, when sampled, outputs the application of multiple octaves of a
 3-dimensional fractional Brownian motion noise, using the supplied `generator` function to construct
@@ -39,9 +39,9 @@ each octave's sampler.
 supplied, one will be generated automatically which will negatively affect the reproducibility of
 the noise (optional, default: NIL).
 
-`generator`: a function object pointing to one of the built-in 3-dimensional generator samplers that
-is used to construct a different sampler, each with a different seed, for each octave (optional,
-default `#'perlin-3d`).
+`generator`: a function object pointing to one of the built-in 3-dimensional generators that is used
+to construct a different sampler, each with a different seed, for each octave (optional, default
+`#'open-simplex2f-3d`).
 
 `octaves`: An integer between 1 and 32, denoting the number of octaves to apply (optional, default:
 4).
