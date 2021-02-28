@@ -1,5 +1,5 @@
 (asdf:defsystem #:cubic-bezier
-  :description ""
+  :description "A library for constructing and evaluating cubic Bézier curve paths."
   :author ("Michael Fiano <mail@mfiano.net>")
   :license "MIT"
   :homepage "https://mfiano.net/projects/cubic-bezier"
