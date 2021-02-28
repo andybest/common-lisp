@@ -14,6 +14,8 @@
    #:bind-block
    #:bind-buffer
    #:buffer-name
+   #:build-shader-dictionary
+   #:build-shader-program
    #:clear-buffer
    #:create-block-alias
    #:create-buffer
