@@ -163,9 +163,9 @@ documentation strings to get a basic idea of how they operate. Let's use the "ad
 modifier, to combine two different noise generators into a single value when sampled.
 
 ```lisp
-(let ((p2d (c:perlin-2d :seed "abc"))
-      (p3d (c:perlin-3d :seed "def")))
-      (add (c:+ p2d p3d))
+(let* ((p2d (c:perlin-2d :seed "abc"))
+       (p3d (c:perlin-3d :seed "def"))
+       (add (c:+ p2d p3d)))
   (c:sample add 0.1d0 42.5d0 13.6d0))
 ```
 
