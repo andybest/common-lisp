@@ -128,7 +128,7 @@
 
 (in-package #:origin.vec2)
 
-(deftype vec () '(simple-array u:f32 (2)))
+(deftype vec () '(u:f32a 2))
 
 (defmacro with-components (((prefix vec) &rest rest) &body body)
   (u:once-only (vec)
@@ -167,18 +167,10 @@
 (ss:defspecialization (vec :inline t) ((x real) (y real)) vec
   (%vec (float x 1.0) (float y 1.0)))
 
-(ss:defspecialization (vec :inline t)
-    ((vec (or (simple-array u:f32 (2))
-              (simple-array u:f32 (3))
-              (simple-array u:f32 (4)))))
-    vec
+(ss:defspecialization (vec :inline t) ((vec (or (u:f32a 2) (u:f32a 3) (u:f32a 4)))) vec
   (%vec (aref vec 0) (aref vec 1)))
 
-(ss:defspecialization (vec :inline t)
-    ((vec (or (simple-array u:f64 (2))
-              (simple-array u:f64 (3))
-              (simple-array u:f64 (4)))))
-    vec
+(ss:defspecialization (vec :inline t) ((vec (or (u:f64a 2) (u:f64a 3) (u:f64a 4)))) vec
   (%vec (float (aref vec 0) 1.0) (float (aref vec 1) 1.0)))
 
 ;;; Accessors

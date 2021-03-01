@@ -81,7 +81,7 @@
 
 (in-package #:origin.quat)
 
-(deftype quat () '(simple-array u:f32 (4)))
+(deftype quat () '(u:f32a 4))
 
 (defmacro with-components (((prefix quat) &rest rest) &body body)
   (u:once-only (quat)
@@ -120,7 +120,7 @@
 (ss:defspecialization (quat :inline t) ((w real) (x real) (y real) (z real)) quat
   (%quat (float w 1.0) (float x 1.0) (float y 1.0) (float z 1.0)))
 
-(ss:defspecialization (quat :inline t) ((quat (simple-array u:f64 (4)))) quat
+(ss:defspecialization (quat :inline t) ((quat (u:f64a 4))) quat
   (%quat (float (aref quat 0) 1.0)
          (float (aref quat 1) 1.0)
          (float (aref quat 2) 1.0)

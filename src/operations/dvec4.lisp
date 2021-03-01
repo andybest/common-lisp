@@ -308,7 +308,7 @@ nearest whole number."
         (m*m (cl:* (length vec1) (length vec2))))
     (if (zerop m*m)
         0d0
-        (cl:acos (the (double-float -1d0 1d0) (cl:/ dot m*m))))))
+        (cl:acos (the (u:f64 -1d0 1d0) (cl:/ dot m*m))))))
 
 (u:fn-> direction= (vec vec &key (:rel u:f64) (:abs u:f64)) boolean)
 (declaim (inline direction=))
@@ -463,7 +463,7 @@ units, converted to degree units."
 (defun sqrt! (out vec)
   "Modify vector OUT to have the square root of the components in VEC."
   (declare (optimize speed))
-  (com:cwset 4 out vec (cl:sqrt (the (double-float 0d0) vec)))
+  (com:cwset 4 out vec (cl:sqrt (the (u:f64 0d0) vec)))
   out)
 
 (u:fn-> sqrt (vec) vec)
@@ -579,7 +579,7 @@ of vector VEC."
   "Modify vector OUT to have the trigonometric arcsine function applied to each component of vector
 VEC."
   (declare (optimize speed))
-  (com:cwset 4 out vec (cl:asin (the (double-float -1d0 1d0) vec)))
+  (com:cwset 4 out vec (cl:asin (the (u:f64 -1d0 1d0) vec)))
   out)
 
 (u:fn-> asin (vec) vec)
@@ -596,7 +596,7 @@ of vector VEC."
   "Modify vector OUT to have the trigonometric arccosine function applied to each component of
 vector VEC."
   (declare (optimize speed))
-  (com:cwset 4 out vec (cl:acos (the (double-float -1d0 1d0) vec)))
+  (com:cwset 4 out vec (cl:acos (the (u:f64 -1d0 1d0) vec)))
   out)
 
 (u:fn-> acos (vec) vec)

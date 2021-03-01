@@ -127,7 +127,7 @@
 
 (in-package #:origin.dvec4)
 
-(deftype vec () '(simple-array u:f64 (4)))
+(deftype vec () '(u:f64a 4))
 
 (defmacro with-components (((prefix vec) &rest rest) &body body)
   (u:once-only (vec)

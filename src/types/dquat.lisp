@@ -81,7 +81,7 @@
 
 (in-package #:origin.dquat)
 
-(deftype quat () '(simple-array u:f64 (4)))
+(deftype quat () '(u:f64a 4))
 
 (defmacro with-components (((prefix quat) &rest rest) &body body)
   (u:once-only (quat)

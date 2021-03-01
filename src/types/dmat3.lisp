@@ -92,7 +92,7 @@
 
 (in-package #:origin.dmat3)
 
-(deftype mat () '(simple-array u:f64 (9)))
+(deftype mat () '(u:f64a 9))
 
 (defmacro with-components (((prefix matrix) &rest rest) &body body)
   (u:once-only (matrix)
@@ -151,7 +151,7 @@
         (aref mat 3) (aref mat 4) (aref mat 5)
         (aref mat 6) (aref mat 7) (aref mat 8)))
 
-(ss:defspecialization (mat :inline t) ((mat (simple-array u:f64 (16)))) mat
+(ss:defspecialization (mat :inline t) ((mat (u:f64a 16))) mat
   (%mat (aref mat 0) (aref mat 4) (aref mat 8)
         (aref mat 1) (aref mat 5) (aref mat 9)
         (aref mat 2) (aref mat 6) (aref mat 10)))

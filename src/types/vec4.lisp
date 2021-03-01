@@ -126,7 +126,7 @@
 
 (in-package #:origin.vec4)
 
-(deftype vec () '(simple-array u:f32 (4)))
+(deftype vec () '(u:f32a 4))
 
 (defmacro with-components (((prefix vec) &rest rest) &body body)
   (u:once-only (vec)
@@ -208,7 +208,7 @@
 (ss:defspecialization (vec :inline t) ((x real) (vec v2:vec) (w real)) vec
   (%vec (float x 1.0) (aref vec 0) (aref vec 1) (float w 1.0)))
 
-(ss:defspecialization (vec :inline t) ((vec (simple-array u:f64 (4)))) vec
+(ss:defspecialization (vec :inline t) ((vec (u:f64a 4))) vec
   (%vec (float (aref vec 0) 1.0)
         (float (aref vec 1) 1.0)
         (float (aref vec 2) 1.0)

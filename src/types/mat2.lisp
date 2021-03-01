@@ -72,7 +72,7 @@
 
 (in-package #:origin.mat2)
 
-(deftype mat () '(simple-array u:f32 (4)))
+(deftype mat () '(u:f32a 4))
 
 (defmacro with-components (((prefix matrix) &rest rest) &body body)
   (u:once-only (matrix)
@@ -115,10 +115,10 @@
 (ss:defspecialization (mat :inline t) ((mat mat)) mat
   (%mat (aref mat 0) (aref mat 1) (aref mat 2) (aref mat 3)))
 
-(ss:defspecialization (mat :inline t) ((mat (simple-array u:f32 (9)))) mat
+(ss:defspecialization (mat :inline t) ((mat (u:f32a 9))) mat
   (%mat (aref mat 0) (aref mat 3) (aref mat 1) (aref mat 4)))
 
-(ss:defspecialization (mat :inline t) ((mat (simple-array u:f32 (16)))) mat
+(ss:defspecialization (mat :inline t) ((mat (u:f32a 16))) mat
   (%mat (aref mat 0) (aref mat 4) (aref mat 1) (aref mat 5)))
 
 (ss:defspecialization (mat :inline t) ((vec1 v2:vec) (vec2 v2:vec)) mat
@@ -127,7 +127,7 @@
 (ss:defspecialization (mat :inline t) ((a real) (b real) (c real) (d real)) mat
   (%mat (float a 1.0) (float b 1.0) (float c 1.0) (float d 1.0)))
 
-(ss:defspecialization (mat :inline t) ((mat (simple-array  u:f64 (4)))) mat
+(ss:defspecialization (mat :inline t) ((mat (u:f64a 4))) mat
   (%mat (float (aref mat 0) 1.0) (float (aref mat 1) 1.0)
         (float (aref mat 2) 1.0) (float (aref mat 3) 1.0)))
 

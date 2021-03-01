@@ -91,7 +91,7 @@
 
 (in-package #:origin.mat3)
 
-(deftype mat () '(simple-array u:f32 (9)))
+(deftype mat () '(u:f32a 9))
 
 (defmacro with-components (((prefix matrix) &rest rest) &body body)
   (u:once-only (matrix)
@@ -150,7 +150,7 @@
         (aref mat 3) (aref mat 4) (aref mat 5)
         (aref mat 6) (aref mat 7) (aref mat 8)))
 
-(ss:defspecialization (mat :inline t) ((mat (simple-array u:f32 (16)))) mat
+(ss:defspecialization (mat :inline t) ((mat (u:f32a 16))) mat
   (%mat (aref mat 0) (aref mat 4) (aref mat 8)
         (aref mat 1) (aref mat 5) (aref mat 9)
         (aref mat 2) (aref mat 6) (aref mat 10)))
@@ -169,7 +169,7 @@
         (float d 1.0) (float e 1.0) (float f 1.0)
         (float g 1.0) (float h 1.0) (float i 1.0)))
 
-(ss:defspecialization (mat :inline t) ((mat (simple-array u:f64 (9)))) mat
+(ss:defspecialization (mat :inline t) ((mat (u:f64a 9))) mat
   (%mat (float (aref mat 0) 1.0) (float (aref mat 1) 1.0) (float (aref mat 2) 1.0)
         (float (aref mat 3) 1.0) (float (aref mat 4) 1.0) (float (aref mat 5) 1.0)
         (float (aref mat 6) 1.0) (float (aref mat 7) 1.0) (float (aref mat 8) 1.0)))

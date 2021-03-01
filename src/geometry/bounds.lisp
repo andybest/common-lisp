@@ -26,7 +26,7 @@ points."
         (let ((distance (point2d:distance-squared (svref points i) center)))
           (when (> distance radius)
             (setf radius distance))))
-      (circle:circle :origin center :radius (sqrt (the (single-float 0.0) radius))))))
+      (circle:circle :origin center :radius (sqrt (the (u:f32 0.0) radius))))))
 
 (u:fn-> bounding-rect (simple-vector) rect:rect)
 (defun bounding-rect (points)

@@ -106,7 +106,7 @@
 
 (in-package #:origin.dmat4)
 
-(deftype mat () '(simple-array u:f64 (16)))
+(deftype mat () '(u:f64a 16))
 
 (defmacro with-components (((prefix matrix) &rest rest) &body body)
   (u:once-only (matrix)
