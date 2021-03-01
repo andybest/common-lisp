@@ -37,7 +37,7 @@
   (let* ((width (image-width image))
          (height (image-height image))
          (data (image-data image))
-         (image-data (make-array (* width height 4) :element-type 'u:ub8))
+         (image-data (u:make-ub8-array (* width height 4)))
          (png (make-instance 'zpng:png
                              :color-type :truecolor-alpha
                              :width width

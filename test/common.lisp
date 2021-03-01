@@ -3,7 +3,7 @@
 (defun make-image (sampler)
   (let* ((width 128)
          (height 128)
-         (data (make-array (* width height) :element-type 'u:ub8))
+         (data (u:make-ub8-array (* width height)))
          (png (make-instance 'zpng:png
                              :color-type :grayscale
                              :width width

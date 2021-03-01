@@ -18,7 +18,7 @@
   (format stream "~a" (class-name (class-of sampler))))
 
 (defun perlin-permute (rng)
-  (let* ((table (make-array 512 :element-type 'u:ub8))
+  (let* ((table (u:make-ub8-array 512))
          (data (rng:shuffle rng (u:iota 256))))
     (replace table data)
     (replace table data :start1 256)

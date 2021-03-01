@@ -7,7 +7,7 @@
             (:copier nil))
   (width 512 :type u:ub24)
   (height 512 :type u:ub24)
-  (data (make-array 0 :element-type 'u:f32) :type u:f32a))
+  (data (u:make-f32-array 0) :type u:f32a))
 
 (declaim (inline map-value))
 (defun map-value (map x y)
@@ -37,7 +37,7 @@
 (defun make-map (source
                  &key (width 512) (height 512) (x-min -1.0) (x-max 1.0) (y-min -1.0) (y-max 1.0)
                    (parallel-p t))
-  (let* ((data (make-array (* width height) :element-type 'u:f32 :initial-element 0.0))
+  (let* ((data (u:make-f32-array (* width height)))
          (map (%make-map :width width :height height :data data))
          (x-min (float x-min 1d0))
          (y-min (float y-min 1d0))

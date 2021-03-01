@@ -18,7 +18,7 @@
             (:predicate nil)
             (:copier nil))
   (source nil :type int:sampler)
-  (control-points (make-array 0 :element-type 'u:f32) :type u:f32a)
+  (control-points (u:make-f32-array 0) :type u:f32a)
   (invert-p nil :type boolean))
 
 (defun make-points (points)
@@ -30,7 +30,7 @@
   (unless (= (length (remove-duplicates points :test #'=))
              (length points))
     (error "A terrace modifier's control points must be unique."))
-  (loop :with result = (make-array (length points) :element-type 'u:f32)
+  (loop :with result = (u:make-f32-array (length points))
         :for p :in points
         :for i :from 0
         :do (setf (aref result i) (float p 1f0))
