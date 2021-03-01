@@ -102,7 +102,7 @@
 (u:eval-always
   (defun %quat (w x y z)
     (declare (optimize speed))
-    (let ((quat (make-array 4 :element-type 'u:f32)))
+    (let ((quat (u:make-f32-array 4)))
       (setf (aref quat 0) w
             (aref quat 1) x
             (aref quat 2) y

@@ -149,7 +149,7 @@
 (u:eval-always
   (defun %vec (x y)
     (declare (optimize speed))
-    (let ((vec (make-array 2 :element-type 'u:f32)))
+    (let ((vec (u:make-f32-array 2)))
       (setf (aref vec 0) x
             (aref vec 1) y)
       vec)))

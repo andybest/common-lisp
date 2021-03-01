@@ -148,7 +148,7 @@
 (u:eval-always
   (defun %mat (m00 m10 m20 m30 m01 m11 m21 m31 m02 m12 m22 m32 m03 m13 m23 m33)
     (declare (optimize speed))
-    (let ((mat (make-array 16 :element-type 'u:f32)))
+    (let ((mat (u:make-f32-array 16)))
       (setf (aref mat 0) m00 (aref mat 1) m10 (aref mat 2) m20 (aref mat 3) m30
             (aref mat 4) m01 (aref mat 5) m11 (aref mat 6) m21 (aref mat 7) m31
             (aref mat 8) m02 (aref mat 9) m12 (aref mat 10) m22 (aref mat 11) m32

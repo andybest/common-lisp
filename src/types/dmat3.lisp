@@ -123,7 +123,7 @@
 (u:eval-always
   (defun %mat (m00 m10 m20 m01 m11 m21 m02 m12 m22)
     (declare (optimize speed))
-    (let ((mat (make-array 9 :element-type 'u:f64)))
+    (let ((mat (u:make-f64-array 9)))
       (setf (aref mat 0) m00
             (aref mat 1) m10
             (aref mat 2) m20
