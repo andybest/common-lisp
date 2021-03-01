@@ -17,7 +17,7 @@
             (:conc-name "")
             (:predicate nil)
             (:copier nil))
-  (table nil :type (simple-array u:ub8 (512))))
+  (table nil :type (u:ub8a 512)))
 
 (defun gen:perlin-1d (&key seed)
   "Construct a sampler that, when sampled, outputs 1-dimensional Perlin Improved noise values

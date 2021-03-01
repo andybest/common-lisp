@@ -36,7 +36,7 @@
             (:conc-name "")
             (:predicate nil)
             (:copier nil))
-  (table nil :type (simple-array u:ub8 (512))))
+  (table nil :type (u:ub8a 512)))
 
 (declaim (inline %make-state))
 (defstruct (state

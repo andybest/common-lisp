@@ -18,7 +18,7 @@
             (:predicate nil)
             (:copier nil))
   (source nil :type int:sampler)
-  (control-points (make-array 0 :element-type 'u:f32) :type (simple-array u:f32 (*)))
+  (control-points (make-array 0 :element-type 'u:f32) :type u:f32a)
   (invert-p nil :type boolean))
 
 (defun make-points (points)

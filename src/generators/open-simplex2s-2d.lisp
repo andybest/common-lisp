@@ -98,8 +98,8 @@
             (:conc-name "")
             (:predicate nil)
             (:copier nil))
-  (gradients (make-array 4096 :element-type 'u:f64) :type (simple-array u:f64 (4096)))
-  (table (make-array 2048 :element-type 'u:b16) :type (simple-array u:b16 (2048)))
+  (gradients (make-array 4096 :element-type 'u:f64) :type (u:f64a 4096))
+  (table (make-array 2048 :element-type 'u:b16) :type (u:b16a 2048))
   (orientation :standard :type (member :standard :x/y)))
 
 (defun permute (rng)

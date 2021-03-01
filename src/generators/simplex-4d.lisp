@@ -37,7 +37,7 @@
             (:conc-name "")
             (:predicate nil)
             (:copier nil))
-  (table nil :type (simple-array u:ub8 (512))))
+  (table nil :type (u:ub8a 512)))
 
 (defun gen:simplex-4d (&key seed)
   "Construct a sampler that, when sampled, outputs 4-dimensional Simplex noise values ranging from

@@ -7,7 +7,7 @@
             (:copier nil))
   (width 512 :type u:ub24)
   (height 512 :type u:ub24)
-  (data (make-array 0 :element-type 'u:f32) :type (simple-array u:f32 (*))))
+  (data (make-array 0 :element-type 'u:f32) :type u:f32a))
 
 (declaim (inline map-value))
 (defun map-value (map x y)

@@ -44,7 +44,7 @@
             (:conc-name "")
             (:predicate nil)
             (:copier nil))
-  (table +permutation+ :type (simple-array u:ub8 (256))))
+  (table +permutation+ :type (u:ub8a 256)))
 
 (declaim (inline %make-state))
 (defstruct (state

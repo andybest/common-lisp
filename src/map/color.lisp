@@ -1,6 +1,6 @@
 (in-package #:%cricket.map)
 
-(deftype color () '(simple-array u:ub8 (4)))
+(deftype color () '(u:ub8a 4))
 
 (declaim (inline rgba))
 (defstruct (color
