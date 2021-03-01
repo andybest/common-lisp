@@ -9,7 +9,7 @@
             (:copier nil))
   (divisions 100 :type fixnum)
   (geometry (make-array 0 :adjustable t :fill-pointer 0) :type vector)
-  (arc-lengths (make-array 0 :element-type 'u:f32) :type u:f32a)
+  (arc-lengths (u:make-f32-array 0) :type u:f32a)
   (arc-lengths-update nil :type boolean))
 
 (u:fn-> estimate-arc-lengths (curve) null)
@@ -119,7 +119,7 @@ sub-divisions to use when estimating the arc-length of the curve path: see the d
 `#'evaluate` for more information."
   (unless (evenp divisions)
     (error "Division count must be even."))
-  (let* ((arc-lengths (make-array (1+ divisions) :element-type 'u:f32))
+  (let* ((arc-lengths (u:make-f32-array (1+ divisions)))
          (curve (%make-curve :divisions divisions :arc-lengths arc-lengths)))
     (make-geometry curve points)
     curve))
