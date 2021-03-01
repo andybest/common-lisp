@@ -1,6 +1,6 @@
 (in-package #:%cricket.internal)
 
-(deftype f50 () '(double-float #.(- (expt 2d0 50)) #.(expt 2d0 50)))
+(deftype f50 () '(u:f64 #.(- (expt 2d0 50)) #.(expt 2d0 50)))
 
 (u:define-constant +prime-x+ 501125321)
 

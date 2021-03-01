@@ -204,8 +204,8 @@ away from their grid alignment (optional, default: 1.0)."
                         (:chebyshev
                          (max (abs vx) (abs vy)))
                         (:minkowski4
-                         (the (double-float 0d0)
-                              (expt (the (double-float 0d0)
+                         (the (u:f64 0d0)
+                              (expt (the (u:f64 0d0)
                                          (+ (* vx vx vx vx)
                                             (* vy vy vy vy)))
                                     0.25d0))))))
