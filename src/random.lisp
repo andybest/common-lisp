@@ -9,12 +9,12 @@
              (get-internal-real-time))))))
 
 (defun random-boolean (generator &optional (probability 0.5))
-  (declare (type single-float probability))
+  (declare (u:f32 probability))
   (< (pcg:pcg-random-float% generator) probability))
 
 (defun random-int (generator &key (min 0) (max 1) parity-p)
-  (declare (type (unsigned-byte 32) min max)
-           (type boolean parity-p))
+  (declare (u:ub32 min max)
+           (boolean parity-p))
   (if parity-p
       (+ min (* 2 (pcg:pcg-random-bounded%
                    generator
@@ -22,11 +22,11 @@
       (+ min (pcg:pcg-random-bounded% generator (1+ (- max min))))))
 
 (defun random-float (generator &key (min 0.0) (max 1.0))
-  (declare (type single-float min max))
+  (declare (u:f32 min max))
   (+ min (* (- max min) (pcg:pcg-random-float% generator))))
 
 (defun random-element (generator sequence)
-  (declare (type sequence sequence))
+  (declare (sequence sequence))
   (let ((len (length sequence)))
     (when (plusp len)
       (elt sequence (pcg:pcg-random-bounded% generator len)))))
