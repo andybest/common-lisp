@@ -111,7 +111,7 @@
 (defun uniform-float-array (program uniform value)
   "Specify an array of floats as the VALUE for the uniform variable, UNIFORM."
   (let ((location (get-uniform-location program uniform)))
-    (%uniform-array location %gl:uniform-1fv 1 single-float value)))
+    (%uniform-array location %gl:uniform-1fv 1 u:f32 value)))
 
 (defun uniform-vec2 (program uniform value)
   "Specify a vec2 as the VALUE for the uniform variable, UNIFORM."
@@ -123,7 +123,7 @@
 (defun uniform-vec2-array (program uniform value)
   "Specify an array of vec2's as the VALUE for the uniform variable, UNIFORM."
   (let ((location (get-uniform-location program uniform)))
-    (%uniform-array location %gl:uniform-2fv 2 single-float value)))
+    (%uniform-array location %gl:uniform-2fv 2 u:f32 value)))
 
 (defun uniform-vec3 (program uniform value)
   "Specify a vec3 as the VALUE for the uniform variable, UNIFORM."
@@ -135,7 +135,7 @@
 (defun uniform-vec3-array (program uniform value)
   "Specify an array of vec3's as the VALUE for the uniform variable, UNIFORM."
   (let ((location (get-uniform-location program uniform)))
-    (%uniform-array location %gl:uniform-3fv 3 single-float value)))
+    (%uniform-array location %gl:uniform-3fv 3 u:f32 value)))
 
 (defun uniform-vec4 (program uniform value)
   "Specify a vec4 as the VALUE for the uniform variable, UNIFORM."
@@ -148,7 +148,7 @@
 (defun uniform-vec4-array (program uniform value)
   "Specify an array of vec4's as the VALUE for the uniform variable, UNIFORM."
   (let ((location (get-uniform-location program uniform)))
-    (%uniform-array location %gl:uniform-4fv 4 single-float value)))
+    (%uniform-array location %gl:uniform-4fv 4 u:f32 value)))
 
 (defun uniform-mat2 (program uniform value)
   "Specify a mat2 as the VALUE for the uniform variable, UNIFORM."

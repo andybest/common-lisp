@@ -68,7 +68,7 @@
         ((:bool :uint) (get-result :type :scalar
                                    :element-type '(unsigned-byte 32)))
         (:int (get-result :type :scalar :element-type '(signed-byte 32)))
-        (:float (get-result :type :scalar :element-type 'single-float))
+        (:float (get-result :type :scalar :element-type 'u:f32))
         ((:vec :mat) (apply #'get-result
                             :type spec
                             :dimensions (list y z)
