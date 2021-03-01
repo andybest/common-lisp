@@ -9,7 +9,7 @@
             (:copier nil))
   (divisions 100 :type fixnum)
   (geometry (make-array 0 :adjustable t :fill-pointer 0) :type vector)
-  (arc-lengths (make-array 0 :element-type 'single-float) :type (simple-array single-float (*)))
+  (arc-lengths (make-array 0 :element-type 'u:f32) :type u:f32a)
   (arc-lengths-update nil :type boolean))
 
 (u:fn-> estimate-arc-lengths (curve) null)
@@ -20,7 +20,7 @@
         :for i :from 1 :to max
         :for previous :of-type v3:vec = (evaluate curve 0f0) :then current
         :for current :of-type v3:vec = (evaluate curve (/ i max))
-        :sum (point3d:distance previous current) :into length :of-type single-float
+        :sum (point3d:distance previous current) :into length :of-type u:f32
         :do (setf (aref (arc-lengths curve) i) length)))
 
 (defun verify-points (points)
@@ -119,12 +119,12 @@ sub-divisions to use when estimating the arc-length of the curve path: see the d
 `#'evaluate` for more information."
   (unless (evenp divisions)
     (error "Division count must be even."))
-  (let* ((arc-lengths (make-array (1+ divisions) :element-type 'single-float))
+  (let* ((arc-lengths (make-array (1+ divisions) :element-type 'u:f32))
          (curve (%make-curve :divisions divisions :arc-lengths arc-lengths)))
     (make-geometry curve points)
     curve))
 
-(u:fn-> remap (curve single-float) single-float)
+(u:fn-> remap (curve u:f32) u:f32)
 (defun remap (curve parameter)
   (declare (optimize speed))
   (flet ((%bisect (arc-lengths arc-length-count target)
