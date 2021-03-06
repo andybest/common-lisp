@@ -50,6 +50,8 @@
    #:zero-p
    #:ones!
    #:ones
+   #:uniform!
+   #:uniform
    #:random!
    #:random
    #:copy!

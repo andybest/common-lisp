@@ -45,6 +45,21 @@ to compare by, and should be tuned specially for the application domain."
   (declare (optimize speed))
   (%vec 1d0 1d0 1d0 1d0))
 
+(u:fn-> uniform! (vec u:f64) vec)
+(declaim (inline uniform!))
+(defun uniform! (vec value)
+  "Modify the vector VEC by setting each of its components to VALUE."
+  (declare (optimize speed))
+  (com:cwset 4 vec nil value)
+  vec)
+
+(u:fn-> uniform (u:f64) vec)
+(declaim (inline uniform))
+(defun uniform (value)
+  "Construct a fresh vector with each component set to VALUE."
+  (declare (optimize speed))
+  (%vec value value value value))
+
 (u:fn-> random! (vec u:f64 u:f64) vec)
 (declaim (inline random!))
 (defun random! (out min max)
