@@ -30,6 +30,21 @@ to compare by, and should be tuned specially for the application domain."
   (declare (optimize speed))
   (= vec +zero+))
 
+(u:fn-> ones! (vec) vec)
+(declaim (inline ones!))
+(defun ones! (vec)
+  "Modify the vector VEC by setting each of its components to one."
+  (declare (optimize speed))
+  (com:cwset 4 vec nil 1.0)
+  vec)
+
+(u:fn-> ones () vec)
+(declaim (inline ones))
+(defun ones ()
+  "Construct a fresh vector with each component set to one."
+  (declare (optimize speed))
+  (%vec 1.0 1.0 1.0 1.0))
+
 (u:fn-> random! (vec u:f32 u:f32) vec)
 (declaim (inline random!))
 (defun random! (out min max)

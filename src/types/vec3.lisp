@@ -52,6 +52,8 @@
    #:zero
    #:zero!
    #:zero-p
+   #:ones!
+   #:ones
    #:random!
    #:random
    #:copy!
