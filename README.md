@@ -4,7 +4,8 @@ Provides an efficient implementation of RFC-4122 UUID version 4.
 
 ## Overview
 
-This library provides the ability to generate random UUID's, and parse UUID strings into UUID objects.
+This library provides the ability to generate random UUID's, and parse UUID strings into UUID
+objects.
 
 ## Install
 
