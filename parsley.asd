@@ -2,9 +2,7 @@
   :description "A toolset for parsing binary data formats."
   :author ("Michael Fiano <mail@mfiano.net>")
   :license "MIT"
-  :homepage "https://mfiano.net/projects/parsley"
-  :source-control (:git "https://git.mfiano.net/mfiano/parsley")
-  :bug-tracker "https://git.mfiano.net/mfiano/parsley/issues"
+  :homepage "https://git.mfiano.net/mfiano/parsley"
   :encoding :utf-8
   :depends-on (#:babel
                #:bitio
