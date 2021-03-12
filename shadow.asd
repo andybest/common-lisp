@@ -2,9 +2,7 @@
   :description "A management system for OpenGL shader programs and associated buffer objects."
   :author "Michael Fiano <mail@mfiano.net>"
   :license "MIT"
-  :homepage "https://mfiano.net/projects/shadow"
-  :source-control (:git "https://git.mfiano.net/mfiano/shadow")
-  :bug-tracker "https://git.mfiano.net/mfiano/shadow/issues"
+  :homepage "https://git.mfiano.net/mfiano/shadow"
   :encoding :utf-8
   :depends-on (#:cffi
                #:cl-opengl
