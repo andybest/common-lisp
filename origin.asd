@@ -2,9 +2,7 @@
   :description "A native Lisp graphics math library with an emphasis on performance and correctness."
   :author "Michael Fiano <mail@mfiano.net>"
   :license "MIT"
-  :homepage "https://mfiano.net/projects/origin"
-  :source-control (:git "https://git.mfiano.net/mfiano/origin")
-  :bug-tracker "https://git.mfiano.net/mfiano/origin/issues"
+  :homepage "https://git.mfiano.net/mfiano/origin"
   :encoding :utf-8
   :depends-on (#:golden-utils
                #:specialization-store)
