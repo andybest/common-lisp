@@ -32,16 +32,15 @@
     (let ((high (high uuid))
           (low (low uuid))
           (string (make-string 36 :element-type 'base-char)))
-      (locally (declare (optimize (safety 0)))
-        (psetf (aref string 8) #\-
-               (aref string 13) #\-
-               (aref string 18) #\-
-               (aref string 23) #\-)
-        (%write string 8 0 60 high)
-        (%write string 4 9 28 high)
-        (%write string 4 14 12 high)
-        (%write string 4 19 60 low)
-        (%write string 12 24 44 low))
+      (psetf (aref string 8) #\-
+             (aref string 13) #\-
+             (aref string 18) #\-
+             (aref string 23) #\-)
+      (%write string 8 0 60 high)
+      (%write string 4 9 28 high)
+      (%write string 4 14 12 high)
+      (%write string 4 19 60 low)
+      (%write string 12 24 44 low)
       string)))
 
 (u:fn-> from-string ((simple-string 36)) uuid)
