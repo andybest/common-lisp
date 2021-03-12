@@ -2,9 +2,7 @@
   :description "A library of reusable GPU shader functions."
   :author ("Michael Fiano <mail@mfiano.net>")
   :license "MIT"
-  :homepage "https://mfiano.net/projects/umbra"
-  :source-control (:git "https://git.mfiano.net/mfiano/umbra")
-  :bug-tracker "https://git.mfiano.net/mfiano/umbra/issues"
+  :homepage "https://git.mfiano.net/mfiano/umbra"
   :encoding :utf-8
   :depends-on (#:golden-utils
                #:shadow
