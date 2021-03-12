@@ -48,4 +48,4 @@ of `source2`.
   (declare (optimize speed))
   (u:lerp (the u:f32 (int:sample (control sampler) x y z w))
           (the u:f32 (int:sample (source1 sampler) x y z w))
-          (the u:f32 (int:sample (source2 sampler) x y z w))))
+          (* (1+ (the u:f32 (int:sample (source2 sampler) x y z w))) 0.5)))
