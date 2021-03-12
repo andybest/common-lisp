@@ -2,8 +2,7 @@
   :description ""
   :author ("Michael Fiano <mail@mfiano.net>")
   :license "MIT"
-  :homepage "https://mfiano.net/projects/syntex"
-  :source-control (:git "https://git.mfiano.net/mfiano/syntex.git")
+  :homepage "https://git.mfiano.net/mfiano/syntex"
   :encoding :utf-8
   :depends-on (#:cl-cpus
                #:golden-utils
