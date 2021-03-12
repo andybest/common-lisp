@@ -32,7 +32,7 @@ the noise (optional, default: NIL)."
            :argument 'value
            :value value))
   (make-constant :rng (int::make-rng seed)
-                 :value (u:lerp (u:clamp (float value 1f0) 0.0 1.0) -1.0 1.0)))
+                 :value (float value 1f0)))
 
 (defmethod int:sample ((sampler gen:constant) x &optional (y 0d0) (z 0d0) (w 0d0))
   (declare (ignore x y z w)
