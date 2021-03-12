@@ -2,8 +2,7 @@
   :description "Create and parse RFC-4122 UUID version 4 identifiers."
   :author ("Michael Fiano <mail@mfiano.net>")
   :license "MIT"
-  :homepage "https://mfiano.net/projects/random-uuid"
-  :source-control (:git "https://github.com/mfiano/random-uuid.git")
+  :homepage "https://git.mfiano.net/mfiano/random-uuid"
   :encoding :utf-8
   :depends-on (#:golden-utils
                #:seedable-rng)
