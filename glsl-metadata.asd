@@ -2,9 +2,7 @@
   :description ""
   :author ("Michael Fiano <mail@mfiano.net>")
   :license "MIT"
-  :homepage "https://mfiano.net/projects/glsl-metadata"
-  :source-control (:git "https://git.mfiano.net/mfiano/glsl-metadata.git")
-  :bug-tracker "https://git.mfiano.net/mfiano/glsl-metadata/issues"
+  :homepage "https://git.mfiano.net/mfiano/glsl-metadata"
   :encoding :utf-8
   :depends-on (#:golden-utils
                #:uiop)
