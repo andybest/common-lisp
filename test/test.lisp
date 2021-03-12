@@ -202,31 +202,31 @@
              "abs")
   (is-values (compare 'modify-blend
                       (c:blend (c:uniform-scale (c:perlin-3d :seed "default") 10)
-                                (c:uniform-scale (c:simplex-2d :seed "default") 8)
-                                (c:uniform-scale (c:open-simplex-3d :seed "default") 10)))
+                               (c:uniform-scale (c:simplex-2d :seed "default") 8)
+                               (c:uniform-scale (c:open-simplex-3d :seed "default") 10)))
              '(t t)
              "blend")
   (is-values (compare 'modify-blend
                       (c:cache
                        (c:blend (c:uniform-scale (c:perlin-3d :seed "default") 10)
-                                 (c:uniform-scale (c:simplex-2d :seed "default") 8)
-                                 (c:uniform-scale (c:open-simplex-3d :seed "default") 10))))
+                                (c:uniform-scale (c:simplex-2d :seed "default") 8)
+                                (c:uniform-scale (c:open-simplex-3d :seed "default") 10))))
              '(t t)
              "cache")
   (is-values (compare 'modify-clamp
                       (c:clamp (c:uniform-scale (c:perlin-3d :seed "default") 10) -0.2 0.4))
              '(t t)
              "clamp")
-  (is-values (compare 'modify-curve
+  (is-values (compare 'modisy-curve
                       (c:curve (c:abs (c:uniform-scale (c:perlin-3d :seed "default") 50))
-                                :points '((0.1 . 0.43) (0.4 . 0.25) (0.6 . 0.4) (0.65 . 0.8))))
+                               :points '((0.1 . 0.43) (0.4 . 0.25) (0.6 . 0.4) (0.65 . 0.8))))
              '(t t)
              "curve")
   (is-values (compare 'modify-displace
                       (c:displace (c:uniform-scale (c:perlin-3d :seed "default") 10)
-                                   :x (c:uniform-scale (c:simplex-3d :seed "default") 8)
-                                   :y (c:uniform-scale (c:open-simplex-2d :seed "default") 9)
-                                   :z (c:uniform-scale (c:perlin-2d :seed "default") 7)))
+                                  :x (c:uniform-scale (c:simplex-3d :seed "default") 8)
+                                  :y (c:uniform-scale (c:open-simplex-2d :seed "default") 9)
+                                  :z (c:uniform-scale (c:perlin-2d :seed "default") 7)))
              '(t t)
              "displace")
   (is-values (compare 'modify-expt
@@ -243,17 +243,17 @@
              "fractalize-fbm")
   (is-values (compare 'modify-fractalize-hybrid-multi
                       (c:fractalize (c:uniform-scale (c:perlin-3d :seed "default") 10)
-                                     :hybrid-multi))
+                                    :hybrid-multi))
              '(t t)
              "fractalize-hybrid-multi")
   (is-values (compare 'modify-fractalize-multi
                       (c:fractalize (c:uniform-scale (c:perlin-3d :seed "default") 10)
-                                     :multi))
+                                    :multi))
              '(t t)
              "fractalize-multi")
   (is-values (compare 'modify-fractalize-ridged-multi
                       (c:fractalize (c:uniform-scale (c:perlin-3d :seed "default") 10)
-                                     :ridged-multi))
+                                    :ridged-multi))
              '(t t)
              "fractalize-ridged-multi")
   (is-values (compare 'modify-negate
@@ -262,17 +262,17 @@
              "negate")
   (is-values (compare 'modify-max
                       (c:max (c:uniform-scale (c:perlin-3d :seed "default") 10)
-                              (c:uniform-scale (c:simplex-3d :seed "default") 10)))
+                             (c:uniform-scale (c:simplex-3d :seed "default") 10)))
              '(t t)
              "max")
   (is-values (compare 'modify-min
                       (c:min (c:uniform-scale (c:perlin-3d :seed "default") 10)
-                              (c:uniform-scale (c:simplex-3d :seed "default") 10)))
+                             (c:uniform-scale (c:simplex-3d :seed "default") 10)))
              '(t t)
              "min")
   (is-values (compare 'modify-power
                       (c:power (c:uniform-scale (c:perlin-3d :seed "default") 10)
-                                (c:uniform-scale (c:simplex-3d :seed "default") 10)))
+                               (c:uniform-scale (c:simplex-3d :seed "default") 10)))
              '(t t)
              "power")
   (is-values (compare 'modify-rotate
@@ -285,11 +285,11 @@
              "scale")
   (is-values (compare 'modify-select
                       (c:select (c:uniform-scale (c:perlin-3d :seed "default") 10)
-                                 (c:uniform-scale (c:simplex-2d :seed "default") 9)
-                                 (c:uniform-scale (c:open-simplex-2d :seed "default") 8)
-                                 :min -0.5
-                                 :max 0.2
-                                 :falloff 0.5))
+                                (c:uniform-scale (c:simplex-2d :seed "default") 9)
+                                (c:uniform-scale (c:open-simplex-2d :seed "default") 8)
+                                :min -0.5
+                                :max 0.2
+                                :falloff 0.5))
              '(t t)
              "select")
   (is-values (compare 'modify-strengthen
@@ -301,20 +301,20 @@
              "strengthen")
   (is-values (compare 'modify-terrace
                       (c:terrace (c:uniform-scale (c:perlin-3d :seed "default") 50)
-                                  :invert-p t
-                                  :points '(0.04 0.28 0.4 0.6 0.7 1)))
+                                 :invert-p t
+                                 :points '(0.04 0.28 0.4 0.6 0.7 1)))
              '(t t)
              "terrace")
   (is-values (compare 'modify-translate
                       (c:translate (c:uniform-scale (c:perlin-3d :seed "default") 10)
-                                    :x 5
-                                    :y 10
-                                    :z 15))
+                                   :x 5
+                                   :y 10
+                                   :z 15))
              '(t t)
              "translate")
   (is-values (compare 'modify-turbulence
                       (c:turbulence (c:uniform-scale (c:perlin-3d :seed "default") 10)
-                                     (c:perlin-3d :seed "default")))
+                                    (c:perlin-3d :seed "default")))
              '(t t)
              "turbulence")
   (is-values (compare 'modify-uniform-scale
