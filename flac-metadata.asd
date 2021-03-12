@@ -2,9 +2,7 @@
   :description "A utility for reading metadata embedded in FLAC audio files."
   :author ("Michael Fiano <mail@mfiano.net>")
   :license "MIT"
-  :homepage "https://mfiano.net/projects/flac-metadata"
-  :source-control (:git "https://git.mfiano.net/mfiano/flac-metadata")
-  :bug-tracker "https://git.mfiano.net/mfiano/flac-metadata/issues"
+  :homepage "https://git.mfiano.net/mfiano/flac-metadata"
   :encoding :utf-8
   :depends-on (#:golden-utils
                #:parsley)
