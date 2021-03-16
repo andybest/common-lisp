@@ -14,5 +14,4 @@
   :components
   ((:file "package")
    (:file "packer")
-   (:file "unpacker")
-   (:file "slicer")))
+   (:file "unpacker")))
