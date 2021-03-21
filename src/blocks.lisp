@@ -71,15 +71,14 @@
         (varjo:v-type-of (uniform (layout x)))))
      (u:href bindings (block-type block) binding-point))))
 
-(defmethod %bind-block ((block-type (eql :uniform)) block binding-point)
+(defun %bind-block/uniform (block binding-point)
   (let* ((program-id (id (program block)))
          (index (%gl:get-uniform-block-index program-id (name block))))
     (%gl:uniform-block-binding program-id index binding-point)))
 
-(defmethod %bind-block ((block-type (eql :buffer)) block binding-point)
+(defun %bind-block/buffer (block binding-point)
   (let* ((program-id (id (program block)))
-         (index (gl:get-program-resource-index
-                 program-id :shader-storage-block (name block))))
+         (index (gl:get-program-resource-index program-id :shader-storage-block (name block))))
     (%gl:shader-storage-block-binding program-id index binding-point)))
 
 (defun bind-block (block-alias binding-point)
@@ -94,7 +93,9 @@
                binding-point
                block-alias))
     (pushnew block (u:href bindings (block-type block) binding-point))
-    (%bind-block (block-type block) block binding-point)
+    (ecase (block-type block)
+      (:uniform (%bind-block/uniform block binding-point))
+      (:buffer (%bind-block/buffer block binding-point)))
     (setf (slot-value block '%binding-point) binding-point)))
 
 (defun unbind-block (block-alias)
