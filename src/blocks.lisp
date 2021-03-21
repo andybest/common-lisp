@@ -107,7 +107,9 @@
     (u:deletef (u:href table binding-point) block)
     (unless (u:href table binding-point)
       (remhash binding-point table))
-    (%bind-block (block-type block) block 0)
+    (ecase (block-type block)
+      (:uniform (%bind-block/uniform block 0))
+      (:buffer (%bind-block/buffer block 0)))
     (setf (slot-value block '%binding-point) 0)))
 
 (defun rebind-blocks (programs)
@@ -119,7 +121,7 @@
                (dolist (block blocks)
                  (with-slots (%program %binding-point) block
                    (when (member (name %program) programs)
-                     (%bind-block :buffer block %binding-point))))))))
+                     (%bind-block/buffer block %binding-point))))))))
     (rebind :uniform)
     (rebind :buffer)
     (u:noop)))
