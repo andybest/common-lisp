@@ -33,7 +33,7 @@
     (format t "~a" (u:href (source program) stage))))
 
 (defun compile-stages (program)
-  (let (shaders)
+  (let ((shaders nil))
     (u:do-hash (k v (source program))
       (let* ((type (stage-type->shader-type k))
              (shader (gl:create-shader type)))
@@ -41,8 +41,7 @@
         (gl:compile-shader shader)
         (push shader shaders)
         (unless (gl:get-shader shader :compile-status)
-          (error "Failed to compile ~a shader stage:~%~a~%"
-                 type (gl:get-shader-info-log shader)))))
+          (error "Failed to compile ~a shader stage:~%~a~%" type (gl:get-shader-info-log shader)))))
     shaders))
 
 (defun link-program (shaders)
@@ -57,17 +56,15 @@
          (gl:attach-shader program shader))
        (gl:link-program program)
        (unless (gl:get-program program :link-status)
-         (error "Failed to link shader program: ~a."
-                (gl:get-program-info-log program)))
+         (error "Failed to link shader program: ~a." (gl:get-program-info-log program)))
        (dolist (shader shaders)
          (gl:detach-shader program shader)
          (gl:delete-shader shader))))
     program))
 
 (defun build-shader-program (name)
-  "Compile the shader stages of NAME, linking them into a program. NAME refers
-to a previously defined shader program using MAKE-SHADER-PROGRAM.
-See MAKE-SHADER-PROGRAM"
+  "Compile the shader stages of NAME, linking them into a program. NAME refers to a previously
+defined shader program using MAKE-SHADER-PROGRAM."
   (let* ((program (find-program name))
          (id (link-program (compile-stages program))))
     (setf (slot-value program '%id) id)
@@ -77,8 +74,7 @@ See MAKE-SHADER-PROGRAM"
     id))
 
 (defun build-shader-dictionary ()
-  "Compile all shader programs defined with MAKE-SHADER-PROGRAM.
-See MAKE-SHADER-PROGRAM"
+  "Compile all shader programs defined with MAKE-SHADER-PROGRAM."
   (let ((programs (meta :programs)))
     (u:maphash-keys #'build-shader-program programs)
     programs))
@@ -91,8 +87,7 @@ See MAKE-SHADER-PROGRAM"
         (pushnew (name program) (u:href stage-fn->programs func-spec))))))
 
 (defun translate-program (program)
-  (with-slots (%name %version %primitive %stage-specs %translated-stages)
-      program
+  (with-slots (%name %version %primitive %stage-specs %translated-stages) program
     (let ((stages (translate-stages %version %primitive %stage-specs)))
       (dolist (stage stages)
         (store-source program stage)
@@ -127,8 +122,7 @@ See MAKE-SHADER-PROGRAM"
   (setf (meta :modify-hook) function))
 
 (defmacro with-shader (name &body body)
-  "Run a body of code which uses (as in glUseProgram) the program identified by
-NAME."
+  "Run a body of code which uses (as in glUseProgram) the program identified by NAME."
   `(unwind-protect
         (progn
           (gl:use-program (id (find-program ,name)))

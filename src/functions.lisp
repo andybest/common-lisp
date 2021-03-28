@@ -36,7 +36,7 @@
 (defun compute-outdated-programs (spec)
   (let* ((dep->fns (meta :dep->fns))
          (spec-fns (u:href dep->fns spec))
-         (programs))
+         (programs nil))
     (u:do-hash (k v (meta :stage-fn->programs))
       (when (or (u:href spec-fns k)
                 (equal k spec))

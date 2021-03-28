@@ -5,18 +5,16 @@
     (list (list (reverse parts) (varjo:type->type-spec type)))))
 
 (defmethod get-uniform-data ((type varjo:v-user-struct) parts)
-  (cons
-   (list (reverse parts) (varjo:type->type-spec type))
-   (loop :for (slot-name slot-type . nil) :in (varjo.internals:v-slots type)
-         :append (get-uniform-data slot-type (cons slot-name parts)))))
+  (cons (list (reverse parts) (varjo:type->type-spec type))
+        (loop :for (slot-name slot-type . nil) :in (varjo.internals:v-slots type)
+              :append (get-uniform-data slot-type (cons slot-name parts)))))
 
 (defmethod get-uniform-data ((type varjo:v-array) parts)
   (loop :with dimensions = (first (varjo:v-dimensions type))
         :with element-type = (varjo:v-element-type type)
         :for i :below dimensions
         :when (zerop i)
-          :collect (list (reverse parts)
-                         (cons (varjo:type->type-spec element-type) dimensions))
+          :collect (list (reverse parts) (cons (varjo:type->type-spec element-type) dimensions))
         :append (get-uniform-data element-type (cons i parts))))
 
 (defun store-uniforms (program)
@@ -25,11 +23,9 @@
                    :for type = (varjo:v-type-of uniform)
                    :unless (or (has-qualifier-p uniform :ubo)
                                (has-qualifier-p uniform :ssbo))
-                     :append (get-uniform-data
-                              type
-                              (list (varjo:name uniform)))))
+                     :append (get-uniform-data type (list (varjo:name uniform)))))
            (%get-program-uniforms (program)
-             (let (uniforms)
+             (let ((uniforms nil))
                (dolist (stage (translated-stages program))
                  (loop :for (parts type-spec) :in (%get-stage-uniforms stage)
                        :do (push (list (ensure-keyword (parts->string parts))
@@ -42,10 +38,7 @@
     (let ((uniforms (%get-program-uniforms program)))
       (dolist (uniform uniforms)
         (destructuring-bind (id name type) uniform
-          (setf (u:href (uniforms program) id)
-                (u:dict #'eq
-                        :name name
-                        :type type))))
+          (setf (u:href (uniforms program) id) (u:dict #'eq :name name :type type))))
       (u:do-hash-keys (k (uniforms program))
         (unless (find k uniforms :key #'car)
           (remhash k (uniforms program)))))))
@@ -81,11 +74,7 @@
   (declare (optimize speed)
            ((or boolean fixnum) value))
   (let ((location (get-uniform-location program uniform)))
-    (%gl:uniform-1i location (if (or (null value)
-                                     (and (realp value)
-                                          (zerop value)))
-                                 0
-                                 1))))
+    (%gl:uniform-1i location (if (or (null value) (and (realp value) (zerop value))) 0 1))))
 
 (defun uniform-bool-array (program uniform value)
   (let ((location (get-uniform-location program uniform)))
@@ -116,7 +105,7 @@
 (defun uniform-vec2 (program uniform value)
   "Specify a vec2 as the VALUE for the uniform variable, UNIFORM."
   (declare (optimize speed)
-           (v2:vec value))
+           ((u:f32a 2) value))
   (let ((location (get-uniform-location program uniform)))
     (%gl:uniform-2f location (aref value 0) (aref value 1))))
 
@@ -128,7 +117,7 @@
 (defun uniform-vec3 (program uniform value)
   "Specify a vec3 as the VALUE for the uniform variable, UNIFORM."
   (declare (optimize speed)
-           (v3:vec value))
+           ((u:f32a 3) value))
   (let ((location (get-uniform-location program uniform)))
     (%gl:uniform-3f location (aref value 0) (aref value 1) (aref value 2))))
 
@@ -140,10 +129,9 @@
 (defun uniform-vec4 (program uniform value)
   "Specify a vec4 as the VALUE for the uniform variable, UNIFORM."
   (declare (optimize speed)
-           (v4:vec value))
+           ((u:f32a 4) value))
   (let ((location (get-uniform-location program uniform)))
-    (%gl:uniform-4f
-     location (aref value 0) (aref value 1) (aref value 2) (aref value 3))))
+    (%gl:uniform-4f location (aref value 0) (aref value 1) (aref value 2) (aref value 3))))
 
 (defun uniform-vec4-array (program uniform value)
   "Specify an array of vec4's as the VALUE for the uniform variable, UNIFORM."
@@ -153,7 +141,7 @@
 (defun uniform-mat2 (program uniform value)
   "Specify a mat2 as the VALUE for the uniform variable, UNIFORM."
   (declare (optimize speed)
-           (m2:mat value))
+           ((u:f32a 4) value))
   (let ((location (get-uniform-location program uniform)))
     (gl:uniform-matrix-2fv location value nil)))
 
@@ -165,7 +153,7 @@
 (defun uniform-mat3 (program uniform value)
   "Specify a mat3 as the VALUE for the uniform variable, UNIFORM."
   (declare (optimize speed)
-           (m3:mat value))
+           ((u:f32a 9) value))
   (let ((location (get-uniform-location program uniform)))
     (gl:uniform-matrix-3fv location value nil)))
 
@@ -177,7 +165,7 @@
 (defun uniform-mat4 (program uniform value)
   "Specify a mat4 as the VALUE for the uniform variable, UNIFORM."
   (declare (optimize speed)
-           (m4:mat value))
+           ((u:f32a 16) value))
   (let ((location (get-uniform-location program uniform)))
     (gl:uniform-matrix-4fv location value nil)))
 

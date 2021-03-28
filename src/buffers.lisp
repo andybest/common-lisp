@@ -32,8 +32,7 @@
   (u:href (meta :buffers) buffer-name))
 
 (defun create-buffer (buffer-name block-alias)
-  "Create a buffer of the given TYPE and NAME, using the block BLOCK-ID of
-PROGRAM-NAME."
+  "Create a buffer of the given TYPE and NAME, using the block BLOCK-ID of PROGRAM-NAME."
   (u:if-let ((block (find-block block-alias)))
     (let* ((buffer-table (meta :buffers))
            (type (block-type->buffer-type (block-type block)))
@@ -63,8 +62,7 @@ PROGRAM-NAME."
 (defun clear-buffer (buffer-name)
   (with-slots (%id %target) (find-buffer buffer-name)
     (gl:bind-buffer %target %id)
-    (%gl:clear-buffer-data
-     %target :r8 :red :unsigned-byte (cffi:null-pointer))
+    (%gl:clear-buffer-data %target :r8 :red :unsigned-byte (cffi:null-pointer))
     (unbind-buffer buffer-name)))
 
 (defun delete-buffer (buffer-name)
@@ -98,8 +96,7 @@ PROGRAM-NAME."
           (%gl:buffer-sub-data target offset size ptr))))))
 
 (defun %write-buffer-member/matrix (target member index value)
-  (with-slots (%element-type %offset %element-stride %byte-stride %dimensions)
-      member
+  (with-slots (%element-type %offset %element-stride %byte-stride %dimensions) member
     (let* ((count (length value))
            (offset (+ %offset (* index %byte-stride)))
            (size (* count %byte-stride)))
@@ -122,15 +119,17 @@ PROGRAM-NAME."
             (%gl:buffer-sub-data target offset size ptr)))))))
 
 (defun write-buffer-path (buffer-name &key path index value)
-  "Write VALUE to the buffer with the name BUFFER-NAME, starting at the given
-PATH.
-PATH: A \"dot-separated\" keyword symbol, where each part denotes a member in
-the buffer's block layout.
-VALUE: A value to write, such as a scalar or matrix depending on the type of the
-member PATH refers to. To write to an array, use a sequence of values.
-Note: Writing to arrays which contain other aggregate types (other arrays or
-structures) is not possible. This is a design decision to allow this library to
-have a simple \"path-based\" buffer writing interface."
+  "Write VALUE to the buffer with the name BUFFER-NAME, starting at the given PATH.
+
+PATH: A \"dot-separated\" keyword symbol, where each part denotes a member in the buffer's block
+layout.
+
+VALUE: A value to write, such as a scalar or matrix depending on the type of the member PATH refers
+to. To write to an array, use a sequence of values.
+
+Note: Writing to arrays which contain other aggregate types (other arrays or structures) is not
+possible. This is a design decision to allow this library to have a simple \"path-based\" buffer
+writing interface."
   (with-slots (%type %id %target %layout) (find-buffer buffer-name)
     (unless path
       (error "Buffer path must be specified."))
@@ -152,12 +151,11 @@ have a simple \"path-based\" buffer writing interface."
 
 (defun %read-buffer-member/vector (member data count)
   (with-slots (%dimensions %element-stride) member
-    (let* ((size (car %dimensions))
-           (func (intern "VEC" (u:format-symbol :keyword "ORIGIN.VEC~d" size))))
+    (let ((size (car %dimensions)))
       (flet ((make-vector (data index size)
-               (let ((args (loop :for i :below size
-                                 :collect (aref data (+ index i)))))
-                 (apply func args))))
+               (let ((output (u:make-f32-array size)))
+                 (replace output data :start2 index)
+                 output)))
         (if (= count 1)
             (make-vector data 0 size)
             (loop :repeat count
@@ -167,29 +165,28 @@ have a simple \"path-based\" buffer writing interface."
 (defun %read-buffer-member/matrix (member data count)
   (with-slots (%dimensions %element-stride) member
     (destructuring-bind (columns rows) %dimensions
-      (let ((func (intern "MAT"
-                          (u:format-symbol :keyword "ORIGIN.MAT~d" columns))))
-        (flet ((make-matrix (data index)
-                 (let ((args (loop :repeat columns
-                                   :for i :from index :by %element-stride
-                                   :append (loop :for j :below rows
-                                                 :collect (aref data (+ i j)))
-                                   :do (incf index %element-stride))))
-                   (apply func args))))
-          (if (or (= columns rows 2)
-                  (= columns rows 3)
-                  (= columns rows 4))
-              (if (= count 1)
-                  (make-matrix data 0)
-                  (loop :for i :below count
-                        :for index = (* columns %element-stride i)
-                        :collect (make-matrix data index)))
-              (error "Only square matrices are supported.")))))))
+      (flet ((make-matrix (data index)
+               (loop :repeat columns
+                     :for i :from index :by %element-stride
+                     :nconc (loop :for j :below rows
+                                  :collect (aref data (+ i j)))
+                       :into result
+                     :do (incf index %element-stride)
+                     :finally (return (make-array (* rows columns)
+                                                  :element-type 'u:f32
+                                                  :initial-contents result)))))
+        (if (or (= columns rows 2)
+                (= columns rows 3)
+                (= columns rows 4))
+            (if (= count 1)
+                (make-matrix data 0)
+                (loop :for i :below count
+                      :for index = (* columns %element-stride i)
+                      :collect (make-matrix data index)))
+            (error "Only square matrices are supported."))))))
 
 (defun %read-buffer-member (target member index count)
-  (with-slots (%type %dimensions %count %element-stride %element-type %offset
-               %byte-stride)
-      member
+  (with-slots (%type %dimensions %count %element-stride %element-type %offset %byte-stride) member
     (let* ((count (or count %count))
            (offset (+ %offset (* index %byte-stride)))
            (size (* count %byte-stride))
@@ -198,8 +195,7 @@ have a simple \"path-based\" buffer writing interface."
                             (= element-count 3))
                        4
                        %element-stride))
-           (data (make-array (* stride (cadr %dimensions) count)
-                             :element-type %element-type)))
+           (data (make-array (* stride (cadr %dimensions) count) :element-type %element-type)))
       (cffi:with-pointer-to-vector-data (ptr data)
         (%gl:get-buffer-sub-data target offset size ptr))
       (ecase %type

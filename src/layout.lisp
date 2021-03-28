@@ -60,11 +60,9 @@
 
 (defun make-layout-member (layout data)
   (dolist (part (getf data :members))
-    (destructuring-bind (&key type name offset size stride &allow-other-keys)
-        part
+    (destructuring-bind (&key type name offset size stride &allow-other-keys) part
       (u:when-let ((unpacked-type (unpack-type (layout-type layout) type))
-                   (path (ensure-keyword
-                          (format nil "~{~a~^.~}" (u:ensure-list name)))))
+                   (path (ensure-keyword (format nil "~{~a~^.~}" (u:ensure-list name)))))
         (setf (u:href (members layout) path)
               (apply #'make-instance 'layout-member
                      :offset offset

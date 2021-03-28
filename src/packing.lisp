@@ -17,8 +17,7 @@
      (let ((element-type (varjo:v-element-type type)))
        (typecase element-type
          ((or varjo:v-user-struct varjo:v-array)
-          (error "Shader blocks containing arrays of aggregates are not ~
-                   currently supported."))
+          (error "Shader blocks containing arrays of aggregates are not currently supported."))
          (t (list* (pack-container type)
                    (pack-type element-type)
                    (varjo:v-dimensions type))))))))
@@ -47,8 +46,7 @@
        ,(pack-block layout)))))
 
 (defun unpack-type (layout-type type)
-  (destructuring-bind ((spec &optional x (y 1) (z 1)) &key &allow-other-keys)
-      type
+  (destructuring-bind ((spec &optional x (y 1) (z 1)) &key &allow-other-keys) type
     (labels ((get-container (x)
                (unpack-type layout-type (list x)))
              (get-stride (count)
@@ -56,8 +54,8 @@
                  (:std140 4)
                  (:std430 (if (= count 3) 4 count))))
              (get-result (&rest args)
-               (destructuring-bind (&key (dimensions '(1 1)) element-type count
-                                      type &allow-other-keys)
+               (destructuring-bind (&key (dimensions '(1 1)) element-type count type
+                                    &allow-other-keys)
                    args
                  (list :dimensions dimensions
                        :element-type element-type
@@ -65,12 +63,8 @@
                        :count (or count 1)
                        :type type))))
       (ecase spec
-        ((:bool :uint) (get-result :type :scalar
-                                   :element-type '(unsigned-byte 32)))
+        ((:bool :uint) (get-result :type :scalar :element-type '(unsigned-byte 32)))
         (:int (get-result :type :scalar :element-type '(signed-byte 32)))
         (:float (get-result :type :scalar :element-type 'u:f32))
-        ((:vec :mat) (apply #'get-result
-                            :type spec
-                            :dimensions (list y z)
-                            (get-container x)))
+        ((:vec :mat) (apply #'get-result :type spec :dimensions (list y z) (get-container x)))
         (:array (apply #'get-result :count y (get-container x)))))))

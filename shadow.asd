@@ -8,8 +8,6 @@
                #:cl-opengl
                #:glsl-packing
                #:golden-utils
-               #:origin
-               #:split-sequence
                #:static-vectors
                #:varjo)
   :pathname "src"

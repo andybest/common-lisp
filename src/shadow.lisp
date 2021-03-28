@@ -10,9 +10,7 @@
 
 (defun reset-program-state ()
   (setf (meta :programs) (u:dict #'eq)
-        (meta :block-bindings) (u:dict #'eq
-                                       :uniform (u:dict #'eq)
-                                       :buffer (u:dict #'eq))
+        (meta :block-bindings) (u:dict #'eq :uniform (u:dict #'eq) :buffer (u:dict #'eq))
         (meta :block-aliases) (u:dict #'equalp)
         (meta :buffers) (u:dict #'equalp)))
 
