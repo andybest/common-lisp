@@ -50,7 +50,8 @@
       (setf (u:href v :location) (gl:get-uniform-location id (u:href v :name))))
     (gl:use-program 0)))
 
-(u:defun-inline get-uniform-location (program uniform)
+(declaim (inline get-uniform-location))
+(defun get-uniform-location (program uniform)
   (declare (optimize speed))
   (u:href (uniforms program) uniform :location))
 
