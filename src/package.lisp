@@ -24,6 +24,7 @@
    #:find-shader-definition
    #:get-program-id
    #:load-shaders
+   #:program
    #:read-buffer-path
    #:recompile-shaders
    #:unbind-block
