@@ -7,7 +7,7 @@
             (:copier nil))
   (width 0 :type u:ub16)
   (height 0 :type u:ub16)
-  (data (make-array 0 :element-type 'u:ub32) :type (simple-array u:ub32)))
+  (data (u:make-ub32-array 0) :type u:ub32a))
 
 (defstruct (argb-image
             (:include image)
@@ -15,7 +15,7 @@
             (:conc-name nil)
             (:predicate nil)
             (:copier nil))
-  (argb-data (make-array 0 :element-type 'u:ub32) :type (simple-array u:ub32)))
+  (argb-data (u:make-ub32-array 0) :type u:ub32a))
 
 (defun make-argb-image (file-path)
   (let ((png (pngload:load-file file-path :flatten t)))
@@ -37,7 +37,7 @@
 (defmethod pack-argb (png (channel-count (eql 1)))
   (loop :with size = (* (png:width png) (png:height png))
         :with data = (png:data png)
-        :with packed-data = (make-array size :element-type 'u:ub32)
+        :with packed-data = (u:make-ub32-array size)
         :for i :below size
         :for value = (aref data i)
         :for pixel = 0
@@ -51,7 +51,7 @@
 (defmethod pack-argb (png (channel-count (eql 2)))
   (loop :with size = (* (png:width png) (png:height png))
         :with data = (png:data png)
-        :with packed-data = (make-array size :element-type 'u:ub32)
+        :with packed-data = (u:make-ub32-array size)
         :for i :below (* size channel-count) :by channel-count
         :for j :from 0
         :for value = (aref data i)
@@ -66,7 +66,7 @@
 (defmethod pack-argb (png (channel-count (eql 3)))
   (loop :with size = (* (png:width png) (png:height png))
         :with data = (png:data png)
-        :with packed-data = (make-array size :element-type 'u:ub32)
+        :with packed-data = (u:make-ub32-array size)
         :for i :below (* size channel-count) :by channel-count
         :for j :from 0
         :for pixel = 0
@@ -80,7 +80,7 @@
 (defmethod pack-argb (png (channel-count (eql 4)))
   (loop :with size = (* (png:width png) (png:height png))
         :with data = (png:data png)
-        :with packed-data = (make-array size :element-type 'u:ub32)
+        :with packed-data = (u:make-ub32-array size)
         :for i :below (* size channel-count) :by channel-count
         :for j :from 0
         :for pixel = 0
@@ -101,7 +101,7 @@
           (ldb (byte 8 24) color)))
 
 (defun unpack-argb (data width height)
-  (let ((unpacked-data (make-array (* width height 4) :element-type 'u:ub8)))
+  (let ((unpacked-data (u:make-ub8-array (* width height 4))))
     (dotimes (i (length data))
       (u:mvlet ((r g b a (from-argb (aref data i)))
                 (offset (* i 4)))
