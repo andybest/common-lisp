@@ -9,11 +9,25 @@
             :initarg :height)
    (%depth :reader depth
            :initarg :depth)
-   (%mask :accessor mask
-          :initarg :mask)))
+   (%mask :reader mask
+          :initarg :mask
+          :initform nil)))
 
-(defgeneric get-index (topology x y z))
+(defgeneric contains-index-p (topology index)
+  (:method ((topology topology) (index integer))
+    (u:when-let (mask (mask topology))
+      (aref mask index))))
+
+(defgeneric get-indices (topology)
+  (:method ((topology topology))
+    (let ((indices nil))
+      (dotimes (i (index-count topology))
+        (when (contains-index-p topology i)
+          (push i indices)))
+      (nreverse indices))))
+
+(defgeneric get-index (topology point))
 
 (defgeneric get-coords (topology index))
 
-(defgeneric mask-topology (topology mask))
+(defgeneric try-move (topology point/index direction))

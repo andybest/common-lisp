@@ -23,13 +23,15 @@
     ((:file "harrison")
      (:module "wfc"
       :components
-      ((:file "direction") ;; topo
-       (:file "topology")
-       (:file "topology-grid")
-       (:file "topology-data")
+      ((:file "point") ;; debroglie
+       (:file "periodicity") ;; mine
+       (:file "direction") ;; topo
+       (:file "topology") ;; topo
+       (:file "topology-data") ;; topo
        (:file "topology-data-1d")
        (:file "topology-data-2d")
        (:file "topology-data-3d")
+       (:file "grid") ;; topo
        (:file "orientation") ;; rot
        (:file "deque") ;; wfc
        (:file "wave") ;; wfc
