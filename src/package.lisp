@@ -30,6 +30,11 @@
   (:export
    #:harrison))
 
+(defpackage #:%syntex.synthesizers.wfc
+  (:local-nicknames
+   (#:u #:golden-utils))
+  (:use #:cl))
+
 (uiop:define-package #:syntex
   (:use #:cl)
   (:reexport #:%syntex.synthesizers.harrison))
