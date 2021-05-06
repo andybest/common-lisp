@@ -1,10 +1,10 @@
-(in-package #:%syntex.synthesizers.wfc)
+(in-package #:%syntex.synthesizers.wfc.direction)
 
 (deftype axis () '(member :x :y :z :w))
 
 (deftype direction () '(member :x+ :x- :y+ :y- :z+ :z- :w+ :w-))
 
-(deftype direction-type ()
+(deftype type ()
   '(member :unknown :cartesian-2d :hexagonal-2d :cartesian-3d :hexagonal-3d))
 
 (defun axis->index (axis)
@@ -41,66 +41,51 @@
 
 (u:eval-always
   (defstruct (direction-set
+              (:conc-name nil)
               (:predicate nil)
               (:copier nil))
-    (dx (u:make-b8-array 0) :type u:b8a)
-    (dy (u:make-b8-array 0) :type u:b8a)
-    (dz (u:make-b8-array 0) :type u:b8a)
+    (x (u:make-b8-array 0) :type u:b8a)
+    (y (u:make-b8-array 0) :type u:b8a)
+    (z (u:make-b8-array 0) :type u:b8a)
     (count 0 :type u:ub8)
-    (type 0 :type direction-type)))
+    (type 0 :type type)))
 
 (u:define-constant +cartesian-2d+
-    (let ((dx (make-array 4 :element-type 'u:b8 :initial-contents '(1 -1 0 0)))
-          (dy (make-array 4 :element-type 'u:b8 :initial-contents '(0 0 1 -1)))
-          (dz (make-array 4 :element-type 'u:b8 :initial-contents '(0 0 0 0))))
-      (make-direction-set :dx dx
-                          :dy dy
-                          :dz dz
-                          :count 4
-                          :type :cartesian-2d))
+    (let ((x (make-array 4 :element-type 'u:b8 :initial-contents '(1 -1 0 0)))
+          (y (make-array 4 :element-type 'u:b8 :initial-contents '(0 0 1 -1)))
+          (z (make-array 4 :element-type 'u:b8 :initial-contents '(0 0 0 0))))
+      (make-direction-set :x x :y y :z z :count 4 :type :cartesian-2d))
   :test #'equalp)
 
 (u:define-constant +cartesian-3d+
-    (let ((dx (make-array 6 :element-type 'u:b8 :initial-contents '(1 -1 0 0 0 0)))
-          (dy (make-array 6 :element-type 'u:b8 :initial-contents '(0 0 1 -1 0 0)))
-          (dz (make-array 6 :element-type 'u:b8 :initial-contents '(0 0 0 0 1 -1))))
-      (make-direction-set :dx dx
-                          :dy dy
-                          :dz dz
-                          :count 6
-                          :type :cartesian-3d))
+    (let ((x (make-array 6 :element-type 'u:b8 :initial-contents '(1 -1 0 0 0 0)))
+          (y (make-array 6 :element-type 'u:b8 :initial-contents '(0 0 1 -1 0 0)))
+          (z (make-array 6 :element-type 'u:b8 :initial-contents '(0 0 0 0 1 -1))))
+      (make-direction-set :x x :y y :z z :count 6 :type :cartesian-3d))
   :test #'equalp)
 
 (u:define-constant +hexagonal-2d+
-    (let ((dx (make-array 6 :element-type 'u:b8 :initial-contents '(1 -1 0 0 1 -1)))
-          (dy (make-array 6 :element-type 'u:b8 :initial-contents '(0 0 1 -1 1 -1)))
-          (dz (make-array 6 :element-type 'u:b8 :initial-contents '(0 0 0 0 0 0))))
-      (make-direction-set :dx dx
-                          :dy dy
-                          :dz dz
-                          :count 6
-                          :type :hexagonal-2d))
+    (let ((x (make-array 6 :element-type 'u:b8 :initial-contents '(1 -1 0 0 1 -1)))
+          (y (make-array 6 :element-type 'u:b8 :initial-contents '(0 0 1 -1 1 -1)))
+          (z (make-array 6 :element-type 'u:b8 :initial-contents '(0 0 0 0 0 0))))
+      (make-direction-set :x x :y y :z z :count 6 :type :hexagonal-2d))
   :test #'equalp)
 
 (u:define-constant +hexagonal-3d+
-    (let ((dx (make-array 8 :element-type 'u:b8 :initial-contents '(1 -1 0 0 0 0 1 -1)))
-          (dy (make-array 8 :element-type 'u:b8 :initial-contents '(0 0 1 -1 0 0 0 0)))
-          (dz (make-array 8 :element-type 'u:b8 :initial-contents '(0 0 0 0 1 -1 1 -1))))
-      (make-direction-set :dx dx
-                          :dy dy
-                          :dz dz
-                          :count 8
-                          :type :hexagonal-3d))
+    (let ((x (make-array 8 :element-type 'u:b8 :initial-contents '(1 -1 0 0 0 0 1 -1)))
+          (y (make-array 8 :element-type 'u:b8 :initial-contents '(0 0 1 -1 0 0 0 0)))
+          (z (make-array 8 :element-type 'u:b8 :initial-contents '(0 0 0 0 1 -1 1 -1))))
+      (make-direction-set :x x :y y :z z :count 8 :type :hexagonal-3d))
   :test #'equalp)
 
-(defun invert-direction (direction)
+(defun invert (direction)
   (logxor direction 1))
 
-(defgeneric get-direction (direction-set point)
-  (:method ((direction-set direction-set) (point point))
-    (dotimes (i (direction-set-count direction-set))
-      (when (and (= (px point) (aref (direction-set-dx direction-set) i))
-                 (= (py point) (aref (direction-set-dy direction-set) i))
-                 (= (pz point) (aref (direction-set-dz direction-set) i)))
-        (return-from get-direction i)))
+(defgeneric get (direction-set point)
+  (:method ((direction-set direction-set) (point point:point))
+    (dotimes (i (count direction-set))
+      (when (and (= (point:x point) (aref (x direction-set) i))
+                 (= (point:y point) (aref (y direction-set) i))
+                 (= (point:z point) (aref (z direction-set) i)))
+        (return-from get i)))
     (error "No direction corresponds to ~a." point)))

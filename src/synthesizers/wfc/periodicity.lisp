@@ -1,8 +1,8 @@
-(in-package #:%syntex.synthesizers.wfc)
+(in-package #:%syntex.synthesizers.wfc.periodicity)
 
 (defstruct (periodicity
-            (:constructor make-periodicity (&optional x y z))
-            (:conc-name periodic-)
+            (:constructor periodicity (&optional x y z))
+            (:conc-name nil)
             (:predicate nil)
             (:copier nil))
   (x nil :type boolean)

@@ -10,9 +10,9 @@
                                     :periodic-p periodic-p))))
     (make-instance 'topology-data-3d :topology topology :data data)))
 
-(defmethod get-value ((topology-data topology-data-3d) (point point))
-  (aref (data topology-data) (px point) (py point) (pz point)))
+(defmethod get-value ((topology-data topology-data-3d) (point point:point))
+  (aref (data topology-data) (point:x point) (point:y point) (point:z point)))
 
 (defmethod get-value ((topology-data topology-data-3d) (index integer))
-  (let ((point (get-coords (topology topology-data) index)))
+  (let ((point (top:get-coords (topology topology-data) index)))
     (get-value topology-data point)))

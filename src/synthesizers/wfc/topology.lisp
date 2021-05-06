@@ -1,4 +1,4 @@
-(in-package #:%syntex.synthesizers.wfc)
+(in-package #:%syntex.synthesizers.wfc.topology)
 
 (defclass topology ()
   ((%index-count :accessor index-count)
@@ -13,18 +13,16 @@
           :initarg :mask
           :initform nil)))
 
-(defgeneric contains-index-p (topology index)
-  (:method ((topology topology) (index integer))
-    (u:when-let (mask (mask topology))
-      (aref mask index))))
+(defun contains-index-p (topology index)
+  (u:when-let (mask (mask topology))
+    (aref mask index)))
 
-(defgeneric get-indices (topology)
-  (:method ((topology topology))
-    (let ((indices nil))
-      (dotimes (i (index-count topology))
-        (when (contains-index-p topology i)
-          (push i indices)))
-      (nreverse indices))))
+(defun get-indices (topology)
+  (let ((indices nil))
+    (dotimes (i (index-count topology))
+      (when (contains-index-p topology i)
+        (push i indices)))
+    (nreverse indices)))
 
 (defgeneric get-index (topology point))
 
