@@ -37,7 +37,11 @@
        (:file "transform-tile") ;; rot
        (:file "transform-subgroup") ;; rot
        (:file "transform-builder") ;; rot
-       (:file "frequency-set") ;; trackers
        (:file "deque") ;; wfc
        (:file "wave") ;; wfc
+       (:file "tracker") ;; trackers
+       (:file "random-picker") ;; trackers
+       (:file "ordered-random-picker") ;; trackers
+       (:file "entropy-tracker") ;; trackers
+       (:file "frequency-set") ;; trackers
        ))))))

@@ -24,17 +24,17 @@
                                              :initial-element pattern-count)
                  :pattern-count pattern-count))
 
-(defun get-possibility (wave index pattern)
+(defun get (wave index pattern)
   (plusp (sbit (possibilities wave) (+ (* index (pattern-count wave)) pattern))))
 
 (defun get-pattern-count (wave index)
   (aref (pattern-counts wave) index))
 
-(defun insert-pattern (wave index pattern)
+(defun add-possibility (wave index pattern)
   (setf (sbit (possibilities wave) (+ (* index (pattern-count wave)) pattern)) 1)
   (incf (aref (pattern-counts wave) index)))
 
-(defun remove-pattern (wave index pattern)
+(defun remove-possibility (wave index pattern)
   (setf (sbit (possibilities wave) (+ (* index (pattern-count wave)) pattern)) 0)
   (when (zerop (decf (aref (pattern-counts wave) index)))
     t))

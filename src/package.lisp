@@ -180,12 +180,6 @@
   (:use #:cl)
   (:export))
 
-(defpackage #:%syntex.synthesizers.wfc.frequency-set
-  (:local-nicknames
-   (#:u #:golden-utils))
-  (:use #:cl)
-  (:export))
-
 (defpackage #:%syntex.synthesizers.wfc.deque
   (:local-nicknames
    (#:u #:golden-utils))
@@ -211,9 +205,55 @@
   (:local-nicknames
    (#:u #:golden-utils))
   (:use #:cl)
+  (:shadow
+   #:get)
   (:export
+   #:get
+   #:get-pattern-count
+   #:indices
    #:make-wave
    #:wave))
+
+(defpackage #:%syntex.synthesizers.wfc.tracker
+  (:use #:cl)
+  (:export
+   #:ban
+   #:reset
+   #:tracker
+   #:unban))
+
+(defpackage #:%syntex.synthesizers.wfc.random-picker
+  (:use #:cl)
+  (:export
+   #:get-index
+   #:get-pattern
+   #:picker))
+
+(defpackage #:%syntex.synthesizers.wfc.ordered-random-picker
+  (:local-nicknames
+   (#:rp #:%syntex.synthesizers.wfc.random-picker)
+   (#:u #:golden-utils)
+   (#:wave #:%syntex.synthesizers.wfc.wave))
+  (:use #:cl)
+  (:export
+   #:make-picker
+   #:picker))
+
+(defpackage #:%syntex.synthesizers.wfc.entropy-tracker
+  (:local-nicknames
+   (#:rp #:%syntex.synthesizers.wfc.random-picker)
+   (#:tr #:%syntex.synthesizers.wfc.tracker)
+   (#:wave #:%syntex.synthesizers.wfc.wave)
+   (#:u #:golden-utils))
+  (:use #:cl)
+  (:export
+   #:tracker))
+
+(defpackage #:%syntex.synthesizers.wfc.frequency-set
+  (:local-nicknames
+   (#:u #:golden-utils))
+  (:use #:cl)
+  (:export))
 
 (uiop:define-package #:syntex
   (:use #:cl)
