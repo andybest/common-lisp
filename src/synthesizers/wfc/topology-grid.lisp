@@ -1,4 +1,4 @@
-(in-package #:%syntex.synthesizers.wfc)
+(in-package #:%syntex.synthesizers.wfc.topology-grid)
 
 (defclass grid (top:topology)
   ((%directions :accessor directions
@@ -41,6 +41,11 @@
              :periodic-y periodic-p
              :periodic-z periodic-p))
 
+(defun same-size-p (grid1 grid2)
+  (and (= (top:width grid1) (top:width grid2))
+       (= (top:height grid1) (top:height grid2))
+       (= (top:depth grid1) (top:depth grid2))))
+
 (defgeneric make-masked-copy (grid mask))
 
 (defmethod make-masked-copy ((grid grid) (mask simple-bit-vector))
@@ -56,49 +61,41 @@
                :periodic-z (per:z periodicity)
                :mask mask)))
 
-(defmethod make-masked-copy :before ((grid grid) (mask topology-data))
-  (let ((topology (topology mask)))
+(defmethod make-masked-copy :before ((grid grid) (mask top:data))
+  (let ((topology (top:topology mask)))
     (unless (typep topology 'grid)
       (error "Mask topology must be a grid."))
     (unless (same-size-p grid topology)
       (error "Mask topology must be the same size as the grid."))))
 
-(defmethod make-masked-copy ((grid grid) (mask topology-data))
+(defmethod make-masked-copy ((grid grid) (mask top:data))
   (let ((mask-data (make-array (top:index-count grid) :element-type 'bit)))
     (dotimes (z (top:depth grid))
       (dotimes (y (top:height grid))
         (dotimes (x (top:width grid))
           (let ((point (point:point x y z)))
-            (setf (aref mask-data (top:get-index grid point)) (get-value mask point))))))
+            (setf (aref mask-data (top:get-index grid point)) (top:get-value mask point))))))
     (make-masked-copy grid mask-data)))
 
-(defgeneric make-resized-copy (grid &key width height depth)
-  (:method ((grid grid) &key width height (depth 1))
-    (let ((periodicity (periodicity grid)))
-      (make-grid :directions (directions grid)
-                 :width width
-                 :height height
-                 :depth depth
-                 :periodic-x (per:x periodicity)
-                 :periodic-y (per:y periodicity)
-                 :periodic-z (per:z periodicity)))))
-
-(defgeneric make-periodic-copy (grid &key x y z)
-  (:method ((grid grid) &key x y z)
+(defun make-resized-copy (grid &key width height (depth 1))
+  (let ((periodicity (periodicity grid)))
     (make-grid :directions (directions grid)
-               :width (top:width grid)
-               :height (top:height grid)
-               :depth (top:depth grid)
-               :periodic-x x
-               :periodic-y y
-               :periodic-z z
-               :mask (top:mask grid))))
+               :width width
+               :height height
+               :depth depth
+               :periodic-x (per:x periodicity)
+               :periodic-y (per:y periodicity)
+               :periodic-z (per:z periodicity))))
 
-(defgeneric same-size-p (grid1 grid2)
-  (:method ((grid1 grid) (grid2 grid))
-    (and (= (top:width grid1) (top:width grid2))
-         (= (top:height grid1) (top:height grid2))
-         (= (top:depth grid1) (top:depth grid2)))))
+(defun make-periodic-copy (grid &key x y z)
+  (make-grid :directions (directions grid)
+             :width (top:width grid)
+             :height (top:height grid)
+             :depth (top:depth grid)
+             :periodic-x x
+             :periodic-y y
+             :periodic-z z
+             :mask (top:mask grid)))
 
 (defmethod top:get-index ((topology grid) (point point:point))
   (let ((width (top:width topology)))

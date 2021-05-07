@@ -13,6 +13,12 @@
           :initarg :mask
           :initform nil)))
 
+(defclass data ()
+  ((%topology :reader topology
+              :initarg :topology)
+   (%values :reader values
+            :initarg :values)))
+
 (defun contains-index-p (topology index)
   (u:when-let (mask (mask topology))
     (aref mask index)))
@@ -23,6 +29,8 @@
       (when (contains-index-p topology i)
         (push i indices)))
     (nreverse indices)))
+
+(defgeneric get-value (data point/index))
 
 (defgeneric get-index (topology point))
 

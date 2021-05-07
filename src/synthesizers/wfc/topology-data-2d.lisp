@@ -1,17 +1,17 @@
-(in-package #:%syntex.synthesizers.wfc)
+(in-package #:%syntex.synthesizers.wfc.topology-data)
 
-(defclass topology-data-2d (topology-data) ())
+(defclass data-2d (top:data) ())
 
-(defun make-topology-data-2d (data &key topology periodic-p)
+(defun make-data-2d (values &key topology periodic-p)
   (let ((topology (or topology
-                      (make-grid-2d (array-dimension data 0)
-                                    (array-dimension data 1)
-                                    :periodic-p periodic-p))))
-    (make-instance 'topology-data-2d :topology topology :data data)))
+                      (grid:make-grid-2d (array-dimension values 0)
+                                         (array-dimension values 1)
+                                         :periodic-p periodic-p))))
+    (make-instance 'data-2d :topology topology :values values)))
 
-(defmethod get-value ((topology-data topology-data-2d) (point point:point))
-  (aref (data topology-data) (point:x point) (point:y point)))
+(defmethod top:get-value ((data data-2d) (point point:point))
+  (aref (top:values data) (point:x point) (point:y point)))
 
-(defmethod get-value ((topology-data topology-data-2d) (index integer))
-  (let ((point (top:get-coords (topology topology-data) index)))
-    (get-value topology-data point)))
+(defmethod top:get-value ((data data-2d) (index integer))
+  (let ((point (top:get-coords (top:topology data) index)))
+    (top:get-value data point)))

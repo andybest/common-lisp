@@ -1,14 +1,12 @@
-(in-package #:%syntex.synthesizers.wfc)
+(in-package #:%syntex.synthesizers.wfc.topology-data)
 
-(defclass topology-data-1d (topology-data) ())
+(defclass data-1d (top:data) ())
 
-(defun make-topology-data-1d (topology data)
-  (make-instance 'topology-data-1d
-                 :topology topology
-                 :data data))
+(defun make-data-1d (topology values)
+  (make-instance 'data-1d :topology topology :values values))
 
-(defmethod get-value ((topology-data topology-data-1d) (point point:point))
-  (aref (data topology-data) (top:get-index (topology topology-data) point)))
+(defmethod top:get-value ((data data-1d) (point point:point))
+  (aref (top:values data) (top:get-index (top:topology data) point)))
 
-(defmethod get-value ((topology-data topology-data-1d) (index integer))
-  (aref (data topology-data) index))
+(defmethod top:get-value ((data data-1d) (index integer))
+  (aref (top:values data) index))

@@ -1,18 +1,18 @@
-(in-package #:%syntex.synthesizers.wfc)
+(in-package #:%syntex.synthesizers.wfc.topology-data)
 
-(defclass topology-data-3d (topology-data) ())
+(defclass data-3d (top:data) ())
 
-(defun make-topology-data-3d (data &key topology periodic-p)
+(defun make-data-3d (values &key topology periodic-p)
   (let ((topology (or topology
-                      (make-grid-3d (array-dimension data 0)
-                                    (array-dimension data 1)
-                                    (array-dimension data 2)
-                                    :periodic-p periodic-p))))
-    (make-instance 'topology-data-3d :topology topology :data data)))
+                      (grid:make-grid-3d (array-dimension values 0)
+                                         (array-dimension values 1)
+                                         (array-dimension values 2)
+                                         :periodic-p periodic-p))))
+    (make-instance 'data-3d :topology topology :values values)))
 
-(defmethod get-value ((topology-data topology-data-3d) (point point:point))
-  (aref (data topology-data) (point:x point) (point:y point) (point:z point)))
+(defmethod top:get-value ((data data-3d) (point point:point))
+  (aref (top:values data) (point:x point) (point:y point) (point:z point)))
 
-(defmethod get-value ((topology-data topology-data-3d) (index integer))
-  (let ((point (top:get-coords (topology topology-data) index)))
-    (get-value topology-data point)))
+(defmethod top:get-value ((data data-3d) (index integer))
+  (let ((point (top:get-coords (top:topology data) index)))
+    (top:get-value data point)))

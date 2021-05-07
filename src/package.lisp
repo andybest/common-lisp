@@ -119,19 +119,45 @@
   (:local-nicknames
    (#:u #:golden-utils))
   (:use #:cl)
+  (:shadow
+   #:values)
   (:export
    #:contains-index-p
+   #:data
    #:depth
    #:directions-count
    #:get-coords
    #:get-index
    #:get-indices
+   #:get-value
    #:height
    #:index-count
    #:mask
    #:topology
    #:try-move
+   #:values
    #:width))
+
+(defpackage #:%syntex.synthesizers.wfc.topology-grid
+  (:local-nicknames
+   (#:dir #:%syntex.synthesizers.wfc.direction)
+   (#:per #:%syntex.synthesizers.wfc.periodicity)
+   (#:point #:%syntex.synthesizers.wfc.point)
+   (#:top #:%syntex.synthesizers.wfc.topology)
+   (#:u #:golden-utils))
+  (:use #:cl)
+  (:export
+   #:make-grid-2d
+   #:make-grid-3d))
+
+(defpackage #:%syntex.synthesizers.wfc.topology-data
+  (:local-nicknames
+   (#:grid #:%syntex.synthesizers.wfc.topology-grid)
+   (#:point #:%syntex.synthesizers.wfc.point)
+   (#:top #:%syntex.synthesizers.wfc.topology)
+   (#:u #:golden-utils))
+  (:use #:cl)
+  (:export))
 
 (defpackage #:%syntex.synthesizers.wfc.frequency-set
   (:local-nicknames
