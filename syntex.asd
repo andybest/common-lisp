@@ -34,9 +34,9 @@
        (:file "topology-data-2d") ;; topo
        (:file "topology-data-3d") ;; topo
        (:file "transform") ;; rot
-       (:file "transformed-tile") ;; rot
-       (:file "subgroup") ;; rot
-       (:file "tile-transform-builder") ;; rot
+       (:file "transform-tile") ;; rot
+       (:file "transform-subgroup") ;; rot
+       (:file "transform-builder") ;; rot
        (:file "frequency-set") ;; trackers
        (:file "deque") ;; wfc
        (:file "wave") ;; wfc

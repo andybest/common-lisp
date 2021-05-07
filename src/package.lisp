@@ -115,6 +115,17 @@
    #:treatment
    #:treatment-set-by))
 
+(defpackage #:%syntex.synthesizers.wfc.transformed-tile
+  (:local-nicknames
+   (#:tfm #:%syntex.synthesizers.wfc.transform)
+   (#:tile #:%syntex.synthesizers.wfc.tile)
+   (#:u #:golden-utils))
+  (:use #:cl)
+  (:export
+   #:make-tile
+   #:tile
+   #:transform))
+
 (defpackage #:%syntex.synthesizers.wfc.topology
   (:local-nicknames
    (#:u #:golden-utils))
@@ -173,6 +184,7 @@
    (#:point #:%syntex.synthesizers.wfc.point)
    (#:sg #:%syntex.synthesizers.wfc.subgroup)
    (#:tfm #:%syntex.synthesizers.wfc.transform)
+   (#:tfm.tile #:%syntex.synthesizers.wfc.transformed-tile)
    (#:tile #:%syntex.synthesizers.wfc.tile)
    (#:top #:%syntex.synthesizers.wfc.topology)
    (#:u #:golden-utils))

@@ -131,14 +131,15 @@
                                                                       (plusp ref1))))
                              :for source = (u:href tiles tfm2)
                              :when source
-                               :do (when (typep source 'transformed-tile)
-                                     (setf tfm2 (tfm:* (tfm:invert (transform source)) tfm2)))
+                               :do (when (typep source 'tfm.tile:tile)
+                                     (setf tfm2 (tfm:* (tfm:invert (tfm.tile:transform source))
+                                                       tfm2)))
                                    (let ((source->target (tfm:* (tfm:invert tfm2) tfm1))
                                          (target nil))
                                      (if (and (not (tfm:reflect-x source->target))
                                               (zerop (tfm:rotation source->target)))
                                          (setf target source)
-                                         (setf target (make-transformed-tile
+                                         (setf target (tfm.tile:make-tile
                                                        :tile source
                                                        :transform source->target)))
                                      (vector-push-extend
