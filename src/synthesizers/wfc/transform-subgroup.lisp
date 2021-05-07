@@ -1,4 +1,4 @@
-(in-package #:%syntex.synthesizers.wfc.subgroup)
+(in-package #:%syntex.synthesizers.wfc.transform-subgroup)
 
 (defclass subgroup ()
   ((%entries :accessor entries

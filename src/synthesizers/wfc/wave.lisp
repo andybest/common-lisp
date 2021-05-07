@@ -1,4 +1,4 @@
-(in-package #:%syntex.synthesizers.wfc)
+(in-package #:%syntex.synthesizers.wfc.wave)
 
 (defclass wave ()
   ((%possibilities :reader possibilities
@@ -24,21 +24,17 @@
                                              :initial-element pattern-count)
                  :pattern-count pattern-count))
 
-(defgeneric get-possibility (wave index pattern)
-  (:method ((wave wave) (index integer) (pattern integer))
-    (plusp (sbit (possibilities wave) (+ (* index (pattern-count wave)) pattern)))))
+(defun get-possibility (wave index pattern)
+  (plusp (sbit (possibilities wave) (+ (* index (pattern-count wave)) pattern))))
 
-(defgeneric get-pattern-count (wave index)
-  (:method ((wave wave) (index integer))
-    (aref (pattern-counts wave) index)))
+(defun get-pattern-count (wave index)
+  (aref (pattern-counts wave) index))
 
-(defgeneric insert-pattern (wave index pattern)
-  (:method ((wave wave) (index integer) (pattern integer))
-    (setf (sbit (possibilities wave) (+ (* index (pattern-count wave)) pattern)) 1)
-    (incf (aref (pattern-counts wave) index))))
+(defun insert-pattern (wave index pattern)
+  (setf (sbit (possibilities wave) (+ (* index (pattern-count wave)) pattern)) 1)
+  (incf (aref (pattern-counts wave) index)))
 
-(defgeneric remove-pattern (wave index pattern)
-  (:method ((wave wave) (index integer) (pattern integer))
-    (setf (sbit (possibilities wave) (+ (* index (pattern-count wave)) pattern)) 0)
-    (when (zerop (decf (aref (pattern-counts wave) index)))
-      t)))
+(defun remove-pattern (wave index pattern)
+  (setf (sbit (possibilities wave) (+ (* index (pattern-count wave)) pattern)) 0)
+  (when (zerop (decf (aref (pattern-counts wave) index)))
+    t))

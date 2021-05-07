@@ -1,4 +1,4 @@
-(in-package #:%syntex.synthesizers.wfc)
+(in-package #:%syntex.synthesizers.wfc.deque)
 
 (defclass deque ()
   ((%head :accessor head
@@ -12,7 +12,7 @@
 (u:define-printer (deque stream)
   (if (empty-p deque)
       (format stream "[empty]")
-      (format stream "~{~s~^ ~}" (deque->list deque))))
+      (format stream "~{~s~^ ~}" (to-list deque))))
 
 (defun make-deque (&key (size 32) (element-type t))
   (make-instance 'deque :buffer (make-array (1+ size) :element-type element-type)))
@@ -21,32 +21,32 @@
   (= (head deque) (tail deque)))
 
 (defun full-p (deque)
-  (let ((length (length (buffer deque))))
+  (let ((length (cl:length (buffer deque))))
     (= (mod (head deque) length)
        (mod (1+ (tail deque)) length))))
 
-(defun deque-length (deque)
+(defun length (deque)
   (let ((head (head deque))
         (tail (tail deque)))
     (cond
       ((< head tail)
        (- tail head))
       ((> head tail)
-       (- (+ (length (buffer deque)) tail) head))
+       (- (+ (cl:length (buffer deque)) tail) head))
       (t
        0))))
 
 (defun shift-head (deque)
-  (setf (head deque) (mod (1+ (head deque)) (length (buffer deque)))))
+  (setf (head deque) (mod (1+ (head deque)) (cl:length (buffer deque)))))
 
 (defun unshift-head (deque)
-  (setf (head deque) (mod (1- (head deque)) (length (buffer deque)))))
+  (setf (head deque) (mod (1- (head deque)) (cl:length (buffer deque)))))
 
 (defun shift-tail (deque)
-  (setf (tail deque) (mod (1+ (tail deque)) (length (buffer deque)))))
+  (setf (tail deque) (mod (1+ (tail deque)) (cl:length (buffer deque)))))
 
 (defun unshift-tail (deque)
-  (setf (tail deque) (mod (1- (tail deque)) (length (buffer deque)))))
+  (setf (tail deque) (mod (1- (tail deque)) (cl:length (buffer deque)))))
 
 (defmacro do-elements ((deque binding) &body body)
   (u:with-gensyms (i head tail buffer)
@@ -57,7 +57,7 @@
          (symbol-macrolet ((,binding (aref ,buffer ,i)))
            (cond
              ((< ,tail ,head)
-              (loop :for ,i :from ,head :below (length ,buffer)
+              (loop :for ,i :from ,head :below (cl:length ,buffer)
                     :do (progn ,@body))
               (loop :for ,i :below ,tail
                     :do (progn ,@body)))
@@ -67,7 +67,7 @@
 
 (defun resize (deque)
   (let* ((old-buffer (buffer deque))
-         (new-buffer (make-array (* (length old-buffer) 2)
+         (new-buffer (make-array (* (cl:length old-buffer) 2)
                                  :element-type (array-element-type old-buffer)))
          (index 0))
     (do-elements (deque x)
@@ -83,7 +83,7 @@
 
 (defun peek-tail (deque)
   (let ((buffer (buffer deque)))
-    (aref buffer (mod (1- (tail deque)) (length buffer)))))
+    (aref buffer (mod (1- (tail deque)) (cl:length buffer)))))
 
 (defun push-head (deque value)
   (when (full-p deque)
@@ -113,7 +113,7 @@
         (unshift-tail deque)
         (values tail t))))
 
-(defun deque->list (deque)
+(defun to-list (deque)
   (let ((list nil))
     (do-elements (deque x)
       (push x list))

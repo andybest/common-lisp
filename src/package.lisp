@@ -96,36 +96,6 @@
    #:transforms
    #:group))
 
-(defpackage #:%syntex.synthesizers.wfc.subgroup
-  (:local-nicknames
-   (#:tfm #:%syntex.synthesizers.wfc.transform)
-   (#:tile #:%syntex.synthesizers.wfc.tile)
-   (#:u #:golden-utils))
-  (:use #:cl)
-  (:export
-   #:copy
-   #:entries
-   #:entry
-   #:expand
-   #:get-transforms
-   #:permute
-   #:set-tile
-   #:subgroup
-   #:tiles
-   #:treatment
-   #:treatment-set-by))
-
-(defpackage #:%syntex.synthesizers.wfc.transformed-tile
-  (:local-nicknames
-   (#:tfm #:%syntex.synthesizers.wfc.transform)
-   (#:tile #:%syntex.synthesizers.wfc.tile)
-   (#:u #:golden-utils))
-  (:use #:cl)
-  (:export
-   #:make-tile
-   #:tile
-   #:transform))
-
 (defpackage #:%syntex.synthesizers.wfc.topology
   (:local-nicknames
    (#:u #:golden-utils))
@@ -170,25 +140,80 @@
   (:use #:cl)
   (:export))
 
+(defpackage #:%syntex.synthesizers.wfc.transformed-tile
+  (:local-nicknames
+   (#:tfm #:%syntex.synthesizers.wfc.transform)
+   (#:tile #:%syntex.synthesizers.wfc.tile)
+   (#:u #:golden-utils))
+  (:use #:cl)
+  (:export
+   #:make-tile
+   #:tile
+   #:transform
+   #:transforms))
+
+(defpackage #:%syntex.synthesizers.wfc.transform-subgroup
+  (:local-nicknames
+   (#:tfm #:%syntex.synthesizers.wfc.transform)
+   (#:tile #:%syntex.synthesizers.wfc.tile)
+   (#:u #:golden-utils))
+  (:use #:cl)
+  (:export
+   #:copy
+   #:entries
+   #:entry
+   #:expand
+   #:get-transforms
+   #:permute
+   #:set-tile
+   #:subgroup
+   #:tiles
+   #:treatment
+   #:treatment-set-by))
+
+(defpackage #:%syntex.synthesizers.wfc.transform-builder
+  (:local-nicknames
+   (#:sg #:%syntex.synthesizers.wfc.transform-subgroup)
+   (#:tfm #:%syntex.synthesizers.wfc.transform)
+   (#:tfm.tile #:%syntex.synthesizers.wfc.transformed-tile)
+   (#:u #:golden-utils))
+  (:use #:cl)
+  (:export))
+
 (defpackage #:%syntex.synthesizers.wfc.frequency-set
   (:local-nicknames
    (#:u #:golden-utils))
   (:use #:cl)
   (:export))
 
-(defpackage #:%syntex.synthesizers.wfc
+(defpackage #:%syntex.synthesizers.wfc.deque
   (:local-nicknames
-   (#:dir #:%syntex.synthesizers.wfc.direction)
-   (#:fs #:%syntex.synthesizers.wfc.frequency-set)
-   (#:per #:%syntex.synthesizers.wfc.periodicity)
-   (#:point #:%syntex.synthesizers.wfc.point)
-   (#:sg #:%syntex.synthesizers.wfc.subgroup)
-   (#:tfm #:%syntex.synthesizers.wfc.transform)
-   (#:tfm.tile #:%syntex.synthesizers.wfc.transformed-tile)
-   (#:tile #:%syntex.synthesizers.wfc.tile)
-   (#:top #:%syntex.synthesizers.wfc.topology)
    (#:u #:golden-utils))
-  (:use #:cl))
+  (:use #:cl)
+  (:shadow
+   #:length)
+  (:export
+   #:deque
+   #:do-elements
+   #:empty-p
+   #:full-p
+   #:length
+   #:make-deque
+   #:peak-head
+   #:peak-tail
+   #:pop-head
+   #:pop-tail
+   #:push-head
+   #:push-tail
+   #:to-list))
+
+(defpackage #:%syntex.synthesizers.wfc.wave
+  (:local-nicknames
+   (#:u #:golden-utils))
+  (:use #:cl)
+  (:export
+   #:make-wave
+   #:wave))
 
 (uiop:define-package #:syntex
   (:use #:cl)
