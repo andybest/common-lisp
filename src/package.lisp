@@ -133,9 +133,16 @@
    #:try-move
    #:width))
 
+(defpackage #:%syntex.synthesizers.wfc.frequency-set
+  (:local-nicknames
+   (#:u #:golden-utils))
+  (:use #:cl)
+  (:export))
+
 (defpackage #:%syntex.synthesizers.wfc
   (:local-nicknames
    (#:dir #:%syntex.synthesizers.wfc.direction)
+   (#:fs #:%syntex.synthesizers.wfc.frequency-set)
    (#:per #:%syntex.synthesizers.wfc.periodicity)
    (#:point #:%syntex.synthesizers.wfc.point)
    (#:sg #:%syntex.synthesizers.wfc.subgroup)

@@ -36,7 +36,8 @@
        (:file "transform") ;; rot
        (:file "transformed-tile") ;; rot
        (:file "subgroup") ;; rot
-       (:file "tile-transform-builder")
+       (:file "tile-transform-builder") ;; rot
+       (:file "frequency-set") ;; trackers
        (:file "deque") ;; wfc
        (:file "wave") ;; wfc
        ))))))
