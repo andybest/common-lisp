@@ -229,6 +229,18 @@
    #:get-pattern
    #:picker))
 
+(defpackage #:%syntex.synthesizers.wfc.frequency-set
+  (:local-nicknames
+   (#:u #:golden-utils))
+  (:use #:cl)
+  (:export
+   #:frequencies
+   #:groups
+   #:pattern-count
+   #:patterns
+   #:plogp
+   #:priority-indices))
+
 (defpackage #:%syntex.synthesizers.wfc.ordered-random-picker
   (:local-nicknames
    (#:rp #:%syntex.synthesizers.wfc.random-picker)
@@ -247,13 +259,26 @@
    (#:u #:golden-utils))
   (:use #:cl)
   (:export
+   #:entropy
+   #:entropy-values
+   #:plogp-sum
+   #:recompute-entropy
+   #:sum
    #:tracker))
 
-(defpackage #:%syntex.synthesizers.wfc.frequency-set
+(defpackage #:%syntex.synthesizers.wfc.array-priority-entropy-tracker
   (:local-nicknames
+   (#:etr #:%syntex.synthesizers.wfc.entropy-tracker)
+   (#:fset #:%syntex.synthesizers.wfc.frequency-set)
+   (#:rp #:%syntex.synthesizers.wfc.random-picker)
+   (#:tr #:%syntex.synthesizers.wfc.tracker)
+   (#:wave #:%syntex.synthesizers.wfc.wave)
    (#:u #:golden-utils))
   (:use #:cl)
-  (:export))
+  (:shadow
+   #:count)
+  (:export
+   #:tracker))
 
 (uiop:define-package #:syntex
   (:use #:cl)

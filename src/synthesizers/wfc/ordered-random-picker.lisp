@@ -20,7 +20,9 @@
                  :indices (wave:indices wave)
                  :wave wave))
 
-(defmethod rp:get-index ((picker picker) (func function))
+(defmethod rp:get-index ((picker picker) (func function) &optional external-priority)
+  (when external-priority
+    (error "Not supported."))
   (let ((mask (mask picker))
         (wave (wave picker)))
     (dotimes (i (indices picker))

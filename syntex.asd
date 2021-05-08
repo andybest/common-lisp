@@ -41,7 +41,8 @@
        (:file "wave") ;; wfc
        (:file "tracker") ;; trackers
        (:file "random-picker") ;; trackers
+       (:file "frequency-set") ;; trackers
        (:file "ordered-random-picker") ;; trackers
        (:file "entropy-tracker") ;; trackers
-       (:file "frequency-set") ;; trackers
+       (:file "array-priority-entropy-tracker") ;; trackers
        ))))))
