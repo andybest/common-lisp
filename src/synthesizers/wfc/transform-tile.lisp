@@ -20,13 +20,6 @@
 (defun make-tile (&key tile transform)
   (make-instance 'tile :tile tile :transform transform))
 
-(defun %make-transforms (&key transforms group treatments default-treatment)
-  (make-instance 'transforms
-                 :transforms transforms
-                 :group group
-                 :treatments treatments
-                 :default-treatment default-treatment))
-
 (defun make-transforms (&key (rotation-count 1) reflect-p)
   (make-instance 'transforms :group (tfm:make-group rotation-count reflect-p)))
 

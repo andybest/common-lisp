@@ -74,7 +74,7 @@
       (dotimes (y (top:height grid))
         (dotimes (x (top:width grid))
           (let ((point (point:point x y z)))
-            (setf (aref mask-data (top:get-index grid point)) (top:get-value mask point))))))
+            (setf (aref mask-data (top:get-index grid point)) (top:get mask point))))))
     (make-masked-copy grid mask-data)))
 
 (defun make-resized-copy (grid &key width height (depth 1))

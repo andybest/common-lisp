@@ -30,7 +30,7 @@
         (push i indices)))
     (nreverse indices)))
 
-(defgeneric get-value (data point/index))
+(defgeneric get (data point/index))
 
 (defgeneric get-index (topology point))
 

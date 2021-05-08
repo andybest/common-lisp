@@ -23,26 +23,43 @@
     ((:file "harrison")
      (:module "wfc"
       :components
-      ((:file "point") ;; debroglie
-       (:file "tile") ;; debroglie
-       (:file "periodicity") ;; mine
-       (:file "direction") ;; topo
-       (:file "topology") ;; topo
-       (:file "topology-grid") ;; topo
-       (:file "topology-data") ;; topo
-       (:file "topology-data-1d") ;; topo
-       (:file "topology-data-2d") ;; topo
-       (:file "topology-data-3d") ;; topo
-       (:file "transform") ;; rot
-       (:file "transform-tile") ;; rot
-       (:file "transform-subgroup") ;; rot
-       (:file "transform-builder") ;; rot
-       (:file "deque") ;; wfc
-       (:file "wave") ;; wfc
-       (:file "tracker") ;; trackers
-       (:file "random-picker") ;; trackers
-       (:file "frequency-set") ;; trackers
-       (:file "ordered-random-picker") ;; trackers
-       (:file "entropy-tracker") ;; trackers
-       (:file "array-priority-entropy-tracker") ;; trackers
+      (
+       ;; base
+       (:file "point")
+       (:file "tile")
+       (:file "tile-propagator-tile-set")
+
+       ;; topo
+       (:file "periodicity")
+       (:file "direction")
+       (:file "topology")
+       (:file "topology-grid")
+       (:file "topology-data")
+       (:file "topology-data-1d")
+       (:file "topology-data-2d")
+       (:file "topology-data-3d")
+
+       ;; rot
+       (:file "transform")
+       (:file "transform-tile")
+       (:file "transform-subgroup")
+       (:file "transform-builder")
+
+       ;; wfc
+       (:file "deque")
+       (:file "pattern-model")
+       (:file "wave")
+
+       ;; models
+       (:file "model-tile-mapping")
+       (:file "model-tile")
+       (:file "model-adjacent")
+
+       ;; trackers
+       (:file "tracker")
+       (:file "tracker-random-picker")
+       (:file "tracker-ordered-random-picker")
+       (:file "tracker-frequency-set")
+       (:file "tracker-entropy")
+       (:file "tracker-array-priority-entropy")
        ))))))

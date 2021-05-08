@@ -37,7 +37,7 @@
     (dotimes (x width)
       (dotimes (y height)
         (let ((point (point:point x y)))
-          (setf (aref values x y) (top:get-value data point)))))
+          (setf (aref values x y) (top:get data point)))))
     values))
 
 (defun to-3d-array (data)
@@ -50,5 +50,5 @@
       (dotimes (y height)
         (dotimes (z depth)
           (let ((point (point:point x y z)))
-            (setf (aref values x y z) (top:get-value data point))))))
+            (setf (aref values x y z) (top:get data point))))))
     values))

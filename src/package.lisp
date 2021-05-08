@@ -47,6 +47,16 @@
    #:tile
    #:value))
 
+(defpackage #:%syntex.synthesizers.wfc.tile-propagator-tile-set
+  (:local-nicknames
+   (#:u #:golden-utils))
+  (:use #:cl)
+  (:export
+   #:make-tile-set
+   #:offset->patterns
+   #:tile-set
+   #:tiles))
+
 (defpackage #:%syntex.synthesizers.wfc.periodicity
   (:use #:cl)
   (:export
@@ -85,6 +95,7 @@
    #:*
    #:angle
    #:check
+   #:group
    #:identity-p
    #:invert
    #:make-group
@@ -93,14 +104,14 @@
    #:reflect-p
    #:rotation
    #:transform
-   #:transforms
-   #:group))
+   #:transforms))
 
 (defpackage #:%syntex.synthesizers.wfc.topology
   (:local-nicknames
    (#:u #:golden-utils))
   (:use #:cl)
   (:shadow
+   #:get
    #:values)
   (:export
    #:contains-index-p
@@ -108,9 +119,9 @@
    #:depth
    #:directions-count
    #:get-coords
+   #:get
    #:get-index
    #:get-indices
-   #:get-value
    #:height
    #:index-count
    #:mask
@@ -201,6 +212,14 @@
    #:push-tail
    #:to-list))
 
+(defpackage #:%syntex.synthesizers.wfc.pattern-model
+  (:local-nicknames
+   (#:u #:golden-utils))
+  (:use #:cl)
+  (:export
+   #:get-pattern-count
+   #:pattern-model))
+
 (defpackage #:%syntex.synthesizers.wfc.wave
   (:local-nicknames
    (#:u #:golden-utils))
@@ -213,6 +232,32 @@
    #:indices
    #:make-wave
    #:wave))
+
+(defpackage #:%syntex.synthesizers.wfc.tile-model-mapping
+  (:local-nicknames
+   (#:point #:%syntex.synthesizers.wfc.point)
+   (#:tile #:%syntex.synthesizers.wfc.tile)
+   (#:top #:%syntex.synthesizers.wfc.topology)
+   (#:tpts #:%syntex.synthesizers.wfc.tile-propagator-tile-set)
+   (#:u #:golden-utils))
+  (:use #:cl)
+  (:export))
+
+(defpackage #:%syntex.synthesizers.wfc.tile-model
+  (:local-nicknames
+   (#:tfm #:%syntex.synthesizers.wfc.transform)
+   (#:tfm.tile #:%syntex.synthesizers.wfc.transformed-tile)
+   (#:tile #:%syntex.synthesizers.wfc.tile))
+  (:use #:cl)
+  (:export
+   #:get-mapping
+   #:model))
+
+(defpackage #:%syntex.synthesizers.wfc.adjacent-model
+  (:local-nicknames)
+  (:use #:cl)
+  (:export
+   #:model))
 
 (defpackage #:%syntex.synthesizers.wfc.tracker
   (:use #:cl)
