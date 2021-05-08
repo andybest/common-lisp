@@ -23,11 +23,11 @@
             :initarg :target)))
 
 (defun get-transforms (subgroup tile)
-  (let ((rotations nil))
+  (let ((rotations (make-array 0 :fill-pointer 0 :adjustable t)))
     (u:do-hash (k v (tiles subgroup))
       (when (eq v tile)
-        (push k rotations)))
-    (nreverse rotations)))
+        (vector-push-extend k rotations)))
+    rotations))
 
 (defun set-tile (subgroup transform tile)
   (let ((tiles (tiles subgroup)))
