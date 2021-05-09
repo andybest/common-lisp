@@ -116,6 +116,7 @@
   (:export
    #:group
    #:make-tile
+   #:make-transforms
    #:tile
    #:transform
    #:transform-all
@@ -186,6 +187,9 @@
    (#:u #:golden-utils))
   (:use #:cl)
   (:export
+   #:directions
+   #:grid
+   #:make-grid
    #:make-grid-2d
    #:make-grid-3d))
 
@@ -212,7 +216,8 @@
    #:make-data-1d
    #:make-data-2d
    #:make-data-3d
-   #:to-tiles))
+   #:to-tiles
+   #:transform-vector))
 
 (defpackage #:%syntex.synthesizers.wfc.deque
   (:local-nicknames

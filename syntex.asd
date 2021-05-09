@@ -29,6 +29,12 @@
        (:file "tile")
        (:file "tile-propagator-tile-set")
 
+       ;; rot
+       (:file "transform")
+       (:file "transform-tile")
+       (:file "transform-subgroup")
+       (:file "transform-builder")
+
        ;; topo
        (:file "periodicity")
        (:file "direction")
@@ -38,12 +44,6 @@
        (:file "topology-data-1d")
        (:file "topology-data-2d")
        (:file "topology-data-3d")
-
-       ;; rot
-       (:file "transform")
-       (:file "transform-tile")
-       (:file "transform-subgroup")
-       (:file "transform-builder")
 
        ;; wfc
        (:file "deque")
