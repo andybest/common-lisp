@@ -19,16 +19,19 @@
    (%values :reader values
             :initarg :values)))
 
+(defclass data/tiles (data) ())
+
 (defun contains-index-p (topology index)
-  (u:when-let (mask (mask topology))
-    (aref mask index)))
+  (let ((mask (mask topology)))
+    (when (or (not mask) (aref mask index))
+      t)))
 
 (defun get-indices (topology)
-  (let ((indices nil))
+  (let ((indices (make-array 0 :fill-pointer 0 :adjustable t)))
     (dotimes (i (index-count topology))
       (when (contains-index-p topology i)
-        (push i indices)))
-    (nreverse indices)))
+        (vector-push-extend i indices)))
+    indices))
 
 (defgeneric get (data point/index))
 

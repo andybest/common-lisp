@@ -2,6 +2,8 @@
 
 (defclass data-1d (top:data) ())
 
+(defclass data-1d/tiles (top:data/tiles) ())
+
 (defun make-data-1d (topology values)
   (make-instance 'data-1d :topology topology :values values))
 

@@ -80,6 +80,7 @@
    #:+hexagonal-2d+
    #:+hexagonal-3d+
    #:count
+   #:get
    #:type
    #:x
    #:y
@@ -106,6 +107,51 @@
    #:transform
    #:transforms))
 
+(defpackage #:%syntex.synthesizers.wfc.tile-transform
+  (:local-nicknames
+   (#:tfm #:%syntex.synthesizers.wfc.transform)
+   (#:tile #:%syntex.synthesizers.wfc.tile)
+   (#:u #:golden-utils))
+  (:use #:cl)
+  (:export
+   #:group
+   #:make-tile
+   #:tile
+   #:transform
+   #:transform-all
+   #:transform-tile
+   #:transform-tiles
+   #:transforms))
+
+(defpackage #:%syntex.synthesizers.wfc.transform-subgroup
+  (:local-nicknames
+   (#:tfm #:%syntex.synthesizers.wfc.transform)
+   (#:tile #:%syntex.synthesizers.wfc.tile)
+   (#:u #:golden-utils))
+  (:use #:cl)
+  (:export
+   #:copy
+   #:entries
+   #:entry
+   #:expand
+   #:get-transforms
+   #:permute
+   #:set-tile
+   #:subgroup
+   #:tiles
+   #:treatment
+   #:treatment-set-by))
+
+(defpackage #:%syntex.synthesizers.wfc.transform-builder
+  (:local-nicknames
+   (#:sg #:%syntex.synthesizers.wfc.transform-subgroup)
+   (#:tfm #:%syntex.synthesizers.wfc.transform)
+   (#:tfm.tile #:%syntex.synthesizers.wfc.tile-transform)
+   (#:u #:golden-utils))
+  (:use #:cl)
+  (:export
+   #:make-transforms))
+
 (defpackage #:%syntex.synthesizers.wfc.topology
   (:local-nicknames
    (#:u #:golden-utils))
@@ -116,6 +162,7 @@
   (:export
    #:contains-index-p
    #:data
+   #:data/tiles
    #:depth
    #:directions-count
    #:get-coords
@@ -144,52 +191,28 @@
 
 (defpackage #:%syntex.synthesizers.wfc.topology-data
   (:local-nicknames
+   (#:dir #:%syntex.synthesizers.wfc.direction)
    (#:grid #:%syntex.synthesizers.wfc.topology-grid)
    (#:point #:%syntex.synthesizers.wfc.point)
+   (#:tfm #:%syntex.synthesizers.wfc.transform)
+   (#:tfm.tile #:%syntex.synthesizers.wfc.tile-transform)
+   (#:tile #:%syntex.synthesizers.wfc.tile)
    (#:top #:%syntex.synthesizers.wfc.topology)
    (#:u #:golden-utils))
   (:use #:cl)
-  (:export))
-
-(defpackage #:%syntex.synthesizers.wfc.transformed-tile
-  (:local-nicknames
-   (#:tfm #:%syntex.synthesizers.wfc.transform)
-   (#:tile #:%syntex.synthesizers.wfc.tile)
-   (#:u #:golden-utils))
-  (:use #:cl)
+  (:shadow
+   #:map)
   (:export
-   #:make-tile
-   #:tile
-   #:transform
-   #:transforms))
-
-(defpackage #:%syntex.synthesizers.wfc.transform-subgroup
-  (:local-nicknames
-   (#:tfm #:%syntex.synthesizers.wfc.transform)
-   (#:tile #:%syntex.synthesizers.wfc.tile)
-   (#:u #:golden-utils))
-  (:use #:cl)
-  (:export
-   #:copy
-   #:entries
-   #:entry
-   #:expand
-   #:get-transforms
-   #:permute
-   #:set-tile
-   #:subgroup
-   #:tiles
-   #:treatment
-   #:treatment-set-by))
-
-(defpackage #:%syntex.synthesizers.wfc.transform-builder
-  (:local-nicknames
-   (#:sg #:%syntex.synthesizers.wfc.transform-subgroup)
-   (#:tfm #:%syntex.synthesizers.wfc.transform)
-   (#:tfm.tile #:%syntex.synthesizers.wfc.transformed-tile)
-   (#:u #:golden-utils))
-  (:use #:cl)
-  (:export))
+   #:data-1d
+   #:data-1d/tiles
+   #:data-2d
+   #:data-2d/tiles
+   #:data-3d
+   #:data-3d/tiles
+   #:make-data-1d
+   #:make-data-2d
+   #:make-data-3d
+   #:to-tiles))
 
 (defpackage #:%syntex.synthesizers.wfc.deque
   (:local-nicknames
@@ -246,15 +269,24 @@
 (defpackage #:%syntex.synthesizers.wfc.tile-model
   (:local-nicknames
    (#:tfm #:%syntex.synthesizers.wfc.transform)
-   (#:tfm.tile #:%syntex.synthesizers.wfc.transformed-tile)
-   (#:tile #:%syntex.synthesizers.wfc.tile))
+   (#:tfm.tile #:%syntex.synthesizers.wfc.tile-transform)
+   (#:tile #:%syntex.synthesizers.wfc.tile)
+   (#:u #:golden-utils))
   (:use #:cl)
   (:export
    #:get-mapping
-   #:model))
+   #:model
+   #:tiles))
 
 (defpackage #:%syntex.synthesizers.wfc.adjacent-model
-  (:local-nicknames)
+  (:local-nicknames
+   (#:dir #:%syntex.synthesizers.wfc.direction)
+   (#:point #:%syntex.synthesizers.wfc.point)
+   (#:tfm.tile #:%syntex.synthesizers.wfc.tile-transform)
+   (#:tm #:%syntex.synthesizers.wfc.tile-model)
+   (#:top #:%syntex.synthesizers.wfc.topology)
+   (#:top.dat #:%syntex.synthesizers.wfc.topology-data)
+   (#:u #:golden-utils))
   (:use #:cl)
   (:export
    #:model))

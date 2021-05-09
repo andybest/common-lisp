@@ -2,6 +2,8 @@
 
 (defclass data-3d (top:data) ())
 
+(defclass data-3d/tiles (top:data/tiles) ())
+
 (defun make-data-3d (values &key topology periodic-p)
   (let ((topology (or topology
                       (grid:make-grid-3d (array-dimension values 0)

@@ -48,7 +48,7 @@
     (y (u:make-b8-array 0) :type u:b8a)
     (z (u:make-b8-array 0) :type u:b8a)
     (count 0 :type u:ub8)
-    (type 0 :type type)))
+    (type :unknown :type type)))
 
 (u:define-constant +cartesian-2d+
     (let ((x (make-array 4 :element-type 'u:b8 :initial-contents '(1 -1 0 0)))

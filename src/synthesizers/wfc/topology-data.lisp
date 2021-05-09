@@ -1,5 +1,7 @@
 (in-package #:%syntex.synthesizers.wfc.topology-data)
 
+(defclass data/tiles () ())
+
 (defun make-data (topology values)
   (etypecase values
     ((simple-array t (*))
@@ -25,8 +27,10 @@
 
 (defun make-data-by-index (topology func)
   (let ((values (make-array (top:index-count topology))))
-    (dolist (i (top:get-indices topology))
-      (setf (aref values i) (funcall func i)))
+    (cl:map nil
+            (lambda (x)
+              (setf (aref values x) (funcall func x)))
+            (top:get-indices topology))
     (make-data topology values)))
 
 (defun to-2d-array (data)
@@ -52,3 +56,69 @@
           (let ((point (point:point x y z)))
             (setf (aref values x y z) (top:get data point))))))
     values))
+
+(defun map (data func)
+  (let* ((topology (top:topology data))
+         (values (make-array (top:index-count topology))))
+    (cl:map nil
+            (lambda (x)
+              (setf (aref values x) (funcall func (top:get data x))))
+            (top:get-indices topology))
+    (make-data-1d topology values)))
+
+(defun to-tiles (data)
+  (let ((data (map data (lambda (x) (tile:tile x)))))
+    (change-class data 'data-1d/tiles)))
+
+(defun transform-vector/square (x y transform)
+  (let ((x (if (tfm:reflect-x transform) (- x) x)))
+    (ecase (tfm:rotation transform)
+      (0 (values x y))
+      (90 (values (- y) x))
+      (180 (values (- x) (- y)))
+      (270 (values y (- x))))))
+
+(defun transform-vector/hex (x y transform)
+  (flet ((%transform (x y micro rotate-180-p reflect-p)
+           (let* ((x (if reflect-p (+ (- x) y) x))
+                  (q (- x y))
+                  (r (- x))
+                  (s y))
+             (case micro
+               (1 (psetf q s s r r q))
+               (2 (psetf q r r s s q)))
+             (when rotate-180-p
+               (setf q (- q)
+                     r (- r)
+                     s (- s)))
+             (values (- r) s))))
+    (let* ((rotation (tfm:rotation transform))
+           (micro (mod (truncate rotation 60) 3))
+           (rotate-180-p (plusp (mod (truncate rotation 60) 2))))
+      (%transform x y micro rotate-180-p (tfm:reflect-x transform)))))
+
+(defun transform-vector (direction-type x y transform)
+  (case direction-type
+    ((:cartesian-2d :cartesian-3d)
+     (transform-vector/square x y transform))
+    (:hexagonal-2d
+     (transform-vector/hex x y transform))
+    (t
+     (error "Unknown direction type: ~s." direction-type))))
+
+(defun transform-direction (directions direction transform)
+  (u:mvlet* ((x (aref (dir:x directions) direction))
+             (y (aref (dir:y directions) direction))
+             (z (aref (dir:z directions) direction))
+             (rx ry (transform-vector (dir:type directions) x y transform)))
+    (dir:get directions (point:point rx ry z))))
+
+(defgeneric transform (original transform tile-transforms))
+
+#++(defmethod transform ((original top:data)
+                         (transform tfm:transform)
+                         (tile-transform tfm.tile:transforms)))
+
+#++(defun transform-tile-data (original transform transforms)
+     (let ((topology (top:topology original)))
+       ))

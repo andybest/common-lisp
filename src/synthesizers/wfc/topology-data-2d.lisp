@@ -2,6 +2,8 @@
 
 (defclass data-2d (top:data) ())
 
+(defclass data-2d/tiles (top:data/tiles) ())
+
 (defun make-data-2d (values &key topology periodic-p)
   (let ((topology (or topology
                       (grid:make-grid-2d (array-dimension values 0)

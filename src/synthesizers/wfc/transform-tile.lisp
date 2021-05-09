@@ -1,4 +1,4 @@
-(in-package #:%syntex.synthesizers.wfc.transformed-tile)
+(in-package #:%syntex.synthesizers.wfc.tile-transform)
 
 (defclass tile (tile:tile)
   ((%transform :reader transform
@@ -43,32 +43,35 @@
            (values (make-tile :tile tile :transform transform) t))))))
 
 (defun transform-tiles (transforms tiles transform)
-  (let ((list nil))
+  (let ((result (make-array 0 :fill-pointer 0 :adjustable t)))
     (map nil
          (lambda (x)
            (u:mvlet ((tile success-p (transform-tile transforms x transform)))
              (when success-p
-               (push tile list))))
+               (vector-push-extend tile result))))
          tiles)
-    (nreverse list)))
+    result))
 
 (defgeneric transform-all (transforms tile/sequence))
 
 (defmethod transform-all ((transforms transforms) (tile tile:tile))
-  (let ((list nil))
+  (let ((result (make-array 0 :fill-pointer 0 :adjustable t)))
     (map nil
          (lambda (x)
            (u:mvlet ((tile success-p (transform-tile transforms tile x)))
              (when success-p
-               (push tile list))))
+               (vector-push-extend tile result))))
          (tfm:transforms (group transforms)))
-    (nreverse list)))
+    result))
 
 (defmethod transform-all ((transforms transforms) (tiles sequence))
-  (let ((list nil))
+  (let ((result (make-array 0 :fill-pointer 0 :adjustable t)))
     (map nil
          (lambda (x)
            (u:when-let ((tiles (transform-all transforms x)))
-             (push tiles list)))
+             (map nil
+                  (lambda (x)
+                    (vector-push-extend x result))
+                  tiles)))
          tiles)
-    (u:flatten (nreverse list))))
+    result))
