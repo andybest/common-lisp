@@ -80,7 +80,9 @@
    #:+hexagonal-2d+
    #:+hexagonal-3d+
    #:count
+   #:direction-set
    #:get
+   #:invert
    #:type
    #:x
    #:y
@@ -217,6 +219,7 @@
    #:make-data-2d
    #:make-data-3d
    #:to-tiles
+   #:transform
    #:transform-vector))
 
 (defpackage #:%syntex.synthesizers.wfc.deque
@@ -261,6 +264,30 @@
    #:make-wave
    #:wave))
 
+(defpackage #:%syntex.synthesizers.wfc.pattern-array
+  (:use #:cl)
+  (:shadow
+   #:values)
+  (:export
+   #:get-depth
+   #:get-height
+   #:get-depth
+   #:pattern-array
+   #:values))
+
+(defpackage #:%syntex.synthesizers.wfc.overlapping-analysis
+  (:local-nicknames
+   (#:pa #:%syntex.synthesizers.wfc.pattern-array)
+   (#:per #:%syntex.synthesizers.wfc.periodicity)
+   (#:point #:%syntex.synthesizers.wfc.point)
+   (#:tfm.tile #:%syntex.synthesizers.wfc.tile-transform)
+   (#:top #:%syntex.synthesizers.wfc.topology)
+   (#:top.dat #:%syntex.synthesizers.wfc.topology-data)
+   (#:u #:golden-utils))
+  (:use #:cl)
+  (:export
+   #:get-transformed-samples))
+
 (defpackage #:%syntex.synthesizers.wfc.tile-model-mapping
   (:local-nicknames
    (#:point #:%syntex.synthesizers.wfc.point)
@@ -269,7 +296,8 @@
    (#:tpts #:%syntex.synthesizers.wfc.tile-propagator-tile-set)
    (#:u #:golden-utils))
   (:use #:cl)
-  (:export))
+  (:export
+   #:mapping))
 
 (defpackage #:%syntex.synthesizers.wfc.tile-model
   (:local-nicknames
@@ -281,16 +309,34 @@
   (:export
    #:get-mapping
    #:model
+   #:multiply-frequency
    #:tiles))
 
 (defpackage #:%syntex.synthesizers.wfc.adjacent-model
   (:local-nicknames
    (#:dir #:%syntex.synthesizers.wfc.direction)
+   (#:grid #:%syntex.synthesizers.wfc.topology-grid)
+   (#:oa #:%syntex.synthesizers.wfc.overlapping-analysis)
+   (#:pm #:%syntex.synthesizers.wfc.pattern-model)
    (#:point #:%syntex.synthesizers.wfc.point)
+   (#:tile #:%syntex.synthesizers.wfc.tile)
    (#:tfm.tile #:%syntex.synthesizers.wfc.tile-transform)
    (#:tm #:%syntex.synthesizers.wfc.tile-model)
+   (#:tmm #:%syntex.synthesizers.wfc.tile-model-mapping)
    (#:top #:%syntex.synthesizers.wfc.topology)
    (#:top.dat #:%syntex.synthesizers.wfc.topology-data)
+   (#:u #:golden-utils))
+  (:use #:cl)
+  (:export
+   #:model))
+
+(defpackage #:%syntex.synthesizers.wfc.graph-adjacent-model
+  (:local-nicknames
+   (#:pm #:%syntex.synthesizers.wfc.pattern-model)
+   (#:tile #:%syntex.synthesizers.wfc.tile)
+   (#:tm #:%syntex.synthesizers.wfc.tile-model)
+   (#:tmm #:%syntex.synthesizers.wfc.tile-model-mapping)
+   (#:top #:%syntex.synthesizers.wfc.topology)
    (#:u #:golden-utils))
   (:use #:cl)
   (:export

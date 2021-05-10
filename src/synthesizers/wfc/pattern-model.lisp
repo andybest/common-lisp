@@ -1,8 +1,10 @@
 (in-package #:%syntex.synthesizers.wfc.pattern-model)
 
 (defclass pattern-model ()
-  ((%propagator :accessor propagator)
-   (%frequencies :accessor frequencies)))
+  ((%propagator :reader propagator
+                :initarg :propagator)
+   (%frequencies :reader frequencies
+                 :initarg :frequencies)))
 
 (defun get-pattern-count (model)
   (length (frequencies model)))

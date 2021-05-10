@@ -1,17 +1,22 @@
 (in-package #:%syntex.synthesizers.wfc.tile-model-mapping)
 
 (defclass mapping ()
-  (
-   (%empty-pattern-set :reader empty-pattern-set
+  ((%empty-pattern-set :reader empty-pattern-set
                        :initform (u:dict #'eql))
-   (%pattern-topology :reader pattern-topology)
-   (%pattern-model :reader pattern-model)
+   (%pattern-topology :reader pattern-topology
+                      :initarg :pattern-topology)
+   (%pattern-model :reader pattern-model
+                   :initarg :pattern-model)
    (%tiles->patterns-by-offset :reader tiles->patterns-by-offset
+                               :initarg :tiles->patterns-by-offset
                                :initform (u:dict #'eql))
    (%patterns->tiles-by-offset :reader patterns->tiles-by-offset
+                               :initarg :patterns->tiles-by-offset
                                :initform (u:dict #'eql))
-   (%tile-coord->pattern-coord-index/offset :reader tile-coord->pattern-coord-index/offset)
-   (%pattern-coord->tile-coord-index/offset :reader pattern-coord->tile-coord-index/offset)))
+   (%tile-coord->pattern-coord-index/offset :reader tile-coord->pattern-coord-index/offset
+                                            :initarg :tile-coord->pattern-coord-index/offset)
+   (%pattern-coord->tile-coord-index/offset :reader pattern-coord->tile-coord-index/offset
+                                            :initarg :pattern-coord->tile-coord-index/offset)))
 
 (defun get-coord/offset (mapping point)
   (u:if-let ((pcio (tile-coord->pattern-coord-index/offset mapping)))

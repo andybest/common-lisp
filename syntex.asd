@@ -51,9 +51,12 @@
        (:file "wave")
 
        ;; models
+       (:file "model-pattern-array")
+       (:file "model-overlapping-analysis")
        (:file "model-tile-mapping")
        (:file "model-tile")
        (:file "model-adjacent")
+       (:file "model-graph-adjacent")
 
        ;; trackers
        (:file "tracker")
