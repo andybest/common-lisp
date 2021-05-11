@@ -5,7 +5,7 @@
                 :initarg :directions)
    (%periodicity :reader periodicity
                  :initarg :periodicity
-                 :initform (per:periodicity))))
+                 :initform (top:make-periodicity))))
 
 (defmethod initialize-instance :after ((instance grid) &key)
   (let* ((width (top:width instance))
@@ -21,7 +21,7 @@
                  :width width
                  :height height
                  :depth depth
-                 :periodicity (per:periodicity periodic-x periodic-y periodic-z)
+                 :periodicity (top:make-periodicity periodic-x periodic-y periodic-z)
                  :mask mask))
 
 (defun make-grid-2d (width height &key periodic-p)
@@ -56,9 +56,9 @@
                :width (top:width grid)
                :height (top:height grid)
                :depth (top:depth grid)
-               :periodic-x (per:x periodicity)
-               :periodic-y (per:y periodicity)
-               :periodic-z (per:z periodicity)
+               :periodic-x (top:periodic-x periodicity)
+               :periodic-y (top:periodic-y periodicity)
+               :periodic-z (top:periodic-z periodicity)
                :mask mask)))
 
 (defmethod make-masked-copy :before ((grid grid) (mask top:data))
@@ -83,9 +83,9 @@
                :width width
                :height height
                :depth depth
-               :periodic-x (per:x periodicity)
-               :periodic-y (per:y periodicity)
-               :periodic-z (per:z periodicity))))
+               :periodic-x (top:periodic-x periodicity)
+               :periodic-y (top:periodic-y periodicity)
+               :periodic-z (top:periodic-z periodicity))))
 
 (defun make-periodic-copy (grid &key x y z)
   (make-grid :directions (directions grid)
@@ -115,7 +115,7 @@
                  (u:once-only (dimension)
                    `(symbol-macrolet ((,point-coord (,(u:format-symbol :point "~a" coord) point)))
                       (cond
-                        ((,(u:format-symbol :per "~a" coord) periodicity)
+                        ((,(u:format-symbol :top "PERIODIC-~a" coord) periodicity)
                          (setf ,point-coord (mod ,point-coord ,dimension)))
                         ((or (minusp ,point-coord)
                              (>= ,point-coord ,dimension))

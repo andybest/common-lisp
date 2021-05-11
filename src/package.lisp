@@ -57,33 +57,6 @@
    #:tile-set
    #:tiles))
 
-(defpackage #:%syntex.synthesizers.wfc.periodicity
-  (:use #:cl)
-  (:export
-   #:periodicity
-   #:x
-   #:y
-   #:z))
-
-(defpackage #:%syntex.synthesizers.wfc.direction
-  (:local-nicknames
-   (#:point #:%syntex.synthesizers.wfc.point)
-   (#:u #:golden-utils))
-  (:use #:cl)
-  (:export
-   #:+cartesian-2d+
-   #:+cartesian-3d+
-   #:+hexagonal-2d+
-   #:+hexagonal-3d+
-   #:direction-count
-   #:direction-set
-   #:get-direction
-   #:invert-direction
-   #:direction-type
-   #:direction-x
-   #:direction-y
-   #:direction-z))
-
 (defpackage #:%syntex.synthesizers.wfc.transform
   (:local-nicknames
    (#:tile #:%syntex.synthesizers.wfc.tile)
@@ -104,6 +77,25 @@
    #:transform-tile
    #:transform-tiles))
 
+(defpackage #:%syntex.synthesizers.wfc.direction
+  (:local-nicknames
+   (#:point #:%syntex.synthesizers.wfc.point)
+   (#:u #:golden-utils))
+  (:use #:cl)
+  (:export
+   #:+cartesian-2d+
+   #:+cartesian-3d+
+   #:+hexagonal-2d+
+   #:+hexagonal-3d+
+   #:direction-count
+   #:direction-set
+   #:get-direction
+   #:invert-direction
+   #:direction-type
+   #:direction-x
+   #:direction-y
+   #:direction-z))
+
 (defpackage #:%syntex.synthesizers.wfc.topology
   (:local-nicknames
    (#:u #:golden-utils))
@@ -111,6 +103,11 @@
   (:shadow
    #:get
    #:values)
+  (:export
+   #:periodic-x
+   #:periodic-y
+   #:periodic-z
+   #:make-periodicity)
   (:export
    #:contains-index-p
    #:data
@@ -132,7 +129,6 @@
 (defpackage #:%syntex.synthesizers.wfc.topology-grid
   (:local-nicknames
    (#:dir #:%syntex.synthesizers.wfc.direction)
-   (#:per #:%syntex.synthesizers.wfc.periodicity)
    (#:point #:%syntex.synthesizers.wfc.point)
    (#:top #:%syntex.synthesizers.wfc.topology)
    (#:u #:golden-utils))
@@ -244,7 +240,6 @@
 (defpackage #:%syntex.synthesizers.wfc.overlapping-analysis
   (:local-nicknames
    (#:pa #:%syntex.synthesizers.wfc.pattern-array)
-   (#:per #:%syntex.synthesizers.wfc.periodicity)
    (#:point #:%syntex.synthesizers.wfc.point)
    (#:tfm #:%syntex.synthesizers.wfc.transform)
    (#:top #:%syntex.synthesizers.wfc.topology)
@@ -317,7 +312,6 @@
    (#:oa #:%syntex.synthesizers.wfc.overlapping-analysis)
    (#:pa #:%syntex.synthesizers.wfc.pattern-array)
    (#:pm #:%syntex.synthesizers.wfc.pattern-model)
-   (#:per #:%syntex.synthesizers.wfc.periodicity)
    (#:point #:%syntex.synthesizers.wfc.point)
    (#:tfm #:%syntex.synthesizers.wfc.transform)
    (#:tile #:%syntex.synthesizers.wfc.tile)
