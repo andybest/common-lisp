@@ -8,7 +8,7 @@
   (make-instance 'data-1d :topology topology :values values))
 
 (defmethod get ((data data-1d) (point point:point))
-  (aref (values data) (get-index (topology data) point)))
+  (aref (%values data) (get-index (topology data) point)))
 
 (defmethod get ((data data-1d) (index integer))
-  (aref (values data) index))
+  (aref (%values data) index))

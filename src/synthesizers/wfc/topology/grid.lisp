@@ -133,7 +133,7 @@
       (let ((index (get-index topology out-point)))
         (when (or (and mask (plusp (bit mask index)))
                   (not mask))
-          (cl:values out-point index))))))
+          (values out-point index))))))
 
 (defmethod try-move ((topology grid) (index integer) (direction integer))
   (let ((point (get-coords topology index)))

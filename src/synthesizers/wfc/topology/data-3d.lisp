@@ -13,7 +13,7 @@
     (make-instance 'data-3d :topology topology :values values)))
 
 (defmethod get ((data data-3d) (point point:point))
-  (aref (values data) (point:x point) (point:y point) (point:z point)))
+  (aref (%values data) (point:x point) (point:y point) (point:z point)))
 
 (defmethod get ((data data-3d) (index integer))
   (let ((point (get-coords (topology data) index)))

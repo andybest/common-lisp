@@ -73,10 +73,10 @@
 (defun transform-vector/square (x y transform)
   (let ((x (if (tfm:reflect-x transform) (- x) x)))
     (ecase (tfm:rotation transform)
-      (0 (cl:values x y))
-      (90 (cl:values (- y) x))
-      (180 (cl:values (- x) (- y)))
-      (270 (cl:values y (- x))))))
+      (0 (values x y))
+      (90 (values (- y) x))
+      (180 (values (- x) (- y)))
+      (270 (values y (- x))))))
 
 (defun %transform-vector/hex (x y micro rotate-180-p reflect-p)
   (let* ((x (if reflect-p (+ (- x) y) x))
@@ -90,7 +90,7 @@
       (setf q (- q)
             r (- r)
             s (- s)))
-    (cl:values (- r) s)))
+    (values (- r) s)))
 
 (defun transform-vector/hex (x y transform)
   (let* ((rotation (tfm:rotation transform))

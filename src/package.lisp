@@ -86,8 +86,7 @@
   (:use #:cl)
   (:shadow
    #:get
-   #:map
-   #:values)
+   #:map)
   ;; periodicity
   (:export
    #:periodic-x

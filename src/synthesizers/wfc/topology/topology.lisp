@@ -16,7 +16,7 @@
 (defclass data ()
   ((%topology :reader topology
               :initarg :topology)
-   (%values :reader values
+   (%values :reader %values
             :initarg :values)))
 
 (defclass data/tiles (data) ())
