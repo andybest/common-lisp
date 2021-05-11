@@ -1,4 +1,4 @@
-(in-package #:%syntex.synthesizers.wfc.transform-subgroup)
+(in-package #:%syntex.synthesizers.wfc.transform)
 
 (defclass subgroup ()
   ((%entries :accessor entries
@@ -53,19 +53,16 @@
                (u:do-hash (k v (tiles subgroup))
                  (when (eq v (source x))
                    (setf expanded-p (or expanded-p
-                                        (set-tile
-                                         subgroup
-                                         (tfm:* k transform)
-                                         (target x)))))
+                                        (set-tile subgroup (* k transform) (target x)))))
                  (when (eq v (target x))
                    (setf expanded-p (or expanded-p
                                         (set-tile
                                          subgroup
-                                         (tfm:* k (tfm:invert transform))
+                                         (* k (invert transform))
                                          (source x))))))))
            (entries subgroup)))))
 
-(defun copy (subgroup)
+(defun copy-subgroup (subgroup)
   (make-instance 'subgroup
                  :entries (u:copy-array (entries subgroup))
                  :tiles (u:copy-hash-table (tiles subgroup))

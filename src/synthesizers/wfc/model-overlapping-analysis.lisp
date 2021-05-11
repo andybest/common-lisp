@@ -1,12 +1,12 @@
 (in-package #:%syntex.synthesizers.wfc.overlapping-analysis)
 
-(defun get-transformed-samples (sample &optional tile-transforms)
-  (let ((tile-transforms (or tile-transforms (tfm.tile:make-transforms)))
+(defun get-transformed-samples (sample &optional tile-transform)
+  (let ((tile-transform (or tile-transform (tfm:make-tile-transform)))
         (result (make-array 0 :fill-pointer 0 :adjustable t)))
     (map nil
          (lambda (x)
-           (vector-push-extend (top.dat:transform sample x tile-transforms) result))
-         (tfm.tile:group tile-transforms))
+           (vector-push-extend (top.dat:transform sample x tile-transform) result))
+         (tfm:group tile-transform))
     result))
 
 (defun try-extract (sample point1 point2)

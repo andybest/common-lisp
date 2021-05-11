@@ -114,59 +114,59 @@
              (rx ry (transform-vector (dir:type directions) x y transform)))
     (dir:get directions (point:point rx ry z))))
 
-(defgeneric transform (original transform &optional tile-transforms))
+(defgeneric transform (original transform &optional tile-transform))
 
 (defmethod transform ((original top:data/tiles)
                       (transform tfm:transform)
-                      &optional tile-transforms)
+                      &optional tile-transform)
   (let ((topology (top:topology original)))
     (unless (typep topology 'grid:grid)
       (error "Expected a grid-based topology."))
     (let ((type (dir:type (grid:directions topology))))
       (case type
         ((:cartesian-2d :cartesian-3d)
-         (transform/square original transform tile-transforms))
+         (transform/square original transform tile-transform))
         (:hexagonal-2d
-         (transform/hex original transform tile-transforms))
+         (transform/hex original transform tile-transform))
         (t
          (error "Unknown direction type: ~s." type))))))
 
-(defgeneric transform/square (original transform &optional tile-transforms))
+(defgeneric transform/square (original transform &optional tile-transform))
 
 (defmethod transform/square ((original top:data/tiles)
                              (transform tfm:transform)
-                             &optional tile-transforms)
+                             &optional tile-transform)
   (flet ((%transform-tile (tile)
-           (tfm.tile:transform-tile tile-transforms tile transform)))
+           (tfm:transform-tile tile-transform tile transform)))
     (transform/square original
                       transform
-                      (when tile-transforms
+                      (when tile-transform
                         #'%transform-tile))))
 
 (defmethod transform/square ((original top:data)
                              (transform tfm:transform)
-                             &optional tile-transforms)
+                             &optional tile-transform)
   (flet ((map-coord (x y)
            (transform-vector/square x y transform)))
     (if (tfm:identity-p transform)
         original
-        (transform-inner original #'map-coord tile-transforms))))
+        (transform-inner original #'map-coord tile-transform))))
 
-(defgeneric transform/hex (original transform &optional tile-transforms))
+(defgeneric transform/hex (original transform &optional tile-transform))
 
 (defmethod transform/hex ((original top:data/tiles)
                           (transform tfm:transform)
-                          &optional tile-transforms)
+                          &optional tile-transform)
   (flet ((%transform-tile (tile)
-           (tfm.tile:transform-tile tile-transforms tile transform)))
+           (tfm:transform-tile tile-transform tile transform)))
     (transform/hex original
                    transform
-                   (when tile-transforms
+                   (when tile-transform
                      #'%transform-tile))))
 
 (defmethod transform/hex ((original top:data)
                           (transform tfm:transform)
-                          &optional tile-transforms)
+                          &optional tile-transform)
   (when (tfm:identity-p transform)
     (return-from transform/hex original))
   (let* ((rotation (tfm:rotation transform))
@@ -174,7 +174,7 @@
          (rotate-180-p (plusp (mod (truncate rotation 60) 2))))
     (flet ((map-coord (x y)
              (%transform-vector/hex x y micro rotate-180-p (tfm:reflect-x transform))))
-      (transform-inner original #'map-coord tile-transforms))))
+      (transform-inner original #'map-coord tile-transform))))
 
 (defun transform-inner (original map-coord-func tile-transform-func)
   (let* ((original-topology (top:topology original))

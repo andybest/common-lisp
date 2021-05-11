@@ -8,12 +8,12 @@
 
 (defgeneric multiply-frequency (model tile multiplier))
 
-(defun %multiply-frequency (model tile multiplier transforms)
+(defun %multiply-frequency (model tile multiplier tile-transform)
   (let ((transformed-tiles (u:dict #'eq)))
     (map nil
          (lambda (x)
-           (u:mvlet ((x success-p (tfm.tile:transform-tile transforms tile x)))
+           (u:mvlet ((x success-p (tfm:transform-tile tile-transform tile x)))
              (when (and success-p (not (u:href transformed-tiles x)))
                (setf (u:href transformed-tiles x) x)
                (multiply-frequency model x multiplier))))
-         (tfm.tile:group transforms))))
+         (tfm:group tile-transform))))

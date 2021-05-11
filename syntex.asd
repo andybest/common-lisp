@@ -31,7 +31,9 @@
 
        ;; rot
        (:file "transform")
-       (:file "transform-tile")
+       (:file "transform-group")
+       (:file "transformed-tile")
+       (:file "tile-transform")
        (:file "transform-subgroup")
        (:file "transform-builder")
 

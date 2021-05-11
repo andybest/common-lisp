@@ -90,70 +90,23 @@
 
 (defpackage #:%syntex.synthesizers.wfc.transform
   (:local-nicknames
+   (#:tile #:%syntex.synthesizers.wfc.tile)
    (#:u #:golden-utils))
   (:use #:cl)
   (:shadow
    #:*)
   (:export
-   #:*
-   #:angle
-   #:check
    #:group
    #:identity-p
    #:invert
-   #:make-group
-   #:make-transform
+   #:make-tile-transform
    #:reflect-x
-   #:reflect-p
    #:rotation
-   #:transform
-   #:transforms))
-
-(defpackage #:%syntex.synthesizers.wfc.tile-transform
-  (:local-nicknames
-   (#:tfm #:%syntex.synthesizers.wfc.transform)
-   (#:tile #:%syntex.synthesizers.wfc.tile)
-   (#:u #:golden-utils))
-  (:use #:cl)
-  (:export
-   #:group
-   #:make-tile
-   #:make-transforms
-   #:tile
+   #:tile-transform
    #:transform
    #:transform-all
    #:transform-tile
-   #:transform-tiles
-   #:transforms))
-
-(defpackage #:%syntex.synthesizers.wfc.transform-subgroup
-  (:local-nicknames
-   (#:tfm #:%syntex.synthesizers.wfc.transform)
-   (#:tile #:%syntex.synthesizers.wfc.tile)
-   (#:u #:golden-utils))
-  (:use #:cl)
-  (:export
-   #:copy
-   #:entries
-   #:entry
-   #:expand
-   #:get-transforms
-   #:permute
-   #:set-tile
-   #:subgroup
-   #:tiles
-   #:treatment
-   #:treatment-set-by))
-
-(defpackage #:%syntex.synthesizers.wfc.transform-builder
-  (:local-nicknames
-   (#:sg #:%syntex.synthesizers.wfc.transform-subgroup)
-   (#:tfm #:%syntex.synthesizers.wfc.transform)
-   (#:tfm.tile #:%syntex.synthesizers.wfc.tile-transform)
-   (#:u #:golden-utils))
-  (:use #:cl)
-  (:export
-   #:make-transforms))
+   #:transform-tiles))
 
 (defpackage #:%syntex.synthesizers.wfc.topology
   (:local-nicknames
@@ -204,7 +157,6 @@
    (#:grid #:%syntex.synthesizers.wfc.topology-grid)
    (#:point #:%syntex.synthesizers.wfc.point)
    (#:tfm #:%syntex.synthesizers.wfc.transform)
-   (#:tfm.tile #:%syntex.synthesizers.wfc.tile-transform)
    (#:tile #:%syntex.synthesizers.wfc.tile)
    (#:top #:%syntex.synthesizers.wfc.topology)
    (#:u #:golden-utils))
@@ -298,7 +250,7 @@
    (#:pa #:%syntex.synthesizers.wfc.pattern-array)
    (#:per #:%syntex.synthesizers.wfc.periodicity)
    (#:point #:%syntex.synthesizers.wfc.point)
-   (#:tfm.tile #:%syntex.synthesizers.wfc.tile-transform)
+   (#:tfm #:%syntex.synthesizers.wfc.transform)
    (#:top #:%syntex.synthesizers.wfc.topology)
    (#:top.dat #:%syntex.synthesizers.wfc.topology-data)
    (#:u #:golden-utils))
@@ -322,7 +274,6 @@
 (defpackage #:%syntex.synthesizers.wfc.tile-model
   (:local-nicknames
    (#:tfm #:%syntex.synthesizers.wfc.transform)
-   (#:tfm.tile #:%syntex.synthesizers.wfc.tile-transform)
    (#:tile #:%syntex.synthesizers.wfc.tile)
    (#:u #:golden-utils))
   (:use #:cl)
@@ -340,7 +291,7 @@
    (#:pm #:%syntex.synthesizers.wfc.pattern-model)
    (#:point #:%syntex.synthesizers.wfc.point)
    (#:tile #:%syntex.synthesizers.wfc.tile)
-   (#:tfm.tile #:%syntex.synthesizers.wfc.tile-transform)
+   (#:tfm #:%syntex.synthesizers.wfc.transform)
    (#:tm #:%syntex.synthesizers.wfc.tile-model)
    (#:tmm #:%syntex.synthesizers.wfc.tile-model-mapping)
    (#:top #:%syntex.synthesizers.wfc.topology)
@@ -354,7 +305,6 @@
   (:local-nicknames
    (#:pm #:%syntex.synthesizers.wfc.pattern-model)
    (#:tfm #:%syntex.synthesizers.wfc.transform)
-   (#:tfm.tile #:%syntex.synthesizers.wfc.tile-transform)
    (#:tile #:%syntex.synthesizers.wfc.tile)
    (#:tm #:%syntex.synthesizers.wfc.tile-model)
    (#:tmm #:%syntex.synthesizers.wfc.tile-model-mapping)
@@ -373,7 +323,7 @@
    (#:pm #:%syntex.synthesizers.wfc.pattern-model)
    (#:per #:%syntex.synthesizers.wfc.periodicity)
    (#:point #:%syntex.synthesizers.wfc.point)
-   (#:tfm.tile #:%syntex.synthesizers.wfc.tile-transform)
+   (#:tfm #:%syntex.synthesizers.wfc.transform)
    (#:tile #:%syntex.synthesizers.wfc.tile)
    (#:tm #:%syntex.synthesizers.wfc.tile-model)
    (#:tmm #:%syntex.synthesizers.wfc.tile-model-mapping)

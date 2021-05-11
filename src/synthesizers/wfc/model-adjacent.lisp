@@ -60,8 +60,8 @@
             (setf (aref (aref propagator pattern) i) (u:dict #'eql)))
           pattern))))
 
-(defun %set-frequency/transforms (model tile frequency transforms)
-  (let ((transformed-tiles (tfm.tile:transform-all transforms tile))
+(defun %set-frequency/transforms (model tile frequency tile-transform)
+  (let ((transformed-tiles (tfm:transform-all tile-transform tile))
         (frequencies (frequencies model)))
     (map nil
          (lambda (x)
@@ -91,29 +91,29 @@
   (when (eq (dir:type (directions model)) :unknown)
     (error "Directions must be set.")))
 
-(defgeneric add-adjacency/transform (model source target direction/point &optional tile-transforms))
+(defgeneric add-adjacency/transform (model source target direction/point &optional tile-transform))
 
 (defmethod add-adjacency/transform ((model model)
                                     (source vector)
                                     (target vector)
                                     (direction integer)
-                                    &optional tile-transforms)
+                                    &optional tile-transform)
   (require-directions model)
   (let* ((directions (directions model))
          (x (aref (dir:x directions) direction))
          (y (aref (dir:y directions) direction))
          (z (aref (dir:z directions) direction))
          (point (point:point x y z)))
-    (add-adjacency/transform model source target point tile-transforms)))
+    (add-adjacency/transform model source target point tile-transform)))
 
 (defmethod add-adjacency/transform ((model model)
                                     (source vector)
                                     (target vector)
                                     (point point:point)
-                                    &optional tile-transforms)
+                                    &optional tile-transform)
   (require-directions model)
   (let ((direction-type (dir:type (directions model)))
-        (tile-transforms (or tile-transforms (tfm.tile:make-transforms))))
+        (tile-transform (or tile-transform (tfm:make-tile-transform))))
     (map nil
          (lambda (transform)
            (u:mvlet ((x y (top.dat:transform-vector direction-type
@@ -121,10 +121,10 @@
                                                     (point:y point)
                                                     transform)))
              (add-adjacency/transform model
-                                      (tfm.tile:transform-tiles tile-transforms source transform)
-                                      (tfm.tile:transform-tiles tile-transforms target transform)
+                                      (tfm:transform-tiles tile-transform source transform)
+                                      (tfm:transform-tiles tile-transform target transform)
                                       (point:point x y (point:z point)))))
-         (tfm.tile:group tile-transforms))))
+         (tfm:group tile-transform))))
 
 (defgeneric add-adjacency (model source target direction/point))
 
@@ -201,11 +201,11 @@
                       (vector-push-extend pattern2
                                           (aref (aref propagator pattern) d)))))))))))))
 
-(defun add-sample (model sample &optional tile-transforms)
+(defun add-sample (model sample &optional tile-transform)
   (map nil
        (lambda (x)
          (%add-sample model x))
-       (oa:get-transformed-samples sample tile-transforms)))
+       (oa:get-transformed-samples sample tile-transform)))
 
 (defmethod tm:get-mapping ((model model) (topology grid:grid))
   (let ((frequencies (frequencies model)))

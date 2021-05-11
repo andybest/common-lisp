@@ -34,8 +34,9 @@
 
 (defun make-model/symmetry (sample n rotation-count reflect-p)
   (let ((model (make-model/uniform n))
-        (transforms (tfm.tile:make-transforms :rotation-count rotation-count :reflect-p reflect-p)))
-    (add-sample model sample transforms)
+        (tile-transform (tfm:make-tile-transform :rotation-count rotation-count
+                                                 :reflect-p reflect-p)))
+    (add-sample model sample tile-transform)
     model))
 
 (defun make-model/uniform (n)
@@ -44,7 +45,7 @@
 (defun make-model/cuboid (nx ny nz)
   (make-instance 'model :nx nx :ny ny :nz nz))
 
-(defun add-sample (model sample &optional tile-transforms)
+(defun add-sample (model sample &optional tile-transform)
   (let ((topology (top:topology sample))
         (propagator (propagator model))
         (pattern-arrays (pattern-arrays model))
@@ -62,7 +63,7 @@
                             (pattern-indices model)
                             pattern-arrays
                             (frequencies model)))
-         (oa:get-transformed-samples sample tile-transforms))
+         (oa:get-transformed-samples sample tile-transform))
     (let* ((directions (grid:directions topology))
            (direction-count (dir:count directions)))
       (dotimes (p (length pattern-arrays))

@@ -65,7 +65,7 @@
           pattern))))
 
 (defun set-frequency/transforms (model tile frequency transforms)
-  (let ((transformed-tiles (tfm.tile:transform-all transforms tile))
+  (let ((transformed-tiles (tfm:transform-all transforms tile))
         (frequencies (frequencies model)))
     (map nil
          (lambda (x)
@@ -87,18 +87,18 @@
   (dolist (tile (tm:tiles model))
     (set-frequency model tile 1d0)))
 
-(defgeneric add-adjacency/transform (model source target direction tile-transforms))
+(defgeneric add-adjacency/transform (model source target direction tile-transform))
 
 (defmethod add-adjacency/transform ((model model)
                                     (source vector)
                                     (target vector)
                                     (direction integer)
-                                    (tile-transforms tfm.tile:transforms))
+                                    (tile-transform tfm:tile-transform))
   (map nil
        (lambda (x)
          (map nil
               (lambda (y)
-                (add-adjacency/transform model x y direction tile-transforms))
+                (add-adjacency/transform model x y direction tile-transform))
               target))
        source))
 
@@ -106,7 +106,7 @@
                                     (source tile:tile)
                                     (target tile:tile)
                                     (direction integer)
-                                    (tile-transforms tfm.tile:transforms))
+                                    (tile-transform tfm:tile-transform))
   (let ((edge-label-info (edge-label-info model)))
     (when (zerop (length edge-label-info))
       (error "Requires edge label info configured."))
@@ -127,12 +127,12 @@
             (declare (ignore idir))
             (when (= dir direction)
               (u:mvlet* ((transform (tfm:invert tfm))
-                         (rd success-p (tfm.tile:transform-tile tile-transforms target transform)))
+                         (rd success-p (tfm:transform-tile tile-transform target transform)))
                 (when success-p
                   (add-adjacency model source rd i))))
             (when (= dir inverse-direction)
               (u:mvlet* ((transform (tfm:invert tfm))
-                         (rs success-p (tfm.tile:transform-tile tile-transforms source transform)))
+                         (rs success-p (tfm:transform-tile tile-transform source transform)))
                 (when success-p
                   (add-adjacency model target i))))))))))
 
