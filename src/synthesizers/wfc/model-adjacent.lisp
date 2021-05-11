@@ -228,8 +228,8 @@
       (make-instance 'tmm:mapping
                      :pattern-topology topology
                      :pattern-model pattern-model
-                     :patterns->tiles-by-offset t->pbo
-                     :tiles->patterns-by-offset p->tbo
+                     :patterns->tiles-by-offset p->tbo
+                     :tiles->patterns-by-offset t->pbo
                      :tile-coord->pattern-coord-index/offset nil))))
 
 (defmethod tm:multiply-frequency ((model model) (tile tile:tile) (multiplier float))

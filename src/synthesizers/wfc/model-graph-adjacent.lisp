@@ -49,13 +49,115 @@
   (let ((pattern (u:href (tiles->patterns model) tile)))
     (incf (aref (frequencies model) pattern) multiplier)))
 
-#++(defun get-pattern ())
+(defun get-pattern (model tile)
+  (let* ((edge-label-count (edge-label-count model))
+         (tiles->patterns (tiles->patterns model))
+         (propagator (propagator model))
+         (pattern (u:href tiles->patterns tile)))
+    (or pattern
+        (let ((pattern-count (hash-table-count tiles->patterns)))
+          (setf (u:href tiles->patterns tile) pattern-count
+                pattern pattern-count)
+          (vector-push-extend 0 (frequencies model))
+          (vector-push-extend (make-array edge-label-count) propagator)
+          (dotimes (i edge-label-count)
+            (setf (aref (aref propagator pattern) i) (u:dict #'eql)))
+          pattern))))
 
-#++(defun set-frequency/transforms (model tile frequency transforms)
-     (let ((transformed-tiles (tfm.tile:transform-all transforms tile))
-           (frequencies (frequencies model)))
-       (map nil
-            (lambda (x)
-              (let ((pattern (get-pattern model x)))
-                (setf (aref frequencies pattern) 0d0)))
-            transformed-tiles)))
+(defun set-frequency/transforms (model tile frequency transforms)
+  (let ((transformed-tiles (tfm.tile:transform-all transforms tile))
+        (frequencies (frequencies model)))
+    (map nil
+         (lambda (x)
+           (let ((pattern (get-pattern model x)))
+             (setf (aref frequencies pattern) 0d0)))
+         transformed-tiles)
+    (let ((incremental-frequency (/ frequency (length transformed-tiles))))
+      (map nil
+           (lambda (x)
+             (let ((pattern (get-pattern model x)))
+               (incf (aref frequencies pattern) incremental-frequency)))
+           transformed-tiles))))
+
+(defun set-frequency (model tile frequency)
+  (let ((pattern (get-pattern model tile)))
+    (setf (aref (frequencies model) pattern) frequency)))
+
+(defun set-uniform-frequency (model)
+  (dolist (tile (tm:tiles model))
+    (set-frequency model tile 1d0)))
+
+(defgeneric add-adjacency/transform (model source target direction tile-transforms))
+
+(defmethod add-adjacency/transform ((model model)
+                                    (source vector)
+                                    (target vector)
+                                    (direction integer)
+                                    (tile-transforms tfm.tile:transforms))
+  (map nil
+       (lambda (x)
+         (map nil
+              (lambda (y)
+                (add-adjacency/transform model x y direction tile-transforms))
+              target))
+       source))
+
+(defmethod add-adjacency/transform ((model model)
+                                    (source tile:tile)
+                                    (target tile:tile)
+                                    (direction integer)
+                                    (tile-transforms tfm.tile:transforms))
+  (let ((edge-label-info (edge-label-info model)))
+    (when (zerop (length edge-label-info))
+      (error "Requires edge label info configured."))
+    (let ((inverse-direction-items (make-array 0 :fill-pointer 0 :adjustable t)))
+      (map nil
+           (lambda (x)
+             (destructuring-bind (i1 i2 i3) x
+               (declare (ignore i2))
+               (when (and (tfm:identity-p i3)
+                          (= i1 direction))
+                 (vector-push-extend x inverse-direction-items))))
+           edge-label-info)
+      (when (zerop (length inverse-direction-items))
+        (error "Couldn't find identity edge label for direction: ~s." direction))
+      (let ((inverse-direction (cadr (aref inverse-direction-items 0))))
+        (dotimes (i (length edge-label-info))
+          (destructuring-bind (dir idir tfm) (aref edge-label-info i)
+            (declare (ignore idir))
+            (when (= dir direction)
+              (u:mvlet* ((transform (tfm:invert tfm))
+                         (rd success-p (tfm.tile:transform-tile tile-transforms target transform)))
+                (when success-p
+                  (add-adjacency model source rd i))))
+            (when (= dir inverse-direction)
+              (u:mvlet* ((transform (tfm:invert tfm))
+                         (rs success-p (tfm.tile:transform-tile tile-transforms source transform)))
+                (when success-p
+                  (add-adjacency model target i))))))))))
+
+(defgeneric add-adjacency (model source target edge-label))
+
+(defmethod add-adjacency ((model model) (source vector) (target vector) (edge-label integer))
+  (map nil
+       (lambda (x)
+         (map nil
+              (lambda (y)
+                (add-adjacency model x y edge-label))
+              target))
+       source))
+
+(defmethod add-adjacency ((model model) (source tile:tile) (target tile:tile) (edge-label integer))
+  (let* ((propagator (propagator model))
+         (source (get-pattern model source))
+         (target (get-pattern model target))
+         (hash-set (aref (aref propagator source) edge-label)))
+    (setf (u:href hash-set target) target)))
+
+(defun adjacent-p (model source target edge-label)
+  (let* ((propagator (propagator model))
+         (source-pattern (get-pattern model source))
+         (target-pattern (get-pattern model target))
+         (source-hash-set (aref (aref propagator source-pattern) edge-label)))
+    (when (u:href source-hash-set target-pattern)
+      t)))

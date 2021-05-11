@@ -57,6 +57,7 @@
        (:file "model-tile")
        (:file "model-adjacent")
        (:file "model-graph-adjacent")
+       (:file "model-overlapping")
 
        ;; trackers
        (:file "tracker")

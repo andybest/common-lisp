@@ -193,7 +193,10 @@
    #:grid
    #:make-grid
    #:make-grid-2d
-   #:make-grid-3d))
+   #:make-grid-3d
+   #:make-masked-copy
+   #:make-resized-copy
+   #:periodicity))
 
 (defpackage #:%syntex.synthesizers.wfc.topology-data
   (:local-nicknames
@@ -218,6 +221,7 @@
    #:make-data-1d
    #:make-data-2d
    #:make-data-3d
+   #:make-data-by-coords
    #:to-tiles
    #:transform
    #:transform-vector))
@@ -265,15 +269,16 @@
    #:wave))
 
 (defpackage #:%syntex.synthesizers.wfc.pattern-array
+  (:local-nicknames
+   (#:u #:golden-utils))
   (:use #:cl)
   (:shadow
    #:values)
   (:export
-   #:get-depth
+   #:get-width
    #:get-height
    #:get-depth
-   #:pattern-array
-   #:values))
+   #:make-pattern-array))
 
 (defpackage #:%syntex.synthesizers.wfc.overlapping-analysis
   (:local-nicknames
@@ -286,6 +291,7 @@
    (#:u #:golden-utils))
   (:use #:cl)
   (:export
+   #:get-patterns
    #:get-transformed-samples))
 
 (defpackage #:%syntex.synthesizers.wfc.tile-model-mapping
@@ -297,7 +303,8 @@
    (#:u #:golden-utils))
   (:use #:cl)
   (:export
-   #:mapping))
+   #:mapping
+   #:pattern-topology))
 
 (defpackage #:%syntex.synthesizers.wfc.tile-model
   (:local-nicknames
@@ -333,10 +340,32 @@
 (defpackage #:%syntex.synthesizers.wfc.graph-adjacent-model
   (:local-nicknames
    (#:pm #:%syntex.synthesizers.wfc.pattern-model)
+   (#:tfm #:%syntex.synthesizers.wfc.transform)
+   (#:tfm.tile #:%syntex.synthesizers.wfc.tile-transform)
    (#:tile #:%syntex.synthesizers.wfc.tile)
    (#:tm #:%syntex.synthesizers.wfc.tile-model)
    (#:tmm #:%syntex.synthesizers.wfc.tile-model-mapping)
    (#:top #:%syntex.synthesizers.wfc.topology)
+   (#:u #:golden-utils))
+  (:use #:cl)
+  (:export
+   #:model))
+
+(defpackage #:%syntex.synthesizers.wfc.overlapping-model
+  (:local-nicknames
+   (#:dir #:%syntex.synthesizers.wfc.direction)
+   (#:grid #:%syntex.synthesizers.wfc.topology-grid)
+   (#:oa #:%syntex.synthesizers.wfc.overlapping-analysis)
+   (#:pa #:%syntex.synthesizers.wfc.pattern-array)
+   (#:pm #:%syntex.synthesizers.wfc.pattern-model)
+   (#:per #:%syntex.synthesizers.wfc.periodicity)
+   (#:point #:%syntex.synthesizers.wfc.point)
+   (#:tfm.tile #:%syntex.synthesizers.wfc.tile-transform)
+   (#:tile #:%syntex.synthesizers.wfc.tile)
+   (#:tm #:%syntex.synthesizers.wfc.tile-model)
+   (#:tmm #:%syntex.synthesizers.wfc.tile-model-mapping)
+   (#:top #:%syntex.synthesizers.wfc.topology)
+   (#:top.dat #:%syntex.synthesizers.wfc.topology-data)
    (#:u #:golden-utils))
   (:use #:cl)
   (:export

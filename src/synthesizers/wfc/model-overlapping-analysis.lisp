@@ -29,7 +29,7 @@
                 (unless (top:contains-index-p topology index)
                   (return-from try-extract nil))
                 (setf (aref values tx ty tz) (top:get sample point-s))))))))
-    (make-instance 'pa:pattern-array :values values)))
+    (pa:make-pattern-array values)))
 
 (defun get-patterns (sample point periodicity pattern-indices pattern-arrays frequencies)
   (let* ((topology (top:topology sample))
