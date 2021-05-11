@@ -50,6 +50,10 @@
        (:file "pattern-model")
        (:file "wave")
 
+       ;; constraints
+       (:file "constraint-tile")
+       (:file "constraint-border")
+
        ;; models
        (:file "model-pattern-array")
        (:file "model-overlapping-analysis")
@@ -66,4 +70,7 @@
        (:file "tracker-frequency-set")
        (:file "tracker-entropy")
        (:file "tracker-array-priority-entropy")
+
+       ;; main
+       (:file "tile-propagator")
        ))))))

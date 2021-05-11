@@ -268,6 +268,19 @@
    #:make-wave
    #:wave))
 
+(defpackage #:%syntex.synthesizers.wfc.constraint-tile
+  (:local-nicknames
+   (#:u #:golden-utils))
+  (:use #:cl)
+  (:export
+   #:tile-constraint))
+
+(defpackage #:%syntex.synthesizers.wfc.constraint-border
+  (:local-nicknames
+   (#:u #:golden-utils))
+  (:use #:cl)
+  (:export))
+
 (defpackage #:%syntex.synthesizers.wfc.pattern-array
   (:local-nicknames
    (#:u #:golden-utils))
@@ -436,6 +449,12 @@
    #:count)
   (:export
    #:tracker))
+
+(defpackage #:%syntex.synthesizers.wfc.tile-propagator
+  (:local-nicknames
+   (#:u #:golden-utils))
+  (:use #:cl)
+  (:export))
 
 (uiop:define-package #:syntex
   (:use #:cl)
