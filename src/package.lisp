@@ -105,6 +105,16 @@
    #:direction-z
    #:get-direction
    #:invert-direction)
+  ;; grid
+  (:export
+   #:directions
+   #:grid
+   #:make-grid
+   #:make-grid-2d
+   #:make-grid-3d
+   #:make-masked-copy
+   #:make-resized-copy
+   #:periodicity)
   (:export
    #:contains-index-p
    #:data
@@ -123,25 +133,8 @@
    #:values
    #:width))
 
-(defpackage #:%syntex.synthesizers.wfc.topology-grid
-  (:local-nicknames
-   (#:point #:%syntex.synthesizers.wfc.point)
-   (#:top #:%syntex.synthesizers.wfc.topology)
-   (#:u #:golden-utils))
-  (:use #:cl)
-  (:export
-   #:directions
-   #:grid
-   #:make-grid
-   #:make-grid-2d
-   #:make-grid-3d
-   #:make-masked-copy
-   #:make-resized-copy
-   #:periodicity))
-
 (defpackage #:%syntex.synthesizers.wfc.topology-data
   (:local-nicknames
-   (#:grid #:%syntex.synthesizers.wfc.topology-grid)
    (#:point #:%syntex.synthesizers.wfc.point)
    (#:tfm #:%syntex.synthesizers.wfc.transform)
    (#:tile #:%syntex.synthesizers.wfc.tile)
@@ -271,7 +264,6 @@
 
 (defpackage #:%syntex.synthesizers.wfc.adjacent-model
   (:local-nicknames
-   (#:grid #:%syntex.synthesizers.wfc.topology-grid)
    (#:oa #:%syntex.synthesizers.wfc.overlapping-analysis)
    (#:pm #:%syntex.synthesizers.wfc.pattern-model)
    (#:point #:%syntex.synthesizers.wfc.point)
@@ -301,7 +293,6 @@
 
 (defpackage #:%syntex.synthesizers.wfc.overlapping-model
   (:local-nicknames
-   (#:grid #:%syntex.synthesizers.wfc.topology-grid)
    (#:oa #:%syntex.synthesizers.wfc.overlapping-analysis)
    (#:pa #:%syntex.synthesizers.wfc.pattern-array)
    (#:pm #:%syntex.synthesizers.wfc.pattern-model)

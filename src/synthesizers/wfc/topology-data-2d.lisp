@@ -6,9 +6,9 @@
 
 (defun make-data-2d (values &key topology periodic-p)
   (let ((topology (or topology
-                      (grid:make-grid-2d (array-dimension values 0)
-                                         (array-dimension values 1)
-                                         :periodic-p periodic-p))))
+                      (top:make-grid-2d (array-dimension values 0)
+                                        (array-dimension values 1)
+                                        :periodic-p periodic-p))))
     (make-instance 'data-2d :topology topology :values values)))
 
 (defmethod top:get ((data data-2d) (point point:point))

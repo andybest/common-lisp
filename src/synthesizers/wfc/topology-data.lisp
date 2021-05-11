@@ -120,9 +120,9 @@
                       (transform tfm:transform)
                       &optional tile-transform)
   (let ((topology (top:topology original)))
-    (unless (typep topology 'grid:grid)
+    (unless (typep topology 'top:grid)
       (error "Expected a grid-based topology."))
-    (let ((type (top:direction-type (grid:directions topology))))
+    (let ((type (top:direction-type (top:directions topology))))
       (case type
         ((:cartesian-2d :cartesian-3d)
          (transform/square original transform tile-transform))
@@ -180,7 +180,7 @@
   (let* ((original-topology (top:topology original))
          (width (top:width original-topology))
          (height (top:height original-topology)))
-    (unless (typep original-topology 'grid:grid)
+    (unless (typep original-topology 'top:grid)
       (error "Expected a grid-based topology."))
     (u:mvlet* ((x1 y1 (funcall map-coord-func 0 0))
                (x2 y2 (funcall map-coord-func (1- width) 0))
@@ -196,11 +196,11 @@
                (height (1+ (- max-y min-y)))
                (depth (top:depth original-topology))
                (mask (make-array (* width height depth) :element-type 'bit :initial-element 0))
-               (topology (grid:make-grid :directions (grid:directions original-topology)
-                                         :width width
-                                         :height height
-                                         :depth depth
-                                         :mask mask))
+               (topology (top:make-grid :directions (top:directions original-topology)
+                                        :width width
+                                        :height height
+                                        :depth depth
+                                        :mask mask))
                (values (make-array (list width height depth))))
       (dotimes (z depth)
         (dotimes (y height)
