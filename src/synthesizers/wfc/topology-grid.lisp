@@ -13,7 +13,7 @@
          (depth (top:depth instance))
          (index-count (* width height depth)))
     (setf (top:index-count instance) index-count
-          (top:directions-count instance) (dir:count (directions instance)))))
+          (top:directions-count instance) (dir:direction-count (directions instance)))))
 
 (defun make-grid (&key directions width height depth periodic-x periodic-y periodic-z mask)
   (make-instance 'grid
@@ -124,9 +124,9 @@
            (periodicity topology)
            (directions (directions topology))
            (out-point (point:copy point)))
-      (incf (point:x out-point) (aref (dir:x directions) direction))
-      (incf (point:y out-point) (aref (dir:y directions) direction))
-      (incf (point:z out-point) (aref (dir:z directions) direction))
+      (incf (point:x out-point) (aref (dir:direction-x directions) direction))
+      (incf (point:y out-point) (aref (dir:direction-y directions) direction))
+      (incf (point:z out-point) (aref (dir:direction-z directions) direction))
       (modify-coord x (top:width topology))
       (modify-coord y (top:height topology))
       (modify-coord z (top:depth topology))

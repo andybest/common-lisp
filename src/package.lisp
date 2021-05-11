@@ -70,23 +70,19 @@
    (#:point #:%syntex.synthesizers.wfc.point)
    (#:u #:golden-utils))
   (:use #:cl)
-  (:shadow
-   #:count
-   #:get
-   #:type)
   (:export
    #:+cartesian-2d+
    #:+cartesian-3d+
    #:+hexagonal-2d+
    #:+hexagonal-3d+
-   #:count
+   #:direction-count
    #:direction-set
-   #:get
-   #:invert
-   #:type
-   #:x
-   #:y
-   #:z))
+   #:get-direction
+   #:invert-direction
+   #:direction-type
+   #:direction-x
+   #:direction-y
+   #:direction-z))
 
 (defpackage #:%syntex.synthesizers.wfc.transform
   (:local-nicknames

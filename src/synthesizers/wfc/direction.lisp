@@ -4,7 +4,7 @@
 
 (deftype direction () '(member :x+ :x- :y+ :y- :z+ :z- :w+ :w-))
 
-(deftype type ()
+(deftype direction-type ()
   '(member :unknown :cartesian-2d :hexagonal-2d :cartesian-3d :hexagonal-3d))
 
 (defun axis->index (axis)
@@ -41,14 +41,14 @@
 
 (u:eval-always
   (defstruct (direction-set
-              (:conc-name nil)
+              (:conc-name direction-)
               (:predicate nil)
               (:copier nil))
     (x (u:make-b8-array 0) :type u:b8a)
     (y (u:make-b8-array 0) :type u:b8a)
     (z (u:make-b8-array 0) :type u:b8a)
     (count 0 :type u:ub8)
-    (type :unknown :type type)))
+    (type :unknown :type direction-type)))
 
 (u:define-constant +cartesian-2d+
     (let ((x (make-array 4 :element-type 'u:b8 :initial-contents '(1 -1 0 0)))
@@ -78,13 +78,13 @@
       (make-direction-set :x x :y y :z z :count 8 :type :hexagonal-3d))
   :test #'equalp)
 
-(defun invert (direction)
+(defun invert-direction (direction)
   (logxor direction 1))
 
-(defun get (direction-set point)
-  (dotimes (i (count direction-set))
-    (when (and (= (point:x point) (aref (x direction-set) i))
-               (= (point:y point) (aref (y direction-set) i))
-               (= (point:z point) (aref (z direction-set) i)))
-      (return-from get i)))
+(defun get-direction (direction-set point)
+  (dotimes (i (direction-count direction-set))
+    (when (and (= (point:x point) (aref (direction-x direction-set) i))
+               (= (point:y point) (aref (direction-y direction-set) i))
+               (= (point:z point) (aref (direction-z direction-set) i)))
+      (return-from get-direction i)))
   (error "No direction corresponds to ~a." point))

@@ -37,11 +37,11 @@
     (make-model topology-data)))
 
 (defun set-directions (model directions)
-  (let ((type (dir:type (directions model))))
+  (let ((type (dir:direction-type (directions model))))
     (unless (or (eq type :unknown)
-                (eq type (dir:type directions)))
+                (eq type (dir:direction-type directions)))
       (error "Cannot set directions to ~s; it has already been set to ~s."
-             (dir:type directions)
+             (dir:direction-type directions)
              type))
     (setf (directions model) directions)))
 
@@ -88,7 +88,7 @@
     (set-frequency model tile 1d0)))
 
 (defun require-directions (model)
-  (when (eq (dir:type (directions model)) :unknown)
+  (when (eq (dir:direction-type (directions model)) :unknown)
     (error "Directions must be set.")))
 
 (defgeneric add-adjacency/transform (model source target direction/point &optional tile-transform))
@@ -100,9 +100,9 @@
                                     &optional tile-transform)
   (require-directions model)
   (let* ((directions (directions model))
-         (x (aref (dir:x directions) direction))
-         (y (aref (dir:y directions) direction))
-         (z (aref (dir:z directions) direction))
+         (x (aref (dir:direction-x directions) direction))
+         (y (aref (dir:direction-y directions) direction))
+         (z (aref (dir:direction-z directions) direction))
          (point (point:point x y z)))
     (add-adjacency/transform model source target point tile-transform)))
 
@@ -112,7 +112,7 @@
                                     (point point:point)
                                     &optional tile-transform)
   (require-directions model)
-  (let ((direction-type (dir:type (directions model)))
+  (let ((direction-type (dir:direction-type (directions model)))
         (tile-transform (or tile-transform (tfm:make-tile-transform))))
     (map nil
          (lambda (transform)
@@ -130,7 +130,7 @@
 
 (defmethod add-adjacency ((model model) (source vector) (target vector) (point point:point))
   (require-directions model)
-  (let ((direction (dir:get (directions model) point)))
+  (let ((direction (dir:get-direction (directions model) point)))
     (add-adjacency model source target direction)))
 
 (defmethod add-adjacency ((model model)
@@ -148,12 +148,12 @@
 
 (defmethod add-adjacency ((model model) (source tile:tile) (target tile:tile) (point point:point))
   (require-directions model)
-  (let ((direction (dir:get (directions model) point)))
+  (let ((direction (dir:get-direction (directions model) point)))
     (add-adjacency model source target direction)))
 
 (defmethod add-adjacency ((model model) (source tile:tile) (target tile:tile) (direction integer))
   (let* ((propagator (propagator model))
-         (inverse-direction (dir:invert direction))
+         (inverse-direction (dir:invert-direction direction))
          (source-pattern (get-pattern model source))
          (target-pattern (get-pattern model target))
          (source-hash-set (aref (aref propagator source-pattern) direction))
@@ -182,7 +182,7 @@
     (unless (typep topology 'grid:grid)
       (error "Expected a grid-based topology."))
     (let* ((directions (grid:directions topology))
-           (direction-count (dir:count directions))
+           (direction-count (dir:direction-count directions))
            (width (top:width topology))
            (height (top:height topology))
            (depth (top:depth topology)))
