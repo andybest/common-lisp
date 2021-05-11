@@ -1,4 +1,4 @@
-(in-package #:%syntex.synthesizers.wfc.direction)
+(in-package #:%syntex.synthesizers.wfc.topology)
 
 (deftype axis () '(member :x :y :z :w))
 

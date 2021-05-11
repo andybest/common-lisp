@@ -13,7 +13,7 @@
          (depth (top:depth instance))
          (index-count (* width height depth)))
     (setf (top:index-count instance) index-count
-          (top:directions-count instance) (dir:direction-count (directions instance)))))
+          (top:directions-count instance) (top:direction-count (directions instance)))))
 
 (defun make-grid (&key directions width height depth periodic-x periodic-y periodic-z mask)
   (make-instance 'grid
@@ -25,7 +25,7 @@
                  :mask mask))
 
 (defun make-grid-2d (width height &key periodic-p)
-  (make-grid :directions dir:+cartesian-2d+
+  (make-grid :directions top:+cartesian-2d+
              :width width
              :height height
              :depth 1
@@ -33,7 +33,7 @@
              :periodic-y periodic-p))
 
 (defun make-grid-3d (width height depth &key periodic-p)
-  (make-grid :directions dir:+cartesian-3d+
+  (make-grid :directions top:+cartesian-3d+
              :width width
              :height height
              :depth depth
@@ -124,9 +124,9 @@
            (periodicity topology)
            (directions (directions topology))
            (out-point (point:copy point)))
-      (incf (point:x out-point) (aref (dir:direction-x directions) direction))
-      (incf (point:y out-point) (aref (dir:direction-y directions) direction))
-      (incf (point:z out-point) (aref (dir:direction-z directions) direction))
+      (incf (point:x out-point) (aref (top:direction-x directions) direction))
+      (incf (point:y out-point) (aref (top:direction-y directions) direction))
+      (incf (point:z out-point) (aref (top:direction-z directions) direction))
       (modify-coord x (top:width topology))
       (modify-coord y (top:height topology))
       (modify-coord z (top:depth topology))

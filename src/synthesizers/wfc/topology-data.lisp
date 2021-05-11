@@ -108,11 +108,11 @@
      (error "Unknown direction type: ~s." direction-type))))
 
 (defun transform-direction (directions direction transform)
-  (u:mvlet* ((x (aref (dir:direction-x directions) direction))
-             (y (aref (dir:direction-y directions) direction))
-             (z (aref (dir:direction-z directions) direction))
-             (rx ry (transform-vector (dir:direction-type directions) x y transform)))
-    (dir:get-direction directions (point:point rx ry z))))
+  (u:mvlet* ((x (aref (top:direction-x directions) direction))
+             (y (aref (top:direction-y directions) direction))
+             (z (aref (top:direction-z directions) direction))
+             (rx ry (transform-vector (top:direction-type directions) x y transform)))
+    (top:get-direction directions (point:point rx ry z))))
 
 (defgeneric transform (original transform &optional tile-transform))
 
@@ -122,7 +122,7 @@
   (let ((topology (top:topology original)))
     (unless (typep topology 'grid:grid)
       (error "Expected a grid-based topology."))
-    (let ((type (dir:direction-type (grid:directions topology))))
+    (let ((type (top:direction-type (grid:directions topology))))
       (case type
         ((:cartesian-2d :cartesian-3d)
          (transform/square original transform tile-transform))

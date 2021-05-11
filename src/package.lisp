@@ -77,11 +77,21 @@
    #:transform-tile
    #:transform-tiles))
 
-(defpackage #:%syntex.synthesizers.wfc.direction
+(defpackage #:%syntex.synthesizers.wfc.topology
   (:local-nicknames
    (#:point #:%syntex.synthesizers.wfc.point)
    (#:u #:golden-utils))
   (:use #:cl)
+  (:shadow
+   #:get
+   #:values)
+  ;; periodicity
+  (:export
+   #:make-periodicity
+   #:periodic-x
+   #:periodic-y
+   #:periodic-z)
+  ;; direction
   (:export
    #:+cartesian-2d+
    #:+cartesian-3d+
@@ -89,25 +99,12 @@
    #:+hexagonal-3d+
    #:direction-count
    #:direction-set
-   #:get-direction
-   #:invert-direction
    #:direction-type
    #:direction-x
    #:direction-y
-   #:direction-z))
-
-(defpackage #:%syntex.synthesizers.wfc.topology
-  (:local-nicknames
-   (#:u #:golden-utils))
-  (:use #:cl)
-  (:shadow
-   #:get
-   #:values)
-  (:export
-   #:periodic-x
-   #:periodic-y
-   #:periodic-z
-   #:make-periodicity)
+   #:direction-z
+   #:get-direction
+   #:invert-direction)
   (:export
    #:contains-index-p
    #:data
@@ -128,7 +125,6 @@
 
 (defpackage #:%syntex.synthesizers.wfc.topology-grid
   (:local-nicknames
-   (#:dir #:%syntex.synthesizers.wfc.direction)
    (#:point #:%syntex.synthesizers.wfc.point)
    (#:top #:%syntex.synthesizers.wfc.topology)
    (#:u #:golden-utils))
@@ -145,7 +141,6 @@
 
 (defpackage #:%syntex.synthesizers.wfc.topology-data
   (:local-nicknames
-   (#:dir #:%syntex.synthesizers.wfc.direction)
    (#:grid #:%syntex.synthesizers.wfc.topology-grid)
    (#:point #:%syntex.synthesizers.wfc.point)
    (#:tfm #:%syntex.synthesizers.wfc.transform)
@@ -276,7 +271,6 @@
 
 (defpackage #:%syntex.synthesizers.wfc.adjacent-model
   (:local-nicknames
-   (#:dir #:%syntex.synthesizers.wfc.direction)
    (#:grid #:%syntex.synthesizers.wfc.topology-grid)
    (#:oa #:%syntex.synthesizers.wfc.overlapping-analysis)
    (#:pm #:%syntex.synthesizers.wfc.pattern-model)
@@ -307,7 +301,6 @@
 
 (defpackage #:%syntex.synthesizers.wfc.overlapping-model
   (:local-nicknames
-   (#:dir #:%syntex.synthesizers.wfc.direction)
    (#:grid #:%syntex.synthesizers.wfc.topology-grid)
    (#:oa #:%syntex.synthesizers.wfc.overlapping-analysis)
    (#:pa #:%syntex.synthesizers.wfc.pattern-array)
