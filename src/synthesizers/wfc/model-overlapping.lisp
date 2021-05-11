@@ -1,6 +1,6 @@
 (in-package #:%syntex.synthesizers.wfc.overlapping-model)
 
-(defclass model (tm:model)
+(defclass model (mod:tile-model)
   ((%nx :accessor nx
         :initarg :nx)
    (%ny :accessor ny
@@ -20,7 +20,7 @@
    (%tiles->patterns :reader tiles->patterns
                      :initform (u:dict #'eq))))
 
-(defmethod tm:tiles ((object model))
+(defmethod mod:tiles ((object model))
   (u:hash-keys (tiles->patterns object)))
 
 (defun make-model (sample n periodic-p symmetries)
@@ -56,13 +56,13 @@
       (setf (nz model) 1))
     (map nil
          (lambda (x)
-           (oa:get-patterns x
-                            (base:make-point (nx model) (ny model) (nz model))
-                            (top:periodicity topology)
-                            (pattern-indices model)
-                            pattern-arrays
-                            (frequencies model)))
-         (oa:get-transformed-samples sample tile-transform))
+           (mod:get-oa-patterns x
+                                (base:make-point (nx model) (ny model) (nz model))
+                                (top:periodicity topology)
+                                (pattern-indices model)
+                                pattern-arrays
+                                (frequencies model)))
+         (mod:get-transformed-samples sample tile-transform))
     (let* ((directions (top:directions topology))
            (direction-count (top:direction-count directions)))
       (dotimes (p (length pattern-arrays))
@@ -85,11 +85,11 @@
 
 (defun agrees-p (a b dx dy dz)
   (let ((x-min (max 0 dx))
-        (x-max (if (minusp dx) (+ dx (pa:get-width b)) (pa:get-width a)))
+        (x-max (if (minusp dx) (+ dx (mod:get-width b)) (mod:get-width a)))
         (y-min (max 0 dy))
-        (y-max (if (minusp dy) (+ dy (pa:get-height b)) (pa:get-height a)))
+        (y-max (if (minusp dy) (+ dy (mod:get-height b)) (mod:get-height a)))
         (z-min (max 0 dz))
-        (z-max (if (minusp dz) (+ dz (pa:get-depth b)) (pa:get-depth a))))
+        (z-max (if (minusp dz) (+ dz (mod:get-depth b)) (mod:get-depth a))))
     (loop :for x :from x-min :below x-max
           :do (loop :for y :from y-min :below y-max
                     :do (loop :for z :from z-min :below z-max
@@ -183,7 +183,7 @@
     (let ((pattern-mask (top:make-data-by-coords pattern-topology #'get-mask)))
       (top:make-masked-copy pattern-topology pattern-mask))))
 
-(defmethod tm:get-mapping ((model model) (topology top:grid))
+(defmethod mod:get-mapping ((model model) (topology top:grid))
   (let* ((frequencies (frequencies model))
          (pattern-model (make-instance 'pm:pattern-model
                                        :propagator (propagator model)
@@ -228,7 +228,7 @@
                (u:href p->tbo 0) (patterns->tiles model)))))
     (when (top:mask topology)
       (setf pattern-topology (make-masked-pattern-topology model topology pattern-topology)))
-    (make-instance 'tmm:mapping
+    (make-instance 'mod:tile-model-mapping
                    :pattern-topology pattern-topology
                    :pattern-model pattern-model
                    :patterns->tiles-by-offset p->tbo
@@ -236,13 +236,13 @@
                    :tile-coord->pattern-coord-index/offset tc->pcio
                    :pattern-coord->tile-coord-index/offset pc->tcio)))
 
-(defmethod tm:multiply-frequency ((model model) (tile base:tile) (multiplier float))
+(defmethod mod:multiply-frequency ((model model) (tile base:tile) (multiplier float))
   (let ((pattern-arrays (pattern-arrays model))
         (frequencies (frequencies model)))
     (dotimes (p (length pattern-arrays))
       (let ((pattern-array (aref pattern-arrays p)))
-        (dotimes (x (pa:get-width pattern-array))
-          (dotimes (y (pa:get-height pattern-array))
-            (dotimes (z (pa:get-depth pattern-array))
+        (dotimes (x (mod:get-width pattern-array))
+          (dotimes (y (mod:get-height pattern-array))
+            (dotimes (z (mod:get-depth pattern-array))
               (when (eq (aref pattern-array x y z) tile)
                 (setf (aref frequencies p) (* (aref frequencies p) multiplier))))))))))

@@ -185,88 +185,41 @@
   (:use #:cl)
   (:export))
 
-(defpackage #:%syntex.synthesizers.wfc.pattern-array
+(defpackage #:%syntex.synthesizers.wfc.model
   (:local-nicknames
+   (#:base #:%syntex.synthesizers.wfc.base)
+   (#:pm #:%syntex.synthesizers.wfc.pattern-model)
+   (#:tfm #:%syntex.synthesizers.wfc.transform)
+   (#:top #:%syntex.synthesizers.wfc.topology)
    (#:u #:golden-utils))
   (:use #:cl)
-  (:shadow
-   #:values)
+  ;; pattern-array
   (:export
    #:get-width
    #:get-height
    #:get-depth
-   #:make-pattern-array))
-
-(defpackage #:%syntex.synthesizers.wfc.overlapping-analysis
-  (:local-nicknames
-   (#:base #:%syntex.synthesizers.wfc.base)
-   (#:pa #:%syntex.synthesizers.wfc.pattern-array)
-   (#:tfm #:%syntex.synthesizers.wfc.transform)
-   (#:top #:%syntex.synthesizers.wfc.topology)
-   (#:u #:golden-utils))
-  (:use #:cl)
+   #:make-pattern-array)
+  ;; overlapping-analysis
   (:export
-   #:get-patterns
-   #:get-transformed-samples))
-
-(defpackage #:%syntex.synthesizers.wfc.tile-model-mapping
-  (:local-nicknames
-   (#:base #:%syntex.synthesizers.wfc.base)
-   (#:top #:%syntex.synthesizers.wfc.topology)
-   (#:u #:golden-utils))
-  (:use #:cl)
+   #:get-oa-patterns
+   #:get-transformed-samples)
+  ;; tile-model-mapping
   (:export
-   #:mapping
-   #:pattern-topology))
-
-(defpackage #:%syntex.synthesizers.wfc.tile-model
-  (:local-nicknames
-   (#:base #:%syntex.synthesizers.wfc.base)
-   (#:tfm #:%syntex.synthesizers.wfc.transform)
-   (#:u #:golden-utils))
-  (:use #:cl)
+   #:pattern-topology
+   #:tile-model-mapping)
+  ;; tile-model
   (:export
    #:get-mapping
-   #:model
+   #:tile-model
    #:multiply-frequency
    #:tiles))
-
-(defpackage #:%syntex.synthesizers.wfc.adjacent-model
-  (:local-nicknames
-   (#:base #:%syntex.synthesizers.wfc.base)
-   (#:oa #:%syntex.synthesizers.wfc.overlapping-analysis)
-   (#:pm #:%syntex.synthesizers.wfc.pattern-model)
-   (#:tfm #:%syntex.synthesizers.wfc.transform)
-   (#:tm #:%syntex.synthesizers.wfc.tile-model)
-   (#:tmm #:%syntex.synthesizers.wfc.tile-model-mapping)
-   (#:top #:%syntex.synthesizers.wfc.topology)
-   (#:u #:golden-utils))
-  (:use #:cl)
-  (:export
-   #:model))
-
-(defpackage #:%syntex.synthesizers.wfc.graph-adjacent-model
-  (:local-nicknames
-   (#:base #:%syntex.synthesizers.wfc.base)
-   (#:pm #:%syntex.synthesizers.wfc.pattern-model)
-   (#:tfm #:%syntex.synthesizers.wfc.transform)
-   (#:tm #:%syntex.synthesizers.wfc.tile-model)
-   (#:tmm #:%syntex.synthesizers.wfc.tile-model-mapping)
-   (#:top #:%syntex.synthesizers.wfc.topology)
-   (#:u #:golden-utils))
-  (:use #:cl)
-  (:export
-   #:model))
 
 (defpackage #:%syntex.synthesizers.wfc.overlapping-model
   (:local-nicknames
    (#:base #:%syntex.synthesizers.wfc.base)
-   (#:oa #:%syntex.synthesizers.wfc.overlapping-analysis)
-   (#:pa #:%syntex.synthesizers.wfc.pattern-array)
+   (#:mod #:%syntex.synthesizers.wfc.model)
    (#:pm #:%syntex.synthesizers.wfc.pattern-model)
    (#:tfm #:%syntex.synthesizers.wfc.transform)
-   (#:tm #:%syntex.synthesizers.wfc.tile-model)
-   (#:tmm #:%syntex.synthesizers.wfc.tile-model-mapping)
    (#:top #:%syntex.synthesizers.wfc.topology)
    (#:u #:golden-utils))
   (:use #:cl)

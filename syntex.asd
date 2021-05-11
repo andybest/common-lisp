@@ -57,12 +57,12 @@
        (:file "constraint-border")
 
        ;; models
-       (:file "model-pattern-array")
-       (:file "model-overlapping-analysis")
-       (:file "model-tile-mapping")
-       (:file "model-tile")
-       (:file "model-adjacent")
-       (:file "model-graph-adjacent")
+       (:file "model/pattern-array")
+       (:file "model/overlapping-analysis")
+       (:file "model/tile-model-mapping")
+       (:file "model/tile-model")
+       (:file "model/adjacent-model")
+       (:file "model/graph-adjacent-model")
        (:file "model-overlapping")
 
        ;; trackers

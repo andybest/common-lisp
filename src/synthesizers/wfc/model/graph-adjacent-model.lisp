@@ -1,6 +1,6 @@
-(in-package #:%syntex.synthesizers.wfc.graph-adjacent-model)
+(in-package #:%syntex.synthesizers.wfc.model)
 
-(defclass model (tm:model)
+(defclass graph-adjacent-model (tile-model)
   ((%directions-count :reader directions-count
                       :initarg :directions-count)
    (%edge-label-count :reader edge-label-count
@@ -14,15 +14,15 @@
    (%edge-label-info :reader edge-label-info
                      :initform (make-array 0 :fill-pointer 0 :adjustable t))))
 
-(defmethod tm:tiles ((object model))
+(defmethod tiles ((object graph-adjacent-model))
   (u:hash-keys (tiles->patterns object)))
 
-(defun make-model (directions-count edge-label-count)
-  (make-instance 'model
+(defun make-graph-adjacent-model (directions-count edge-label-count)
+  (make-instance 'graph-adjacent-model
                  :directions-count directions-count
                  :edge-label-count edge-label-count))
 
-(defmethod tm:get-mapping ((model model) (topology top:topology))
+(defmethod get-mapping ((model graph-adjacent-model) (topology top:topology))
   (let ((frequencies (frequencies model)))
     (when (zerop (reduce #'+ frequencies))
       (error "No tiles have assigned frequencies."))
@@ -38,18 +38,18 @@
               (u:href tbo v) k))
       (setf (u:href t->pbo 0) pbo
             (u:href p->tbo 0) tbo)
-      (make-instance 'tmm:mapping
+      (make-instance 'tile-model-mapping
                      :pattern-topology topology
                      :pattern-model pattern-model
                      :patterns->tiles-by-offset t->pbo
                      :tiles->patterns-by-offset p->tbo
                      :tile-coord->pattern-coord-index/offset nil))))
 
-(defmethod tm:multiply-frequency ((model model) (tile base:tile) (multiplier float))
+(defmethod multiply-frequency ((model graph-adjacent-model) (tile base:tile) (multiplier float))
   (let ((pattern (u:href (tiles->patterns model) tile)))
     (incf (aref (frequencies model) pattern) multiplier)))
 
-(defun get-pattern (model tile)
+(defmethod get-pattern ((model graph-adjacent-model) (tile base:tile))
   (let* ((edge-label-count (edge-label-count model))
          (tiles->patterns (tiles->patterns model))
          (propagator (propagator model))
@@ -64,36 +64,18 @@
             (setf (aref (aref propagator pattern) i) (u:dict #'eql)))
           pattern))))
 
-(defun set-frequency/transforms (model tile frequency transforms)
-  (let ((transformed-tiles (tfm:transform-all transforms tile))
-        (frequencies (frequencies model)))
-    (map nil
-         (lambda (x)
-           (let ((pattern (get-pattern model x)))
-             (setf (aref frequencies pattern) 0d0)))
-         transformed-tiles)
-    (let ((incremental-frequency (/ frequency (length transformed-tiles))))
-      (map nil
-           (lambda (x)
-             (let ((pattern (get-pattern model x)))
-               (incf (aref frequencies pattern) incremental-frequency)))
-           transformed-tiles))))
+(defmethod set-frequency ((model graph-adjacent-model)
+                          (tile base:tile)
+                          (frequency float)
+                          &optional tile-transform)
+  (declare (ignore tile-transform))
+  (%set-frequency model tile frequency))
 
-(defun set-frequency (model tile frequency)
-  (let ((pattern (get-pattern model tile)))
-    (setf (aref (frequencies model) pattern) frequency)))
-
-(defun set-uniform-frequency (model)
-  (dolist (tile (tm:tiles model))
-    (set-frequency model tile 1d0)))
-
-(defgeneric add-adjacency/transform (model source target direction tile-transform))
-
-(defmethod add-adjacency/transform ((model model)
+(defmethod add-adjacency/transform ((model graph-adjacent-model)
                                     (source vector)
                                     (target vector)
                                     (direction integer)
-                                    (tile-transform tfm:tile-transform))
+                                    &optional tile-transform)
   (map nil
        (lambda (x)
          (map nil
@@ -102,11 +84,11 @@
               target))
        source))
 
-(defmethod add-adjacency/transform ((model model)
+(defmethod add-adjacency/transform ((model graph-adjacent-model)
                                     (source base:tile)
                                     (target base:tile)
                                     (direction integer)
-                                    (tile-transform tfm:tile-transform))
+                                    &optional tile-transform)
   (let ((edge-label-info (edge-label-info model)))
     (when (zerop (length edge-label-info))
       (error "Requires edge label info configured."))
@@ -134,11 +116,12 @@
               (u:mvlet* ((transform (tfm:invert tfm))
                          (rs success-p (tfm:transform-tile tile-transform source transform)))
                 (when success-p
-                  (add-adjacency model target i))))))))))
+                  (add-adjacency model target rs i))))))))))
 
-(defgeneric add-adjacency (model source target edge-label))
-
-(defmethod add-adjacency ((model model) (source vector) (target vector) (edge-label integer))
+(defmethod add-adjacency ((model graph-adjacent-model)
+                          (source vector)
+                          (target vector)
+                          (edge-label integer))
   (map nil
        (lambda (x)
          (map nil
@@ -147,14 +130,17 @@
               target))
        source))
 
-(defmethod add-adjacency ((model model) (source base:tile) (target base:tile) (edge-label integer))
+(defmethod add-adjacency ((model graph-adjacent-model)
+                          (source base:tile)
+                          (target base:tile)
+                          (edge-label integer))
   (let* ((propagator (propagator model))
          (source (get-pattern model source))
          (target (get-pattern model target))
          (hash-set (aref (aref propagator source) edge-label)))
     (setf (u:href hash-set target) target)))
 
-(defun adjacent-p (model source target edge-label)
+(defmethod adjacent-p ((model graph-adjacent-model) source target edge-label)
   (let* ((propagator (propagator model))
          (source-pattern (get-pattern model source))
          (target-pattern (get-pattern model target))

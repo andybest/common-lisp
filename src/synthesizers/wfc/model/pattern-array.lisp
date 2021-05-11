@@ -1,4 +1,4 @@
-(in-package #:%syntex.synthesizers.wfc.pattern-array)
+(in-package #:%syntex.synthesizers.wfc.model)
 
 (defun make-pattern-array (values)
   (u:copy-array values :element-type 'fixnum))

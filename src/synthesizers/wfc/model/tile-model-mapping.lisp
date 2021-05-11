@@ -1,6 +1,6 @@
-(in-package #:%syntex.synthesizers.wfc.tile-model-mapping)
+(in-package #:%syntex.synthesizers.wfc.model)
 
-(defclass mapping ()
+(defclass tile-model-mapping ()
   ((%empty-pattern-set :reader empty-pattern-set
                        :initform (u:dict #'eql))
    (%pattern-topology :reader pattern-topology
@@ -50,11 +50,11 @@
 
 (defgeneric get-patterns (mapping tile/tile-set offset))
 
-(defmethod get-patterns ((mapping mapping) (tile base:tile) (offset integer))
+(defmethod get-patterns ((mapping tile-model-mapping) (tile base:tile) (offset integer))
   (let ((pbo (tiles->patterns-by-offset mapping)))
     (%get-patterns (u:href pbo offset) tile)))
 
-(defmethod get-patterns ((mapping mapping)
+(defmethod get-patterns ((mapping tile-model-mapping)
                          (tile-set base:tile-propagator-tile-set)
                          (offset integer))
   (or (u:href (base:offset->patterns tile-set) offset)

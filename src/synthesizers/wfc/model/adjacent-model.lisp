@@ -1,6 +1,6 @@
-(in-package #:%syntex.synthesizers.wfc.adjacent-model)
+(in-package #:%syntex.synthesizers.wfc.model)
 
-(defclass model (tm:model)
+(defclass adjacent-model (tile-model)
   ((%directions :accessor directions)
    (%tiles->patterns :reader tiles->patterns
                      :initform (u:dict #'eq))
@@ -14,27 +14,27 @@
    (%target :accessor target)
    (%direction :accessor direction)))
 
-(defmethod tm:tiles ((object model))
+(defmethod tiles ((object adjacent-model))
   (u:hash-keys (tiles->patterns object)))
 
-(defgeneric make-model (input))
+(defgeneric make-adjacent-model (input))
 
-(defmethod make-model ((directions top:direction-set))
-  (let ((model (make-instance 'model)))
+(defmethod make-adjacent-model ((directions top:direction-set))
+  (let ((model (make-instance 'adjacent-model)))
     (set-directions model directions)
     model))
 
-(defmethod make-model ((sample top:data/tiles))
-  (let ((model (make-instance 'model)))
+(defmethod make-adjacent-model ((sample top:data/tiles))
+  (let ((model (make-instance 'adjacent-model)))
     (%add-sample model sample)
     model))
 
-(defmethod make-model ((sample top:data))
-  (make-model (top:to-tiles sample)))
+(defmethod make-adjacent-model ((sample top:data))
+  (make-adjacent-model (top:to-tiles sample)))
 
 (defun from-2d-array (sample &optional periodic-p)
   (let ((topology-data (top:make-data-2d sample :periodic-p periodic-p)))
-    (make-model topology-data)))
+    (make-adjacent-model topology-data)))
 
 (defun set-directions (model directions)
   (let ((type (top:direction-type (directions model))))
@@ -45,7 +45,7 @@
              type))
     (setf (directions model) directions)))
 
-(defun get-pattern (model tile)
+(defmethod get-pattern ((model adjacent-model) (tile base:tile))
   (let* ((direction-count (length (directions model)))
          (tiles->patterns (tiles->patterns model))
          (propagator (propagator model))
@@ -60,7 +60,7 @@
             (setf (aref (aref propagator pattern) i) (u:dict #'eql)))
           pattern))))
 
-(defun %set-frequency/transforms (model tile frequency tile-transform)
+(defun set-frequency/transform (model tile frequency tile-transform)
   (let ((transformed-tiles (tfm:transform-all tile-transform tile))
         (frequencies (frequencies model)))
     (map nil
@@ -75,16 +75,20 @@
                (incf (aref frequencies pattern) incremental-frequency)))
            transformed-tiles))))
 
-(defun set-frequency (model tile frequency &optional transforms)
-  (flet ((%set-frequency (model tile frequency)
-           (let ((pattern (get-pattern model tile)))
-             (setf (aref (frequencies model) pattern) frequency))))
-    (if transforms
-        (%set-frequency/transforms model tile frequency transforms)
-        (%set-frequency model tile frequency))))
+(defun %set-frequency (model tile frequency)
+  (let ((pattern (get-pattern model tile)))
+    (setf (aref (frequencies model) pattern) frequency)))
+
+(defmethod set-frequency ((model adjacent-model)
+                          (tile base:tile)
+                          (frequency float)
+                          &optional tile-transform)
+  (if tile-transform
+      (set-frequency/transform model tile frequency tile-transform)
+      (%set-frequency model tile frequency)))
 
 (defun set-uniform-frequency (model)
-  (dolist (tile (tm:tiles model))
+  (dolist (tile (tiles model))
     (set-frequency model tile 1d0)))
 
 (defun require-directions (model)
@@ -93,7 +97,7 @@
 
 (defgeneric add-adjacency/transform (model source target direction/point &optional tile-transform))
 
-(defmethod add-adjacency/transform ((model model)
+(defmethod add-adjacency/transform ((model adjacent-model)
                                     (source vector)
                                     (target vector)
                                     (direction integer)
@@ -106,7 +110,7 @@
          (point (base:make-point x y z)))
     (add-adjacency/transform model source target point tile-transform)))
 
-(defmethod add-adjacency/transform ((model model)
+(defmethod add-adjacency/transform ((model adjacent-model)
                                     (source vector)
                                     (target vector)
                                     (point base:point)
@@ -128,12 +132,12 @@
 
 (defgeneric add-adjacency (model source target direction/point))
 
-(defmethod add-adjacency ((model model) (source vector) (target vector) (point base:point))
+(defmethod add-adjacency ((model adjacent-model) (source vector) (target vector) (point base:point))
   (require-directions model)
   (let ((direction (top:get-direction (directions model) point)))
     (add-adjacency model source target direction)))
 
-(defmethod add-adjacency ((model model)
+(defmethod add-adjacency ((model adjacent-model)
                           (source vector)
                           (target vector)
                           (direction integer))
@@ -146,12 +150,18 @@
               target))
        source))
 
-(defmethod add-adjacency ((model model) (source base:tile) (target base:tile) (point base:point))
+(defmethod add-adjacency ((model adjacent-model)
+                          (source base:tile)
+                          (target base:tile)
+                          (point base:point))
   (require-directions model)
   (let ((direction (top:get-direction (directions model) point)))
     (add-adjacency model source target direction)))
 
-(defmethod add-adjacency ((model model) (source base:tile) (target base:tile) (direction integer))
+(defmethod add-adjacency ((model adjacent-model)
+                          (source base:tile)
+                          (target base:tile)
+                          (direction integer))
   (let* ((propagator (propagator model))
          (inverse-direction (top:invert-direction direction))
          (source-pattern (get-pattern model source))
@@ -167,7 +177,9 @@
                  (target adjacency)
                  (direction adjacency)))
 
-(defun adjacent-p (model source target direction)
+(defgeneric adjacent-p (model source target direction))
+
+(defmethod adjacent-p ((model adjacent-model) source target direction)
   (let* ((propagator (propagator model))
          (source-pattern (get-pattern model source))
          (target-pattern (get-pattern model target))
@@ -201,13 +213,13 @@
                       (vector-push-extend pattern2
                                           (aref (aref propagator pattern) d)))))))))))))
 
-(defun add-sample (model sample &optional tile-transform)
+(defmethod add-sample ((model adjacent-model) sample &optional tile-transform)
   (map nil
        (lambda (x)
          (%add-sample model x))
-       (oa:get-transformed-samples sample tile-transform)))
+       (get-transformed-samples sample tile-transform)))
 
-(defmethod tm:get-mapping ((model model) (topology top:grid))
+(defmethod get-mapping ((model adjacent-model) (topology top:grid))
   (let ((frequencies (frequencies model)))
     (require-directions model)
     (set-directions model (top:directions topology))
@@ -225,13 +237,13 @@
               (u:href tbo v) k))
       (setf (u:href t->pbo 0) pbo
             (u:href p->tbo 0) tbo)
-      (make-instance 'tmm:mapping
+      (make-instance 'tile-model-mapping
                      :pattern-topology topology
                      :pattern-model pattern-model
                      :patterns->tiles-by-offset p->tbo
                      :tiles->patterns-by-offset t->pbo
                      :tile-coord->pattern-coord-index/offset nil))))
 
-(defmethod tm:multiply-frequency ((model model) (tile base:tile) (multiplier float))
+(defmethod multiply-frequency ((model adjacent-model) (tile base:tile) (multiplier float))
   (let ((pattern (u:href (tiles->patterns model) tile)))
     (incf (aref (frequencies model) pattern) multiplier)))

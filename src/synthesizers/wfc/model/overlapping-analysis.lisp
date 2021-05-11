@@ -1,4 +1,4 @@
-(in-package #:%syntex.synthesizers.wfc.overlapping-analysis)
+(in-package #:%syntex.synthesizers.wfc.model)
 
 (defun get-transformed-samples (sample &optional tile-transform)
   (let ((tile-transform (or tile-transform (tfm:make-tile-transform)))
@@ -29,9 +29,9 @@
                 (unless (top:contains-index-p topology index)
                   (return-from try-extract nil))
                 (setf (aref values tx ty tz) (top:get sample point-s))))))))
-    (pa:make-pattern-array values)))
+    (make-pattern-array values)))
 
-(defun get-patterns (sample point periodicity pattern-indices pattern-arrays frequencies)
+(defun get-oa-patterns (sample point periodicity pattern-indices pattern-arrays frequencies)
   (let* ((topology (top:topology sample))
          (width (top:width topology))
          (height (top:height topology))
