@@ -5,7 +5,7 @@
         (result (make-array 0 :fill-pointer 0 :adjustable t)))
     (map nil
          (lambda (x)
-           (vector-push-extend (top.dat:transform sample x tile-transform) result))
+           (vector-push-extend (top:transform sample x tile-transform) result))
          (tfm:group tile-transform))
     result))
 

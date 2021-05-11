@@ -30,10 +30,10 @@
     model))
 
 (defmethod make-model ((sample top:data))
-  (make-model (top.dat:to-tiles sample)))
+  (make-model (top:to-tiles sample)))
 
 (defun from-2d-array (sample &optional periodic-p)
-  (let ((topology-data (top.dat:make-data-2d sample :periodic-p periodic-p)))
+  (let ((topology-data (top:make-data-2d sample :periodic-p periodic-p)))
     (make-model topology-data)))
 
 (defun set-directions (model directions)
@@ -116,10 +116,10 @@
         (tile-transform (or tile-transform (tfm:make-tile-transform))))
     (map nil
          (lambda (transform)
-           (u:mvlet ((x y (top.dat:transform-vector direction-type
-                                                    (point:x point)
-                                                    (point:y point)
-                                                    transform)))
+           (u:mvlet ((x y (top:transform-vector direction-type
+                                                (point:x point)
+                                                (point:y point)
+                                                transform)))
              (add-adjacency/transform model
                                       (tfm:transform-tiles tile-transform source transform)
                                       (tfm:transform-tiles tile-transform target transform)

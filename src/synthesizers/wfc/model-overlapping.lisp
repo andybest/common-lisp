@@ -24,8 +24,7 @@
   (u:hash-keys (tiles->patterns object)))
 
 (defun make-model (sample n periodic-p symmetries)
-  (let ((topology-data (top.dat:to-tiles
-                        (top.dat:make-data-2d sample :periodic-p periodic-p)))
+  (let ((topology-data (top:to-tiles (top:make-data-2d sample :periodic-p periodic-p)))
         (symmetries>1 (> symmetries 1)))
     (make-model/symmetry topology-data
                          n
@@ -140,7 +139,7 @@
                (setf (aref pc->tciov px py pz) (make-array 0 :fill-pointer 0 :adjustable t)))
              (vector-push-extend (list coords index offset) (aref pc->tciov px py pz))))
          (top:get-indices topology))
-    (top.dat:make-data-3d pc->tciov :topology pattern-topology)))
+    (top:make-data-3d pc->tciov :topology pattern-topology)))
 
 (defun make-tc->pcio (model topology pattern-topology)
   (flet ((%map (point)
@@ -150,7 +149,7 @@
                       (new-point (point:point px py pz))
                       (pattern-index (top:get-index pattern-topology new-point)))
              (list new-point pattern-index (combine-offsets model ox oy oz)))))
-    (top.dat:make-data-by-coords topology #'%map)))
+    (top:make-data-by-coords topology #'%map)))
 
 (defun get-topology-mask (topology x y z)
   (let ((width (top:width topology))
@@ -181,7 +180,7 @@
                                           (+ (point:y point) oy)
                                           (+ (point:z point) oz))
                    (return-from get-mask t)))))))
-    (let ((pattern-mask (top.dat:make-data-by-coords pattern-topology #'get-mask)))
+    (let ((pattern-mask (top:make-data-by-coords pattern-topology #'get-mask)))
       (top:make-masked-copy pattern-topology pattern-mask))))
 
 (defmethod tm:get-mapping ((model model) (topology top:grid))

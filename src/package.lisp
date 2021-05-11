@@ -80,23 +80,21 @@
 (defpackage #:%syntex.synthesizers.wfc.topology
   (:local-nicknames
    (#:point #:%syntex.synthesizers.wfc.point)
+   (#:tfm #:%syntex.synthesizers.wfc.transform)
+   (#:tile #:%syntex.synthesizers.wfc.tile)
    (#:u #:golden-utils))
   (:use #:cl)
   (:shadow
    #:get
+   #:map
    #:values)
   ;; periodicity
   (:export
-   #:make-periodicity
    #:periodic-x
    #:periodic-y
    #:periodic-z)
   ;; direction
   (:export
-   #:+cartesian-2d+
-   #:+cartesian-3d+
-   #:+hexagonal-2d+
-   #:+hexagonal-3d+
    #:direction-count
    #:direction-set
    #:direction-type
@@ -105,51 +103,30 @@
    #:direction-z
    #:get-direction
    #:invert-direction)
-  ;; grid
-  (:export
-   #:directions
-   #:grid
-   #:make-grid
-   #:make-grid-2d
-   #:make-grid-3d
-   #:make-masked-copy
-   #:make-resized-copy
-   #:periodicity)
+  ;; topology
   (:export
    #:contains-index-p
    #:data
    #:data/tiles
    #:depth
-   #:directions-count
    #:get-coords
    #:get
    #:get-index
    #:get-indices
    #:height
-   #:index-count
    #:mask
    #:topology
    #:try-move
-   #:values
-   #:width))
-
-(defpackage #:%syntex.synthesizers.wfc.topology-data
-  (:local-nicknames
-   (#:point #:%syntex.synthesizers.wfc.point)
-   (#:tfm #:%syntex.synthesizers.wfc.transform)
-   (#:tile #:%syntex.synthesizers.wfc.tile)
-   (#:top #:%syntex.synthesizers.wfc.topology)
-   (#:u #:golden-utils))
-  (:use #:cl)
-  (:shadow
-   #:map)
+   #:width)
+  ;; grid
   (:export
-   #:data-1d
-   #:data-1d/tiles
-   #:data-2d
-   #:data-2d/tiles
-   #:data-3d
-   #:data-3d/tiles
+   #:directions
+   #:grid
+   #:make-masked-copy
+   #:make-resized-copy
+   #:periodicity)
+  ;; data
+  (:export
    #:make-data-1d
    #:make-data-2d
    #:make-data-3d
@@ -231,7 +208,6 @@
    (#:point #:%syntex.synthesizers.wfc.point)
    (#:tfm #:%syntex.synthesizers.wfc.transform)
    (#:top #:%syntex.synthesizers.wfc.topology)
-   (#:top.dat #:%syntex.synthesizers.wfc.topology-data)
    (#:u #:golden-utils))
   (:use #:cl)
   (:export
@@ -272,7 +248,6 @@
    (#:tm #:%syntex.synthesizers.wfc.tile-model)
    (#:tmm #:%syntex.synthesizers.wfc.tile-model-mapping)
    (#:top #:%syntex.synthesizers.wfc.topology)
-   (#:top.dat #:%syntex.synthesizers.wfc.topology-data)
    (#:u #:golden-utils))
   (:use #:cl)
   (:export
@@ -302,7 +277,6 @@
    (#:tm #:%syntex.synthesizers.wfc.tile-model)
    (#:tmm #:%syntex.synthesizers.wfc.tile-model-mapping)
    (#:top #:%syntex.synthesizers.wfc.topology)
-   (#:top.dat #:%syntex.synthesizers.wfc.topology-data)
    (#:u #:golden-utils))
   (:use #:cl)
   (:export

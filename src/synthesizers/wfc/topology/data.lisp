@@ -1,4 +1,4 @@
-(in-package #:%syntex.synthesizers.wfc.topology-data)
+(in-package #:%syntex.synthesizers.wfc.topology)
 
 (defclass data/tiles () ())
 
@@ -12,58 +12,58 @@
      (make-instance 'data-3d :topology topology :values values))))
 
 (defun make-data-by-coords (topology func)
-  (let* ((width (top:width topology))
-         (height (top:height topology))
-         (depth (top:depth topology))
+  (let* ((width (width topology))
+         (height (height topology))
+         (depth (depth topology))
          (values (make-array (list width height depth))))
     (dotimes (z depth)
       (dotimes (y height)
         (dotimes (x width)
           (let* ((point (point:point x y z))
-                 (index (top:get-index topology point)))
-            (when (top:contains-index-p topology index)
+                 (index (get-index topology point)))
+            (when (contains-index-p topology index)
               (setf (aref values x y z) (funcall func point)))))))
     (make-data topology values)))
 
 (defun make-data-by-index (topology func)
-  (let ((values (make-array (top:index-count topology))))
+  (let ((values (make-array (index-count topology))))
     (cl:map nil
             (lambda (x)
               (setf (aref values x) (funcall func x)))
-            (top:get-indices topology))
+            (get-indices topology))
     (make-data topology values)))
 
 (defun to-2d-array (data)
-  (let* ((topology (top:topology data))
-         (width (top:width topology))
-         (height (top:height topology))
+  (let* ((topology (topology data))
+         (width (width topology))
+         (height (height topology))
          (values (make-array (list width height))))
     (dotimes (x width)
       (dotimes (y height)
         (let ((point (point:point x y)))
-          (setf (aref values x y) (top:get data point)))))
+          (setf (aref values x y) (get data point)))))
     values))
 
 (defun to-3d-array (data)
-  (let* ((topology (top:topology data))
-         (width (top:width topology))
-         (height (top:height topology))
-         (depth (top:depth topology))
+  (let* ((topology (topology data))
+         (width (width topology))
+         (height (height topology))
+         (depth (depth topology))
          (values (make-array (list width height depth))))
     (dotimes (x width)
       (dotimes (y height)
         (dotimes (z depth)
           (let ((point (point:point x y z)))
-            (setf (aref values x y z) (top:get data point))))))
+            (setf (aref values x y z) (get data point))))))
     values))
 
 (defun map (data func)
-  (let* ((topology (top:topology data))
-         (values (make-array (top:index-count topology))))
+  (let* ((topology (topology data))
+         (values (make-array (index-count topology))))
     (cl:map nil
             (lambda (x)
-              (setf (aref values x) (funcall func (top:get data x))))
-            (top:get-indices topology))
+              (setf (aref values x) (funcall func (get data x))))
+            (get-indices topology))
     (make-data-1d topology values)))
 
 (defun to-tiles (data)
@@ -73,10 +73,10 @@
 (defun transform-vector/square (x y transform)
   (let ((x (if (tfm:reflect-x transform) (- x) x)))
     (ecase (tfm:rotation transform)
-      (0 (values x y))
-      (90 (values (- y) x))
-      (180 (values (- x) (- y)))
-      (270 (values y (- x))))))
+      (0 (cl:values x y))
+      (90 (cl:values (- y) x))
+      (180 (cl:values (- x) (- y)))
+      (270 (cl:values y (- x))))))
 
 (defun %transform-vector/hex (x y micro rotate-180-p reflect-p)
   (let* ((x (if reflect-p (+ (- x) y) x))
@@ -90,7 +90,7 @@
       (setf q (- q)
             r (- r)
             s (- s)))
-    (values (- r) s)))
+    (cl:values (- r) s)))
 
 (defun transform-vector/hex (x y transform)
   (let* ((rotation (tfm:rotation transform))
@@ -108,21 +108,21 @@
      (error "Unknown direction type: ~s." direction-type))))
 
 (defun transform-direction (directions direction transform)
-  (u:mvlet* ((x (aref (top:direction-x directions) direction))
-             (y (aref (top:direction-y directions) direction))
-             (z (aref (top:direction-z directions) direction))
-             (rx ry (transform-vector (top:direction-type directions) x y transform)))
-    (top:get-direction directions (point:point rx ry z))))
+  (u:mvlet* ((x (aref (direction-x directions) direction))
+             (y (aref (direction-y directions) direction))
+             (z (aref (direction-z directions) direction))
+             (rx ry (transform-vector (direction-type directions) x y transform)))
+    (get-direction directions (point:point rx ry z))))
 
 (defgeneric transform (original transform &optional tile-transform))
 
-(defmethod transform ((original top:data/tiles)
+(defmethod transform ((original data/tiles)
                       (transform tfm:transform)
                       &optional tile-transform)
-  (let ((topology (top:topology original)))
-    (unless (typep topology 'top:grid)
+  (let ((topology (topology original)))
+    (unless (typep topology 'grid)
       (error "Expected a grid-based topology."))
-    (let ((type (top:direction-type (top:directions topology))))
+    (let ((type (direction-type (directions topology))))
       (case type
         ((:cartesian-2d :cartesian-3d)
          (transform/square original transform tile-transform))
@@ -133,7 +133,7 @@
 
 (defgeneric transform/square (original transform &optional tile-transform))
 
-(defmethod transform/square ((original top:data/tiles)
+(defmethod transform/square ((original data/tiles)
                              (transform tfm:transform)
                              &optional tile-transform)
   (flet ((%transform-tile (tile)
@@ -143,9 +143,7 @@
                       (when tile-transform
                         #'%transform-tile))))
 
-(defmethod transform/square ((original top:data)
-                             (transform tfm:transform)
-                             &optional tile-transform)
+(defmethod transform/square ((original data) (transform tfm:transform) &optional tile-transform)
   (flet ((map-coord (x y)
            (transform-vector/square x y transform)))
     (if (tfm:identity-p transform)
@@ -154,9 +152,7 @@
 
 (defgeneric transform/hex (original transform &optional tile-transform))
 
-(defmethod transform/hex ((original top:data/tiles)
-                          (transform tfm:transform)
-                          &optional tile-transform)
+(defmethod transform/hex ((original data/tiles) (transform tfm:transform) &optional tile-transform)
   (flet ((%transform-tile (tile)
            (tfm:transform-tile tile-transform tile transform)))
     (transform/hex original
@@ -164,9 +160,7 @@
                    (when tile-transform
                      #'%transform-tile))))
 
-(defmethod transform/hex ((original top:data)
-                          (transform tfm:transform)
-                          &optional tile-transform)
+(defmethod transform/hex ((original data) (transform tfm:transform) &optional tile-transform)
   (when (tfm:identity-p transform)
     (return-from transform/hex original))
   (let* ((rotation (tfm:rotation transform))
@@ -177,10 +171,10 @@
       (transform-inner original #'map-coord tile-transform))))
 
 (defun transform-inner (original map-coord-func tile-transform-func)
-  (let* ((original-topology (top:topology original))
-         (width (top:width original-topology))
-         (height (top:height original-topology)))
-    (unless (typep original-topology 'top:grid)
+  (let* ((original-topology (topology original))
+         (width (width original-topology))
+         (height (height original-topology)))
+    (unless (typep original-topology 'grid)
       (error "Expected a grid-based topology."))
     (u:mvlet* ((x1 y1 (funcall map-coord-func 0 0))
                (x2 y2 (funcall map-coord-func (1- width) 0))
@@ -194,13 +188,13 @@
                (offset-y (- min-y))
                (width (1+ (- max-x min-x)))
                (height (1+ (- max-y min-y)))
-               (depth (top:depth original-topology))
+               (depth (depth original-topology))
                (mask (make-array (* width height depth) :element-type 'bit :initial-element 0))
-               (topology (top:make-grid :directions (top:directions original-topology)
-                                        :width width
-                                        :height height
-                                        :depth depth
-                                        :mask mask))
+               (topology (make-grid :directions (directions original-topology)
+                                    :width width
+                                    :height height
+                                    :depth depth
+                                    :mask mask))
                (values (make-array (list width height depth))))
       (dotimes (z depth)
         (dotimes (y height)
@@ -208,8 +202,8 @@
             (u:mvlet ((new-x new-y (funcall map-coord-func x y)))
               (incf new-x offset-x)
               (incf new-y offset-y)
-              (let ((new-index (top:get-index topology (point:point new-x new-y z)))
-                    (new-value (top:get original (point:point x y z)))
+              (let ((new-index (get-index topology (point:point new-x new-y z)))
+                    (new-value (get original (point:point x y z)))
                     (new-value-bit 1))
                 (when tile-transform-func
                   (u:mvlet ((tile success-p (funcall tile-transform-func new-value)))
@@ -217,8 +211,8 @@
                           new-value-bit (if success-p 1 0))))
                 (setf (aref values new-x new-y z) new-value
                       (aref mask new-index) (and new-value-bit
-                                                 (top:contains-index-p
+                                                 (contains-index-p
                                                   original-topology
-                                                  (top:get-index original-topology
-                                                                 (point:point x y z))))))))))
+                                                  (get-index original-topology
+                                                             (point:point x y z))))))))))
       (make-data-3d values :topology topology))))

@@ -30,22 +30,22 @@
        (:file "tile-propagator-tile-set")
 
        ;; rot
-       (:file "transform")
-       (:file "transform-group")
-       (:file "transformed-tile")
-       (:file "tile-transform")
-       (:file "transform-subgroup")
-       (:file "transform-builder")
+       (:file "transform/transform")
+       (:file "transform/group")
+       (:file "transform/transformed-tile")
+       (:file "transform/tile-transform")
+       (:file "transform/subgroup")
+       (:file "transform/tile-builder")
 
        ;; topo
-       (:file "periodicity")
-       (:file "direction")
-       (:file "topology")
-       (:file "topology-grid")
-       (:file "topology-data")
-       (:file "topology-data-1d")
-       (:file "topology-data-2d")
-       (:file "topology-data-3d")
+       (:file "topology/periodicity")
+       (:file "topology/direction")
+       (:file "topology/topology")
+       (:file "topology/grid")
+       (:file "topology/data")
+       (:file "topology/data-1d")
+       (:file "topology/data-2d")
+       (:file "topology/data-3d")
 
        ;; wfc
        (:file "deque")
