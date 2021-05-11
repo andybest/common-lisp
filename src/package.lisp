@@ -193,38 +193,7 @@
    (#:top #:%syntex.synthesizers.wfc.topology)
    (#:u #:golden-utils))
   (:use #:cl)
-  ;; pattern-array
-  (:export
-   #:get-width
-   #:get-height
-   #:get-depth
-   #:make-pattern-array)
-  ;; overlapping-analysis
-  (:export
-   #:get-oa-patterns
-   #:get-transformed-samples)
-  ;; tile-model-mapping
-  (:export
-   #:pattern-topology
-   #:tile-model-mapping)
-  ;; tile-model
-  (:export
-   #:get-mapping
-   #:tile-model
-   #:multiply-frequency
-   #:tiles))
-
-(defpackage #:%syntex.synthesizers.wfc.overlapping-model
-  (:local-nicknames
-   (#:base #:%syntex.synthesizers.wfc.base)
-   (#:mod #:%syntex.synthesizers.wfc.model)
-   (#:pm #:%syntex.synthesizers.wfc.pattern-model)
-   (#:tfm #:%syntex.synthesizers.wfc.transform)
-   (#:top #:%syntex.synthesizers.wfc.topology)
-   (#:u #:golden-utils))
-  (:use #:cl)
-  (:export
-   #:model))
+  (:export))
 
 (defpackage #:%syntex.synthesizers.wfc.tracker
   (:use #:cl)

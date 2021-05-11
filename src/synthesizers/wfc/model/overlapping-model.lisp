@@ -1,6 +1,6 @@
-(in-package #:%syntex.synthesizers.wfc.overlapping-model)
+(in-package #:%syntex.synthesizers.wfc.model)
 
-(defclass model (mod:tile-model)
+(defclass overlapping-model (tile-model)
   ((%nx :accessor nx
         :initarg :nx)
    (%ny :accessor ny
@@ -20,31 +20,31 @@
    (%tiles->patterns :reader tiles->patterns
                      :initform (u:dict #'eq))))
 
-(defmethod mod:tiles ((object model))
+(defmethod tiles ((object overlapping-model))
   (u:hash-keys (tiles->patterns object)))
 
-(defun make-model (sample n periodic-p symmetries)
+(defun make-overlapping-model (sample n periodic-p symmetries)
   (let ((topology-data (top:to-tiles (top:make-data-2d sample :periodic-p periodic-p)))
         (symmetries>1 (> symmetries 1)))
-    (make-model/symmetry topology-data
-                         n
-                         (if symmetries>1 (truncate symmetries 2) 1)
-                         symmetries>1)))
+    (make-overlapping-model/symmetry topology-data
+                                     n
+                                     (if symmetries>1 (truncate symmetries 2) 1)
+                                     symmetries>1)))
 
-(defun make-model/symmetry (sample n rotation-count reflect-p)
-  (let ((model (make-model/uniform n))
+(defun make-overlapping-model/symmetry (sample n rotation-count reflect-p)
+  (let ((model (make-overlapping-model/uniform n))
         (tile-transform (tfm:make-tile-transform :rotation-count rotation-count
                                                  :reflect-p reflect-p)))
     (add-sample model sample tile-transform)
     model))
 
-(defun make-model/uniform (n)
-  (make-model/cuboid n n n))
+(defun make-overlapping-model/uniform (n)
+  (make-overlapping-model/cuboid n n n))
 
-(defun make-model/cuboid (nx ny nz)
-  (make-instance 'model :nx nx :ny ny :nz nz))
+(defun make-overlapping-model/cuboid (nx ny nz)
+  (make-instance 'overlapping-model :nx nx :ny ny :nz nz))
 
-(defun add-sample (model sample &optional tile-transform)
+(defmethod add-sample ((model overlapping-model) sample &optional tile-transform)
   (let ((topology (top:topology sample))
         (propagator (propagator model))
         (pattern-arrays (pattern-arrays model))
@@ -56,13 +56,13 @@
       (setf (nz model) 1))
     (map nil
          (lambda (x)
-           (mod:get-oa-patterns x
-                                (base:make-point (nx model) (ny model) (nz model))
-                                (top:periodicity topology)
-                                (pattern-indices model)
-                                pattern-arrays
-                                (frequencies model)))
-         (mod:get-transformed-samples sample tile-transform))
+           (get-oa-patterns x
+                            (base:make-point (nx model) (ny model) (nz model))
+                            (top:periodicity topology)
+                            (pattern-indices model)
+                            pattern-arrays
+                            (frequencies model)))
+         (get-transformed-samples sample tile-transform))
     (let* ((directions (top:directions topology))
            (direction-count (top:direction-count directions)))
       (dotimes (p (length pattern-arrays))
@@ -85,11 +85,11 @@
 
 (defun agrees-p (a b dx dy dz)
   (let ((x-min (max 0 dx))
-        (x-max (if (minusp dx) (+ dx (mod:get-width b)) (mod:get-width a)))
+        (x-max (if (minusp dx) (+ dx (get-width b)) (get-width a)))
         (y-min (max 0 dy))
-        (y-max (if (minusp dy) (+ dy (mod:get-height b)) (mod:get-height a)))
+        (y-max (if (minusp dy) (+ dy (get-height b)) (get-height a)))
         (z-min (max 0 dz))
-        (z-max (if (minusp dz) (+ dz (mod:get-depth b)) (mod:get-depth a))))
+        (z-max (if (minusp dz) (+ dz (get-depth b)) (get-depth a))))
     (loop :for x :from x-min :below x-max
           :do (loop :for y :from y-min :below y-max
                     :do (loop :for z :from z-min :below z-max
@@ -183,7 +183,7 @@
     (let ((pattern-mask (top:make-data-by-coords pattern-topology #'get-mask)))
       (top:make-masked-copy pattern-topology pattern-mask))))
 
-(defmethod mod:get-mapping ((model model) (topology top:grid))
+(defmethod get-mapping ((model overlapping-model) (topology top:grid))
   (let* ((frequencies (frequencies model))
          (pattern-model (make-instance 'pm:pattern-model
                                        :propagator (propagator model)
@@ -228,7 +228,7 @@
                (u:href p->tbo 0) (patterns->tiles model)))))
     (when (top:mask topology)
       (setf pattern-topology (make-masked-pattern-topology model topology pattern-topology)))
-    (make-instance 'mod:tile-model-mapping
+    (make-instance 'tile-model-mapping
                    :pattern-topology pattern-topology
                    :pattern-model pattern-model
                    :patterns->tiles-by-offset p->tbo
@@ -236,13 +236,13 @@
                    :tile-coord->pattern-coord-index/offset tc->pcio
                    :pattern-coord->tile-coord-index/offset pc->tcio)))
 
-(defmethod mod:multiply-frequency ((model model) (tile base:tile) (multiplier float))
+(defmethod multiply-frequency ((model overlapping-model) (tile base:tile) (multiplier float))
   (let ((pattern-arrays (pattern-arrays model))
         (frequencies (frequencies model)))
     (dotimes (p (length pattern-arrays))
       (let ((pattern-array (aref pattern-arrays p)))
-        (dotimes (x (mod:get-width pattern-array))
-          (dotimes (y (mod:get-height pattern-array))
-            (dotimes (z (mod:get-depth pattern-array))
+        (dotimes (x (get-width pattern-array))
+          (dotimes (y (get-height pattern-array))
+            (dotimes (z (get-depth pattern-array))
               (when (eq (aref pattern-array x y z) tile)
                 (setf (aref frequencies p) (* (aref frequencies p) multiplier))))))))))
