@@ -45,7 +45,7 @@
                      :tiles->patterns-by-offset p->tbo
                      :tile-coord->pattern-coord-index/offset nil))))
 
-(defmethod tm:multiply-frequency ((model model) (tile tile:tile) (multiplier float))
+(defmethod tm:multiply-frequency ((model model) (tile base:tile) (multiplier float))
   (let ((pattern (u:href (tiles->patterns model) tile)))
     (incf (aref (frequencies model) pattern) multiplier)))
 
@@ -103,8 +103,8 @@
        source))
 
 (defmethod add-adjacency/transform ((model model)
-                                    (source tile:tile)
-                                    (target tile:tile)
+                                    (source base:tile)
+                                    (target base:tile)
                                     (direction integer)
                                     (tile-transform tfm:tile-transform))
   (let ((edge-label-info (edge-label-info model)))
@@ -147,7 +147,7 @@
               target))
        source))
 
-(defmethod add-adjacency ((model model) (source tile:tile) (target tile:tile) (edge-label integer))
+(defmethod add-adjacency ((model model) (source base:tile) (target base:tile) (edge-label integer))
   (let* ((propagator (propagator model))
          (source (get-pattern model source))
          (target (get-pattern model target))

@@ -19,7 +19,7 @@
     (dotimes (z depth)
       (dotimes (y height)
         (dotimes (x width)
-          (let* ((point (point:point x y z))
+          (let* ((point (base:make-point x y z))
                  (index (get-index topology point)))
             (when (contains-index-p topology index)
               (setf (aref values x y z) (funcall func point)))))))
@@ -40,7 +40,7 @@
          (values (make-array (list width height))))
     (dotimes (x width)
       (dotimes (y height)
-        (let ((point (point:point x y)))
+        (let ((point (base:make-point x y)))
           (setf (aref values x y) (get data point)))))
     values))
 
@@ -53,7 +53,7 @@
     (dotimes (x width)
       (dotimes (y height)
         (dotimes (z depth)
-          (let ((point (point:point x y z)))
+          (let ((point (base:make-point x y z)))
             (setf (aref values x y z) (get data point))))))
     values))
 
@@ -67,7 +67,7 @@
     (make-data-1d topology values)))
 
 (defun to-tiles (data)
-  (let ((data (map data (lambda (x) (tile:tile x)))))
+  (let ((data (map data (lambda (x) (base:make-tile x)))))
     (change-class data 'data-1d/tiles)))
 
 (defun transform-vector/square (x y transform)
@@ -112,7 +112,7 @@
              (y (aref (direction-y directions) direction))
              (z (aref (direction-z directions) direction))
              (rx ry (transform-vector (direction-type directions) x y transform)))
-    (get-direction directions (point:point rx ry z))))
+    (get-direction directions (base:make-point rx ry z))))
 
 (defgeneric transform (original transform &optional tile-transform))
 
@@ -202,8 +202,8 @@
             (u:mvlet ((new-x new-y (funcall map-coord-func x y)))
               (incf new-x offset-x)
               (incf new-y offset-y)
-              (let ((new-index (get-index topology (point:point new-x new-y z)))
-                    (new-value (get original (point:point x y z)))
+              (let ((new-index (get-index topology (base:make-point new-x new-y z)))
+                    (new-value (get original (base:make-point x y z)))
                     (new-value-bit 1))
                 (when tile-transform-func
                   (u:mvlet ((tile success-p (funcall tile-transform-func new-value)))
@@ -214,5 +214,5 @@
                                                  (contains-index-p
                                                   original-topology
                                                   (get-index original-topology
-                                                             (point:point x y z))))))))))
+                                                             (base:make-point x y z))))))))))
       (make-data-3d values :topology topology))))

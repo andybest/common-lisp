@@ -83,8 +83,8 @@
 
 (defun get-direction (direction-set point)
   (dotimes (i (direction-count direction-set))
-    (when (and (= (point:x point) (aref (direction-x direction-set) i))
-               (= (point:y point) (aref (direction-y direction-set) i))
-               (= (point:z point) (aref (direction-z direction-set) i)))
+    (when (and (= (base:point-x point) (aref (direction-x direction-set) i))
+               (= (base:point-y point) (aref (direction-y direction-set) i))
+               (= (base:point-z point) (aref (direction-z direction-set) i)))
       (return-from get-direction i)))
   (error "No direction corresponds to ~a." point))

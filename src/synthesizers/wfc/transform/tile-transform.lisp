@@ -27,7 +27,7 @@
                        (default-treatment tile-transform))))
     (ecase treatment
       (:missing
-       (values (tile:tile nil) nil))
+       (values (base:make-tile nil) nil))
       (:unchanged
        (values tile t))
       (:generated
@@ -47,7 +47,7 @@
 
 (defgeneric transform-all (tile-transform tile/sequence))
 
-(defmethod transform-all ((tile-transform tile-transform) (tile tile:tile))
+(defmethod transform-all ((tile-transform tile-transform) (tile base:tile))
   (let ((result (make-array 0 :fill-pointer 0 :adjustable t)))
     (map nil
          (lambda (x)

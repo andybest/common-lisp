@@ -103,13 +103,13 @@
          (x (aref (top:direction-x directions) direction))
          (y (aref (top:direction-y directions) direction))
          (z (aref (top:direction-z directions) direction))
-         (point (point:point x y z)))
+         (point (base:make-point x y z)))
     (add-adjacency/transform model source target point tile-transform)))
 
 (defmethod add-adjacency/transform ((model model)
                                     (source vector)
                                     (target vector)
-                                    (point point:point)
+                                    (point base:point)
                                     &optional tile-transform)
   (require-directions model)
   (let ((direction-type (top:direction-type (directions model)))
@@ -117,18 +117,18 @@
     (map nil
          (lambda (transform)
            (u:mvlet ((x y (top:transform-vector direction-type
-                                                (point:x point)
-                                                (point:y point)
+                                                (base:point-x point)
+                                                (base:point-y point)
                                                 transform)))
              (add-adjacency/transform model
                                       (tfm:transform-tiles tile-transform source transform)
                                       (tfm:transform-tiles tile-transform target transform)
-                                      (point:point x y (point:z point)))))
+                                      (base:make-point x y (base:point-z point)))))
          (tfm:group tile-transform))))
 
 (defgeneric add-adjacency (model source target direction/point))
 
-(defmethod add-adjacency ((model model) (source vector) (target vector) (point point:point))
+(defmethod add-adjacency ((model model) (source vector) (target vector) (point base:point))
   (require-directions model)
   (let ((direction (top:get-direction (directions model) point)))
     (add-adjacency model source target direction)))
@@ -146,12 +146,12 @@
               target))
        source))
 
-(defmethod add-adjacency ((model model) (source tile:tile) (target tile:tile) (point point:point))
+(defmethod add-adjacency ((model model) (source base:tile) (target base:tile) (point base:point))
   (require-directions model)
   (let ((direction (top:get-direction (directions model) point)))
     (add-adjacency model source target direction)))
 
-(defmethod add-adjacency ((model model) (source tile:tile) (target tile:tile) (direction integer))
+(defmethod add-adjacency ((model model) (source base:tile) (target base:tile) (direction integer))
   (let* ((propagator (propagator model))
          (inverse-direction (top:invert-direction direction))
          (source-pattern (get-pattern model source))
@@ -190,7 +190,7 @@
       (dotimes (z depth)
         (dotimes (y height)
           (dotimes (x width)
-            (let* ((point (point:point x y z))
+            (let* ((point (base:make-point x y z))
                    (index (top:get-index topology point)))
               (when (top:contains-index-p topology index)
                 (let ((pattern (get-pattern model (top:get sample point))))
@@ -232,6 +232,6 @@
                      :tiles->patterns-by-offset t->pbo
                      :tile-coord->pattern-coord-index/offset nil))))
 
-(defmethod tm:multiply-frequency ((model model) (tile tile:tile) (multiplier float))
+(defmethod tm:multiply-frequency ((model model) (tile base:tile) (multiplier float))
   (let ((pattern (u:href (tiles->patterns model) tile)))
     (incf (aref (frequencies model) pattern) multiplier)))

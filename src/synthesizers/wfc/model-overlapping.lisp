@@ -57,7 +57,7 @@
     (map nil
          (lambda (x)
            (oa:get-patterns x
-                            (point:point (nx model) (ny model) (nz model))
+                            (base:make-point (nx model) (ny model) (nz model))
                             (top:periodicity topology)
                             (pattern-indices model)
                             pattern-arrays
@@ -131,9 +131,9 @@
            (let* ((coords (top:get-coords topology index))
                   (values (top:get tc->pcio index))
                   (point (aref values 0))
-                  (px (point:x point))
-                  (py (point:y point))
-                  (pz (point:z point))
+                  (px (base:point-x point))
+                  (py (base:point-y point))
+                  (pz (base:point-z point))
                   (offset (aref values 2)))
              (unless (aref pc->tciov px py pz)
                (setf (aref pc->tciov px py pz) (make-array 0 :fill-pointer 0 :adjustable t)))
@@ -143,10 +143,10 @@
 
 (defun make-tc->pcio (model topology pattern-topology)
   (flet ((%map (point)
-           (u:mvlet* ((px ox (overlap-coord (point:x point) (top:width pattern-topology)))
-                      (py oy (overlap-coord (point:y point) (top:height pattern-topology)))
-                      (pz oz (overlap-coord (point:z point) (top:depth pattern-topology)))
-                      (new-point (point:point px py pz))
+           (u:mvlet* ((px ox (overlap-coord (base:point-x point) (top:width pattern-topology)))
+                      (py oy (overlap-coord (base:point-y point) (top:height pattern-topology)))
+                      (pz oz (overlap-coord (base:point-z point) (top:depth pattern-topology)))
+                      (new-point (base:make-point px py pz))
                       (pattern-index (top:get-index pattern-topology new-point)))
              (list new-point pattern-index (combine-offsets model ox oy oz)))))
     (top:make-data-by-coords topology #'%map)))
@@ -168,7 +168,7 @@
        (let ((x (mod x width))
              (y (mod y height))
              (z (mod z depth)))
-         (aref (top:mask topology) (top:get-index topology (point:point x y z))))))))
+         (aref (top:mask topology) (top:get-index topology (base:make-point x y z))))))))
 
 (defun make-masked-pattern-topology (model topology pattern-topology)
   (flet ((get-mask (point)
@@ -176,9 +176,9 @@
              (dotimes (oy (ny model))
                (dotimes (ox (nx model))
                  (when (get-topology-mask topology
-                                          (+ (point:x point) ox)
-                                          (+ (point:y point) oy)
-                                          (+ (point:z point) oz))
+                                          (+ (base:point-x point) ox)
+                                          (+ (base:point-y point) oy)
+                                          (+ (base:point-z point) oz))
                    (return-from get-mask t)))))))
     (let ((pattern-mask (top:make-data-by-coords pattern-topology #'get-mask)))
       (top:make-masked-copy pattern-topology pattern-mask))))
@@ -236,7 +236,7 @@
                    :tile-coord->pattern-coord-index/offset tc->pcio
                    :pattern-coord->tile-coord-index/offset pc->tcio)))
 
-(defmethod tm:multiply-frequency ((model model) (tile tile:tile) (multiplier float))
+(defmethod tm:multiply-frequency ((model model) (tile base:tile) (multiplier float))
   (let ((pattern-arrays (pattern-arrays model))
         (frequencies (frequencies model)))
     (dotimes (p (length pattern-arrays))

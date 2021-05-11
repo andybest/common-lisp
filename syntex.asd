@@ -25,9 +25,9 @@
       :components
       (
        ;; base
-       (:file "point")
-       (:file "tile")
-       (:file "tile-propagator-tile-set")
+       (:file "base/point")
+       (:file "base/tile")
+       (:file "base/tile-propagator-tile-set")
 
        ;; rot
        (:file "transform/transform")

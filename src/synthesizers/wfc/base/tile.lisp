@@ -1,8 +1,8 @@
-(in-package #:%syntex.synthesizers.wfc.tile)
+(in-package #:%syntex.synthesizers.wfc.base)
 
 (defclass tile ()
   ((%value :reader value
            :initarg :value)))
 
-(defun tile (value)
+(defun make-tile (value)
   (make-instance 'tile :value value))

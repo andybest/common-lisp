@@ -1,6 +1,6 @@
 (in-package #:%syntex.synthesizers.wfc.transform)
 
-(defclass transformed-tile (tile:tile)
+(defclass transformed-tile (base:tile)
   ((%transform :reader transform
                :initarg :transform)))
 
