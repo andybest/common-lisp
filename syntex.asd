@@ -47,15 +47,6 @@
        (:file "topology/data-2d")
        (:file "topology/data-3d")
 
-       ;; wfc
-       (:file "deque")
-       (:file "pattern-model")
-       (:file "wave")
-
-       ;; constraints
-       (:file "constraint-tile")
-       (:file "constraint-border")
-
        ;; models
        (:file "model/pattern-array")
        (:file "model/overlapping-analysis")
@@ -64,6 +55,15 @@
        (:file "model/adjacent-model")
        (:file "model/graph-adjacent-model")
        (:file "model/overlapping-model")
+
+       ;; wfc
+       (:file "deque")
+       (:file "pattern-model")
+       (:file "wave")
+
+       ;; constraints
+       (:file "constraint-tile")
+       (:file "constraint-border")
 
        ;; trackers
        (:file "tracker")

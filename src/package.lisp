@@ -130,6 +130,16 @@
    #:transform
    #:transform-vector))
 
+(defpackage #:%syntex.synthesizers.wfc.model
+  (:local-nicknames
+   (#:base #:%syntex.synthesizers.wfc.base)
+   (#:pm #:%syntex.synthesizers.wfc.pattern-model)
+   (#:tfm #:%syntex.synthesizers.wfc.transform)
+   (#:top #:%syntex.synthesizers.wfc.topology)
+   (#:u #:golden-utils))
+  (:use #:cl)
+  (:export))
+
 (defpackage #:%syntex.synthesizers.wfc.deque
   (:local-nicknames
    (#:u #:golden-utils))
@@ -181,16 +191,6 @@
 
 (defpackage #:%syntex.synthesizers.wfc.constraint-border
   (:local-nicknames
-   (#:u #:golden-utils))
-  (:use #:cl)
-  (:export))
-
-(defpackage #:%syntex.synthesizers.wfc.model
-  (:local-nicknames
-   (#:base #:%syntex.synthesizers.wfc.base)
-   (#:pm #:%syntex.synthesizers.wfc.pattern-model)
-   (#:tfm #:%syntex.synthesizers.wfc.transform)
-   (#:top #:%syntex.synthesizers.wfc.topology)
    (#:u #:golden-utils))
   (:use #:cl)
   (:export))
