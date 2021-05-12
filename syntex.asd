@@ -18,61 +18,6 @@
    (:file "conditions")
    (:file "common")
    (:file "image")
-   (:module "synthesizers"
+   (:module "harrison"
     :components
-    ((:file "harrison")
-     (:module "wfc"
-      :components
-      (
-       ;; base
-       (:file "base/point")
-       (:file "base/tile")
-       (:file "base/tile-propagator-tile-set")
-
-       ;; rot
-       (:file "transform/transform")
-       (:file "transform/group")
-       (:file "transform/transformed-tile")
-       (:file "transform/tile-transform")
-       (:file "transform/subgroup")
-       (:file "transform/tile-builder")
-
-       ;; topo
-       (:file "topology/periodicity")
-       (:file "topology/direction")
-       (:file "topology/topology")
-       (:file "topology/grid")
-       (:file "topology/data")
-       (:file "topology/data-1d")
-       (:file "topology/data-2d")
-       (:file "topology/data-3d")
-
-       ;; models
-       (:file "model/pattern-array")
-       (:file "model/overlapping-analysis")
-       (:file "model/tile-model-mapping")
-       (:file "model/tile-model")
-       (:file "model/adjacent-model")
-       (:file "model/graph-adjacent-model")
-       (:file "model/overlapping-model")
-
-       ;; wfc
-       (:file "deque")
-       (:file "pattern-model")
-       (:file "wave")
-
-       ;; constraints
-       (:file "constraint-tile")
-       (:file "constraint-border")
-
-       ;; trackers
-       (:file "tracker")
-       (:file "tracker-random-picker")
-       (:file "tracker-ordered-random-picker")
-       (:file "tracker-frequency-set")
-       (:file "tracker-entropy")
-       (:file "tracker-array-priority-entropy")
-
-       ;; main
-       (:file "tile-propagator")
-       ))))))
+    ((:file "harrison")))))

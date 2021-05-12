@@ -1,4 +1,4 @@
-(in-package #:%syntex.synthesizers.harrison)
+(in-package #:%syntex.harrison)
 
 (defstruct (state
             (:constructor %make-state)
