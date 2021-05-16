@@ -5,6 +5,7 @@
   :homepage "https://git.mfiano.net/mfiano/syntex"
   :encoding :utf-8
   :depends-on (#:cl-cpus
+               #:damn-fast-priority-queue
                #:golden-utils
                #:lparallel
                #:pngload
@@ -29,4 +30,5 @@
      (:file "sample")
      (:file "pattern")
      (:file "adjacency")
+     (:file "tile-map")
      (:file "core")))))

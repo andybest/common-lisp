@@ -106,11 +106,11 @@
                  (= (kernel:count kernel) (expt size 2)))))
       (kernel:convolve kernel #'%extract :test #'%extract-test))))
 
-(defun get-count (patterns)
-  (length (id->pattern patterns)))
+(defun get-count (collection)
+  (length (id->pattern collection)))
 
 (defun get-origin-color (pattern)
   (aref (data pattern) 0))
 
-(defun get-pattern (patterns id)
-  (aref (id->pattern patterns) id))
+(defun get-pattern (collection id)
+  (aref (id->pattern collection) id))

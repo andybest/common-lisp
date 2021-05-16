@@ -26,7 +26,7 @@
             (:copier nil))
   (x 0 :type u:non-negative-fixnum)
   (y 0 :type u:non-negative-fixnum)
-  (value 0 :type u:ub32))
+  (value 0 :type t))
 
 (u:define-printer (cell stream)
   (format stream "~d,~d" (x cell) (y cell)))
