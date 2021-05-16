@@ -11,9 +11,7 @@
    #:get-cell
    #:grid
    #:height
-   #:make-cell
    #:make-grid
-   #:map-cells
    #:value
    #:width
    #:x
@@ -73,9 +71,3 @@
          (dotimes (,x ,width)
            (let ((,cell (aref ,cells (+ (* ,y ,width) ,x))))
              ,@body))))))
-
-(defun map-cells (grid func)
-  (let ((cells nil))
-    (do-cells (grid cell)
-      (push (funcall func cell) cells))
-    (nreverse cells)))

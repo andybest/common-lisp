@@ -7,18 +7,18 @@
    (#:u #:golden-utils))
   (:use #:cl)
   (:export
-   #:align
-   #:data
-   #:data->pattern
    #:extract
+   #:get-count
    #:get-origin-color
    #:get-pattern
+   #:grid
    #:id
-   #:id->pattern
    #:make-pattern
    #:make-pattern-collection
-   #:pattern
    #:pattern-collection
+   #:reflect-p
+   #:rotation
+   #:size
    #:x
    #:y))
 
@@ -30,7 +30,7 @@
             (:predicate nil)
             (:copier nil))
   (id 0 :type u:non-negative-fixnum)
-  (kernel nil :type kernel:kernel)
+  (grid nil :type grid:grid)
   (size 2 :type u:positive-fixnum)
   (x 0 :type u:non-negative-fixnum)
   (y 0 :type u:non-negative-fixnum)
@@ -49,25 +49,30 @@
 (u:define-printer (pattern-collection stream)
   (format stream "count: ~d" (hash-table-count (data->pattern pattern-collection))))
 
-(defun make-data (kernel &key size rotation reflect-p periodic-p)
+(defun make-data (grid kernel &key size rotation reflect-p periodic-p)
   (let ((data (u:make-ub32-array (expt size 2)))
+        (cells (grid:cells grid))
         (index 0))
     (kernel:map kernel
                 (lambda (x)
-                  (setf (aref data index) (grid:value x))
-                  (incf index))
+                  (let ((value (grid:value x)))
+                    (setf (aref data index) value
+                          (grid:value (aref cells index)) value)
+                    (incf index)))
                 :rotation rotation
                 :reflect-p reflect-p
                 :periodic-p periodic-p)
     data))
 
 (defun make-pattern (kernel &key size (rotation 0) reflect-p periodic-p)
-  (let ((data (make-data kernel
-                         :size size
-                         :rotation rotation
-                         :reflect-p reflect-p
-                         :periodic-p periodic-p)))
-    (%make-pattern :kernel kernel
+  (let* ((grid (grid:make-grid size size))
+         (data (make-data grid
+                          kernel
+                          :size size
+                          :rotation rotation
+                          :reflect-p reflect-p
+                          :periodic-p periodic-p)))
+    (%make-pattern :grid grid
                    :size size
                    :x (kernel:x kernel)
                    :y (kernel:y kernel)
@@ -101,13 +106,11 @@
                  (= (kernel:count kernel) (expt size 2)))))
       (kernel:convolve kernel #'%extract :test #'%extract-test))))
 
-(defun align (pattern)
-  (kernel:align (kernel pattern) (x pattern) (y pattern))
-  pattern)
+(defun get-count (patterns)
+  (length (id->pattern patterns)))
 
 (defun get-origin-color (pattern)
-  (align pattern)
-  (grid:value (kernel:resolve (kernel pattern) 0 0)))
+  (aref (data pattern) 0))
 
 (defun get-pattern (patterns id)
   (aref (id->pattern patterns) id))

@@ -12,13 +12,9 @@
    #:align
    #:convolve
    #:count
-   #:grid
-   #:height
    #:kernel
    #:make-kernel
    #:map
-   #:resolve
-   #:width
    #:x
    #:y))
 

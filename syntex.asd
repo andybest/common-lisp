@@ -28,4 +28,5 @@
      (:file "kernel")
      (:file "sample")
      (:file "pattern")
+     (:file "adjacency")
      (:file "core")))))
