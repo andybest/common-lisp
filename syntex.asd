@@ -20,4 +20,12 @@
    (:file "image")
    (:module "harrison"
     :components
-    ((:file "harrison")))))
+    ((:file "harrison")))
+   (:module "wfc"
+    :components
+    ((:file "image")
+     (:file "grid")
+     (:file "kernel")
+     (:file "sample")
+     (:file "pattern")
+     (:file "core")))))

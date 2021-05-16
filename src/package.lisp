@@ -30,6 +30,13 @@
   (:export
    #:harrison))
 
+(defpackage #:%syntex.wfc
+  (:local-nicknames
+   (#:img #:%syntex.image)
+   (#:u #:golden-utils))
+  (:use #:cl)
+  (:export))
+
 (uiop:define-package #:syntex
   (:use #:cl)
   (:reexport #:%syntex.harrison))
