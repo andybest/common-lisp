@@ -1,16 +1,3 @@
-(in-package #:cl-user)
-
-(defpackage #:%syntex.wfc.sample
-  (:local-nicknames
-   (#:grid #:%syntex.wfc.grid)
-   (#:img #:%syntex.wfc.image)
-   (#:u #:golden-utils))
-  (:use #:cl)
-  (:shadow
-   #:load)
-  (:export
-   #:load))
-
 (in-package #:%syntex.wfc.sample)
 
 (defun load (file-path)

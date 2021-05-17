@@ -1,27 +1,3 @@
-(in-package #:cl-user)
-
-(defpackage #:%syntex.wfc.pattern
-  (:local-nicknames
-   (#:grid #:%syntex.wfc.grid)
-   (#:kernel #:%syntex.wfc.kernel)
-   (#:u #:golden-utils))
-  (:use #:cl)
-  (:export
-   #:extract
-   #:get-count
-   #:get-origin-color
-   #:get-pattern
-   #:grid
-   #:id
-   #:make-pattern
-   #:make-pattern-collection
-   #:pattern-collection
-   #:reflect-p
-   #:rotation
-   #:size
-   #:x
-   #:y))
-
 (in-package #:%syntex.wfc.pattern)
 
 (defstruct (pattern

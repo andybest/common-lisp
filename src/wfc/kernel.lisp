@@ -1,23 +1,3 @@
-(in-package #:cl-user)
-
-(defpackage #:%syntex.wfc.kernel
-  (:local-nicknames
-   (#:grid #:%syntex.wfc.grid)
-   (#:u #:golden-utils))
-  (:use #:cl)
-  (:shadow
-   #:count
-   #:map)
-  (:export
-   #:align
-   #:convolve
-   #:count
-   #:kernel
-   #:make-kernel
-   #:map
-   #:x
-   #:y))
-
 (in-package #:%syntex.wfc.kernel)
 
 (defstruct (kernel

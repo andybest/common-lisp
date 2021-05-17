@@ -24,11 +24,12 @@
     ((:file "harrison")))
    (:module "wfc"
     :components
-    ((:file "image")
+    ((:file "package")
+     (:file "image")
      (:file "grid")
      (:file "kernel")
      (:file "sample")
      (:file "pattern")
+     (:file "core")
      (:file "adjacency")
-     (:file "tile-map")
-     (:file "core")))))
+     (:file "wfc")))))

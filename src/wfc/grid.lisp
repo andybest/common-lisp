@@ -1,22 +1,3 @@
-(in-package #:cl-user)
-
-(defpackage #:%syntex.wfc.grid
-  (:local-nicknames
-   (#:u #:golden-utils))
-  (:use #:cl)
-  (:export
-   #:cell
-   #:cells
-   #:do-cells
-   #:get-cell
-   #:grid
-   #:height
-   #:make-grid
-   #:value
-   #:width
-   #:x
-   #:y))
-
 (in-package #:%syntex.wfc.grid)
 
 (defstruct (cell

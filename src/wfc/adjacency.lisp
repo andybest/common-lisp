@@ -1,15 +1,3 @@
-(in-package #:cl-user)
-
-(defpackage #:%syntex.wfc.adjacency
-  (:local-nicknames
-   (#:grid #:%syntex.wfc.grid)
-   (#:kernel #:%syntex.wfc.kernel)
-   (#:pat #:%syntex.wfc.pattern)
-   (#:u #:golden-utils))
-  (:use #:cl)
-  (:export
-   #:generate))
-
 (in-package #:%syntex.wfc.adjacency)
 
 (defun make-edge-kernel (pattern edge)
@@ -50,8 +38,10 @@
     (%map pattern2 data2 (invert-edge edge))
     (equalp data1 data2)))
 
-(defun generate (adjacencies patterns pattern-size)
-  (let* ((pattern-count (pat:get-count patterns))
+(defun generate (core &key pattern-size)
+  (let* ((patterns (core:patterns core))
+         (pattern-count (pat:get-count patterns))
+         (adjacencies (core:adjacencies core))
          (data-size (- (expt pattern-size 2) pattern-size))
          (data1 (u:make-ub32-array data-size))
          (data2 (u:make-ub32-array data-size)))
@@ -63,3 +53,7 @@
             (dolist (edge '(:left :right :up :down))
               (when (compatible-p pattern1 pattern2 :data1 data1 :data2 data2 :edge edge)
                 (push j (u:href adjacencies i edge))))))))))
+
+(defun choose (core pattern-id direction)
+  (let ((possible (u:href (core:adjacencies core) pattern-id direction)))
+    (rng:element (core:rng core) possible)))

@@ -1,18 +1,3 @@
-(in-package #:cl-user)
-
-(defpackage #:%syntex.wfc.image
-  (:local-nicknames
-   (#:png #:pngload)
-   (#:u #:golden-utils))
-  (:use #:cl)
-  (:export
-   #:data
-   #:image
-   #:height
-   #:make-image
-   #:unpack
-   #:width))
-
 (in-package #:%syntex.wfc.image)
 
 (defstruct (image
