@@ -120,6 +120,7 @@
    (#:u #:golden-utils))
   (:use #:cl)
   (:export
+   #:make-tile-map
    #:prepare))
 
 (defpackage #:%syntex.wfc

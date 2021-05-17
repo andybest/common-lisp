@@ -39,7 +39,7 @@
               (output-height 10)
               seed)
   (let* ((sample (sample:load sample-path))
-         (tile-map (grid:make-grid output-width output-height))
+         (tile-map (tm:make-tile-map :width output-width :height output-height))
          (core (core:make-core :seed seed :sample sample :tile-map tile-map)))
     (analyze core :pattern-size pattern-size :periodic-p periodic-p)
     (prepare-tile-map core)
