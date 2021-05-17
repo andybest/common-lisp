@@ -1,20 +1,29 @@
 (in-package #:%syntex.wfc.tile-map)
 
 (defstruct (tile-data
+            (:constructor %make-tile-data)
             (:conc-name nil)
             (:predicate nil)
             (:copier nil))
-  (possible-patterns (u:dict #'eql) :type hash-table)
+  (possible-patterns (u:make-bit-vector 0) :type simple-bit-vector)
   (total-weight 0 :type u:non-negative-fixnum)
   (total-weight-log-weight 0.0 :type u:f32)
-  (entropy-noise 0.0 :type u:f32))
+  (entropy-noise 0.0 :type u:f32)
+  (collapsed-p nil :type boolean))
 
-(defun calculate-initial-weights (core tile)
-  (let ((frequencies (core:frequencies core))
-        (tile-data (grid:value tile))
-        (total-weight 0)
-        (total-weight-log-weight 0.0))
-    (u:do-hash-keys (pattern-id (possible-patterns tile-data))
+(defun make-tile-data (core &key pattern-count total-weight total-weight-log-weight)
+  (u:mvlet* ((entropy-noise (rng:float (core:rng core) 0.0 0.0001))
+             (possible-patterns (u:make-bit-vector pattern-count 1)))
+    (%make-tile-data :possible-patterns possible-patterns
+                     :entropy-noise entropy-noise
+                     :total-weight total-weight
+                     :total-weight-log-weight total-weight-log-weight)))
+
+(defun calculate-initial-weights (core pattern-count)
+  (let* ((frequencies (core:frequencies core))
+         (total-weight 0)
+         (total-weight-log-weight 0.0))
+    (dotimes (pattern-id pattern-count)
       (let ((frequency (aref frequencies pattern-id)))
         (incf total-weight frequency)
         (incf total-weight-log-weight (* frequency (log frequency 2)))))
@@ -22,18 +31,15 @@
             total-weight-log-weight)))
 
 (defun prepare (core)
-  (let ((rng (core:rng core))
-        (tile-map (core:tile-map core))
-        (pattern-count (pat:get-count (core:patterns core))))
+  (u:mvlet* ((tile-map (core:tile-map core))
+             (pattern-count (pat:get-count (core:patterns core)))
+             (total-weight total-weight-log-weight (calculate-initial-weights core pattern-count)))
     (grid:do-cells (tile-map tile)
-      (let* ((entropy-noise (rng:float rng 0.0 0.0001))
-             (data (make-tile-data :entropy-noise entropy-noise)))
-        (setf (grid:value tile) data)
-        (dotimes (i pattern-count)
-          (setf (u:href (possible-patterns data) i) i))
-        (u:mvlet ((total-weight total-weight-log-weight (calculate-initial-weights core tile)))
-          (setf (total-weight data) total-weight
-                (total-weight-log-weight data) total-weight-log-weight))))))
+      (let ((data (make-tile-data core
+                                  :pattern-count pattern-count
+                                  :total-weight total-weight
+                                  :total-weight-log-weight total-weight-log-weight)))
+        (setf (grid:value tile) data)))))
 
 (defun compute-entropy (tile)
   (let* ((tile-data (grid:value tile))
@@ -45,6 +51,6 @@
 (defun remove-tile (core tile pattern-id)
   (let ((tile-data (grid:value tile))
         (frequency (aref (core:frequencies core) pattern-id)))
-    (remhash pattern-id (possible-patterns tile-data))
+    (setf (sbit (possible-patterns tile-data) pattern-id) 0)
     (decf (total-weight tile-data) frequency)
     (decf (total-weight-log-weight tile-data) (* frequency (log frequency 2)))))
