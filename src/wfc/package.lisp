@@ -95,7 +95,8 @@
    #:origin-colors
    #:patterns
    #:rng
-   #:sample))
+   #:sample
+   #:tile-map))
 
 (defpackage #:%syntex.wfc.adjacency
   (:local-nicknames
@@ -110,12 +111,25 @@
    #:choose
    #:generate))
 
+(defpackage #:%syntex.wfc.tile-map
+  (:local-nicknames
+   (#:core #:%syntex.wfc.core)
+   (#:grid #:%syntex.wfc.grid)
+   (#:pat #:%syntex.wfc.pattern)
+   (#:rng #:seedable-rng)
+   (#:u #:golden-utils))
+  (:use #:cl)
+  (:export
+   #:prepare))
+
 (defpackage #:%syntex.wfc
   (:local-nicknames
    (#:adj #:%syntex.wfc.adjacency)
    (#:core #:%syntex.wfc.core)
+   (#:grid #:%syntex.wfc.grid)
    (#:pat #:%syntex.wfc.pattern)
    (#:sample #:%syntex.wfc.sample)
+   (#:tm #:%syntex.wfc.tile-map)
    (#:u #:golden-utils))
   (:use #:cl)
   (:export

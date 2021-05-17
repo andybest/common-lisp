@@ -32,4 +32,5 @@
      (:file "pattern")
      (:file "core")
      (:file "adjacency")
+     (:file "tile-map")
      (:file "wfc")))))

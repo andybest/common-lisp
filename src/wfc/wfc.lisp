@@ -24,6 +24,11 @@
   (analyze-origin-colors core)
   (adj:generate core :pattern-size pattern-size))
 
+;;; Prepare tile map
+
+(defun prepare-tile-map (core)
+  (tm:prepare core))
+
 ;;; Main entry point
 
 (defun wfc (sample-path
@@ -33,8 +38,9 @@
               (output-width 10)
               (output-height 10)
               seed)
-  (declare (ignore output-width output-height))
   (let* ((sample (sample:load sample-path))
-         (core (core:make-core seed sample)))
+         (tile-map (grid:make-grid output-width output-height))
+         (core (core:make-core :seed seed :sample sample :tile-map tile-map)))
     (analyze core :pattern-size pattern-size :periodic-p periodic-p)
+    (prepare-tile-map core)
     core))
