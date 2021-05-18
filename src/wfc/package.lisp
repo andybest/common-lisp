@@ -90,6 +90,9 @@
   (:use #:cl)
   (:export
    #:adjacencies
+   #:contradiction
+   #:direction->index
+   #:direction->offset
    #:frequencies
    #:make-core
    #:origin-colors
@@ -116,12 +119,22 @@
    (#:core #:%syntex.wfc.core)
    (#:grid #:%syntex.wfc.grid)
    (#:pat #:%syntex.wfc.pattern)
+   (#:pq #:damn-fast-priority-queue)
    (#:rng #:seedable-rng)
    (#:u #:golden-utils))
   (:use #:cl)
   (:export
+   #:choose-tile
+   #:collapse-tile
+   #:compute-entropy
+   #:enabler-count
+   #:entropy-queue
+   #:grid
    #:make-tile-map
-   #:prepare))
+   #:pattern-removal-stack
+   #:prepare
+   #:remove-possible-pattern
+   #:uncollapsed-count))
 
 (defpackage #:%syntex.wfc
   (:local-nicknames
@@ -129,6 +142,7 @@
    (#:core #:%syntex.wfc.core)
    (#:grid #:%syntex.wfc.grid)
    (#:pat #:%syntex.wfc.pattern)
+   (#:pq #:damn-fast-priority-queue)
    (#:sample #:%syntex.wfc.sample)
    (#:tm #:%syntex.wfc.tile-map)
    (#:u #:golden-utils))

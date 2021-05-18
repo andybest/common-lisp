@@ -24,12 +24,15 @@
 (u:define-printer (grid stream)
   (format stream "~dx~d" (width grid) (height grid)))
 
-(defun make-grid (width height)
-  (let* ((cells (make-array (* width height)))
-         (grid (%make-grid :width width :height height :cells cells)))
-    (dotimes (y height)
-      (dotimes (x width)
-        (setf (aref cells (+ (* y width) x)) (make-cell x y))))
+(defun make-grid (width height &optional cells)
+  (let ((grid (%make-grid :width width :height height)))
+    (if cells
+        (setf (cells grid) cells)
+        (let ((cells (make-array (* width height))))
+          (dotimes (y height)
+            (dotimes (x width)
+              (setf (aref cells (+ (* y width) x)) (make-cell x y)
+                    (cells grid) cells)))))
     grid))
 
 (defun get-cell (grid x y &key periodic-p)

@@ -1,16 +1,18 @@
 (in-package #:%syntex.wfc.tile-map)
 
 (defstruct (tile-map
-            (:include grid:grid)
             (:constructor %make-tile-map)
-            (:conc-name "")
+            (:conc-name nil)
             (:predicate nil)
             (:copier nil))
-  (uncollapsed-count 0 :type u:non-negative-fixnum))
+  (grid nil :type grid:grid)
+  (uncollapsed-count 0 :type u:non-negative-fixnum)
+  (entropy-queue (pq:make-queue) :type pq:queue)
+  (pattern-removal-stack nil :type list))
 
 (defstruct (tile
             (:include grid:cell)
-            (:constructor %make-tile)
+            (:constructor %make-tile (x y))
             (:conc-name "")
             (:predicate nil)
             (:copier nil))
@@ -18,17 +20,17 @@
   (total-weight 0 :type u:non-negative-fixnum)
   (total-weight-log-weight 0.0 :type u:f32)
   (entropy-noise 0.0 :type u:f32)
-  (collapsed-p nil :type boolean))
+  (collapsed-p nil :type boolean)
+  (enabler-counts (make-array (list 0 4)) :type simple-array))
 
 (defun make-tile-map (&key width height)
   (let* ((tiles (make-array (* width height)))
-         (tile-map (%make-tile-map :width width
-                                   :height height
-                                   :cells tiles
+         (grid (grid:make-grid width height tiles))
+         (tile-map (%make-tile-map :grid grid
                                    :uncollapsed-count (* width height))))
     (dotimes (y height)
       (dotimes (x width)
-        (setf (aref tiles (+ (* y width) x)) (%make-tile :x x :y y))))
+        (setf (aref tiles (+ (* y width) x)) (%make-tile x y))))
     tile-map))
 
 (defun calculate-initial-weights (core pattern-count)
@@ -42,25 +44,78 @@
     (values total-weight
             total-weight-log-weight)))
 
+(defun make-tile-enabler-counts (core)
+  (let* ((adjacencies (core:adjacencies core))
+         (pattern-count (pat:get-count (core:patterns core)))
+         (enabler-counts (make-array (list pattern-count 4))))
+    (dotimes (pattern-id pattern-count)
+      (loop :for direction :in '(:left :right :up :down)
+            :for i :from 0
+            :for count = (length (u:href (aref adjacencies pattern-id) direction))
+            :do (setf (aref enabler-counts pattern-id i) count)))
+    enabler-counts))
+
 (defun prepare (core)
   (u:mvlet* ((rng (core:rng core))
-             (tile-map (core:tile-map core))
+             (grid (grid (core:tile-map core)))
              (pattern-count (pat:get-count (core:patterns core)))
              (total-weight total-weight-log-weight (calculate-initial-weights core pattern-count)))
-    (grid:do-cells (tile-map tile)
+    (grid:do-cells (grid tile)
       (setf (possible-patterns tile) (u:make-bit-vector pattern-count 1)
             (total-weight tile) total-weight
             (total-weight-log-weight tile) total-weight-log-weight
-            (entropy-noise tile) (rng:float rng 0.0 0.0001)))))
+            (entropy-noise tile) (rng:float rng 0.0 0.0001)
+            (enabler-counts tile) (make-tile-enabler-counts core)))))
 
 (defun compute-entropy (tile)
-  (let ((total-weight-log-weight (total-weight-log-weight tile)))
+  (let ((total-weight (total-weight tile))
+        (total-weight-log-weight (total-weight-log-weight tile)))
     (+ (- (log total-weight-log-weight 2)
-          (/ total-weight-log-weight (total-weight tile)))
+          (/ total-weight-log-weight total-weight))
        (entropy-noise tile))))
 
-(defun remove-tile (core tile pattern-id)
+(defun remove-possible-pattern (core tile pattern-id)
   (let ((frequency (aref (core:frequencies core) pattern-id)))
     (setf (sbit (possible-patterns tile) pattern-id) 0)
     (decf (total-weight tile) frequency)
     (decf (total-weight-log-weight tile) (* frequency (log frequency 2)))))
+
+(defun choose-tile (core)
+  (let* ((tile-map (core:tile-map core))
+         (entropy-queue (entropy-queue tile-map)))
+    (u:while (pq:peek entropy-queue)
+      (let ((tile (pq:dequeue entropy-queue)))
+        (unless (collapsed-p tile)
+          (return-from choose-tile tile))))
+    (error "Bug: Entropy heap is empty but there are still uncollapsed tiles.")))
+
+(defun choose-pattern-id (core tile)
+  (let* ((frequencies (core:frequencies core))
+         (possible-patterns (possible-patterns tile))
+         (remaining (rng:int (core:rng core) 0 (total-weight tile) nil)))
+    (dotimes (pattern-id (length possible-patterns))
+      (when (plusp (sbit possible-patterns pattern-id))
+        (let ((weight (aref frequencies pattern-id)))
+          (if (>= remaining weight)
+              (decf remaining weight)
+              (return-from choose-pattern-id pattern-id)))))
+    (error "Bug: Inconsistency detected with tile frequencies.")))
+
+(defun collapse-tile (core tile)
+  (let ((tile-map (core:tile-map core))
+        (possible-patterns (possible-patterns tile))
+        (chosen-pattern-id (choose-pattern-id core tile)))
+    (setf (collapsed-p tile) t
+          (grid:value tile) chosen-pattern-id)
+    (dotimes (pattern-id (length possible-patterns))
+      (unless (= pattern-id chosen-pattern-id)
+        (setf (sbit possible-patterns pattern-id) 0)
+        (push (cons tile chosen-pattern-id) (pattern-removal-stack tile-map))))))
+
+(defun enabler-count (tile pattern-id direction)
+  (let ((direction-index (core:direction->index direction)))
+    (aref (enabler-counts tile) pattern-id direction-index)))
+
+(defun (setf enabler-count) (value tile pattern-id direction)
+  (let ((direction-index (core:direction->index direction)))
+    (setf (aref (enabler-counts tile) pattern-id direction-index) value)))

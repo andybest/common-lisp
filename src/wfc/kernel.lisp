@@ -8,8 +8,8 @@
   (grid nil :type grid:grid)
   (width 2 :type u:positive-fixnum)
   (height 2 :type u:positive-fixnum)
-  (x 0 :type u:non-negative-fixnum)
-  (y 0 :type u:non-negative-fixnum))
+  (x 0 :type fixnum)
+  (y 0 :type fixnum))
 
 (defun make-kernel (&key grid (width 2) (height 2))
   (%make-kernel :grid grid :width width :height height))
