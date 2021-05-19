@@ -51,12 +51,13 @@
     (values total-weight
             total-weight-log-weight)))
 
-(u:fn-> make-tile-enabler-counts (core:core) (u:ub32a (* 4)))
-(defun make-tile-enabler-counts (core)
+(u:fn-> make-tile-enabler-counts (core:core &optional u:ub32a) (u:ub32a (* 4)))
+(defun make-tile-enabler-counts (core &optional enabler-counts)
   (declare (optimize speed))
   (let* ((adjacencies (core:adjacencies core))
          (pattern-count (pat:get-count (core:patterns core)))
-         (enabler-counts (make-array (list pattern-count 4) :element-type 'u:ub32)))
+         (enabler-counts (or enabler-counts
+                             (make-array (list pattern-count 4) :element-type 'u:ub32))))
     (dotimes (pattern-id pattern-count)
       (loop :for direction :in '(:left :right :up :down)
             :for i :from 0
@@ -64,20 +65,31 @@
             :do (setf (aref enabler-counts pattern-id i) count)))
     enabler-counts))
 
+(u:fn-> reset-tile (core:core tile &optional boolean) null)
+(defun reset-tile (core tile &optional allocate-p)
+  (declare (optimize speed))
+  (u:mvlet* ((rng (core:rng core))
+             (pattern-count (pat:get-count (core:patterns core)))
+             (total-weight total-weight-log-weight (calculate-initial-weights core pattern-count)))
+    (setf (total-weight tile) total-weight
+          (total-weight-log-weight tile) total-weight-log-weight
+          (entropy-noise tile) (rng:float rng 0.0 0.0001)
+          (collapsed-p tile) nil)
+    (if allocate-p
+        (setf (possible-patterns tile) (u:make-bit-vector pattern-count 1)
+              (enabler-counts tile) (make-tile-enabler-counts core))
+        (progn
+          (fill (possible-patterns tile) 1)
+          (make-tile-enabler-counts core (enabler-counts tile))))
+    nil))
+
 (u:fn-> prepare (core:core) null)
 (declaim (inline prepare))
 (defun prepare (core)
   (declare (optimize speed))
-  (u:mvlet* ((rng (core:rng core))
-             (grid (grid (core:tile-map core)))
-             (pattern-count (pat:get-count (core:patterns core)))
-             (total-weight total-weight-log-weight (calculate-initial-weights core pattern-count)))
+  (let ((grid (grid (core:tile-map core))))
     (grid:do-cells (grid tile)
-      (setf (possible-patterns tile) (u:make-bit-vector pattern-count 1)
-            (total-weight tile) total-weight
-            (total-weight-log-weight tile) total-weight-log-weight
-            (entropy-noise tile) (rng:float rng 0.0 0.0001)
-            (enabler-counts tile) (make-tile-enabler-counts core)))))
+      (reset-tile core tile t))))
 
 (u:fn-> compute-entropy (tile) u:f32)
 (defun compute-entropy (tile)
