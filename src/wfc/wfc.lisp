@@ -54,7 +54,7 @@
 
 ;;; Render output
 
-(defun render (core)
+(defun render (core &key path)
   (let* ((grid (tm:grid (core:tile-map core)))
          (width (grid:width grid))
          (height (grid:height grid))
@@ -62,23 +62,25 @@
     (grid:do-cells (grid cell)
       (let ((color (grid:value cell)))
         (setf (aref data (+ (* (grid:y cell) width) (grid:x cell))) color)))
-    (img:write-image data width height "~/Temp/foo.png")))
+    (img:write-image data width height path)
+    (format t "Image written to: ~s~%" (namestring path))))
 
 ;;; Main entry point
 
 (defun wfc (sample-path
             &key
+              seed
               (pattern-size 2)
               (periodic-input-p t)
               periodic-output-p
-              (output-width 10)
-              (output-height 10)
-              seed)
+              (output-width 128)
+              (output-height 128)
+              output-path)
   (let* ((sample (sample:load sample-path))
          (tile-map (tm:make-tile-map :width output-width :height output-height))
          (core (core:make-core :seed seed :sample sample :tile-map tile-map)))
     (analyze core :pattern-size pattern-size :periodic-p periodic-input-p)
     (prepare-tile-map core)
     (solve core :periodic-p periodic-output-p)
-    (render core)
-    core))
+    (render core :path output-path)
+    nil))
