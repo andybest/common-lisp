@@ -32,6 +32,7 @@
    #:kernel
    #:make-kernel
    #:map
+   #:rotation
    #:x
    #:y))
 
@@ -53,15 +54,16 @@
    (#:u #:golden-utils))
   (:use #:cl)
   (:export
+   #:collection
    #:extract
    #:get-count
    #:get-origin-color
    #:get-pattern
    #:grid
    #:id
+   #:make-collection
    #:make-pattern
-   #:make-pattern-collection
-   #:pattern-collection
+   #:pattern
    #:reflect-p
    #:rotation
    #:size
@@ -78,6 +80,8 @@
   (:export
    #:adjacencies
    #:contradiction
+   #:core
+   #:direction
    #:direction->index
    #:direction->offset
    #:frequencies

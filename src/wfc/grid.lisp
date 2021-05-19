@@ -1,30 +1,36 @@
 (in-package #:%syntex.wfc.grid)
 
+(deftype dimension () '(and u:ub16 (integer 2)))
+
+(declaim (inline make-cell))
 (defstruct (cell
             (:constructor make-cell (x y))
             (:conc-name nil)
             (:predicate nil)
             (:copier nil))
-  (x 0 :type u:non-negative-fixnum)
-  (y 0 :type u:non-negative-fixnum)
+  (x 0 :type u:ub16)
+  (y 0 :type u:ub16)
   (value 0 :type u:ub32))
 
 (u:define-printer (cell stream)
   (format stream "~d,~d" (x cell) (y cell)))
 
+(declaim (inline %make-grid))
 (defstruct (grid
             (:constructor %make-grid)
             (:conc-name nil)
             (:predicate nil)
             (:copier nil))
-  (width 0 :type u:positive-fixnum)
-  (height 0 :type u:positive-fixnum)
-  (cells (make-array 0) :type simple-array))
+  (width 0 :type dimension)
+  (height 0 :type dimension)
+  (cells (make-array 0) :type (vector t)))
 
 (u:define-printer (grid stream)
   (format stream "~dx~d" (width grid) (height grid)))
 
+(u:fn-> make-grid (dimension dimension &optional simple-array) grid)
 (defun make-grid (width height &optional cells)
+  (declare (optimize speed))
   (let ((grid (%make-grid :width width :height height)))
     (if cells
         (setf (cells grid) cells)
@@ -35,16 +41,19 @@
                     (cells grid) cells)))))
     grid))
 
+(declaim (inline get-cell))
+(u:fn-> get-cell (grid fixnum fixnum &key (:periodic-p boolean)) (or cell null))
 (defun get-cell (grid x y &key periodic-p)
+  (declare (optimize speed))
   (let ((width (width grid))
         (height (height grid)))
     (if periodic-p
-        (aref (cells grid) (+ (* (mod y height) width) (mod x width)))
+        (svref (cells grid) (+ (* (mod y height) width) (mod x width)))
         (when (and (<= 0 x)
                    (< x width)
                    (<= 0 y)
                    (< y height))
-          (aref (cells grid) (+ (* y width) x))))))
+          (svref (cells grid) (+ (* y width) x))))))
 
 (defmacro do-cells ((grid cell) &body body)
   (u:with-gensyms (width height cells x y)
@@ -53,5 +62,5 @@
            (,cells (cells ,grid)))
        (dotimes (,y ,height)
          (dotimes (,x ,width)
-           (let ((,cell (aref ,cells (+ (* ,y ,width) ,x))))
+           (let ((,cell (svref ,cells (+ (* ,y ,width) ,x))))
              ,@body))))))

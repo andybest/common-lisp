@@ -1,5 +1,6 @@
 (in-package #:%syntex.image)
 
+(declaim (inline %make-image))
 (defstruct (image
             (:constructor %make-image)
             (:conc-name nil)
@@ -20,8 +21,11 @@
     (error "Unsupported image file.")))
 
 (defmethod pack ((png png:png) (color-type (eql :greyscale)))
-  (loop :with size = (* (png:width png) (png:height png))
-        :with data = (png:data png)
+  (declare (optimize speed))
+  (loop :with width :of-type u:ub16 = (png:width png)
+        :with height :of-type u:ub16 = (png:height png)
+        :with size = (* width height)
+        :with data :of-type u:ub8a = (png:data png)
         :with packed-data = (u:make-ub32-array size)
         :for i :below size
         :for value = (aref data i)
@@ -34,8 +38,11 @@
         :finally (return packed-data)))
 
 (defmethod pack (png (color-type (eql :greyscale-alpha)))
-  (loop :with size = (* (png:width png) (png:height png))
-        :with data = (png:data png)
+  (declare (optimize speed))
+  (loop :with width :of-type u:ub16 = (png:width png)
+        :with height :of-type u:ub16 = (png:height png)
+        :with size = (* width height)
+        :with data :of-type u:ub8a = (png:data png)
         :with packed-data = (u:make-ub32-array size)
         :for i :below (* size 2) :by 2
         :for j :from 0
@@ -49,8 +56,11 @@
         :finally (return packed-data)))
 
 (defmethod pack (png (color-type (eql :truecolour)))
-  (loop :with size = (* (png:width png) (png:height png))
-        :with data = (png:data png)
+  (declare (optimize speed))
+  (loop :with width :of-type u:ub16 = (png:width png)
+        :with height :of-type u:ub16 = (png:height png)
+        :with size = (* width height)
+        :with data :of-type u:ub8a = (png:data png)
         :with packed-data = (u:make-ub32-array size)
         :for i :below (* size 3) :by 3
         :for j :from 0
@@ -63,8 +73,11 @@
         :finally (return packed-data)))
 
 (defmethod pack (png (color-type (eql :truecolour-alpha)))
-  (loop :with size = (* (png:width png) (png:height png))
-        :with data = (png:data png)
+  (declare (optimize speed))
+  (loop :with width :of-type u:ub16 = (png:width png)
+        :with height :of-type u:ub16 = (png:height png)
+        :with size = (* width height)
+        :with data :of-type u:ub8a = (png:data png)
         :with packed-data = (u:make-ub32-array size)
         :for i :below (* size 4) :by 4
         :for j :from 0
@@ -85,7 +98,10 @@
           (ldb (byte 8 0) color)
           (ldb (byte 8 24) color)))
 
+(u:fn-> unpack (u:ub32a u:ub16 u:ub16) u:ub8a)
+(declaim (inline unpack))
 (defun unpack (data width height)
+  (declare (optimize speed))
   (let ((unpacked-data (u:make-ub8-array (* width height 4))))
     (dotimes (i (length data))
       (u:mvlet ((r g b a (from-argb (aref data i)))
@@ -96,10 +112,13 @@
               (aref unpacked-data (+ offset 3)) a)))
     unpacked-data))
 
+(u:fn-> write-image (u:ub32a u:ub16 u:ub16 (or pathname string)) (values))
 (defun write-image (data width height file-path)
+  (declare (optimize speed))
   (let ((png (make-instance 'zpng:png
                             :color-type :truecolor-alpha
                             :width width
                             :height height
                             :image-data (unpack data width height))))
-    (zpng:write-png png file-path)))
+    (zpng:write-png png file-path)
+    (values)))

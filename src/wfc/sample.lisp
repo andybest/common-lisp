@@ -1,6 +1,8 @@
 (in-package #:%syntex.wfc.sample)
 
+(u:fn-> load ((or pathname string)) grid:grid)
 (defun load (file-path)
+  (declare (optimize speed))
   (let* ((image (img:make-image file-path))
          (width (img:width image))
          (height (img:height image))

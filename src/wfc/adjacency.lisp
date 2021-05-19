@@ -1,6 +1,9 @@
 (in-package #:%syntex.wfc.adjacency)
 
+(u:fn-> make-edge-kernel (pat:pattern core:direction) kernel:kernel)
+(declaim (inline make-edge-kernel))
 (defun make-edge-kernel (pattern edge)
+  (declare (optimize speed))
   (let ((grid (pat:grid pattern))
         (size (pat:size pattern)))
     (ecase edge
@@ -9,7 +12,10 @@
       ((:up :down)
        (kernel:make-kernel :grid grid :width size :height (1- size))))))
 
+(u:fn-> align-edge (kernel:kernel &key (:edge core:direction)) kernel:kernel)
+(declaim (inline align-edge))
 (defun align-edge (kernel &key edge)
+  (declare (optimize speed))
   (ecase edge
     ((:left :up)
      (kernel:align kernel 0 0))
@@ -18,27 +24,39 @@
     (:down
      (kernel:align kernel 0 1))))
 
+(u:fn-> invert-edge (core:direction) core:direction)
+(declaim (inline invert-edge))
 (defun invert-edge (edge)
+  (declare (optimize speed))
   (ecase edge
     (:left :right)
     (:right :left)
     (:up :down)
     (:down :up)))
 
+(u:fn-> compatible-p
+        (pat:pattern pat:pattern &key (:data1 u:ub32a) (:data2 u:ub32a) (:edge core:direction))
+        boolean)
 (defun compatible-p (pattern1 pattern2 &key data1 data2 edge)
+  (declare (optimize speed))
   (flet ((%map (pattern data edge)
            (let ((kernel (make-edge-kernel pattern edge))
                  (index 0))
+             (declare (u:ub8 index))
              (align-edge kernel :edge edge)
              (kernel:map kernel
                          (lambda (x)
                            (setf (aref data index) (grid:value x))
                            (incf index))))))
+    (declare (inline %map))
     (%map pattern1 data1 edge)
     (%map pattern2 data2 (invert-edge edge))
     (equalp data1 data2)))
 
+(u:fn-> generate (core:core &key (:pattern-size u:ub8)) null)
+(declaim (inline generate))
 (defun generate (core &key pattern-size)
+  (declare (optimize speed))
   (let* ((patterns (core:patterns core))
          (pattern-count (pat:get-count patterns))
          (adjacencies (make-array pattern-count))
@@ -53,7 +71,5 @@
             (dolist (edge '(:left :right :up :down))
               (when (compatible-p pattern1 pattern2 :data1 data1 :data2 data2 :edge edge)
                 (push j (u:href (aref adjacencies i) edge))))))))
-    (setf (core:adjacencies core) adjacencies)))
-
-(defun get-possible (core pattern-id direction)
-  (u:href (aref (core:adjacencies core) pattern-id) direction))
+    (setf (core:adjacencies core) adjacencies)
+    nil))

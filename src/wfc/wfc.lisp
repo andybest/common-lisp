@@ -20,7 +20,9 @@
 
 ;;; Main algorithm
 
+(u:fn-> propagate (core:core &key (:periodic-p boolean)) null)
 (defun propagate (core &key periodic-p)
+  (declare (optimize speed))
   (let* ((adjacencies (core:adjacencies core))
          (tile-map (core:tile-map core))
          (entropy-queue (tm:entropy-queue tile-map)))
@@ -40,7 +42,9 @@
                     (push (cons neighbor pattern-id) (tm:pattern-removal-stack tile-map)))
                   (decf (tm:enabler-count neighbor pattern-id opposite-direction)))))))))))
 
+(u:fn-> solve (core:core &key (:periodic-p boolean)) null)
 (defun solve (core &key periodic-p)
+  (declare (optimize speed))
   (let* ((tile-map (core:tile-map core))
          (grid (tm:grid tile-map))
          (entropy-queue (tm:entropy-queue tile-map))
@@ -54,7 +58,9 @@
 
 ;;; Render output
 
+(u:fn-> render (core:core &key (:path (or pathname string))) (values))
 (defun render (core &key path)
+  (declare (optimize speed))
   (let* ((grid (tm:grid (core:tile-map core)))
          (width (grid:width grid))
          (height (grid:height grid))
@@ -63,7 +69,8 @@
       (let ((color (grid:value cell)))
         (setf (aref data (+ (* (grid:y cell) width) (grid:x cell))) color)))
     (img:write-image data width height path)
-    (format t "Image written to: ~s~%" (namestring path))))
+    (format t "Image written to: ~s~%" (namestring path))
+    (values)))
 
 ;;; Main entry point
 
