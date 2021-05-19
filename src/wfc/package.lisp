@@ -111,8 +111,8 @@
    (#:u #:golden-utils))
   (:use #:cl)
   (:export
-   #:choose
-   #:generate))
+   #:generate
+   #:invert-edge))
 
 (defpackage #:%syntex.wfc.tile-map
   (:local-nicknames

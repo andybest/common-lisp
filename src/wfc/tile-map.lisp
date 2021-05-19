@@ -26,8 +26,7 @@
 (defun make-tile-map (&key width height)
   (let* ((tiles (make-array (* width height)))
          (grid (grid:make-grid width height tiles))
-         (tile-map (%make-tile-map :grid grid
-                                   :uncollapsed-count (* width height))))
+         (tile-map (%make-tile-map :grid grid :uncollapsed-count (* width height))))
     (dotimes (y height)
       (dotimes (x width)
         (setf (aref tiles (+ (* y width) x)) (%make-tile x y))))
@@ -70,7 +69,7 @@
 (defun compute-entropy (tile)
   (let ((total-weight (total-weight tile))
         (total-weight-log-weight (total-weight-log-weight tile)))
-    (+ (- (log total-weight-log-weight 2)
+    (+ (- (log total-weight 2)
           (/ total-weight-log-weight total-weight))
        (entropy-noise tile))))
 
@@ -108,9 +107,10 @@
     (setf (collapsed-p tile) t
           (grid:value tile) chosen-pattern-id)
     (dotimes (pattern-id (length possible-patterns))
-      (unless (= pattern-id chosen-pattern-id)
+      (when (and (= (sbit possible-patterns pattern-id) 1)
+                 (/= pattern-id chosen-pattern-id))
         (setf (sbit possible-patterns pattern-id) 0)
-        (push (cons tile chosen-pattern-id) (pattern-removal-stack tile-map))))))
+        (push (cons tile pattern-id) (pattern-removal-stack tile-map))))))
 
 (defun enabler-count (tile pattern-id direction)
   (let ((direction-index (core:direction->index direction)))
