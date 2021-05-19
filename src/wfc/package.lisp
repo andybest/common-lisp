@@ -128,6 +128,7 @@
    #:compute-entropy
    #:enabler-count
    #:entropy-queue
+   #:get-neighbor
    #:grid
    #:make-tile-map
    #:pattern-removal-stack

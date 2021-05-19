@@ -113,6 +113,13 @@
         (setf (sbit possible-patterns pattern-id) 0)
         (push (cons tile pattern-id) (pattern-removal-stack tile-map))))))
 
+(defun get-neighbor (tile-map tile direction &key periodic-p)
+  (u:mvlet ((grid (grid tile-map))
+            (x (grid:x tile))
+            (y (grid:y tile))
+            (ox oy (core:direction->offset direction)))
+    (grid:get-cell grid (+ x ox) (+ y oy) :periodic-p periodic-p)))
+
 (defun enabler-count (tile pattern-id direction)
   (let ((direction-index (core:direction->index direction)))
     (aref (enabler-counts tile) pattern-id direction-index)))
