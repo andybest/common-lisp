@@ -18,6 +18,25 @@
 (defun prepare-tile-map (core)
   (tm:prepare core))
 
+;;; Progress meter
+
+(defun update-progress (tile-map tile-count progress)
+  (let ((current (truncate (- tile-count (tm:uncollapsed-count tile-map))
+                           (/ tile-count 100))))
+    (if (/= current progress)
+        (progn
+          (cond
+            ((zerop progress)
+             (format t "0%"))
+            ((= current 100)
+             (format t "100%~%"))
+            ((zerop (mod current 10))
+             (format t "~d%" current))
+            (t (format t ".")))
+          (finish-output)
+          current)
+        progress)))
+
 ;;; Main algorithm
 
 (u:fn-> enqueue-initial-tile (core:core) null)
@@ -57,13 +76,17 @@
 (u:fn-> solve (core:core &key (:periodic-p boolean)) null)
 (defun solve (core &key periodic-p)
   (declare (optimize speed))
-  (let ((tile-map (core:tile-map core)))
+  (let* ((tile-map (core:tile-map core))
+         (grid (tm:grid tile-map))
+         (tile-count (* (grid:width grid) (grid:height grid)))
+         (progress 0))
     (enqueue-initial-tile core)
     (u:while (plusp (tm:uncollapsed-count tile-map))
       (let ((tile (tm:choose-tile core)))
         (tm:collapse-tile core tile)
         (propagate core :periodic-p periodic-p)
-        (decf (tm:uncollapsed-count tile-map))))))
+        (decf (tm:uncollapsed-count tile-map))
+        (setf progress (update-progress tile-map tile-count progress))))))
 
 ;;; Render output
 
