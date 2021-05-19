@@ -132,6 +132,8 @@
    #:grid
    #:make-tile-map
    #:pattern-removal-stack
+   #:possible-pattern-p
+   #:positive-enabler-counts-p
    #:prepare
    #:remove-possible-pattern
    #:uncollapsed-count))

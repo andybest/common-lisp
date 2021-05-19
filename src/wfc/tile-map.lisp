@@ -73,9 +73,15 @@
           (/ total-weight-log-weight total-weight))
        (entropy-noise tile))))
 
+(defun possible-pattern-p (tile pattern-id)
+  (plusp (sbit (possible-patterns tile) pattern-id)))
+
 (defun remove-possible-pattern (core tile pattern-id)
-  (let ((frequency (aref (core:frequencies core) pattern-id)))
-    (setf (sbit (possible-patterns tile) pattern-id) 0)
+  (let ((frequency (aref (core:frequencies core) pattern-id))
+        (possible-patterns (possible-patterns tile)))
+    (setf (sbit possible-patterns pattern-id) 0)
+    (when (every #'zerop possible-patterns)
+      (error 'core:contradiction))
     (decf (total-weight tile) frequency)
     (decf (total-weight-log-weight tile) (* frequency (log frequency 2)))))
 
@@ -93,7 +99,7 @@
          (possible-patterns (possible-patterns tile))
          (remaining (rng:int (core:rng core) 0 (total-weight tile) nil)))
     (dotimes (pattern-id (length possible-patterns))
-      (when (plusp (sbit possible-patterns pattern-id))
+      (when (possible-pattern-p tile pattern-id)
         (let ((weight (aref frequencies pattern-id)))
           (if (>= remaining weight)
               (decf remaining weight)
@@ -108,7 +114,7 @@
     (setf (collapsed-p tile) t
           (grid:value tile) (pat:get-origin-color patterns chosen-pattern-id))
     (dotimes (pattern-id (length possible-patterns))
-      (when (and (= (sbit possible-patterns pattern-id) 1)
+      (when (and (possible-pattern-p tile pattern-id)
                  (/= pattern-id chosen-pattern-id))
         (setf (sbit possible-patterns pattern-id) 0)
         (push (cons tile pattern-id) (pattern-removal-stack tile-map))))))
@@ -127,3 +133,9 @@
 (defun (setf enabler-count) (value tile pattern-id direction)
   (let ((direction-index (core:direction->index direction)))
     (setf (aref (enabler-counts tile) pattern-id direction-index) value)))
+
+(defun positive-enabler-counts-p (tile pattern-id)
+  (and (plusp (enabler-count tile pattern-id :left))
+       (plusp (enabler-count tile pattern-id :right))
+       (plusp (enabler-count tile pattern-id :up))
+       (plusp (enabler-count tile pattern-id :down))))
