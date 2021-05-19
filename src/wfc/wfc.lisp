@@ -90,4 +90,4 @@
     (prepare-tile-map core)
     (solve core :periodic-p periodic-output-p)
     (render core :path output-path)
-    nil))
+    (values)))

@@ -60,15 +60,9 @@
    #:get-origin-color
    #:get-pattern
    #:grid
-   #:id
    #:make-collection
-   #:make-pattern
    #:pattern
-   #:reflect-p
-   #:rotation
-   #:size
-   #:x
-   #:y))
+   #:size))
 
 (defpackage #:%syntex.wfc.core
   (:local-nicknames
@@ -97,7 +91,6 @@
    (#:grid #:%syntex.wfc.grid)
    (#:kernel #:%syntex.wfc.kernel)
    (#:pat #:%syntex.wfc.pattern)
-   (#:rng #:seedable-rng)
    (#:u #:golden-utils))
   (:use #:cl)
   (:export
