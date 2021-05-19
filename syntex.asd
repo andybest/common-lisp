@@ -25,7 +25,6 @@
    (:module "wfc"
     :components
     ((:file "package")
-     (:file "image")
      (:file "grid")
      (:file "kernel")
      (:file "sample")

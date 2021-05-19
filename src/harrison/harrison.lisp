@@ -20,9 +20,9 @@
 
 (defun make-state (image &key output-width output-height indexed-p kernel-size output-path seed)
   (let* ((rng (rng:make-generator seed))
-         (sample-width (img::width image))
-         (sample-height (img::height image))
-         (sample-data (img::argb-data image))
+         (sample-width (img:width image))
+         (sample-height (img:height image))
+         (sample-data (img:data image))
          (output-width (or output-width sample-width))
          (output-height (or output-height sample-height)))
     (%make-state :rng rng
@@ -49,8 +49,8 @@
 (declaim (inline color-metric))
 (defun color-metric (color1 color2)
   (declare (u:ub32 color1 color2))
-  (u:mvlet* ((r1 g1 b1 a1 (img::from-argb color1))
-             (r2 g2 b2 a2 (img::from-argb color2))
+  (u:mvlet* ((r1 g1 b1 a1 (img:from-argb color1))
+             (r2 g2 b2 a2 (img:from-argb color2))
              (r (1+ (* (expt (- r1 r2) 2) 7.62939453125d-7)))
              (g (1+ (* (expt (- g1 g2) 2) 7.62939453125d-7)))
              (b (1+ (* (expt (- b1 b2) 2) 7.62939453125d-7))))
@@ -221,13 +221,10 @@
          (height (output-height state))
          (output-size (* width height))
          (origins (origins state))
-         (result (u:make-ub32-array output-size)))
-    (dotimes (i (length result))
-      (setf (aref result i) (aref sample-data (aref origins i))))
-    (img::write-image (img::unpack-argb result width height)
-                      width
-                      height
-                      (output-path state))))
+         (data (u:make-ub32-array output-size)))
+    (dotimes (i (length data))
+      (setf (aref data i) (aref sample-data (aref origins i))))
+    (img:write-image data width height (output-path state))))
 
 (defun %harrison (state round candidate-count metrics indices)
   (dotimes (counter (length indices))
@@ -268,7 +265,7 @@
     (error 'int::invalid-harrison-candidate-count :value candidate-count))
   (unless (typep seed '(or string null))
     (error 'int::invalid-seed :seed seed))
-  (let* ((state (make-state (img::make-argb-image file-path)
+  (let* ((state (make-state (img:make-image file-path)
                             :indexed-p indexed-p
                             :output-width width
                             :output-height height

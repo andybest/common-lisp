@@ -52,6 +52,18 @@
         (propagate core :periodic-p periodic-p)
         (decf (tm:uncollapsed-count tile-map))))))
 
+;;; Render output
+
+(defun render (core)
+  (let* ((grid (tm:grid (core:tile-map core)))
+         (width (grid:width grid))
+         (height (grid:height grid))
+         (data (u:make-ub32-array (* width height))))
+    (grid:do-cells (grid cell)
+      (let ((color (grid:value cell)))
+        (setf (aref data (+ (* (grid:y cell) width) (grid:x cell))) color)))
+    (img:write-image data width height "~/Temp/foo.png")))
+
 ;;; Main entry point
 
 (defun wfc (sample-path
@@ -70,35 +82,3 @@
     (solve core :periodic-p periodic-output-p)
     (render core)
     core))
-
-(defun render (core)
-  (labels ((from-argb (color)
-             (values (ldb (byte 8 16) color)
-                     (ldb (byte 8 8) color)
-                     (ldb (byte 8 0) color)
-                     (ldb (byte 8 24) color)))
-           (unpack-argb (data width height)
-             (let ((unpacked-data (u:make-ub8-array (* width height 4))))
-               (dotimes (i (length data))
-                 (u:mvlet ((r g b a (from-argb (aref data i)))
-                           (offset (* i 4)))
-                   (setf (aref unpacked-data offset) r
-                         (aref unpacked-data (+ offset 1)) g
-                         (aref unpacked-data (+ offset 2)) b
-                         (aref unpacked-data (+ offset 3)) a)))
-               unpacked-data))
-           (write-image (data width height file-path)
-             (let ((png (make-instance 'zpng:png
-                                       :color-type :truecolor-alpha
-                                       :width width
-                                       :height height
-                                       :image-data (unpack-argb data width height))))
-               (zpng:write-png png file-path))))
-    (let* ((grid (tm:grid (core:tile-map core)))
-           (width (grid:width grid))
-           (height (grid:height grid))
-           (data (u:make-ub32-array (* width height))))
-      (grid:do-cells (grid cell)
-        (let ((color (grid:value cell)))
-          (setf (aref data (+ (* (grid:y cell) width) (grid:x cell))) color)))
-      (write-image data width height "~/Temp/foo.png"))))

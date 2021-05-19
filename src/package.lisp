@@ -17,7 +17,13 @@
    (#:png #:pngload)
    (#:u #:golden-utils))
   (:use #:cl)
-  (:export))
+  (:export
+   #:data
+   #:from-argb
+   #:height
+   #:make-image
+   #:width
+   #:write-image))
 
 (defpackage #:%syntex.harrison
   (:local-nicknames

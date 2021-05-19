@@ -1,18 +1,5 @@
 (in-package #:cl-user)
 
-(defpackage #:%syntex.wfc.image
-  (:local-nicknames
-   (#:png #:pngload)
-   (#:u #:golden-utils))
-  (:use #:cl)
-  (:export
-   #:data
-   #:image
-   #:height
-   #:make-image
-   #:unpack
-   #:width))
-
 (defpackage #:%syntex.wfc.grid
   (:local-nicknames
    (#:u #:golden-utils))
@@ -51,7 +38,7 @@
 (defpackage #:%syntex.wfc.sample
   (:local-nicknames
    (#:grid #:%syntex.wfc.grid)
-   (#:img #:%syntex.wfc.image)
+   (#:img #:%syntex.image)
    (#:u #:golden-utils))
   (:use #:cl)
   (:shadow
@@ -143,6 +130,7 @@
    (#:adj #:%syntex.wfc.adjacency)
    (#:core #:%syntex.wfc.core)
    (#:grid #:%syntex.wfc.grid)
+   (#:img #:%syntex.image)
    (#:pat #:%syntex.wfc.pattern)
    (#:pq #:damn-fast-priority-queue)
    (#:sample #:%syntex.wfc.sample)
