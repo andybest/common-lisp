@@ -9,19 +9,8 @@
                :size pattern-size
                :periodic-p periodic-p))
 
-(defun analyze-origin-colors (core)
-  (let* ((patterns (core:patterns core))
-         (pattern-count (pat:get-count patterns))
-         (origin-colors (u:make-ub32-array pattern-count)))
-    (dotimes (id pattern-count)
-      (let* ((pattern (pat:get-pattern patterns id))
-             (color (pat:get-origin-color pattern)))
-        (setf (aref origin-colors id) color)))
-    (setf (core:origin-colors core) origin-colors)))
-
 (defun analyze (core &key pattern-size periodic-p)
   (analyze-patterns core :pattern-size pattern-size :periodic-p periodic-p)
-  (analyze-origin-colors core)
   (adj:generate core :pattern-size pattern-size))
 
 ;;; Prepare tile map
@@ -119,7 +108,6 @@
            (height (grid:height grid))
            (data (u:make-ub32-array (* width height))))
       (grid:do-cells (grid cell)
-        (let* ((pattern-id (grid:value cell))
-               (origin-color (aref (core:origin-colors core) pattern-id)))
-          (setf (aref data (+ (* (grid:y cell) width) (grid:x cell))) origin-color)))
+        (let ((color (grid:value cell)))
+          (setf (aref data (+ (* (grid:y cell) width) (grid:x cell))) color)))
       (write-image data width height "~/Temp/foo.png"))))

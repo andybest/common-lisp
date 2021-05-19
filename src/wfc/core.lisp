@@ -11,7 +11,6 @@
   (patterns nil :type pat:pattern-collection)
   (frequencies (make-array 0 :fill-pointer 0 :adjustable t) :type vector)
   (adjacencies (make-array 0) :type simple-array)
-  (origin-colors (u:make-ub32-array 0) :type u:ub32a)
   tile-map)
 
 (u:define-printer (core stream :type nil)

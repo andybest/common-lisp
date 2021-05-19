@@ -95,7 +95,6 @@
    #:direction->offset
    #:frequencies
    #:make-core
-   #:origin-colors
    #:patterns
    #:rng
    #:sample

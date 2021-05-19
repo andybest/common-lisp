@@ -85,8 +85,9 @@
 (defun get-count (collection)
   (length (id->pattern collection)))
 
-(defun get-origin-color (pattern)
-  (aref (data pattern) 0))
+(defun get-origin-color (collection pattern-id)
+  (let ((pattern (get-pattern collection pattern-id)))
+    (aref (data pattern) 0)))
 
 (defun get-pattern (collection id)
   (aref (id->pattern collection) id))

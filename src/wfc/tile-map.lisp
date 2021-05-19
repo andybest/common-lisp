@@ -101,11 +101,12 @@
     (error "Bug: Inconsistency detected with tile frequencies.")))
 
 (defun collapse-tile (core tile)
-  (let ((tile-map (core:tile-map core))
-        (possible-patterns (possible-patterns tile))
-        (chosen-pattern-id (choose-pattern-id core tile)))
+  (let* ((tile-map (core:tile-map core))
+         (patterns (core:patterns core))
+         (possible-patterns (possible-patterns tile))
+         (chosen-pattern-id (choose-pattern-id core tile)))
     (setf (collapsed-p tile) t
-          (grid:value tile) chosen-pattern-id)
+          (grid:value tile) (pat:get-origin-color patterns chosen-pattern-id))
     (dotimes (pattern-id (length possible-patterns))
       (when (and (= (sbit possible-patterns pattern-id) 1)
                  (/= pattern-id chosen-pattern-id))
