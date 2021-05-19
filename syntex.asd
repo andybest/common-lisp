@@ -15,7 +15,10 @@
   :pathname "src"
   :serial t
   :components
-  ((:file "package")
+  ((:file "package-common")
+   (:file "package-harrison")
+   (:file "package-wfc")
+   (:file "package")
    (:file "conditions")
    (:file "common")
    (:file "image")
@@ -24,8 +27,7 @@
     ((:file "harrison")))
    (:module "wfc"
     :components
-    ((:file "package")
-     (:file "grid")
+    ((:file "grid")
      (:file "kernel")
      (:file "sample")
      (:file "pattern")

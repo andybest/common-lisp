@@ -73,7 +73,6 @@
   (:use #:cl)
   (:export
    #:adjacencies
-   #:contradiction
    #:core
    #:direction
    #:direction->index
@@ -101,6 +100,7 @@
   (:local-nicknames
    (#:core #:%syntex.wfc.core)
    (#:grid #:%syntex.wfc.grid)
+   (#:int #:%syntex.internal)
    (#:pat #:%syntex.wfc.pattern)
    (#:pq #:damn-fast-priority-queue)
    (#:rng #:seedable-rng)

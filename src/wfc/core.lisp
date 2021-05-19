@@ -21,8 +21,6 @@
 (u:define-printer (core stream :type nil)
   (format stream "CORE"))
 
-(define-condition contradiction (error) ())
-
 (defun make-core (&key seed sample tile-map)
   (%make-core :rng (rng:make-generator seed)
               :sample sample

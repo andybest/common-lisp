@@ -54,3 +54,9 @@
      (format stream "Invalid candidate count ~s for Harrison synthesizer.~%~%Must be an integer ~
                      between 1 and 255."
              (value condition)))))
+
+(define-condition wfc-contradiction (syntex-error) ()
+  (:report
+   (lambda (condition stream)
+     (declare (ignore condition))
+     (format stream "Contradiction occurred."))))

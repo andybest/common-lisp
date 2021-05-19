@@ -101,7 +101,7 @@
     (declare (u:non-negative-fixnum frequency))
     (setf (sbit possible-patterns pattern-id) 0)
     (when (every #'zerop possible-patterns)
-      (error 'core:contradiction))
+      (error 'int:wfc-contradiction))
     (decf (total-weight tile) frequency)
     (decf (total-weight-log-weight tile) (* frequency (log frequency 2)))
     nil))
