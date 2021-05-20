@@ -34,4 +34,5 @@
      (:file "core")
      (:file "adjacency")
      (:file "tile-map")
+     (:file "solver")
      (:file "wfc")))))

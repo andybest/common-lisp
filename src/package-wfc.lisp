@@ -122,6 +122,18 @@
    #:remove-possible-pattern
    #:uncollapsed-count))
 
+(defpackage #:%syntex.wfc.solver
+  (:local-nicknames
+   (#:adj #:%syntex.wfc.adjacency)
+   (#:core #:%syntex.wfc.core)
+   (#:grid #:%syntex.wfc.grid)
+   (#:pq #:damn-fast-priority-queue)
+   (#:tm #:%syntex.wfc.tile-map)
+   (#:u #:golden-utils))
+  (:use #:cl)
+  (:export
+   #:solve))
+
 (defpackage #:%syntex.wfc
   (:local-nicknames
    (#:adj #:%syntex.wfc.adjacency)
@@ -129,8 +141,8 @@
    (#:grid #:%syntex.wfc.grid)
    (#:img #:%syntex.image)
    (#:pat #:%syntex.wfc.pattern)
-   (#:pq #:damn-fast-priority-queue)
    (#:sample #:%syntex.wfc.sample)
+   (#:solver #:%syntex.wfc.solver)
    (#:tm #:%syntex.wfc.tile-map)
    (#:u #:golden-utils))
   (:use #:cl)
