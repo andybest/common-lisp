@@ -23,7 +23,7 @@
             (:copier nil))
   (width 0 :type dimension)
   (height 0 :type dimension)
-  (cells (make-array 0) :type (vector t)))
+  (cells (make-array 0) :type (vector cell)))
 
 (u:define-printer (grid stream)
   (format stream "~dx~d" (width grid) (height grid)))

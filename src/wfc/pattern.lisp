@@ -22,7 +22,7 @@
             (:predicate nil)
             (:copier nil))
   (data->pattern (u:dict #'equalp) :type hash-table)
-  (id->pattern (make-array 0 :fill-pointer 0 :adjustable t) :type (vector t)))
+  (id->pattern (make-array 0) :type simple-vector))
 
 (u:define-printer (collection stream)
   (format stream "count: ~d" (hash-table-count (data->pattern collection))))
@@ -76,9 +76,20 @@
       (progn
         (setf (id pattern) (hash-table-count data->pattern)
               (u:href data->pattern data) pattern)
-        (vector-push-extend pattern (id->pattern collection))
         (vector-push-extend 1 frequencies)))
     pattern))
+
+(u:fn-> make-id-map (collection) null)
+(defun make-id-map (collection)
+  (declare (optimize speed))
+  (let* ((data->pattern (data->pattern collection))
+         (pattern-count (hash-table-count data->pattern))
+         (id->pattern (make-array pattern-count)))
+    (u:do-hash-values (pattern data->pattern)
+      (let ((id (id pattern)))
+        (setf (aref id->pattern id) pattern)))
+    (setf (id->pattern collection) id->pattern)
+    nil))
 
 (u:fn-> extract (collection vector grid:grid &key (:size u:ub8) (:periodic-p boolean)) null)
 (declaim (inline extract))
@@ -97,10 +108,14 @@
            (%extract-test (kernel)
              (or periodic-p
                  (= (kernel:count kernel) (expt size 2)))))
-      (kernel:convolve kernel #'%extract :test #'%extract-test))))
+      (kernel:convolve kernel #'%extract :test #'%extract-test)
+      (make-id-map collection)
+      nil)))
 
 (u:fn-> get-pattern (collection u:ub32) pattern)
+(declaim (inline get-pattern))
 (defun get-pattern (collection pattern-id)
+  (declare (optimize speed))
   (aref (id->pattern collection) pattern-id))
 
 (u:fn-> get-count (collection) u:ub32)
@@ -112,5 +127,6 @@
 (u:fn-> get-origin-color (collection u:ub32) u:ub32)
 (declaim (inline get-origin-color))
 (defun get-origin-color (collection pattern-id)
+  (declare (optimize speed))
   (let ((pattern (get-pattern collection pattern-id)))
     (aref (data pattern) 0)))

@@ -179,6 +179,7 @@
 (u:fn-> (setf enabler-count) (u:ub16 tile u:ub32 core:direction) u:ub16)
 (declaim (inline (setf enabler-count)))
 (defun (setf enabler-count) (value tile pattern-id direction)
+  (declare (optimize speed))
   (let ((direction-index (core:direction->index direction)))
     (setf (aref (enabler-counts tile) pattern-id direction-index) value)))
 
