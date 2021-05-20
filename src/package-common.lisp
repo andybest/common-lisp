@@ -2,14 +2,19 @@
 
 (defpackage #:%syntex.internal
   (:use #:cl)
-  ;; Conditions
   (:export
+   #:check-file-exists
+   #:check-image-dimension
+   #:check-output-path
+   #:check-seed
    #:file-not-found
    #:invalid-dimension
    #:invalid-harrison-candidate-count
    #:invalid-harrison-rounds
-   #:invalid-kernel-size
+   #:invalid-harrison-kernel-size
+   #:invalid-output-path
    #:invalid-seed
+   #:invalid-wfc-pattern-size
    #:syntex-error
    #:wfc-contradiction))
 

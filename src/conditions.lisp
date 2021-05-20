@@ -18,14 +18,6 @@
    (lambda (condition stream)
      (format stream "Invalid seed: ~s.~%~%Seed must be a string or NIL." (seed condition)))))
 
-(define-condition invalid-kernel-size (syntex-error)
-  ((%value :reader value
-           :initarg :value))
-  (:report
-   (lambda (condition stream)
-     (format stream "Invalid kernel size ~s.~%~%Must be an integer between 1 and 255."
-             (value condition)))))
-
 (define-condition invalid-dimension (syntex-error)
   ((%dimension :reader dimension
                :initarg :dimension)
@@ -36,6 +28,22 @@
      (format stream "Invalid dimension ~s for ~s.~%~%Must be an integer between 8 and 65535."
              (value condition)
              (dimension condition)))))
+
+(define-condition invalid-output-path (syntex-error)
+  ((%value :reader value
+           :initarg :value))
+  (:report
+   (lambda (condition stream)
+     (format stream "Invalid output path: ~s.~%~%Must be a pathname or a string."
+             (value condition)))))
+
+(define-condition invalid-harrison-kernel-size (syntex-error)
+  ((%value :reader value
+           :initarg :value))
+  (:report
+   (lambda (condition stream)
+     (format stream "Invalid kernel size ~s.~%~%Must be an integer between 1 and 255."
+             (value condition)))))
 
 (define-condition invalid-harrison-rounds (syntex-error)
   ((%value :reader value
@@ -53,6 +61,14 @@
    (lambda (condition stream)
      (format stream "Invalid candidate count ~s for Harrison synthesizer.~%~%Must be an integer ~
                      between 1 and 255."
+             (value condition)))))
+
+(define-condition invalid-wfc-kernel-size (syntex-error)
+  ((%value :reader value
+           :initarg :value))
+  (:report
+   (lambda (condition stream)
+     (format stream "Invalid pattern size ~s.~%~%Must be an integer between 2 and 255."
              (value condition)))))
 
 (define-condition wfc-contradiction (syntex-error) ()

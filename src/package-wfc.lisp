@@ -139,6 +139,7 @@
    (#:core #:%syntex.wfc.core)
    (#:grid #:%syntex.wfc.grid)
    (#:img #:%syntex.image)
+   (#:int #:%syntex.internal)
    (#:pat #:%syntex.wfc.pattern)
    (#:sample #:%syntex.wfc.sample)
    (#:solver #:%syntex.wfc.solver)

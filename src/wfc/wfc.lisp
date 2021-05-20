@@ -1,7 +1,5 @@
 (in-package #:%syntex.wfc)
 
-;;; Render output
-
 (u:fn-> render (core:core &key (:path (or pathname string))) (values))
 (defun render (core &key path)
   (declare (optimize speed))
@@ -16,9 +14,7 @@
     (format t "~&Image written to: ~s~%" (namestring path))
     (values)))
 
-;;; Main entry point
-
-(defun wfc (sample-path
+(defun wfc (file-path
             &key
               seed
               (pattern-size 2)
@@ -27,7 +23,14 @@
               (output-width 128)
               (output-height 128)
               output-path)
-  (let* ((sample (sample:load sample-path))
+  (int:check-file-exists file-path)
+  (int:check-image-dimension :width output-width)
+  (int:check-image-dimension :height output-height)
+  (int:check-seed seed)
+  (int:check-output-path output-path)
+  (unless (typep pattern-size '(integer 2 255))
+    (error 'int:invalid-wfc-pattern-size :value pattern-size))
+  (let* ((sample (sample:load file-path))
          (tile-map (tm:make-tile-map :width output-width :height output-height))
          (core (core:make-core :seed seed :sample sample :tile-map tile-map)))
     (pat:extract core :size pattern-size :periodic-p periodic-input-p)
