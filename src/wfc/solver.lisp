@@ -51,8 +51,8 @@
           current)
         progress)))
 
-(u:fn-> solve (core:core &key (:periodic-p boolean)) null)
-(defun solve (core &key periodic-p)
+(u:fn-> solve (core:core &key (:periodic-p boolean) (:show-progress-p boolean)) null)
+(defun solve (core &key periodic-p show-progress-p)
   (declare (optimize speed))
   (let* ((tile-map (core:tile-map core))
          (grid (tm:grid tile-map))
@@ -64,4 +64,5 @@
         (tm:collapse-tile core tile)
         (propagate core :periodic-p periodic-p)
         (decf (tm:uncollapsed-count tile-map))
-        (setf progress (update-progress tile-map tile-count progress))))))
+        (when show-progress-p
+          (setf progress (update-progress tile-map tile-count progress)))))))

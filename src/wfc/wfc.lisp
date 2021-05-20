@@ -22,6 +22,7 @@
               periodic-output-p
               (output-width 128)
               (output-height 128)
+              (show-progress-p t)
               output-path)
   (int:check-file-exists file-path)
   (int:check-image-dimension :width output-width)
@@ -36,6 +37,6 @@
     (pat:extract core :size pattern-size :periodic-p periodic-input-p)
     (adj:generate core :pattern-size pattern-size)
     (tm:prepare core)
-    (solver:solve core :periodic-p periodic-output-p)
+    (solver:solve core :periodic-p periodic-output-p :show-progress-p show-progress-p)
     (render core :path output-path)
     (values)))
