@@ -36,6 +36,25 @@
    #:x
    #:y))
 
+(defpackage #:%syntex.wfc.core
+  (:local-nicknames
+   (#:grid #:%syntex.wfc.grid)
+   (#:rng #:seedable-rng)
+   (#:u #:golden-utils))
+  (:use #:cl)
+  (:export
+   #:adjacencies
+   #:core
+   #:data->pattern
+   #:direction
+   #:direction->index
+   #:direction->offset
+   #:id->pattern
+   #:make-core
+   #:rng
+   #:sample
+   #:tile-map))
+
 (defpackage #:%syntex.wfc.sample
   (:local-nicknames
    (#:grid #:%syntex.wfc.grid)
@@ -49,40 +68,20 @@
 
 (defpackage #:%syntex.wfc.pattern
   (:local-nicknames
+   (#:core #:%syntex.wfc.core)
    (#:grid #:%syntex.wfc.grid)
    (#:kernel #:%syntex.wfc.kernel)
    (#:u #:golden-utils))
   (:use #:cl)
   (:export
-   #:collection
    #:extract
    #:get-count
+   #:get-frequency
    #:get-origin-color
    #:get-pattern
    #:grid
-   #:make-collection
    #:pattern
    #:size))
-
-(defpackage #:%syntex.wfc.core
-  (:local-nicknames
-   (#:grid #:%syntex.wfc.grid)
-   (#:pat #:%syntex.wfc.pattern)
-   (#:rng #:seedable-rng)
-   (#:u #:golden-utils))
-  (:use #:cl)
-  (:export
-   #:adjacencies
-   #:core
-   #:direction
-   #:direction->index
-   #:direction->offset
-   #:frequencies
-   #:make-core
-   #:patterns
-   #:rng
-   #:sample
-   #:tile-map))
 
 (defpackage #:%syntex.wfc.adjacency
   (:local-nicknames

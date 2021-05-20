@@ -29,9 +29,9 @@
     :components
     ((:file "grid")
      (:file "kernel")
+     (:file "core")
      (:file "sample")
      (:file "pattern")
-     (:file "core")
      (:file "adjacency")
      (:file "tile-map")
      (:file "solver")

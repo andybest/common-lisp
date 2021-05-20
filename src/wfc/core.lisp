@@ -13,8 +13,8 @@
   (rng nil :type rng:generator)
   (seed nil :type (or string null))
   (sample nil :type grid:grid)
-  (patterns nil :type pat:collection)
-  (frequencies (make-array 0 :fill-pointer 0 :adjustable t) :type (vector t))
+  (data->pattern (u:dict #'equalp) :type hash-table)
+  (id->pattern (make-array 0) :type simple-vector)
   (adjacencies (make-array 0) :type simple-vector)
   tile-map)
 
@@ -24,7 +24,6 @@
 (defun make-core (&key seed sample tile-map)
   (%make-core :rng (rng:make-generator seed)
               :sample sample
-              :patterns (pat:make-collection)
               :tile-map tile-map))
 
 (u:fn-> direction->index (direction) direction-index)

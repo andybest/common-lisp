@@ -23,7 +23,7 @@
             (:copier nil))
   (width 0 :type dimension)
   (height 0 :type dimension)
-  (cells (make-array 0) :type (vector cell)))
+  (cells (make-array 0) :type simple-vector))
 
 (u:define-printer (grid stream)
   (format stream "~dx~d" (width grid) (height grid)))
@@ -48,12 +48,12 @@
   (let ((width (width grid))
         (height (height grid)))
     (if periodic-p
-        (svref (cells grid) (+ (* (mod y height) width) (mod x width)))
+        (aref (cells grid) (+ (* (mod y height) width) (mod x width)))
         (when (and (<= 0 x)
                    (< x width)
                    (<= 0 y)
                    (< y height))
-          (svref (cells grid) (+ (* y width) x))))))
+          (aref (cells grid) (+ (* y width) x))))))
 
 (defmacro do-cells ((grid cell) &body body)
   (u:with-gensyms (width height cells x y)
@@ -62,5 +62,5 @@
            (,cells (cells ,grid)))
        (dotimes (,y ,height)
          (dotimes (,x ,width)
-           (let ((,cell (svref ,cells (+ (* ,y ,width) ,x))))
+           (let ((,cell (aref ,cells (+ (* ,y ,width) ,x))))
              ,@body))))))
