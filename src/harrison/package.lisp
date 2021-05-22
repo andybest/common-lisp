@@ -2,7 +2,8 @@
 
 (defpackage #:%syntex.harrison
   (:local-nicknames
-   (#:int #:%syntex.internal)
+   (#:com #:%syntex.common)
+   (#:cond #:%syntex.conditions)
    (#:lp #:lparallel)
    (#:img #:%syntex.image)
    (#:rng #:seedable-rng)

@@ -1,6 +1,6 @@
 (in-package #:%syntex.wfc.kernel)
 
-(deftype dimension () '(and u:ub8 (integer 2)))
+(deftype dimension () '(and u:ub8 (integer 1)))
 
 (deftype rotation () '(integer 0 3))
 

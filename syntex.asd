@@ -5,7 +5,6 @@
   :homepage "https://git.mfiano.net/mfiano/syntex"
   :encoding :utf-8
   :depends-on (#:cl-cpus
-               #:damn-fast-priority-queue
                #:golden-utils
                #:lparallel
                #:pngload
@@ -15,24 +14,27 @@
   :pathname "src"
   :serial t
   :components
-  ((:file "package-common")
-   (:file "package-harrison")
-   (:file "package-wfc")
-   (:file "package")
-   (:file "conditions")
-   (:file "common")
-   (:file "image")
+  ((:module "common"
+    :components
+    ((:file "package")
+     (:file "conditions")
+     (:file "priority-queue")
+     (:file "common")
+     (:file "image")))
    (:module "harrison"
     :components
-    ((:file "harrison")))
+    ((:file "package")
+     (:file "harrison")))
    (:module "wfc"
     :components
-    ((:file "grid")
+    ((:file "package")
+     (:file "grid")
      (:file "kernel")
      (:file "core")
      (:file "sample")
      (:file "pattern")
-     (:file "adjacency")
+     (:file "history")
      (:file "tile-map")
      (:file "solver")
-     (:file "wfc")))))
+     (:file "wfc")))
+   (:file "package")))

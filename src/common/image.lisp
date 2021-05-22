@@ -112,13 +112,13 @@
               (aref unpacked-data (+ offset 3)) a)))
     unpacked-data))
 
-(u:fn-> write-image (u:ub32a u:ub16 u:ub16 (or pathname string)) (values))
-(defun write-image (data width height file-path)
+(u:fn-> write (u:ub8a u:ub16 u:ub16 (or pathname string)) (values))
+(defun write (data width height file-path)
   (declare (optimize speed))
   (let ((png (make-instance 'zpng:png
                             :color-type :truecolor-alpha
                             :width width
                             :height height
-                            :image-data (unpack data width height))))
+                            :image-data data)))
     (zpng:write-png png file-path)
     (values)))

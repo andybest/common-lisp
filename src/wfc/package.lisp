@@ -49,11 +49,28 @@
    #:direction
    #:direction->index
    #:direction->offset
+   #:history
    #:id->pattern
+   #:invert-direction
    #:make-core
+   #:progress
    #:rng
    #:sample
-   #:tile-map))
+   #:tile-map
+   #:uncollapsed-count))
+
+(defpackage #:%syntex.wfc.history
+  (:local-nicknames
+   (#:cond #:%syntex.conditions)
+   (#:core #:%syntex.wfc.core)
+   (#:u #:golden-utils))
+  (:use #:cl)
+  (:export
+   #:advance-time
+   #:backtrack
+   #:history
+   #:make-history
+   #:record))
 
 (defpackage #:%syntex.wfc.sample
   (:local-nicknames
@@ -74,34 +91,19 @@
    (#:u #:golden-utils))
   (:use #:cl)
   (:export
-   #:extract
+   #:analyze
    #:get-count
    #:get-frequency
-   #:get-origin-color
-   #:get-pattern
-   #:grid
-   #:pattern
-   #:size))
-
-(defpackage #:%syntex.wfc.adjacency
-  (:local-nicknames
-   (#:core #:%syntex.wfc.core)
-   (#:grid #:%syntex.wfc.grid)
-   (#:kernel #:%syntex.wfc.kernel)
-   (#:pat #:%syntex.wfc.pattern)
-   (#:u #:golden-utils))
-  (:use #:cl)
-  (:export
-   #:generate
-   #:invert-edge))
+   #:get-origin-color))
 
 (defpackage #:%syntex.wfc.tile-map
   (:local-nicknames
+   (#:cond #:%syntex.conditions)
    (#:core #:%syntex.wfc.core)
    (#:grid #:%syntex.wfc.grid)
-   (#:int #:%syntex.internal)
+   (#:hist #:%syntex.wfc.history)
    (#:pat #:%syntex.wfc.pattern)
-   (#:pq #:damn-fast-priority-queue)
+   (#:pq #:%syntex.priority-queue)
    (#:rng #:seedable-rng)
    (#:u #:golden-utils))
   (:use #:cl)
@@ -118,15 +120,14 @@
    #:possible-pattern-p
    #:positive-enabler-counts-p
    #:prepare
-   #:remove-possible-pattern
-   #:uncollapsed-count))
+   #:remove-possible-pattern))
 
 (defpackage #:%syntex.wfc.solver
   (:local-nicknames
-   (#:adj #:%syntex.wfc.adjacency)
    (#:core #:%syntex.wfc.core)
    (#:grid #:%syntex.wfc.grid)
-   (#:pq #:damn-fast-priority-queue)
+   (#:hist #:%syntex.wfc.history)
+   (#:pq #:%syntex.priority-queue)
    (#:tm #:%syntex.wfc.tile-map)
    (#:u #:golden-utils))
   (:use #:cl)
@@ -135,11 +136,12 @@
 
 (defpackage #:%syntex.wfc
   (:local-nicknames
-   (#:adj #:%syntex.wfc.adjacency)
    (#:core #:%syntex.wfc.core)
+   (#:cond #:%syntex.conditions)
    (#:grid #:%syntex.wfc.grid)
+   (#:hist #:%syntex.wfc.history)
    (#:img #:%syntex.image)
-   (#:int #:%syntex.internal)
+   (#:com #:%syntex.common)
    (#:pat #:%syntex.wfc.pattern)
    (#:sample #:%syntex.wfc.sample)
    (#:solver #:%syntex.wfc.solver)

@@ -1,8 +1,8 @@
-(in-package #:%syntex.internal)
+(in-package #:%syntex.conditions)
 
-(define-condition syntex-error (error)
-  ((%synthesizer-type :reader synthesizer-type
-                      :initarg :synthesizer-type)))
+(define-condition syntex-error (error) ())
+
+(define-condition syntex-warning (warning) ())
 
 (define-condition file-not-found (syntex-error)
   ((%file-path :reader file-path
@@ -63,7 +63,7 @@
                      between 1 and 255."
              (value condition)))))
 
-(define-condition invalid-wfc-kernel-size (syntex-error)
+(define-condition invalid-wfc-pattern-size (syntex-error)
   ((%value :reader value
            :initarg :value))
   (:report
@@ -71,8 +71,38 @@
      (format stream "Invalid pattern size ~s.~%~%Must be an integer between 2 and 255."
              (value condition)))))
 
-(define-condition wfc-contradiction (syntex-error) ()
+(define-condition invalid-wfc-backtrack-distance (syntex-error)
+  ((%value :reader value
+           :initarg :value))
+  (:report
+   (lambda (condition stream)
+     (format stream "Invalid backtrack distance ~s.~%~%Must be a positive fixnum."
+             (value condition)))))
+
+(define-condition invalid-wfc-backtrack-retry-count (syntex-error)
+  ((%value :reader value
+           :initarg :value))
+  (:report
+   (lambda (condition stream)
+     (format stream "Invalid backtrack retry count ~s.~%~%Must be a positive fixnum."
+             (value condition)))))
+
+(define-condition wfc-contradiction (syntex-warning) ()
   (:report
    (lambda (condition stream)
      (declare (ignore condition))
      (format stream "Contradiction occurred."))))
+
+(define-condition wfc-max-backtrack-retries-exceeded (syntex-error)
+  ((%value :reader value
+           :initarg :value))
+  (:report
+   (lambda (condition stream)
+     (format stream "Maximum number of backtrack retries exceeded: ~d.~%~%~
+
+                     Possible solutions:~%~
+
+                     - Supply a larger :BACKTRACK-RETRIES value.~%~
+                     - Supply a larger :BACKTRACK-DISTANCE value.~%~
+                     - Use another correction strategy by changing the value of :STRATEGY. "
+             (value condition)))))
