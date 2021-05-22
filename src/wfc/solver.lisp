@@ -70,6 +70,5 @@
     (let ((tile (tm:choose-tile core)))
       (tm:collapse-tile core tile)
       (propagate core :periodic-p periodic-p)
-      (decf (core:uncollapsed-count core))
       (hist:advance-time core)
       (update-progress core :show-p show-progress-p))))

@@ -24,10 +24,9 @@
 (u:define-printer (core stream :type nil)
   (format stream "CORE"))
 
-(defun make-core (&key seed sample tile-map history)
+(defun make-core (&key seed sample history)
   (%make-core :rng (rng:make-generator seed)
               :sample sample
-              :tile-map tile-map
               :history history))
 
 (u:fn-> direction->index (direction) direction-index)

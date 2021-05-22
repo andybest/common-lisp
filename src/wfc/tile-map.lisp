@@ -13,7 +13,7 @@
 (declaim (inline %make-tile))
 (defstruct (tile
             (:include grid:cell)
-            (:constructor %make-tile (x y))
+            (:constructor %make-tile)
             (:conc-name "")
             (:predicate nil)
             (:copier nil))
@@ -22,18 +22,7 @@
   (total-weight-log-weight 0.0 :type u:f32)
   (entropy-noise 0.0 :type u:f32)
   (collapsed-p nil :type boolean)
-  (enabler-counts (make-array 4) :type simple-vector))
-
-(u:fn-> make-tile-map (&key (:width u:ub16) (:height u:ub16)) tile-map)
-(defun make-tile-map (&key width height)
-  (declare (optimize speed))
-  (let* ((tiles (make-array (* width height)))
-         (grid (grid:make-grid width height tiles))
-         (tile-map (%make-tile-map :grid grid)))
-    (dotimes (y height)
-      (dotimes (x width)
-        (setf (aref tiles (+ (* y width) x)) (%make-tile x y))))
-    tile-map))
+  (enabler-counts (make-array (list 0 4) :element-type 'u:ub32) :type (u:ub32a (* 4))))
 
 (u:fn-> calculate-initial-weights (core:core u:ub32) (values u:ub32 u:f32))
 (defun calculate-initial-weights (core pattern-count)
@@ -49,45 +38,59 @@
     (values total-weight
             total-weight-log-weight)))
 
-(u:fn-> make-tile-enabler-counts (core:core) simple-vector)
-(defun make-tile-enabler-counts (core)
+(u:fn-> make-tile-enabler-counts (core:core &optional u:ub32a) (u:ub32a (* 4)))
+(defun make-tile-enabler-counts (core &optional enabler-counts)
   (declare (optimize speed))
   (let* ((adjacencies (core:adjacencies core))
          (pattern-count (pat:get-count core))
-         (enabler-counts (make-array 4)))
-    (loop :for direction :in '(:left :right :up :down)
-          :for i :from 0
-          :for a = (make-array pattern-count)
-          :do (dotimes (pid pattern-count)
-                (let ((count (list-length (u:href (aref adjacencies pid) direction))))
-                  (setf (aref a pid) count)))
-              (setf (svref enabler-counts i) a))
+         (enabler-counts (or enabler-counts
+                             (make-array (list pattern-count 4)
+                                         :element-type 'u:ub32
+                                         :initial-element 0))))
+    (dotimes (pattern-id pattern-count)
+      (loop :for direction :in '(:left :right :up :down)
+            :for i :from 0
+            :for count = (list-length (u:href (aref adjacencies pattern-id) direction))
+            :do (setf (aref enabler-counts pattern-id i) count)))
     enabler-counts))
+
+(defun make-tile (core x y)
+  (u:mvlet* ((rng (core:rng core))
+             (pattern-count (pat:get-count core))
+             (total-weight total-weight-log-weight (calculate-initial-weights core pattern-count)))
+    (%make-tile :x x
+                :y y
+                :possible-patterns (u:make-bit-vector pattern-count 1)
+                :total-weight total-weight
+                :total-weight-log-weight total-weight-log-weight
+                :entropy-noise (rng:float rng 0.0 0.0001)
+                :enabler-counts (make-tile-enabler-counts core))))
 
 (u:fn-> reset-tile (core:core tile) null)
 (defun reset-tile (core tile)
   (declare (optimize speed))
-  (u:mvlet* ((rng (core:rng core))
-             (pattern-count (pat:get-count core))
+  (u:mvlet* ((pattern-count (pat:get-count core))
              (total-weight total-weight-log-weight (calculate-initial-weights core pattern-count)))
+    (fill (possible-patterns tile) 1)
     (setf (total-weight tile) total-weight
           (total-weight-log-weight tile) total-weight-log-weight
-          (entropy-noise tile) (rng:float rng 0.0 0.0001)
-          (collapsed-p tile) nil)
-    (setf (possible-patterns tile) (u:make-bit-vector pattern-count 1)
-          (enabler-counts tile) (make-tile-enabler-counts core))
+          (collapsed-p tile) nil
+          (enabler-counts tile) (make-tile-enabler-counts core (enabler-counts tile)))
     nil))
 
-(u:fn-> prepare (core:core) null)
-(declaim (inline prepare))
-(defun prepare (core)
+(u:fn-> make-tile-map (core:core &key (:width u:ub16) (:height u:ub16)) null)
+(defun make-tile-map (core &key width height)
   (declare (optimize speed))
-  (let* ((grid (grid (core:tile-map core)))
-         (width (grid:width grid))
-         (height (grid:height grid)))
-    (setf (core:uncollapsed-count core) (* width height))
-    (grid:do-cells (grid tile)
-      (reset-tile core tile))))
+  (let* ((tile-count (* width height))
+         (tiles (make-array tile-count))
+         (grid (grid:make-grid width height tiles))
+         (tile-map (%make-tile-map :grid grid)))
+    (dotimes (y height)
+      (dotimes (x width)
+        (setf (aref tiles (+ (* y width) x)) (make-tile core x y))))
+    (setf (core:tile-map core) tile-map
+          (core:uncollapsed-count core) tile-count)
+    nil))
 
 (u:fn-> compute-entropy (tile) u:f32)
 (defun compute-entropy (tile)
@@ -186,6 +189,7 @@
           (incf pushed-pattern-count)))
       (when (plusp pushed-pattern-count)
         (hist:record core #'backtrack/restore-possible-patterns))
+      (decf (core:uncollapsed-count core))
       nil)))
 
 (u:fn-> get-neighbor (tile-map tile core:direction &key (:periodic-p boolean)) (or grid:cell null))
@@ -203,22 +207,20 @@
 (defun enabler-count (core tile pattern-id direction)
   (declare (optimize speed)
            (ignore core))
-  (let* ((direction-index (core:direction->index direction))
-         (direction-counts (svref (enabler-counts tile) direction-index)))
-    (svref direction-counts pattern-id)))
+  (let ((direction-index (core:direction->index direction)))
+    (aref (enabler-counts tile) pattern-id direction-index)))
 
 (u:fn-> (setf enabler-count) (u:ub16 core:core tile u:ub32 core:direction) u:ub16)
 (declaim (inline (setf enabler-count)))
 (defun (setf enabler-count) (value core tile pattern-id direction)
   (declare (optimize speed))
-  (let* ((direction-index (core:direction->index direction))
-         (direction-counts (svref (enabler-counts tile) direction-index)))
+  (let ((direction-index (core:direction->index direction)))
     (flet ((backtrack/restore-enabler-count (count)
-             (setf (svref direction-counts pattern-id) count)))
+             (setf (aref (enabler-counts tile) pattern-id direction-index) count)))
       (hist:record core
                    #'backtrack/restore-enabler-count
-                   (svref direction-counts pattern-id))
-      (setf (svref direction-counts pattern-id) value))))
+                   (aref (enabler-counts tile) pattern-id direction-index))
+      (setf (aref (enabler-counts tile) pattern-id direction-index) value))))
 
 (u:fn-> positive-enabler-counts-p (core:core tile u:ub32) boolean)
 (declaim (inline positive-enabler-counts-p))

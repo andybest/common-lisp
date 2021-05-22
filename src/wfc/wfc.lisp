@@ -47,11 +47,10 @@
   (unless (typep backtrack-retries 'u:positive-fixnum)
     (error 'cond:invalid-wfc-backtrack-retry-count :value backtrack-retries))
   (let* ((sample (sample:load sample-path))
-         (tile-map (tm:make-tile-map :width width :height height))
          (history (hist:make-history :distance backtrack-distance :retries backtrack-retries))
-         (core (core:make-core :seed seed :sample sample :tile-map tile-map :history history)))
+         (core (core:make-core :seed seed :sample sample :history history)))
     (pat:analyze core :size pattern-size :periodic-p periodic-input-p)
-    (tm:prepare core)
+    (tm:make-tile-map core :width width :height height)
     (solver:solve core :periodic-p periodic-output-p :show-progress-p show-progress-p)
     (if render-p
         (render core :path output-path)

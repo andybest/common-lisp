@@ -41,8 +41,8 @@
                     (cells grid) cells)))))
     grid))
 
-(declaim (inline get-cell))
 (u:fn-> get-cell (grid fixnum fixnum &key (:periodic-p boolean)) (or cell null))
+(declaim (inline get-cell))
 (defun get-cell (grid x y &key periodic-p)
   (declare (optimize speed))
   (let ((width (width grid))

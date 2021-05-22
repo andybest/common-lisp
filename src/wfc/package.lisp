@@ -119,7 +119,6 @@
    #:pattern-removal-stack
    #:possible-pattern-p
    #:positive-enabler-counts-p
-   #:prepare
    #:remove-possible-pattern))
 
 (defpackage #:%syntex.wfc.solver
