@@ -13,6 +13,7 @@
    #:invalid-wfc-backtrack-distance
    #:invalid-wfc-backtrack-retry-count
    #:invalid-wfc-pattern-size
+   #:invalid-wfc-strategy
    #:syntex-error
    #:wfc-contradiction
    #:wfc-max-backtrack-retries-exceeded))

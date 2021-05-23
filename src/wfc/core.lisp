@@ -4,6 +4,8 @@
 
 (deftype direction-index () '(integer 0 3))
 
+(deftype strategy () '(member :backtrack))
+
 (declaim (inline %make-core))
 (defstruct (core
             (:constructor %make-core)
@@ -18,16 +20,18 @@
   (adjacencies (make-array 0) :type simple-vector)
   (progress 0 :type (integer 0 100))
   (uncollapsed-count 0 :type u:non-negative-fixnum)
+  (strategy :backtrack :type strategy)
   history
   tile-map)
 
 (u:define-printer (core stream :type nil)
   (format stream "CORE"))
 
-(defun make-core (&key seed sample history)
+(defun make-core (&key seed sample history strategy)
   (%make-core :rng (rng:make-generator seed)
               :sample sample
-              :history history))
+              :history history
+              :strategy strategy))
 
 (u:fn-> direction->index (direction) direction-index)
 (declaim (inline direction->index))

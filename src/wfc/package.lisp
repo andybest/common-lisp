@@ -56,6 +56,7 @@
    #:progress
    #:rng
    #:sample
+   #:strategy
    #:tile-map
    #:uncollapsed-count))
 
@@ -119,7 +120,8 @@
    #:pattern-removal-stack
    #:possible-pattern-p
    #:positive-enabler-counts-p
-   #:remove-possible-pattern))
+   #:remove-possible-pattern
+   #:tile-count))
 
 (defpackage #:%syntex.wfc.solver
   (:local-nicknames

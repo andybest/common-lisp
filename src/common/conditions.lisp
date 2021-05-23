@@ -71,6 +71,17 @@
      (format stream "Invalid pattern size ~s.~%~%Must be an integer between 2 and 255."
              (value condition)))))
 
+(define-condition invalid-wfc-strategy (syntex-error)
+  ((%value :reader value
+           :initarg :value)
+   (%allowed :reader allowed
+             :initarg :allowed))
+  (:report
+   (lambda (condition stream)
+     (format stream "Invalid strategy ~s.~%~%Must be one of ~{~a~^, ~}."
+             (value condition)
+             (allowed condition)))))
+
 (define-condition invalid-wfc-backtrack-distance (syntex-error)
   ((%value :reader value
            :initarg :value))
