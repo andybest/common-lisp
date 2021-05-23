@@ -55,7 +55,9 @@
             :do (setf (aref enabler-counts pattern-id i) count)))
     enabler-counts))
 
+(u:fn-> make-tile (core:core u:ub16 u:ub16) tile)
 (defun make-tile (core x y)
+  (declare (optimize speed))
   (u:mvlet* ((rng (core:rng core))
              (initial-weights (initial-weights (core:tile-map core)))
              (pattern-count (pat:get-count core)))
