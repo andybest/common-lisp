@@ -89,4 +89,7 @@
       (tm:collapse-tile core tile)
       (propagate core :periodic-p periodic-p)
       (hist:advance-time core)
-      (update-progress core :show-p show-progress-p))))
+      (update-progress core :show-p show-progress-p)))
+  (when (eq (core:strategy core) :backtrack)
+    (tg:gc :full t))
+  nil)

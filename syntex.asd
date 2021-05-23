@@ -10,6 +10,7 @@
                #:pngload
                #:seedable-rng
                #:uiop
+               #:trivial-garbage
                #:zpng)
   :pathname "src"
   :serial t
