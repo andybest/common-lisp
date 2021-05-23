@@ -32,7 +32,8 @@
 (declaim (inline record))
 (defun record (core func &optional arg)
   (declare (optimize speed))
-  (vector-push-extend (cons func arg) (entries (core:history core)))
+  (when (eq (core:strategy core) :backtrack)
+    (vector-push-extend (cons func arg) (entries (core:history core))))
   nil)
 
 (u:fn-> backtrack (core:core) null)
