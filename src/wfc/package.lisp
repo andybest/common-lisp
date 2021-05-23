@@ -126,6 +126,7 @@
    #:pattern-removal-stack
    #:possible-pattern-p
    #:remove-possible-pattern
+   #:tile
    #:tile-count))
 
 (defpackage #:%syntex.wfc.solver
@@ -136,6 +137,7 @@
    (#:hist #:%syntex.wfc.history)
    (#:kernel #:%syntex.wfc.kernel)
    (#:pq #:%syntex.priority-queue)
+   (#:rng #:seedable-rng)
    (#:tm #:%syntex.wfc.tile-map)
    (#:u #:golden-utils))
   (:use #:cl)
