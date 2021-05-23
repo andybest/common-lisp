@@ -132,7 +132,7 @@
         (y kernel) y)
   kernel)
 
-(u:fn-> resolve (kernel u:ub16 u:ub16 &key (:periodic-p boolean)) (or grid:cell null))
+(u:fn-> resolve (kernel u:b16 u:b16 &key (:periodic-p boolean)) (or grid:cell null))
 (defun resolve (kernel x y &key periodic-p)
   (declare (optimize speed))
   (grid:get-cell (grid kernel)
@@ -149,6 +149,38 @@
         :for cell = (resolve kernel x y :periodic-p periodic-p)
         :when cell
           :do (funcall func cell)))
+
+(u:fn-> map/left (kernel function &key (:periodic-p boolean)) null)
+(declaim (inline map/left))
+(defun map/left (kernel func &key periodic-p)
+  (declare (optimize speed))
+  (u:when-let ((cell (resolve kernel -1 0 :periodic-p periodic-p)))
+    (funcall func cell)
+    nil))
+
+(u:fn-> map/right (kernel function &key (:periodic-p boolean)) null)
+(declaim (inline map/right))
+(defun map/right (kernel func &key periodic-p)
+  (declare (optimize speed))
+  (u:when-let ((cell (resolve kernel 1 0 :periodic-p periodic-p)))
+    (funcall func cell)
+    nil))
+
+(u:fn-> map/up (kernel function &key (:periodic-p boolean)) null)
+(declaim (inline map/up))
+(defun map/up (kernel func &key periodic-p)
+  (declare (optimize speed))
+  (u:when-let ((cell (resolve kernel 0 -1 :periodic-p periodic-p)))
+    (funcall func cell)
+    nil))
+
+(u:fn-> map/down (kernel function &key (:periodic-p boolean)) null)
+(declaim (inline map/down))
+(defun map/down (kernel func &key periodic-p)
+  (declare (optimize speed))
+  (u:when-let ((cell (resolve kernel 0 1 :periodic-p periodic-p)))
+    (funcall func cell)
+    nil))
 
 (u:fn-> count (kernel &key (:test function)) u:ub8)
 (defun count (kernel &key (test (constantly t)))

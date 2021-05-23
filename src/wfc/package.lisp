@@ -32,6 +32,10 @@
    #:kernel
    #:make-kernel
    #:map
+   #:map/left
+   #:map/right
+   #:map/up
+   #:map/down
    #:rotation
    #:x
    #:y))
@@ -99,10 +103,10 @@
 
 (defpackage #:%syntex.wfc.tile-map
   (:local-nicknames
-   (#:cond #:%syntex.conditions)
    (#:core #:%syntex.wfc.core)
    (#:grid #:%syntex.wfc.grid)
    (#:hist #:%syntex.wfc.history)
+   (#:kernel #:%syntex.wfc.kernel)
    (#:pat #:%syntex.wfc.pattern)
    (#:pq #:%syntex.priority-queue)
    (#:rng #:seedable-rng)
@@ -117,17 +121,20 @@
    #:get-neighbor
    #:grid
    #:make-tile-map
+   #:neighbor-kernel
+   #:pattern-removable-p
    #:pattern-removal-stack
    #:possible-pattern-p
-   #:positive-enabler-counts-p
    #:remove-possible-pattern
    #:tile-count))
 
 (defpackage #:%syntex.wfc.solver
   (:local-nicknames
+   (#:cond #:%syntex.conditions)
    (#:core #:%syntex.wfc.core)
    (#:grid #:%syntex.wfc.grid)
    (#:hist #:%syntex.wfc.history)
+   (#:kernel #:%syntex.wfc.kernel)
    (#:pq #:%syntex.priority-queue)
    (#:tm #:%syntex.wfc.tile-map)
    (#:u #:golden-utils))
