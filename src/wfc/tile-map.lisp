@@ -8,6 +8,7 @@
             (:copier nil))
   (grid nil :type grid:grid)
   (entropy-queue (pq:make-queue) :type pq:queue)
+  (initial-weights (cons 0 0.0) :type cons)
   (pattern-removal-stack nil :type list))
 
 (declaim (inline %make-tile))
@@ -56,40 +57,43 @@
 
 (defun make-tile (core x y)
   (u:mvlet* ((rng (core:rng core))
-             (pattern-count (pat:get-count core))
-             (total-weight total-weight-log-weight (calculate-initial-weights core pattern-count)))
-    (%make-tile :x x
-                :y y
-                :possible-patterns (u:make-bit-vector pattern-count 1)
-                :total-weight total-weight
-                :total-weight-log-weight total-weight-log-weight
-                :entropy-noise (rng:float rng 0.0 0.0001)
-                :enabler-counts (make-tile-enabler-counts core))))
+             (initial-weights (initial-weights (core:tile-map core)))
+             (pattern-count (pat:get-count core)))
+    (destructuring-bind (weight . weight-log-weight) initial-weights
+      (%make-tile :x x
+                  :y y
+                  :possible-patterns (u:make-bit-vector pattern-count 1)
+                  :total-weight weight
+                  :total-weight-log-weight weight-log-weight
+                  :entropy-noise (rng:float rng 0.0 0.0001)
+                  :enabler-counts (make-tile-enabler-counts core)))))
 
 (u:fn-> reset-tile (core:core tile) null)
 (defun reset-tile (core tile)
   (declare (optimize speed))
-  (u:mvlet* ((pattern-count (pat:get-count core))
-             (total-weight total-weight-log-weight (calculate-initial-weights core pattern-count)))
+  (destructuring-bind (weight . weight-log-weight) (initial-weights (core:tile-map core))
     (fill (possible-patterns tile) 1)
-    (setf (total-weight tile) total-weight
-          (total-weight-log-weight tile) total-weight-log-weight
+    (setf (total-weight tile) weight
+          (total-weight-log-weight tile) weight-log-weight
           (collapsed-p tile) nil
-          (enabler-counts tile) (make-tile-enabler-counts core (enabler-counts tile)))
-    nil))
+          (enabler-counts tile) (make-tile-enabler-counts core (enabler-counts tile))))
+  nil)
 
 (u:fn-> make-tile-map (core:core &key (:width u:ub16) (:height u:ub16)) null)
 (defun make-tile-map (core &key width height)
   (declare (optimize speed))
-  (let* ((tile-count (* width height))
-         (tiles (make-array tile-count))
-         (grid (grid:make-grid width height tiles))
-         (tile-map (%make-tile-map :grid grid)))
+  (u:mvlet* ((tile-count (* width height))
+             (tiles (make-array tile-count))
+             (grid (grid:make-grid width height tiles))
+             (tile-map (%make-tile-map :grid grid))
+             (pattern-count (pat:get-count core))
+             (weight weight-log-weight (calculate-initial-weights core pattern-count)))
+    (setf (initial-weights tile-map) (cons weight weight-log-weight)
+          (core:tile-map core) tile-map
+          (core:uncollapsed-count core) tile-count)
     (dotimes (y height)
       (dotimes (x width)
         (setf (aref tiles (+ (* y width) x)) (make-tile core x y))))
-    (setf (core:tile-map core) tile-map
-          (core:uncollapsed-count core) tile-count)
     nil))
 
 (u:fn-> compute-entropy (tile) u:f32)
