@@ -15,7 +15,8 @@
    #:invalid-wfc-pattern-size
    #:invalid-wfc-strategy
    #:syntex-error
-   #:wfc-contradiction
+   #:wfc-contradiction-error
+   #:wfc-contradiction-warning
    #:wfc-max-backtrack-retries-exceeded))
 
 (defpackage #:%syntex.image

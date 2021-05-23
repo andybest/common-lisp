@@ -4,7 +4,7 @@
 
 (deftype direction-index () '(integer 0 3))
 
-(deftype strategy () '(member :backtrack))
+(deftype strategy () '(member :none :backtrack))
 
 (declaim (inline %make-core))
 (defstruct (core
