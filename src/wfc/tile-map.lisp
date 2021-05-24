@@ -27,7 +27,9 @@
      (%initial-weights :accessor initial-weights)
      (%neighbor-kernel :accessor neighbor-kernel)
      (%pattern-removal-stack :accessor pattern-removal-stack
-                             :initform nil))))
+                             :initform nil)
+     (%uncollapsed-count :accessor uncollapsed-count
+                         :initform 0))))
 
 (defmethod initialize-instance :after ((instance tile-map) &key core width height)
   (u:mvlet* ((tile-count (cell-count instance))
@@ -38,8 +40,8 @@
     (setf (cells instance) tiles
           (initial-weights instance) (cons weight weight-log-weight)
           (neighbor-kernel instance) kernel
-          (tile-map core) instance
-          (uncollapsed-count core) tile-count)
+          (uncollapsed-count instance) tile-count
+          (tile-map core) instance)
     (dotimes (y height)
       (dotimes (x width)
         (setf (aref tiles (+ (* y width) x)) (make-tile core x y))))))
@@ -210,7 +212,7 @@
           (incf pushed-pattern-count)))
       (when (plusp pushed-pattern-count)
         (record core #'backtrack/restore-possible-patterns))
-      (decf (the u:non-negative-fixnum (uncollapsed-count core)))
+      (decf (the u:non-negative-fixnum (uncollapsed-count tile-map)))
       nil)))
 
 (u:fn-> get-neighbor (tile-map tile direction &key (:periodic-p boolean)) (or cell null))

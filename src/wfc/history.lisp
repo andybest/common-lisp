@@ -44,6 +44,7 @@
 (defun backtrack (core)
   (declare (optimize speed))
   (let* ((history (history core))
+         (tile-map (tile-map core))
          (timestamp (timestamp history))
          (entries (entries history))
          (target-timestamp (max 0 (- timestamp (the u:non-negative-fixnum (distance history)))))
@@ -60,7 +61,7 @@
              (declare (function func))
              (funcall func arg)))
           (u:non-negative-fixnum
-           (incf (the u:non-negative-fixnum (uncollapsed-count core)))
+           (incf (the u:non-negative-fixnum (uncollapsed-count tile-map)))
            (setf (timestamp history) item
                  stop-p (< item target-timestamp))))))
     (if (> progress (the (integer 0 100) (last-progress history)))

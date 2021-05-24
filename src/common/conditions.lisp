@@ -98,11 +98,13 @@
      (format stream "Invalid backtrack retry count ~s.~%~%Must be a positive fixnum."
              (value condition)))))
 
-(define-condition wfc-contradiction-warning (syntex-warning) ()
+(define-condition wfc-contradiction-warning (syntex-warning)
+  ((%progress :reader progress
+              :initarg :progress))
   (:report
    (lambda (condition stream)
-     (declare (ignore condition))
-     (format stream "Contradiction occurred."))))
+     (format stream "Contradiction occurred at ~d%."
+             (progress condition)))))
 
 (define-condition wfc-contradiction-error (syntex-warning) ()
   (:report

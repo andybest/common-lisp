@@ -21,15 +21,12 @@
                  :initform (make-array 0))
    (%progress :accessor progress
               :initform 0)
-   (%uncollapsed-count :accessor uncollapsed-count
-                       :initform 0)
    (%strategy :reader strategy
               :initarg :strategy
               :initform :backtrack)
    (%history :reader history
              :initarg :history)
-   (%tile-map :accessor tile-map
-              :initarg :tile-map)))
+   (%tile-map :accessor tile-map)))
 
 (defun make-core (&key seed sample history strategy)
   (make-instance 'core
