@@ -1,20 +1,22 @@
 (in-package #:%syntex.image)
 
-(declaim (inline %make-image))
-(defstruct (image
-            (:constructor %make-image)
-            (:conc-name nil)
-            (:predicate nil)
-            (:copier nil))
-  (width 0 :type u:ub16)
-  (height 0 :type u:ub16)
-  (data (u:make-ub32-array 0) :type u:ub32a))
+(defclass image ()
+  ((%width :reader width
+           :initarg :width
+           :initform 0)
+   (%height :reader height
+            :initarg :height
+            :initform 0)
+   (%data :reader data
+          :initarg :data
+          :initform (u:make-ub32-array 0))))
 
 (defun make-image (file-path)
   (let ((png (png:load-file file-path :flatten t)))
-    (%make-image :width (png:width png)
-                 :height (png:height png)
-                 :data (pack png (png:color-type png)))))
+    (make-instance 'image
+                   :width (png:width png)
+                   :height (png:height png)
+                   :data (pack png (png:color-type png)))))
 
 (defgeneric pack (png color-type)
   (:method (png color-type)

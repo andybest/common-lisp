@@ -1,55 +1,78 @@
-(in-package #:%syntex.wfc.tile-map)
+(in-package #:%syntex.wfc)
 
-(declaim (inline %make-tile-map))
-(defstruct (tile-map
-            (:constructor %make-tile-map)
-            (:conc-name nil)
-            (:predicate nil)
-            (:copier nil))
-  (grid nil :type grid:grid)
-  (tile-count 0 :type u:ub32)
-  (entropy-queue (pq:make-queue) :type pq:queue)
-  (initial-weights (cons 0 0.0) :type cons)
-  (neighbor-kernel nil :type kernel:kernel)
-  (pattern-removal-stack nil :type list))
+(u:eval-always
+  (defclass tile (cell)
+    ((%possible-patterns :accessor possible-patterns
+                         :initarg :possible-patterns)
+     (%weight :accessor weight
+              :initarg :weight
+              :initform 0)
+     (%weight-log-weight :accessor weight-log-weight
+                         :initarg :weight-log-weight
+                         :initform 0.0)
+     (%entropy-noise :reader entropy-noise
+                     :initarg :entropy-noise)
+     (%collapsed-p :accessor collapsed-p
+                   :initarg :collapsed-p
+                   :initform nil)
+     (%enabler-counts :reader enabler-counts
+                      :initarg :enabler-counts))))
 
-(declaim (inline %make-tile))
-(defstruct (tile
-            (:include grid:cell)
-            (:constructor %make-tile)
-            (:conc-name "")
-            (:predicate nil)
-            (:copier nil))
-  (possible-patterns (u:make-bit-vector 0) :type simple-bit-vector)
-  (total-weight 0 :type u:non-negative-fixnum)
-  (total-weight-log-weight 0.0 :type u:f32)
-  (entropy-noise 0.0 :type u:f32)
-  (collapsed-p nil :type boolean)
-  (enabler-counts (make-array (list 0 4) :element-type 'u:ub32) :type (u:ub32a (* 4))))
+(u:eval-always
+  (defclass tile-map (grid)
+    ((%core :reader core
+            :initarg :core)
+     (%entropy-queue :reader entropy-queue
+                     :initform (pq:make-queue))
+     (%initial-weights :accessor initial-weights)
+     (%neighbor-kernel :accessor neighbor-kernel)
+     (%pattern-removal-stack :accessor pattern-removal-stack
+                             :initform nil))))
 
-(u:fn-> calculate-initial-weights (core:core u:ub32) (values u:ub32 u:f32))
+(defmethod initialize-instance :after ((instance tile-map) &key core width height)
+  (u:mvlet* ((tile-count (cell-count instance))
+             (tiles (make-array tile-count))
+             (kernel (make-kernel :grid instance :width 3 :height 3))
+             (pattern-count (get-pattern-count core))
+             (weight weight-log-weight (calculate-initial-weights core pattern-count)))
+    (setf (cells instance) tiles
+          (initial-weights instance) (cons weight weight-log-weight)
+          (neighbor-kernel instance) kernel
+          (tile-map core) instance
+          (uncollapsed-count core) tile-count)
+    (dotimes (y height)
+      (dotimes (x width)
+        (setf (aref tiles (+ (* y width) x)) (make-tile core x y))))))
+
+(u:fn-> make-tile-map (core &key (:width u:ub16) (:height u:ub16)) tile-map)
+(defun make-tile-map (core &key width height)
+  (declare (optimize speed))
+  (values (make-instance 'tile-map :core core :width width :height height)))
+
+(u:fn-> calculate-initial-weights (core u:ub32) (values u:ub32 u:f32))
 (defun calculate-initial-weights (core pattern-count)
-  (let ((total-weight 0)
-        (total-weight-log-weight 0.0))
-    (declare (u:ub16 total-weight)
-             (u:f32 total-weight-log-weight))
+  (let ((weight 0)
+        (weight-log-weight 0.0))
+    (declare (u:ub16 weight)
+             (u:f32 weight-log-weight))
     (dotimes (pattern-id pattern-count)
-      (let ((frequency (pat:get-frequency core pattern-id)))
+      (let ((frequency (get-frequency core pattern-id)))
         (declare (u:ub16 frequency))
-        (incf total-weight frequency)
-        (incf total-weight-log-weight (* frequency (log frequency 2)))))
-    (values total-weight
-            total-weight-log-weight)))
+        (incf weight frequency)
+        (incf weight-log-weight (* frequency (log frequency 2)))))
+    (values weight
+            weight-log-weight)))
 
-(u:fn-> make-tile-enabler-counts (core:core &optional u:ub32a) (u:ub32a (* 4)))
+(u:fn-> make-tile-enabler-counts (core &optional u:ub32a) (u:ub32a (* 4)))
 (defun make-tile-enabler-counts (core &optional enabler-counts)
   (declare (optimize speed))
-  (let* ((adjacencies (core:adjacencies core))
-         (pattern-count (pat:get-count core))
+  (let* ((adjacencies (adjacencies core))
+         (pattern-count (get-pattern-count core))
          (enabler-counts (or enabler-counts
                              (make-array (list pattern-count 4)
                                          :element-type 'u:ub32
                                          :initial-element 0))))
+    (declare ((simple-array t) adjacencies))
     (dotimes (pattern-id pattern-count)
       (loop :for direction :in '(:left :right :up :down)
             :for i :from 0
@@ -57,60 +80,45 @@
             :do (setf (aref enabler-counts pattern-id i) count)))
     enabler-counts))
 
-(u:fn-> make-tile (core:core u:ub16 u:ub16) tile)
+(u:fn-> make-tile (core u:ub16 u:ub16) tile)
 (defun make-tile (core x y)
   (declare (optimize speed))
-  (u:mvlet* ((rng (core:rng core))
-             (initial-weights (initial-weights (core:tile-map core)))
-             (pattern-count (pat:get-count core)))
-    (destructuring-bind (weight . weight-log-weight) initial-weights
-      (%make-tile :x x
-                  :y y
-                  :possible-patterns (u:make-bit-vector pattern-count 1)
-                  :total-weight weight
-                  :total-weight-log-weight weight-log-weight
-                  :entropy-noise (rng:float rng 0.0 0.0001)
-                  :enabler-counts (make-tile-enabler-counts core)))))
+  (u:mvlet* ((rng (rng core))
+             (initial-weights (initial-weights (tile-map core)))
+             (pattern-count (get-pattern-count core)))
+    (values
+     (make-instance 'tile
+                    :x x
+                    :y y
+                    :possible-patterns (u:make-bit-vector pattern-count 1)
+                    :weight (car initial-weights)
+                    :weight-log-weight (cdr initial-weights)
+                    :entropy-noise (rng:float rng 0.0 0.0001)
+                    :enabler-counts (make-tile-enabler-counts core)))))
 
-(u:fn-> reset-tile (core:core tile) null)
+(u:fn-> reset-tile (core tile) tile)
 (defun reset-tile (core tile)
   (declare (optimize speed))
-  (destructuring-bind (weight . weight-log-weight) (initial-weights (core:tile-map core))
-    (fill (possible-patterns tile) 1)
-    (setf (total-weight tile) weight
-          (total-weight-log-weight tile) weight-log-weight
-          (collapsed-p tile) nil
-          (enabler-counts tile) (make-tile-enabler-counts core (enabler-counts tile))))
-  nil)
-
-(u:fn-> make-tile-map (core:core &key (:width u:ub16) (:height u:ub16)) null)
-(defun make-tile-map (core &key width height)
-  (declare (optimize speed))
-  (u:mvlet* ((tile-count (* width height))
-             (tiles (make-array tile-count))
-             (grid (grid:make-grid width height tiles))
-             (neighbor-kernel (kernel:make-kernel :grid grid :width 3 :height 3))
-             (tile-map (%make-tile-map :grid grid
-                                       :tile-count tile-count
-                                       :neighbor-kernel neighbor-kernel))
-             (pattern-count (pat:get-count core))
-             (weight weight-log-weight (calculate-initial-weights core pattern-count)))
-    (setf (initial-weights tile-map) (cons weight weight-log-weight)
-          (core:tile-map core) tile-map
-          (core:uncollapsed-count core) tile-count)
-    (dotimes (y height)
-      (dotimes (x width)
-        (setf (aref tiles (+ (* y width) x)) (make-tile core x y))))
-    nil))
+  (destructuring-bind (weight . weight-log-weight) (initial-weights (tile-map core))
+    (fill (the simple-bit-vector (possible-patterns tile)) 1)
+    (values
+     (reinitialize-instance tile
+                            :collapsed-p nil
+                            :weight weight
+                            :weight-log-weight weight-log-weight
+                            :enabler-counts (make-tile-enabler-counts core (enabler-counts tile))))))
 
 (u:fn-> compute-entropy (tile) u:f32)
 (defun compute-entropy (tile)
   (declare (optimize speed))
-  (let ((total-weight (total-weight tile))
-        (total-weight-log-weight (total-weight-log-weight tile)))
-    (+ (- (log total-weight 2)
-          (/ total-weight-log-weight total-weight))
-       (entropy-noise tile))))
+  (let ((weight (weight tile))
+        (weight-log-weight (weight-log-weight tile))
+        (noise (entropy-noise tile)))
+    (declare (u:non-negative-fixnum weight)
+             (u:f32 weight-log-weight noise))
+    (+ (- (log weight 2)
+          (/ weight-log-weight weight))
+       noise)))
 
 (u:fn-> possible-pattern-p (tile u:ub32) boolean)
 (declaim (inline possible-pattern-p))
@@ -118,36 +126,36 @@
   (declare (optimize speed))
   (plusp (sbit (possible-patterns tile) pattern-id)))
 
-(u:fn-> remove-possible-pattern (core:core tile u:ub32) boolean)
+(u:fn-> remove-possible-pattern (core tile u:ub32) boolean)
 (defun remove-possible-pattern (core tile pattern-id)
   (declare (optimize speed))
-  (let ((frequency (pat:get-frequency core pattern-id))
+  (let ((frequency (get-frequency core pattern-id))
         (possible-patterns (possible-patterns tile)))
-    (declare (u:non-negative-fixnum frequency))
+    (declare (u:non-negative-fixnum frequency)
+             (simple-bit-vector possible-patterns))
     (flet ((backtrack/restore-pattern (data)
              (setf (sbit (possible-patterns tile) pattern-id) data))
            (backtrack/restore-weights (data)
-             (destructuring-bind (total-weight total-weight-log-weight) data
-               (setf (total-weight tile) total-weight
-                     (total-weight-log-weight tile) total-weight-log-weight))))
-      (hist:record core
-                   #'backtrack/restore-pattern
-                   (sbit possible-patterns pattern-id))
-      (hist:record core
-                   #'backtrack/restore-weights
-                   (list (total-weight tile)
-                         (total-weight-log-weight tile)))
+             (destructuring-bind (weight weight-log-weight) data
+               (setf (weight tile) weight
+                     (weight-log-weight tile) weight-log-weight))))
+      (record core
+              #'backtrack/restore-pattern
+              (sbit possible-patterns pattern-id))
+      (record core
+              #'backtrack/restore-weights
+              (list (weight tile) (weight-log-weight tile)))
       (setf (sbit possible-patterns pattern-id) 0)
       (when (every #'zerop possible-patterns)
         (return-from remove-possible-pattern nil))
-      (decf (total-weight tile) frequency)
-      (decf (total-weight-log-weight tile) (* frequency (log frequency 2))))
+      (decf (the u:non-negative-fixnum (weight tile)) frequency)
+      (decf (the u:f32 (weight-log-weight tile)) (* frequency (log frequency 2))))
     t))
 
-(u:fn-> choose-tile (core:core) tile)
+(u:fn-> choose-tile (core) tile)
 (defun choose-tile (core)
   (declare (optimize speed))
-  (let* ((tile-map (core:tile-map core))
+  (let* ((tile-map (tile-map core))
          (entropy-queue (entropy-queue tile-map)))
     (u:while (pq:peek entropy-queue)
       (let ((tile (pq:dequeue entropy-queue)))
@@ -155,29 +163,32 @@
           (return-from choose-tile tile))))
     (error "Bug: Entropy heap is empty but there are still uncollapsed tiles.")))
 
-(u:fn-> choose-pattern-id (core:core tile) u:ub32)
+(u:fn-> choose-pattern-id (core tile) u:ub32)
 (defun choose-pattern-id (core tile)
+  (declare (optimize speed))
   (let ((possible-patterns (possible-patterns tile))
-        (remaining (rng:int (core:rng core) 0 (total-weight tile) nil)))
-    (declare (fixnum remaining))
+        (remaining (rng:int (rng core) 0 (weight tile) nil)))
+    (declare (fixnum remaining)
+             (simple-bit-vector possible-patterns))
     (dotimes (pattern-id (length possible-patterns))
       (when (possible-pattern-p tile pattern-id)
-        (let ((weight (pat:get-frequency core pattern-id)))
+        (let ((weight (get-frequency core pattern-id)))
           (declare (u:non-negative-fixnum weight))
           (if (>= remaining weight)
               (decf remaining weight)
               (return-from choose-pattern-id pattern-id)))))
     (error "Bug: Inconsistency detected with tile frequencies.")))
 
-(u:fn-> collapse-tile (core:core tile) null)
+(u:fn-> collapse-tile (core tile) null)
 (defun collapse-tile (core tile)
   (declare (optimize speed))
-  (let* ((tile-map (core:tile-map core))
+  (let* ((tile-map (tile-map core))
          (possible-patterns (possible-patterns tile))
          (chosen-pattern-id (choose-pattern-id core tile))
          (pushed-pattern-count 0)
          (original-possible-patterns nil))
-    (declare (u:ub32 pushed-pattern-count))
+    (declare (u:ub32 pushed-pattern-count)
+             (simple-bit-vector possible-patterns))
     (flet ((backtrack/uncollapse-tile (data)
              (declare (ignore data))
              (setf (collapsed-p tile) nil
@@ -186,9 +197,9 @@
              (declare (ignore data))
              (setf (possible-patterns tile) original-possible-patterns
                    (pattern-removal-stack tile-map) nil)))
-      (hist:record core #'backtrack/uncollapse-tile)
+      (record core #'backtrack/uncollapse-tile)
       (setf (collapsed-p tile) t
-            (value tile) (pat:get-origin-color core chosen-pattern-id))
+            (value tile) (get-origin-color core chosen-pattern-id))
       (dotimes (pattern-id (length possible-patterns))
         (when (and (possible-pattern-p tile pattern-id)
                    (/= pattern-id chosen-pattern-id))
@@ -198,41 +209,44 @@
           (push (cons tile pattern-id) (pattern-removal-stack tile-map))
           (incf pushed-pattern-count)))
       (when (plusp pushed-pattern-count)
-        (hist:record core #'backtrack/restore-possible-patterns))
-      (decf (core:uncollapsed-count core))
+        (record core #'backtrack/restore-possible-patterns))
+      (decf (the u:non-negative-fixnum (uncollapsed-count core)))
       nil)))
 
-(u:fn-> get-neighbor (tile-map tile core:direction &key (:periodic-p boolean)) (or grid:cell null))
+(u:fn-> get-neighbor (tile-map tile direction &key (:periodic-p boolean)) (or cell null))
 (declaim (inline get-neighbor))
 (defun get-neighbor (tile-map tile direction &key periodic-p)
   (declare (optimize speed))
-  (u:mvlet ((grid (grid tile-map))
-            (x (x tile))
+  (u:mvlet ((x (x tile))
             (y (y tile))
-            (ox oy (core:direction->offset direction)))
-    (grid:get-cell grid (+ x ox) (+ y oy) :periodic-p periodic-p)))
+            (ox oy (direction->offset direction)))
+    (declare (u:ub16 x y)
+             (u:b16 ox oy))
+    (get-cell tile-map (+ x ox) (+ y oy) :periodic-p periodic-p)))
 
-(u:fn-> enabler-count (core:core tile u:ub32 core:direction) u:ub16)
+(u:fn-> enabler-count (core tile u:ub32 direction) u:ub16)
 (declaim (inline enabler-count))
 (defun enabler-count (core tile pattern-id direction)
   (declare (optimize speed)
            (ignore core))
-  (let ((direction-index (core:direction->index direction)))
-    (aref (enabler-counts tile) pattern-id direction-index)))
+  (let ((direction-index (direction->index direction)))
+    (aref (the u:ub32a (enabler-counts tile)) pattern-id direction-index)))
 
-(u:fn-> (setf enabler-count) (u:ub16 core:core tile u:ub32 core:direction) u:ub16)
+(u:fn-> (setf enabler-count) (u:ub16 core tile u:ub32 direction) u:ub16)
 (declaim (inline (setf enabler-count)))
 (defun (setf enabler-count) (value core tile pattern-id direction)
   (declare (optimize speed))
-  (let ((direction-index (core:direction->index direction)))
+  (let ((enabler-counts (enabler-counts tile))
+        (direction-index (direction->index direction)))
+    (declare (u:ub32a enabler-counts))
     (flet ((backtrack/restore-enabler-count (count)
-             (setf (aref (enabler-counts tile) pattern-id direction-index) count)))
-      (hist:record core
-                   #'backtrack/restore-enabler-count
-                   (aref (enabler-counts tile) pattern-id direction-index))
-      (setf (aref (enabler-counts tile) pattern-id direction-index) value))))
+             (setf (aref enabler-counts pattern-id direction-index) count)))
+      (record core
+              #'backtrack/restore-enabler-count
+              (aref enabler-counts pattern-id direction-index))
+      (setf (aref enabler-counts pattern-id direction-index) value))))
 
-(u:fn-> pattern-removable-p (core:core tile u:ub32 core:direction) boolean)
+(u:fn-> pattern-removable-p (core tile u:ub32 direction) boolean)
 (declaim (inline pattern-removable-p))
 (defun pattern-removable-p (core tile pattern-id direction)
   (declare (optimize speed))

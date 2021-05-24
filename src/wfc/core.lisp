@@ -1,4 +1,4 @@
-(in-package #:%syntex.wfc.core)
+(in-package #:%syntex.wfc)
 
 (deftype direction () '(member :left :right :up :down))
 
@@ -6,32 +6,38 @@
 
 (deftype strategy () '(member :none :backtrack))
 
-(declaim (inline %make-core))
-(defstruct (core
-            (:constructor %make-core)
-            (:conc-name nil)
-            (:predicate nil)
-            (:copier nil))
-  (rng nil :type rng:generator)
-  (seed nil :type (or string null))
-  (sample nil :type grid:grid)
-  (data->pattern (u:dict #'equalp) :type hash-table)
-  (id->pattern (make-array 0) :type simple-vector)
-  (adjacencies (make-array 0) :type simple-vector)
-  (progress 0 :type (integer 0 100))
-  (uncollapsed-count 0 :type u:non-negative-fixnum)
-  (strategy :backtrack :type strategy)
-  history
-  tile-map)
-
-(u:define-printer (core stream :type nil)
-  (format stream "CORE"))
+(defclass core ()
+  ((%rng :reader rng
+         :initarg :rng)
+   (%seed :reader seed
+          :initarg :seed)
+   (%sample :reader sample
+            :initarg :sample)
+   (%data->pattern :reader data->pattern
+                   :initform (u:dict #'equalp))
+   (%id->pattern :accessor id->pattern
+                 :initform (make-array 0))
+   (%adjacencies :accessor adjacencies
+                 :initform (make-array 0))
+   (%progress :accessor progress
+              :initform 0)
+   (%uncollapsed-count :accessor uncollapsed-count
+                       :initform 0)
+   (%strategy :reader strategy
+              :initarg :strategy
+              :initform :backtrack)
+   (%history :reader history
+             :initarg :history)
+   (%tile-map :accessor tile-map
+              :initarg :tile-map)))
 
 (defun make-core (&key seed sample history strategy)
-  (%make-core :rng (rng:make-generator seed)
-              :sample sample
-              :history history
-              :strategy strategy))
+  (make-instance 'core
+                 :rng (rng:make-generator seed)
+                 :seed seed
+                 :sample sample
+                 :history history
+                 :strategy strategy))
 
 (u:fn-> direction->index (direction) direction-index)
 (declaim (inline direction->index))

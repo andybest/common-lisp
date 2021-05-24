@@ -15,21 +15,19 @@
   :pathname "src"
   :serial t
   :components
-  ((:module "common"
+  ((:file "package")
+   (:module "common"
     :components
-    ((:file "package")
-     (:file "conditions")
+    ((:file "conditions")
      (:file "priority-queue")
      (:file "common")
      (:file "image")))
    (:module "harrison"
     :components
-    ((:file "package")
-     (:file "harrison")))
+    ((:file "harrison")))
    (:module "wfc"
     :components
-    ((:file "package")
-     (:file "grid")
+    ((:file "grid")
      (:file "kernel")
      (:file "core")
      (:file "sample")
@@ -37,5 +35,4 @@
      (:file "history")
      (:file "tile-map")
      (:file "solver")
-     (:file "wfc")))
-   (:file "package")))
+     (:file "wfc")))))
