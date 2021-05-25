@@ -98,18 +98,6 @@
                     :entropy-noise (rng:float *rng* 0.0 0.0001)
                     :enabler-counts (make-tile-enabler-counts core)))))
 
-(u:fn-> reset-tile (core tile) tile)
-(defun reset-tile (core tile)
-  (declare (optimize speed))
-  (destructuring-bind (weight . weight-log-weight) (initial-weights (tile-map core))
-    (fill (the simple-bit-vector (possible-patterns tile)) 1)
-    (values
-     (reinitialize-instance tile
-                            :collapsed-p nil
-                            :weight weight
-                            :weight-log-weight weight-log-weight
-                            :enabler-counts (make-tile-enabler-counts core (enabler-counts tile))))))
-
 (u:fn-> compute-entropy (tile) u:f32)
 (defun compute-entropy (tile)
   (declare (optimize speed))
