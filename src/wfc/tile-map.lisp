@@ -66,15 +66,14 @@
     (values weight
             weight-log-weight)))
 
-(u:fn-> make-tile-enabler-counts (core &optional u:ub32a) (u:ub32a (* 4)))
-(defun make-tile-enabler-counts (core &optional enabler-counts)
+(u:fn-> make-tile-enabler-counts (core) (u:ub32a (* 4)))
+(defun make-tile-enabler-counts (core)
   (declare (optimize speed))
   (let* ((adjacencies (adjacencies core))
          (pattern-count (get-pattern-count core))
-         (enabler-counts (or enabler-counts
-                             (make-array (list pattern-count 4)
-                                         :element-type 'u:ub32
-                                         :initial-element 0))))
+         (enabler-counts (make-array (list pattern-count 4)
+                                     :element-type 'u:ub32
+                                     :initial-element 0)))
     (declare ((simple-array t) adjacencies))
     (dotimes (pattern-id pattern-count)
       (loop :for direction :in '(:left :right :up :down)

@@ -21,8 +21,10 @@
           (unless (remove-possible-pattern core tile pattern-id)
             (warn 'cond:wfc-contradiction-warning :progress (progress core))
             (ecase (strategy core)
-              (:backtrack (backtrack core))
-              (:none (error 'cond:wfc-contradiction-error)))
+              (:backtrack
+               (backtrack core))
+              (:none
+               (error 'cond:wfc-contradiction-error)))
             (throw :contradiction nil))
           (pq:enqueue entropy-queue tile (compute-entropy tile))
           (push (cons tile pattern-id) (pattern-removal-stack tile-map)))
