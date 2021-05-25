@@ -32,10 +32,10 @@
         :for i :below size
         :for value = (aref data i)
         :for pixel = 0
-        :do (setf (ldb (byte 8 16) pixel) value
+        :do (setf (ldb (byte 8 24) pixel) value
+                  (ldb (byte 8 16) pixel) value
                   (ldb (byte 8 8) pixel) value
-                  (ldb (byte 8 0) pixel) value
-                  (ldb (byte 8 24) pixel) 255
+                  (ldb (byte 8 0) pixel) 0
                   (aref packed-data i) pixel)
         :finally (return packed-data)))
 
@@ -50,10 +50,10 @@
         :for j :from 0
         :for value = (aref data i)
         :for pixel = 0
-        :do (setf (ldb (byte 8 16) pixel) value
+        :do (setf (ldb (byte 8 24) pixel) value
+                  (ldb (byte 8 16) pixel) value
                   (ldb (byte 8 8) pixel) value
-                  (ldb (byte 8 0) pixel) value
-                  (ldb (byte 8 24) pixel) (aref data (1+ i))
+                  (ldb (byte 8 0) pixel) 0
                   (aref packed-data j) pixel)
         :finally (return packed-data)))
 
@@ -67,10 +67,10 @@
         :for i :below (* size 3) :by 3
         :for j :from 0
         :for pixel = 0
-        :do (setf (ldb (byte 8 16) pixel) (aref data i)
-                  (ldb (byte 8 8) pixel) (aref data (+ i 1))
-                  (ldb (byte 8 0) pixel) (aref data (+ i 2))
-                  (ldb (byte 8 24) pixel) 255
+        :do (setf (ldb (byte 8 24) pixel) (aref data i)
+                  (ldb (byte 8 16) pixel) (aref data (+ i 1))
+                  (ldb (byte 8 8) pixel) (aref data (+ i 2))
+                  (ldb (byte 8 0) pixel) 0
                   (aref packed-data j) pixel)
         :finally (return packed-data)))
 
@@ -84,41 +84,39 @@
         :for i :below (* size 4) :by 4
         :for j :from 0
         :for pixel = 0
-        :do (setf (ldb (byte 8 16) pixel) (aref data i)
-                  (ldb (byte 8 8) pixel) (aref data (+ i 1))
-                  (ldb (byte 8 0) pixel) (aref data (+ i 2))
-                  (ldb (byte 8 24) pixel) (aref data (+ i 3))
+        :do (setf (ldb (byte 8 24) pixel) (aref data i)
+                  (ldb (byte 8 16) pixel) (aref data (+ i 1))
+                  (ldb (byte 8 8) pixel) (aref data (+ i 2))
+                  (ldb (byte 8 0) pixel) 0
                   (aref packed-data j) pixel)
         :finally (return packed-data)))
 
-(u:fn-> from-argb (u:ub32) (values u:ub8 u:ub8 u:ub8 u:ub8))
-(declaim (inline from-argb))
-(defun from-argb (color)
+(u:fn-> from-rgb (u:ub32) (values u:ub8 u:ub8 u:ub8))
+(declaim (inline from-rgb))
+(defun from-rgb (color)
   (declare (optimize speed))
-  (values (ldb (byte 8 16) color)
-          (ldb (byte 8 8) color)
-          (ldb (byte 8 0) color)
-          (ldb (byte 8 24) color)))
+  (values (ldb (byte 8 24) color)
+          (ldb (byte 8 16) color)
+          (ldb (byte 8 8) color)))
 
 (u:fn-> unpack (u:ub32a u:ub16 u:ub16) u:ub8a)
 (declaim (inline unpack))
 (defun unpack (data width height)
   (declare (optimize speed))
-  (let ((unpacked-data (u:make-ub8-array (* width height 4))))
+  (let ((unpacked-data (u:make-ub8-array (* width height 3))))
     (dotimes (i (length data))
-      (u:mvlet ((r g b a (from-argb (aref data i)))
-                (offset (* i 4)))
+      (u:mvlet ((r g b (from-rgb (aref data i)))
+                (offset (* i 3)))
         (setf (aref unpacked-data offset) r
               (aref unpacked-data (+ offset 1)) g
-              (aref unpacked-data (+ offset 2)) b
-              (aref unpacked-data (+ offset 3)) a)))
+              (aref unpacked-data (+ offset 2)) b)))
     unpacked-data))
 
 (u:fn-> write (u:ub8a u:ub16 u:ub16 (or pathname string)) (values))
 (defun write (data width height file-path)
   (declare (optimize speed))
   (let ((png (make-instance 'zpng:png
-                            :color-type :truecolor-alpha
+                            :color-type :truecolor
                             :width width
                             :height height
                             :image-data data)))

@@ -28,7 +28,7 @@
    #:write)
   (:export
    #:data
-   #:from-argb
+   #:from-rgb
    #:height
    #:make-image
    #:unpack

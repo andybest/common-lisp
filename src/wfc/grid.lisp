@@ -11,7 +11,7 @@
          :initarg :y
          :initform 0)
      (%value :accessor value
-             :initform nil))))
+             :initform #xff00ffff))))
 
 (u:eval-always
   (defclass grid ()

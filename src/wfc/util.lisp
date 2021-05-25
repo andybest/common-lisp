@@ -34,6 +34,12 @@
     (:up :down)
     (:down :up)))
 
+(u:fn-> invalid-color-p (u:ub32) boolean)
+(declaim (inline invalid-color-p))
+(defun invalid-color-p (value)
+  (declare (optimize speed))
+  (/= (ldb (byte 8 0) value) 0))
+
 (u:fn-> make-output (core) u:ub8a)
 (defun make-output (core)
   (declare (optimize speed))
