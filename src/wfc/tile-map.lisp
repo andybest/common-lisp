@@ -5,33 +5,31 @@
     ((%possible-patterns :accessor possible-patterns
                          :initarg :possible-patterns)
      (%weight :accessor weight
-              :initarg :weight
-              :initform 0)
+              :initarg :weight)
      (%weight-log-weight :accessor weight-log-weight
-                         :initarg :weight-log-weight
-                         :initform 0.0)
+                         :initarg :weight-log-weight)
      (%entropy-noise :reader entropy-noise
                      :initarg :entropy-noise)
      (%collapsed-p :accessor collapsed-p
-                   :initarg :collapsed-p
                    :initform nil)
-     (%enabler-counts :reader enabler-counts
+     (%enabler-counts :accessor enabler-counts
                       :initarg :enabler-counts))))
 
 (u:eval-always
   (defclass tile-map (grid)
-    ((%core :reader core
+    ((%core :accessor core
             :initarg :core)
-     (%entropy-queue :reader entropy-queue
+     (%entropy-queue :accessor entropy-queue
                      :initform (pq:make-queue))
      (%initial-weights :accessor initial-weights)
      (%neighbor-kernel :accessor neighbor-kernel)
      (%pattern-removal-stack :accessor pattern-removal-stack
                              :initform nil)
-     (%uncollapsed-count :accessor uncollapsed-count
-                         :initform 0))))
+     (%uncollapsed-count :accessor uncollapsed-count)
+     (%snapshots :accessor snapshots
+                 :initform nil))))
 
-(defmethod initialize-instance :after ((instance tile-map) &key core width height)
+(defmethod initialize-instance :after ((instance tile-map) &key core)
   (u:mvlet* ((tile-count (cell-count instance))
              (tiles (make-array tile-count))
              (kernel (make-kernel :grid instance :width 3 :height 3))
@@ -40,16 +38,19 @@
     (setf (cells instance) tiles
           (initial-weights instance) (cons weight weight-log-weight)
           (neighbor-kernel instance) kernel
-          (uncollapsed-count instance) tile-count
-          (tile-map core) instance)
-    (dotimes (y height)
-      (dotimes (x width)
-        (setf (aref tiles (+ (* y width) x)) (make-tile core x y))))))
+          (uncollapsed-count instance) tile-count)))
 
 (u:fn-> make-tile-map (core &key (:width u:ub16) (:height u:ub16)) tile-map)
 (defun make-tile-map (core &key width height)
   (declare (optimize speed))
-  (values (make-instance 'tile-map :core core :width width :height height)))
+  (let* ((tile-map (make-instance 'tile-map :core core :width width :height height))
+         (cells (cells tile-map)))
+    (declare ((simple-array t) cells))
+    (setf (tile-map core) tile-map)
+    (dotimes (y height)
+      (dotimes (x width)
+        (setf (aref cells (+ (* y width) x)) (make-tile core x y))))
+    tile-map))
 
 (u:fn-> calculate-initial-weights (core u:ub32) (values u:ub32 u:f32))
 (defun calculate-initial-weights (core pattern-count)
@@ -85,8 +86,7 @@
 (u:fn-> make-tile (core u:ub16 u:ub16) tile)
 (defun make-tile (core x y)
   (declare (optimize speed))
-  (u:mvlet* ((rng (rng core))
-             (initial-weights (initial-weights (tile-map core)))
+  (u:mvlet* ((initial-weights (initial-weights (tile-map core)))
              (pattern-count (get-pattern-count core)))
     (values
      (make-instance 'tile
@@ -95,7 +95,7 @@
                     :possible-patterns (u:make-bit-vector pattern-count 1)
                     :weight (car initial-weights)
                     :weight-log-weight (cdr initial-weights)
-                    :entropy-noise (rng:float rng 0.0 0.0001)
+                    :entropy-noise (rng:float *rng* 0.0 0.0001)
                     :enabler-counts (make-tile-enabler-counts core)))))
 
 (u:fn-> reset-tile (core tile) tile)
@@ -169,7 +169,7 @@
 (defun choose-pattern-id (core tile)
   (declare (optimize speed))
   (let ((possible-patterns (possible-patterns tile))
-        (remaining (rng:int (rng core) 0 (weight tile) nil)))
+        (remaining (rng:int *rng* 0 (weight tile) nil)))
     (declare (fixnum remaining)
              (simple-bit-vector possible-patterns))
     (dotimes (pattern-id (length possible-patterns))

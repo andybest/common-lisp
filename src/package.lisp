@@ -40,6 +40,7 @@
    (#:u #:golden-utils))
   (:use #:cl)
   (:export
+   #:copy
    #:dequeue
    #:enqueue
    #:make-queue

@@ -1,15 +1,11 @@
 (in-package #:%syntex.wfc)
 
-(deftype direction () '(member :left :right :up :down))
-
-(deftype direction-index () '(integer 0 3))
+(defvar *rng* nil)
 
 (deftype strategy () '(member :none :backtrack))
 
 (defclass core ()
-  ((%rng :reader rng
-         :initarg :rng)
-   (%seed :reader seed
+  ((%seed :reader seed
           :initarg :seed)
    (%sample :reader sample
             :initarg :sample)
@@ -29,39 +25,4 @@
    (%tile-map :accessor tile-map)))
 
 (defun make-core (&key seed sample history strategy)
-  (make-instance 'core
-                 :rng (rng:make-generator seed)
-                 :seed seed
-                 :sample sample
-                 :history history
-                 :strategy strategy))
-
-(u:fn-> direction->index (direction) direction-index)
-(declaim (inline direction->index))
-(defun direction->index (direction)
-  (declare (optimize speed))
-  (ecase direction
-    (:left 0)
-    (:right 1)
-    (:up 2)
-    (:down 3)))
-
-(u:fn-> direction->offset (direction) (values (integer -1 1) (integer -1 1)))
-(declaim (inline direction->offset))
-(defun direction->offset (direction)
-  (declare (optimize speed))
-  (ecase direction
-    (:left (values -1 0))
-    (:right (values 1 0))
-    (:up (values 0 -1))
-    (:down (values 0 1))))
-
-(u:fn-> invert-direction (direction) direction)
-(declaim (inline invert-direction))
-(defun invert-direction (direction)
-  (declare (optimize speed))
-  (ecase direction
-    (:left :right)
-    (:right :left)
-    (:up :down)
-    (:down :up)))
+  (make-instance 'core :seed seed :sample sample :history history :strategy strategy))

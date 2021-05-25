@@ -22,6 +22,13 @@
   (%make-queue :data (make-array initial-size)
                :priorities (make-array initial-size :element-type 'u:f32)))
 
+(u:fn-> copy (queue) queue)
+(defun copy (queue)
+  (declare (optimize speed))
+  (%make-queue :size (size queue)
+               :data (copy-seq (data queue))
+               :priorities (copy-seq (priorities queue))))
+
 (u:fn-> heapify-up (data u:f32a u:array-length) null)
 (declaim (inline heapify-up))
 (defun heapify-up (data priorities index)
