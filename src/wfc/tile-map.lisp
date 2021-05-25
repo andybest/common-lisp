@@ -25,9 +25,13 @@
      (%neighbor-kernel :accessor neighbor-kernel)
      (%pattern-removal-stack :accessor pattern-removal-stack
                              :initform nil)
-     (%uncollapsed-count :accessor uncollapsed-count)
-     (%snapshots :accessor snapshots
-                 :initform nil))))
+     (%uncollapsed-count :accessor uncollapsed-count))))
+
+(u:define-printer (tile stream)
+  (format stream "~d, ~d" (x tile) (y tile)))
+
+(u:define-printer (tile-map stream)
+  (format stream "~dx~d" (width tile-map) (height tile-map)))
 
 (defmethod initialize-instance :after ((instance tile-map) &key core)
   (u:mvlet* ((tile-count (cell-count instance))
@@ -74,7 +78,7 @@
          (enabler-counts (make-array pattern-count)))
     (declare ((simple-array t) adjacencies))
     (dotimes (pattern-id pattern-count)
-      (loop :with direction-counts = (make-array 4 :element-type 'u:ub8 :initial-element 0)
+      (loop :with direction-counts = (make-array 4 :element-type 'u:ub16 :initial-element 0)
             :for direction :in '(:left :right :up :down)
             :for i :from 0
             :for count = (list-length (u:href (aref adjacencies pattern-id) direction))
@@ -222,7 +226,7 @@
          (direction-counts (aref enabler-counts pattern-id))
          (direction-index (direction->index direction)))
     (declare ((simple-array t) enabler-counts)
-             (u:ub8a direction-counts))
+             (u:ub16a direction-counts))
     (aref direction-counts direction-index)))
 
 (u:fn-> (setf enabler-count) (u:ub32 core tile u:ub32 direction) null)
@@ -233,7 +237,7 @@
          (direction-counts (aref enabler-counts pattern-id))
          (direction-index (direction->index direction)))
     (declare ((simple-array t) enabler-counts)
-             (u:ub8a direction-counts))
+             (u:ub16a direction-counts))
     (flet ((backtrack/restore-enabler-count (count)
              (setf (aref direction-counts direction-index) count)))
       (record core
