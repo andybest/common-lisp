@@ -56,11 +56,11 @@
 (defun calculate-initial-weights (core pattern-count)
   (let ((weight 0)
         (weight-log-weight 0.0))
-    (declare (u:ub16 weight)
+    (declare (u:ub32 weight)
              (u:f32 weight-log-weight))
     (dotimes (pattern-id pattern-count)
       (let ((frequency (get-frequency core pattern-id)))
-        (declare (u:ub16 frequency))
+        (declare (u:ub32 frequency))
         (incf weight frequency)
         (incf weight-log-weight (* frequency (log frequency 2)))))
     (values weight
@@ -214,7 +214,7 @@
              (u:b16 ox oy))
     (get-cell tile-map (+ x ox) (+ y oy) :periodic-p periodic-p)))
 
-(u:fn-> enabler-count (core tile u:ub32 direction) u:ub16)
+(u:fn-> enabler-count (core tile u:ub32 direction) u:ub32)
 (declaim (inline enabler-count))
 (defun enabler-count (core tile pattern-id direction)
   (declare (optimize speed)
@@ -222,7 +222,7 @@
   (let ((direction-index (direction->index direction)))
     (aref (the u:ub32a (enabler-counts tile)) pattern-id direction-index)))
 
-(u:fn-> (setf enabler-count) (u:ub16 core tile u:ub32 direction) u:ub16)
+(u:fn-> (setf enabler-count) (u:ub32 core tile u:ub32 direction) u:ub32)
 (declaim (inline (setf enabler-count)))
 (defun (setf enabler-count) (value core tile pattern-id direction)
   (declare (optimize speed))
