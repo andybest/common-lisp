@@ -27,10 +27,10 @@
     ((:file "harrison")))
    (:module "wfc"
     :components
-    ((:file "util")
-     (:file "core")
+    ((:file "core")
      (:file "grid")
      (:file "kernel")
+     (:file "util")
      (:file "sample")
      (:file "pattern")
      (:file "history")

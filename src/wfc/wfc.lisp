@@ -1,31 +1,5 @@
 (in-package #:%syntex.wfc)
 
-(u:fn-> make-output (core) u:ub8a)
-(defun make-output (core)
-  (declare (optimize speed))
-  (let* ((tile-map (tile-map core))
-         (width (width tile-map))
-         (height (height tile-map))
-         (data (u:make-ub32-array (cell-count tile-map))))
-    (declare (u:ub16 width height))
-    (do-cells (tile-map cell)
-      (let ((color (value cell))
-            (x (x cell))
-            (y (y cell)))
-        (declare (u:ub16 x y))
-        (setf (aref data (+ (* y width) x)) color)))
-    (img:unpack data width height)))
-
-(u:fn-> render (core &key (:path (or pathname string))) (values))
-(defun render (core &key path)
-  (declare (optimize speed))
-  (let* ((tile-map (tile-map core))
-         (width (width tile-map))
-         (height (height tile-map)))
-    (img:write (make-output core) width height path)
-    (format t "~&Image written to: ~s~%" (namestring path))
-    (values)))
-
 (defun wfc (sample-path
             &key
               seed
