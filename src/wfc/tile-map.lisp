@@ -56,6 +56,7 @@
 
 (u:fn-> calculate-initial-weights (core u:ub32) (values u:ub32 u:f32))
 (defun calculate-initial-weights (core pattern-count)
+  (declare (optimize speed))
   (let ((weight 0)
         (weight-log-weight 0.0))
     (declare (u:ub32 weight)
@@ -71,8 +72,8 @@
 (u:fn-> make-tile (core u:ub16 u:ub16) tile)
 (defun make-tile (core x y)
   (declare (optimize speed))
-  (u:mvlet* ((initial-weights (initial-weights (tile-map core)))
-             (pattern-count (get-pattern-count core)))
+  (u:mvlet ((initial-weights (initial-weights (tile-map core)))
+            (pattern-count (get-pattern-count core)))
     (values
      (make-instance 'tile
                     :x x
@@ -100,15 +101,18 @@
   (declare (optimize speed))
   (plusp (sbit (possible-patterns tile) pattern-id)))
 
+(u:fn-> ban-pattern (core tile u:ub32) boolean)
 (defun ban-pattern (core tile pattern-id)
+  (declare (optimize speed))
   (let ((possible-patterns (possible-patterns tile))
         (frequency (get-frequency core pattern-id)))
+    (declare (simple-bit-vector possible-patterns))
     (take-snapshot/ban-pattern core tile pattern-id)
     (setf (sbit possible-patterns pattern-id) 0)
     (when (every #'zerop possible-patterns)
       (return-from ban-pattern nil))
-    (decf (weight tile) frequency)
-    (decf (weight-log-weight tile) (* frequency (log frequency 2)))
+    (decf (the u:ub32 (weight tile)) frequency)
+    (decf (the u:f32 (weight-log-weight tile)) (* frequency (log frequency 2)))
     t))
 
 (u:fn-> choose-tile (core) tile)
@@ -138,7 +142,9 @@
               (return-from choose-pattern-id pattern-id)))))
     (error "Bug: Inconsistency detected with tile frequencies.")))
 
+(u:fn-> collapse-tile (core tile) null)
 (defun collapse-tile (core tile)
+  (declare (optimize speed))
   (let ((tile-map (tile-map core))
         (possible-patterns (possible-patterns tile))
         (chosen-pattern-id (choose-pattern-id core tile))
@@ -153,13 +159,16 @@
     (take-snapshot/collapse-tile core tile original-possible-patterns)
     (setf (collapsed-p tile) t
           (value tile) (get-origin-color core chosen-pattern-id))
-    (decf (uncollapsed-count tile-map))
+    (decf (the u:non-negative-fixnum (uncollapsed-count tile-map)))
     nil))
 
+(u:fn-> pattern-removable-p (core tile tile u:ub32 direction) boolean)
 (defun pattern-removable-p (core origin neighbor pattern-id direction)
-  (let ((adjacencies (u:href (aref (adjacencies core) pattern-id) direction)))
+  (declare (optimize speed))
+  (let ((adjacencies (adjacencies core)))
+    (declare ((simple-array t) adjacencies))
     (when (possible-pattern-p neighbor pattern-id)
-      (dolist (i adjacencies)
-        (when (possible-pattern-p origin i)
+      (dolist (adjacent-pattern-id (u:href (aref adjacencies pattern-id) direction))
+        (when (possible-pattern-p origin adjacent-pattern-id)
           (return-from pattern-removable-p nil)))
       t)))

@@ -9,8 +9,8 @@
                #:lparallel
                #:pngload
                #:seedable-rng
-               #:uiop
                #:trivial-garbage
+               #:uiop
                #:zpng)
   :pathname "src"
   :serial t

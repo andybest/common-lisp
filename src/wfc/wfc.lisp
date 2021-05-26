@@ -22,7 +22,7 @@
   (unless (typep pattern-size '(integer 2 255))
     (error 'cond:invalid-wfc-pattern-size :value pattern-size))
   (unless (typep strategy 'strategy)
-    (error 'cond:invalid-wfc-strategy :value strategy :allowed '(:backtrack)))
+    (error 'cond:invalid-wfc-strategy :value strategy :allowed '(:none :backtrack)))
   (unless (typep backtrack-distance 'u:positive-fixnum)
     (error 'cond:invalid-wfc-backtrack-distance :value backtrack-distance))
   (unless (typep backtrack-retries 'u:positive-fixnum)
@@ -38,5 +38,4 @@
     (solve core :periodic-p periodic-output-p :show-progress-p show-progress-p)
     (if render-p
         (render core :path output-path)
-        (make-output core))
-    core))
+        (make-output core))))
