@@ -28,14 +28,15 @@
   (unless (typep backtrack-retries 'u:positive-fixnum)
     (error 'cond:invalid-wfc-backtrack-retry-count :value backtrack-retries))
   (let* ((*rng* (rng:make-generator seed))
-         (history (make-history :distance backtrack-distance :retries backtrack-retries))
+         (backtracker (make-backtracker :distance backtrack-distance :retries backtrack-retries))
          (core (make-core :seed seed
                           :sample (load-sample sample-path)
-                          :history history
+                          :backtracker backtracker
                           :strategy strategy)))
     (analyze-patterns core :size pattern-size :periodic-p periodic-input-p)
     (make-tile-map core :width width :height height)
     (solve core :periodic-p periodic-output-p :show-progress-p show-progress-p)
     (if render-p
         (render core :path output-path)
-        (make-output core))))
+        (make-output core))
+    core))

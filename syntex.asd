@@ -33,7 +33,7 @@
      (:file "util")
      (:file "sample")
      (:file "pattern")
-     (:file "history")
      (:file "tile-map")
+     (:file "backtracker")
      (:file "solver")
      (:file "wfc")))))

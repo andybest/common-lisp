@@ -20,9 +20,9 @@
    (%strategy :reader strategy
               :initarg :strategy
               :initform :backtrack)
-   (%history :reader history
-             :initarg :history)
+   (%backtracker :reader backtracker
+                 :initarg :backtracker)
    (%tile-map :accessor tile-map)))
 
-(defun make-core (&key seed sample history strategy)
-  (make-instance 'core :seed seed :sample sample :history history :strategy strategy))
+(defun make-core (&key seed sample backtracker strategy)
+  (make-instance 'core :seed seed :sample sample :backtracker backtracker :strategy strategy))

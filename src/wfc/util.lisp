@@ -2,28 +2,6 @@
 
 (deftype direction () '(member :left :right :up :down))
 
-(deftype direction-index () '(integer 0 3))
-
-(u:fn-> direction->index (direction) direction-index)
-(declaim (inline direction->index))
-(defun direction->index (direction)
-  (declare (optimize speed))
-  (ecase direction
-    (:left 0)
-    (:right 1)
-    (:up 2)
-    (:down 3)))
-
-(u:fn-> direction->offset (direction) (values (integer -1 1) (integer -1 1)))
-(declaim (inline direction->offset))
-(defun direction->offset (direction)
-  (declare (optimize speed))
-  (ecase direction
-    (:left (values -1 0))
-    (:right (values 1 0))
-    (:up (values 0 -1))
-    (:down (values 0 1))))
-
 (u:fn-> invert-direction (direction) direction)
 (declaim (inline invert-direction))
 (defun invert-direction (direction)
@@ -33,12 +11,6 @@
     (:right :left)
     (:up :down)
     (:down :up)))
-
-(u:fn-> invalid-color-p (u:ub32) boolean)
-(declaim (inline invalid-color-p))
-(defun invalid-color-p (value)
-  (declare (optimize speed))
-  (/= (ldb (byte 8 0) value) 0))
 
 (u:fn-> make-output (core) u:ub8a)
 (defun make-output (core)
@@ -62,6 +34,7 @@
   (let* ((tile-map (tile-map core))
          (width (width tile-map))
          (height (height tile-map)))
+    (format t "~&Writing image file: ~s...~%" (namestring path))
     (img:write (make-output core) width height path)
     (format t "~&Image written to: ~s~%" (namestring path))
     (values)))

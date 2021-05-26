@@ -199,6 +199,8 @@
 (u:fn-> analyze-patterns (core &key (:size u:ub8) (:periodic-p boolean)) null)
 (defun analyze-patterns (core &key size periodic-p)
   (declare (optimize speed))
+  (format t "~&Analyzing sample patterns...~%")
   (extract-patterns core :size size :periodic-p periodic-p)
   (generate-adjacencies core :pattern-size size)
+  (format t "Sample patterns analyzed.~%")
   nil)
