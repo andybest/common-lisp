@@ -25,12 +25,6 @@
                              :initform nil)
      (%uncollapsed-count :accessor uncollapsed-count))))
 
-(u:define-printer (tile stream)
-  (format stream "~d, ~d" (x tile) (y tile)))
-
-(u:define-printer (tile-map stream)
-  (format stream "~dx~d" (width tile-map) (height tile-map)))
-
 (defmethod initialize-instance :after ((instance tile-map) &key core)
   (u:mvlet* ((tile-count (cell-count instance))
              (tiles (make-array tile-count))
@@ -83,6 +77,12 @@
                     :weight-log-weight (cdr initial-weights)
                     :entropy-noise (rng:float *rng* 0.0 0.0001)))))
 
+(u:fn-> possible-pattern-p (tile u:ub32) boolean)
+(declaim (inline possible-pattern-p))
+(defun possible-pattern-p (tile pattern-id)
+  (declare (optimize speed))
+  (plusp (sbit (possible-patterns tile) pattern-id)))
+
 (u:fn-> compute-entropy (tile) u:f32)
 (defun compute-entropy (tile)
   (declare (optimize speed))
@@ -94,12 +94,6 @@
     (+ (- (log weight 2)
           (/ weight-log-weight weight))
        noise)))
-
-(u:fn-> possible-pattern-p (tile u:ub32) boolean)
-(declaim (inline possible-pattern-p))
-(defun possible-pattern-p (tile pattern-id)
-  (declare (optimize speed))
-  (plusp (sbit (possible-patterns tile) pattern-id)))
 
 (u:fn-> ban-pattern (core tile u:ub32) boolean)
 (defun ban-pattern (core tile pattern-id)
@@ -165,10 +159,9 @@
 (u:fn-> pattern-removable-p (core tile tile u:ub32 direction) boolean)
 (defun pattern-removable-p (core origin neighbor pattern-id direction)
   (declare (optimize speed))
-  (let ((adjacencies (adjacencies core)))
-    (declare ((simple-array t) adjacencies))
-    (when (possible-pattern-p neighbor pattern-id)
-      (dolist (adjacent-pattern-id (u:href (aref adjacencies pattern-id) direction))
+  (when (possible-pattern-p neighbor pattern-id)
+    (let ((adjacencies (aref (the (simple-array t) (adjacencies core)) pattern-id)))
+      (dolist (adjacent-pattern-id (u:href adjacencies direction))
         (when (possible-pattern-p origin adjacent-pattern-id)
           (return-from pattern-removable-p nil)))
       t)))

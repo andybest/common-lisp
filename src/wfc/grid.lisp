@@ -27,6 +27,12 @@
      (%cell-count :accessor cell-count
                   :initform 0))))
 
+(u:define-printer (cell stream)
+  (format stream "~d, ~d" (x cell) (y cell)))
+
+(u:define-printer (grid stream)
+  (format stream "~dx~d" (width grid) (height grid)))
+
 (defmethod initialize-instance :after ((instance grid) &key cells)
   (let* ((width (width instance))
          (height (height instance))
