@@ -101,7 +101,6 @@
   (let ((possible-patterns (possible-patterns tile))
         (frequency (get-frequency core pattern-id)))
     (declare (simple-bit-vector possible-patterns))
-    (take-snapshot/ban-pattern core tile pattern-id)
     (setf (sbit possible-patterns pattern-id) 0)
     (when (every #'zerop possible-patterns)
       (return-from ban-pattern nil))

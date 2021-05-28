@@ -30,15 +30,24 @@
     (vector-push-extend func (snapshots (backtracker core))))
   nil)
 
-(u:fn-> take-snapshot/ban-pattern (core tile u:ub32) null)
-(defun take-snapshot/ban-pattern (core tile pattern-id)
+(u:fn-> take-snapshot/modify-tile (core tile simple-bit-vector) null)
+(defun take-snapshot/modify-tile (core tile possible-patterns)
   (declare (optimize speed))
-  (flet ((%unban (weight weight-log-weight)
-           (lambda ()
-             (setf (sbit (possible-patterns tile) pattern-id) 1
-                   (weight tile) weight
+  (flet ((%restore ()
+           (let ((weight 0)
+                 (weight-log-weight 0.0))
+             (declare (u:ub32 weight)
+                      (u:f32 weight-log-weight))
+             (setf (possible-patterns tile) possible-patterns)
+             (dotimes (i (length possible-patterns))
+               (let ((frequency (get-frequency core i)))
+                 (declare (u:ub32 frequency))
+                 (when (possible-pattern-p tile i)
+                   (incf weight frequency)
+                   (incf weight-log-weight (* frequency (log frequency 2))))))
+             (setf (weight tile) weight
                    (weight-log-weight tile) weight-log-weight))))
-    (take-snapshot core (%unban (weight tile) (weight-log-weight tile)))
+    (take-snapshot core #'%restore)
     nil))
 
 (u:fn-> take-snapshot/collapse-tile (core tile (or simple-bit-vector null)) null)
