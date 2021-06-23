@@ -131,15 +131,14 @@
 (define-test m4/translate
   (let ((m (m4:rotate m4:+id+ (v3:vec const:pi/3 0f0 0f0)))
         (o (m4:id))
-        (r (m4:mat 1f0 0f0 0f0 0f0
-                   0f0 0.5f0 0.86602545f0 0f0
-                   0f0 -0.86602545f0 0.5f0 0f0
-                   5f0 10f0 15f0 1f0))
-        (v (v3:vec 5f0 10f0 15f0)))
+        (r (m4:mat 1.0 0.0 0.0 0.0 0.0 0.49999997 0.86602545 0.0 0.0 -0.86602545 0.49999997 0.0
+                   5.0 -7.9903817 16.160254 1.0))
+        (v (v3:vec 5f0 10f0 15f0))
+        (ov (v3:vec 5.0 -7.9903817 16.160254)))
     (true (m4:= (m4:translate! o m v) r))
     (true (m4:= o r))
     (is v3:= (m4:get-translation (m4:translate m4:+id+ v)) v)
-    (is v3:= (m4:get-translation (m4:translate m v)) v)))
+    (is v3:= (m4:get-translation (m4:translate m v)) ov)))
 
 (define-test m4/rotation-copy
   (let ((m (m4:mat 1f0 2f0 3f0 4f0

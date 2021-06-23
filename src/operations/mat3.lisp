@@ -379,19 +379,20 @@ MAT, bounded by the components of matrices MIN and MAX."
 (u:fn-> translate! (mat mat v2:vec) mat)
 (declaim (inline translate!))
 (defun translate! (out mat vec)
+  "Compute a translation matrix with identity rotation T from VEC, returning the matrix
+multiplication of MAT * T."
   (declare (optimize speed))
   (with-components ((o out) (m mat))
     (v2:with-components ((v vec))
-      (copy! out mat)
-      (psetf o00 (cl:+ m00 (cl:* m20 vx))
-             o01 (cl:+ m01 (cl:* m21 vx))
-             o02 (cl:+ m02 (cl:* m22 vx))
-             o10 (cl:+ m10 (cl:* m20 vy))
-             o11 (cl:+ m11 (cl:* m21 vy))
-             o12 (cl:+ m12 (cl:* m22 vy))
+      (psetf o00 m00
+             o01 m01
+             o02 (cl:+ (cl:* m00 vx) (cl:* m01 vy) m02)
+             o10 m10
+             o11 m11
+             o12 (cl:+ (cl:* m10 vx) (cl:* m11 vy) m12)
              o20 m20
              o21 m21
-             o22 m22)))
+             o22 (cl:+ (cl:* m20 vx) (cl:* m21 vy) m22))))
   out)
 
 (u:fn-> translate (mat v2:vec) mat)

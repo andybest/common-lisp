@@ -416,26 +416,27 @@ MAT, bounded by the components of matrices MIN and MAX."
 (u:fn-> translate! (mat mat dv3:vec) mat)
 (declaim (inline translate!))
 (defun translate! (out mat vec)
+  "Compute a translation matrix with identity rotation T from VEC, returning the matrix
+multiplication of MAT * T."
   (declare (optimize speed))
   (with-components ((o out) (m mat))
     (dv3:with-components ((v vec))
-      (copy! out mat)
-      (psetf o00 (cl:+ m00 (cl:* m30 vx))
-             o01 (cl:+ m01 (cl:* m31 vx))
-             o02 (cl:+ m02 (cl:* m32 vx))
-             o03 (cl:+ m03 (cl:* m33 vx))
-             o10 (cl:+ m10 (cl:* m30 vy))
-             o11 (cl:+ m11 (cl:* m31 vy))
-             o12 (cl:+ m12 (cl:* m32 vy))
-             o13 (cl:+ m13 (cl:* m33 vy))
-             o20 (cl:+ m20 (cl:* m30 vz))
-             o21 (cl:+ m21 (cl:* m31 vz))
-             o22 (cl:+ m22 (cl:* m32 vz))
-             o23 (cl:+ m23 (cl:* m33 vz))
+      (psetf o00 m00
+             o01 m01
+             o02 m02
+             o03 (cl:+ (cl:* m00 vx) (cl:* m01 vy) (cl:* m02 vz) m03)
+             o10 m10
+             o11 m11
+             o12 m12
+             o13 (cl:+ (cl:* m10 vx) (cl:* m11 vy) (cl:* m12 vz) m13)
+             o20 m20
+             o21 m21
+             o22 m22
+             o23 (cl:+ (cl:* m20 vx) (cl:* m21 vy) (cl:* m22 vz) m23)
              o30 m30
              o31 m31
              o32 m32
-             o33 m33)))
+             o33 (cl:+ (cl:* m30 vx) (cl:* m31 vy) (cl:* m32 vz) m33))))
   out)
 
 (u:fn-> translate (mat dv3:vec) mat)
