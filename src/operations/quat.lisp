@@ -320,6 +320,7 @@
   (to-mat3! (m3:id) quat))
 
 (u:fn-> to-mat4! (m4:mat quat) m4:mat)
+(declaim (inline to-mat4!))
 (defun to-mat4! (out quat)
   (declare (optimize speed))
   (m4:with-components ((o out))
@@ -361,6 +362,7 @@
   (to-mat4! (m4:id) quat))
 
 (u:fn-> from-mat3! (quat m3:mat) quat)
+(declaim (inline from-mat3!))
 (defun from-mat3! (out mat)
   (declare (optimize speed))
   (with-components ((o out))
@@ -384,6 +386,7 @@
   (from-mat3! (id) mat))
 
 (u:fn-> from-mat4! (quat m4:mat) quat)
+(declaim (inline from-mat4!))
 (defun from-mat4! (out mat)
   (declare (optimize speed))
   (with-components ((o out))

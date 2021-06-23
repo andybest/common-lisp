@@ -282,6 +282,7 @@
   (to-euler! (dv3:zero) quat))
 
 (u:fn-> to-mat3! (dm3:mat quat) dm3:mat)
+(declaim (inline to-mat3!))
 (defun to-mat3! (out quat)
   (declare (optimize speed))
   (dm3:with-components ((o out))
@@ -316,6 +317,7 @@
   (to-mat3! (dm3:id) quat))
 
 (u:fn-> to-mat4! (dm4:mat quat) dm4:mat)
+(declaim (inline to-mat4!))
 (defun to-mat4! (out quat)
   (declare (optimize speed))
   (dm4:with-components ((o out))
@@ -357,6 +359,7 @@
   (to-mat4! (dm4:id) quat))
 
 (u:fn-> from-mat3! (quat dm3:mat) quat)
+(declaim (inline from-mat3!))
 (defun from-mat3! (out mat)
   (declare (optimize speed))
   (with-components ((o out))
@@ -380,6 +383,7 @@
   (from-mat3! (id) mat))
 
 (u:fn-> from-mat4! (quat dm4:mat) quat)
+(declaim (inline from-mat4!))
 (defun from-mat4! (out mat)
   (declare (optimize speed))
   (with-components ((o out))
