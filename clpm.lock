@@ -37,5 +37,8 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 :reverse-dependencies
-("printv" (t (:project :name "printv" :branch "patch-1" :source :implicit-vcs)))
+("printv"
+ (t
+  (:project :name "printv" :commit "952641813b9a26d1e946d11ab947432c32a8a343"
+   :source :implicit-vcs)))
 
