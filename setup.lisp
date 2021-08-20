@@ -21,3 +21,6 @@
 
 ;; Load support for the statistical profiler
 #+sbcl (require :sb-sprof)
+
+;; Install asdf
+(require :asdf)

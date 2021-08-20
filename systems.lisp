@@ -5,8 +5,8 @@
       ;; FIXME: Needed until clpm issue #28 is resolved, which would allow us to query the clpmfile
       ;; for a list of systems.
       (systems '("printv")))
+  (clpm-client:install :context #p"/home/mfiano/Projects/Lisp/init/clpm")
   (clpm-client:activate-context #p"/home/mfiano/Projects/Lisp/init/clpm"
                                 :activate-asdf-integration t)
-  (clpm-client:install)
   (dolist (system systems)
     (asdf:load-system system)))
