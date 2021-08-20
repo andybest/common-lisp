@@ -39,5 +39,3 @@
 #+clpm-client
 (defun :update-bundle (&rest systems)
   (clpm-client:update :systems systems))
-
-
