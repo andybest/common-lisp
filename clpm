@@ -1,0 +1,11 @@
+;;; -*- Mode: common-lisp; -*-
+
+(:api-version "0.3")
+
+(:source "quicklisp" :url "https://beta.quicklisp.org/dist/quicklisp.txt" :type :quicklisp)
+
+(:asd "seedable-rng.asd")
+
+(:system "cl-pcg")
+(:github "mfiano-utils" :path "mfiano/mfiano-utils" :branch "master")
+(:github "ironclad" :path "sharplispers/ironclad" :branch "master")

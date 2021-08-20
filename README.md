@@ -88,6 +88,6 @@ is an additional value to sum with the final result.
 
 ## License
 
-Copyright © Michael Fiano <mail@mfiano.net>.
+Copyright © 2021 Michael Fiano <mail@mfiano.net>.
 
 Licensed under the MIT License.
