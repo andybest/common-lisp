@@ -6,7 +6,7 @@
    (#:m2 #:origin.mat2)
    (#:m3 #:origin.mat3)
    (#:ss #:specialization-store)
-   (#:u #:golden-utils)
+   (#:u #:mfiano-utils)
    (#:v3 #:origin.vec3)
    (#:v4 #:origin.vec4))
   (:use #:cl)

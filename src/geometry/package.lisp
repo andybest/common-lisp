@@ -18,7 +18,7 @@
    (#:rect #:origin.geometry.rect)
    (#:shape-set-2d #:origin.geometry.shape-set-2d)
    (#:sphere #:origin.geometry.sphere)
-   (#:u #:golden-utils)
+   (#:u #:mfiano-utils)
    (#:v2 #:origin.vec2)
    (#:v3 #:origin.vec3))
   (:use #:cl)

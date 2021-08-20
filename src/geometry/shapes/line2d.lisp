@@ -7,7 +7,7 @@
 (defpackage #:origin.geometry.line2d
   (:local-nicknames
    (#:point2d #:origin.geometry.point2d)
-   (#:u #:golden-utils)
+   (#:u #:mfiano-utils)
    (#:v2 #:origin.vec2))
   (:use #:cl)
   (:shadow

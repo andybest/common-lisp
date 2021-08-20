@@ -5,7 +5,7 @@
 (defpackage #:origin.geometry.sphere
   (:local-nicknames
    (#:point3d #:origin.geometry.point3d)
-   (#:u #:golden-utils))
+   (#:u #:mfiano-utils))
   (:use #:cl)
   (:export
    #:origin

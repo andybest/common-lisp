@@ -5,7 +5,7 @@
 (defpackage #:origin.geometry.circle
   (:local-nicknames
    (#:point2d #:origin.geometry.point2d)
-   (#:u #:golden-utils))
+   (#:u #:mfiano-utils))
   (:use #:cl)
   (:export
    #:circle

@@ -3,7 +3,7 @@
 (defpackage #:origin.geometry.triangle
   (:local-nicknames
    (#:point3d #:origin.geometry.point3d)
-   (#:u #:golden-utils)
+   (#:u #:mfiano-utils)
    (#:v3 #:origin.vec3))
   (:use #:cl)
   (:export

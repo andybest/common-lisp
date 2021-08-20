@@ -6,7 +6,7 @@
    (#:const #:origin.constants)
    (#:dv2 #:origin.dvec2)
    (#:ss #:specialization-store)
-   (#:u #:golden-utils)
+   (#:u #:mfiano-utils)
    (#:v3 #:origin.vec3))
   (:use #:cl)
   (:shadow

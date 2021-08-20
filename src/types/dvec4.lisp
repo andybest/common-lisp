@@ -7,7 +7,7 @@
    (#:dv2 #:origin.dvec2)
    (#:dv3 #:origin.dvec3)
    (#:ss #:specialization-store)
-   (#:u #:golden-utils)
+   (#:u #:mfiano-utils)
    (#:v4 #:origin.vec4))
   (:use #:cl)
   (:shadow

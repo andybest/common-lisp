@@ -8,7 +8,7 @@
    (#:m2 #:origin.mat2)
    (#:point2d #:origin.geometry.point2d)
    (#:rect #:origin.geometry.rect)
-   (#:u #:golden-utils)
+   (#:u #:mfiano-utils)
    (#:v2 #:origin.vec2))
   (:use #:cl)
   (:export

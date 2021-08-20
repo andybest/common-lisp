@@ -3,8 +3,9 @@
   :author "Michael Fiano <mail@mfiano.net>"
   :license "MIT"
   :homepage "https://git.mfiano.net/mfiano/origin"
+  :version "0.1.0"
   :encoding :utf-8
-  :depends-on (#:golden-utils
+  :depends-on (#:mfiano-utils
                #:specialization-store)
   :pathname "src"
   :serial t

@@ -18,7 +18,7 @@
    (#:circle #:origin.geometry.circle)
    (#:orect #:origin.geometry.oriented-rect)
    (#:rect #:origin.geometry.rect)
-   (#:u #:golden-utils))
+   (#:u #:mfiano-utils))
   (:use #:cl)
   (:export
    #:circles

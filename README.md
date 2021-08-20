@@ -34,6 +34,6 @@ of writing, this currently includes: ABCL, SBCL, CCL, ECL, and Clasp.
 
 ## License
 
-Copyright © 2014-2018 Michael Fiano <mail@mfiano.net>.
+Copyright © 2014-2021 Michael Fiano <mail@mfiano.net>.
 
 Licensed under the MIT License.

@@ -14,7 +14,7 @@
 
 (defpackage #:origin.geometry.shape-set-3d
   (:local-nicknames
-   (#:u #:golden-utils))
+   (#:u #:mfiano-utils))
   (:use #:cl)
   (:export
    #:aabbs

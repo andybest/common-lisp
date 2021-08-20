@@ -4,7 +4,7 @@
 
 (defpackage #:origin.geometry.point2d
   (:local-nicknames
-   (#:u #:golden-utils)
+   (#:u #:mfiano-utils)
    (#:v2 #:origin.vec2))
   (:use #:cl)
   (:import-from

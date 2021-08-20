@@ -2,7 +2,7 @@
 
 (defpackage #:origin.common
   (:local-nicknames
-   (#:u #:golden-utils))
+   (#:u #:mfiano-utils))
   (:use #:cl)
   (:shadow
    #:=)

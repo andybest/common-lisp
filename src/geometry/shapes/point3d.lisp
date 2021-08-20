@@ -4,7 +4,7 @@
 
 (defpackage #:origin.geometry.point3d
   (:local-nicknames
-   (#:u #:golden-utils)
+   (#:u #:mfiano-utils)
    (#:v3 #:origin.vec3)
    (#:v4 #:origin.vec4)
    (#:m4 #:origin.mat4))

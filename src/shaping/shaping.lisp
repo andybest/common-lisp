@@ -3,7 +3,7 @@
 (defpackage #:origin.shaping
   (:local-nicknames
    (#:const #:origin.constants)
-   (#:u #:golden-utils))
+   (#:u #:mfiano-utils))
   (:use #:cl)
   ;; shaping
   (:export

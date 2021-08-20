@@ -9,7 +9,7 @@
    (#:dv4 #:origin.dvec4)
    (#:q #:origin.quat)
    (#:ss #:specialization-store)
-   (#:u #:golden-utils))
+   (#:u #:mfiano-utils))
   (:use #:cl)
   (:shadow
    #:=
