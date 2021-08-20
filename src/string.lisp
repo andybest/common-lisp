@@ -1,4 +1,4 @@
-(in-package #:golden-utils)
+(in-package #:mfiano-utils)
 
 (defun string-merge (&rest strings)
   "Merge `STRINGS` into a single string."

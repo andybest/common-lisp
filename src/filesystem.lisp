@@ -1,4 +1,4 @@
-(in-package #:golden-utils)
+(in-package #:mfiano-utils)
 
 (defmacro with-file-input ((stream path) &body body)
   "Open the file at location `PATH` as input and perform `BODY`."

@@ -1,23 +1,19 @@
-# golden-utils
+# mfiano-utils
 
-Auxiliary Utilities (AU).
+mfiano's personal utility library.
 
 ## Overview
 
-A collection of personal utilities that have been found useful.
+A collection of personal utilities that I have been found useful.
 
 ## Install
 
 ```lisp
-(ql:quickload :golden-utils)
+(ql:quickload :mfiano-utils)
 ```
-
-## Usage
-
-TODO
 
 ## License
 
-Copyright © 2017-2020 Michael Fiano <mail@mfiano.net>
+Copyright © 2017-2021 Michael Fiano <mail@mfiano.net>
 
 Licensed under the MIT License.

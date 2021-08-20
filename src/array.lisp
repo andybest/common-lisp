@@ -1,4 +1,4 @@
-(in-package #:golden-utils)
+(in-package #:mfiano-utils)
 
 (declaim (inline make-b8-array))
 (defun make-b8-array (size &optional (initial-element 0))

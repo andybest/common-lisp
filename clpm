@@ -1,0 +1,9 @@
+;;; -*- Mode: common-lisp; -*-
+
+(:api-version "0.3")
+
+(:source "quicklisp" :url "https://beta.quicklisp.org/dist/quicklisp.txt" :type :quicklisp)
+
+(:asd "mfiano-utils.asd")
+
+(:github "alexandria" :host "gitlab.common-lisp.net" :path "alexandria/alexandria" :branch "master")

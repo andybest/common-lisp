@@ -1,4 +1,4 @@
-(in-package #:golden-utils)
+(in-package #:mfiano-utils)
 
 (declaim (inline degrees->radians))
 (defun degrees->radians (degrees)

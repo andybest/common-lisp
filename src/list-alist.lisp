@@ -1,7 +1,7 @@
 ;;;; Association lists.
 ;;;; Various functions dealing with association lists.
 
-(in-package #:golden-utils)
+(in-package #:mfiano-utils)
 
 (deftype alist () '(satisfies alist-p))
 

@@ -1,8 +1,9 @@
-(asdf:defsystem #:golden-utils
+(asdf:defsystem #:mfiano-utils
   :description "A utility library."
   :author ("Michael Fiano <mail@mfiano.net>")
   :license "MIT"
-  :homepage "https://git.mfiano.net/mfiano/golden-utils"
+  :homepage "https://github.com/mfiano/mfiano-utils"
+  :version "0.1.0"
   :encoding :utf-8
   :depends-on (#:alexandria
                #:uiop)

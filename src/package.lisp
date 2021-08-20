@@ -1,6 +1,6 @@
 (in-package #:cl-user)
 
-(uiop:define-package #:golden-utils
+(uiop:define-package #:mfiano-utils
   (:use #:cl)
   (:mix-reexport #:alexandria)
   (:shadow

@@ -1,4 +1,4 @@
-(in-package #:golden-utils)
+(in-package #:mfiano-utils)
 
 (defun count-digits (integer)
   "Return the number of digits of `INTEGER`."

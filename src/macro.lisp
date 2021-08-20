@@ -1,4 +1,4 @@
-(in-package #:golden-utils)
+(in-package #:mfiano-utils)
 
 (defmacro define-printer ((object stream &key (type t) identity) &body body)
   "Define a PRINT-OBJECT method for `OBJECT`."
