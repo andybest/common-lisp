@@ -3,7 +3,7 @@
 (defpackage #:cricket.test
   (:local-nicknames
    (#:c #:cricket)
-   (#:u #:golden-utils))
+   (#:u #:mfiano-utils))
   (:use #:cl
         #:prove))
 

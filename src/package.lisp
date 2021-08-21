@@ -4,7 +4,7 @@
   (:local-nicknames
    (#:lp #:lparallel)
    (#:rng #:seedable-rng)
-   (#:u #:golden-utils))
+   (#:u #:mfiano-utils))
   (:use #:cl)
   ;; API
   (:export
@@ -97,7 +97,7 @@
   (:local-nicknames
    (#:int #:%cricket.internal)
    (#:lp #:lparallel)
-   (#:u #:golden-utils))
+   (#:u #:mfiano-utils))
   (:use #:cl)
   (:shadow #:map)
   (:export
