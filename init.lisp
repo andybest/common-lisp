@@ -1,5 +1,5 @@
 (let ((*default-pathname-defaults* #p"/home/mfiano/Projects/Lisp/init/"))
   (load "setup.lisp")
+  ;; (load "quicklisp.lisp")
   (load "clpm.lisp")
-  (load "util.lisp")
-  (load "systems.lisp"))
+  (load "util.lisp"))

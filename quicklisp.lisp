@@ -13,3 +13,8 @@
   (ql:update-all-dists)
   (when systems
     (ql:quickload systems :force :all)))
+
+;; Load some systems that should always be available
+#+quicklisp
+(let ((systems '(:printv)))
+  (apply #':load systems))
