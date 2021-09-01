@@ -176,4 +176,5 @@
    #:radians->degrees)
   ;; Misc
   (:export
+   #:doc
    #:noop))
