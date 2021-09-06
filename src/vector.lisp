@@ -9,11 +9,11 @@
 ;;; Constructors
 
 (u:eval-always
-  (defun make-vector (&rest components)
+  (defun vec (&rest components)
     (doc "Construct a vector with a dimensionality equal to the number of reals given, and its ~
 components set to the values of the arguments.")
     (let* ((size (length components))
-           (constructor (u:format-symbol (symbol-package 'make-vector) "%MAKE-VECTOR~d" size)))
+           (constructor (u:format-symbol (symbol-package 'vec) "%MAKE-VECTOR~d" size)))
       (if (fboundp constructor)
           (let ((vector (funcall constructor)))
             (loop :for component :in components
@@ -22,10 +22,10 @@ components set to the values of the arguments.")
             vector)
           (error "Invalid vector size: ~d." size)))))
 
-(define-compiler-macro make-vector (&rest components)
+(define-compiler-macro vec (&rest components)
   (u:with-gensyms (vector)
     (let* ((size (length components))
-           (constructor (u:format-symbol (symbol-package 'make-vector) "%MAKE-VECTOR~d" size)))
+           (constructor (u:format-symbol (symbol-package 'vec) "%MAKE-VECTOR~d" size)))
       (if (fboundp constructor)
           `(let ((,vector (,constructor)))
              (setf
@@ -37,29 +37,29 @@ components set to the values of the arguments.")
           (error "Invalid vector size: ~d." size)))))
 
 (u:eval-always
-  (defun make-vector/zero (size)
+  (defun vec/zero (size)
     "Construct a zero vector of the given size."
-    (apply #'make-vector (make-list size :initial-element 0d0))))
+    (apply #'vec (make-list size :initial-element 0d0))))
 
-(define-compiler-macro make-vector/zero (&whole whole size)
+(define-compiler-macro vec/zero (&whole whole size)
   (if (constantp size)
-      `(make-vector ,@(make-list (eval size) :initial-element 0d0))
+      `(vec ,@(make-list (eval size) :initial-element 0d0))
       whole))
 
-(defun make-vector/from-vector (size vector)
+(defun vec/from-vec (size vector)
   (doc "Construct a vector of the given SIZE, by copying the components of the given VECTOR of any ~
  size into it. If VECTOR has fewer components than SIZE, any remaining components are set to zero. ~
 If VECTOR has more components than SIZE, any remaining components of VECTOR are dropped.")
-  (let ((out (make-vector/zero size)))
+  (let ((out (vec/zero size)))
     (replace (components out) (components vector))
     out))
 
-(defun make-vector/random (size &key (min 0d0) (max 1d0))
+(defun vec/random (size &key (min 0d0) (max 1d0))
   (doc "Construct a vector of the given SIZE with each component set to a random value bounded by ~
 MIN and MAX.")
-  (%make-random (make-vector/zero size) min max))
+  (%make-random (vec/zero size) min max))
 
-(defun make-vector/velocity (axis rate)
+(defun vec/velocity (axis rate)
   (doc "Constructs a vector designating a velocity following the right-hand rule, with a direction ~
 parallel to AXIS, and a magnitude of RATE units per second.")
   (velocity! axis rate (default axis)))
@@ -208,7 +208,7 @@ result in the {OUT:DESC} OUT."
 (define-op cross ((vector1 :*) (vector2 :*)) (vector3)
   "Compute the cross product of the {VECTOR:DESC}s VECTOR1 and VECTOR2, storing the result in a ~
 new {VECTOR1:DESC}."
-  (cross! vector1 vector2 (make-vector/zero 3)))
+  (cross! vector1 vector2 (vec/zero 3)))
 
 (define-op cross! ((vector1 :*) (vector2 :*) (dest :*)) (vector3)
   "Compute the cross product of the {VECTOR:DESC}s VECTOR1 and VECTOR2, storing the result in the ~
@@ -446,98 +446,98 @@ direction parallel to the {AXIS:DESC} AXIS, and a magnitude of RATE units per se
 
 ;;; Constants
 
-(u:define-constant +vector2/zero+ (make-vector/zero 2)
+(u:define-constant +v2-zero+ (vec/zero 2)
   :test #'=
   :documentation "A 2-dimensional zero vector.")
 
-(u:define-constant +vector2/ones+ (make-vector 1 1)
+(u:define-constant +v2-ones+ (vec 1 1)
   :test #'=
   :documentation "A 2-dimensional vector with each component set to 1.")
 
-(u:define-constant +vector2/positive-x+ (make-vector 1 0)
+(u:define-constant +v2+x+ (vec 1 0)
   :test #'=
   :documentation "A 2-dimensional vector representing a direction along the positive X axis.")
 
-(u:define-constant +vector2/negative-x+ (make-vector -1 0)
+(u:define-constant +v2-x+ (vec -1 0)
   :test #'=
   :documentation "A 2-dimensional vector representing a direction along the negative X axis.")
 
-(u:define-constant +vector2/positive-y+ (make-vector 0 1)
+(u:define-constant +v2+y+ (vec 0 1)
   :test #'=
   :documentation "A 2-dimensional vector representing a direction along the positive Y axis.")
 
-(u:define-constant +vector2/negative-y+ (make-vector 0 -1)
+(u:define-constant +v2-y+ (vec 0 -1)
   :test #'=
   :documentation "A 2-dimensional vector representing a direction along the negative Y axis.")
 
-(u:define-constant +vector3/zero+ (make-vector/zero 3)
+(u:define-constant +v3-zero+ (vec/zero 3)
   :test #'=
   :documentation "A 3-dimensional zero vector.")
 
-(u:define-constant +vector3/ones+ (make-vector 1 1 1)
+(u:define-constant +v3-ones+ (vec 1 1 1)
   :test #'=
   :documentation "A 3-dimensional vector with each component set to 1.")
 
-(u:define-constant +vector3/positive-x+ (make-vector 1 0 0)
+(u:define-constant +v3+x+ (vec 1 0 0)
   :test #'=
   :documentation "A 3-dimensional vector representing a direction along the positive X axis.")
 
-(u:define-constant +vector3/negative-x+ (make-vector -1 0 0)
+(u:define-constant +v3-x+ (vec -1 0 0)
   :test #'=
   :documentation "A 3-dimensional vector representing a direction along the negative X axis.")
 
-(u:define-constant +vector3/positive-y+ (make-vector 0 1 0)
+(u:define-constant +v3+y+ (vec 0 1 0)
   :test #'=
   :documentation "A 3-dimensional vector representing a direction along the positive Y axis.")
 
-(u:define-constant +vector3/negative-y+ (make-vector 0 -1 0)
+(u:define-constant +v3-y+ (vec 0 -1 0)
   :test #'=
   :documentation "A 3-dimensional vector representing a direction along the negative Y axis.")
 
-(u:define-constant +vector3/positive-z+ (make-vector 0 0 1)
+(u:define-constant +v3+z+ (vec 0 0 1)
   :test #'=
   :documentation "A 3-dimensional vector representing a direction along the positive Z axis.")
 
-(u:define-constant +vector3/negative-z+ (make-vector 0 0 -1)
+(u:define-constant +v3-z+ (vec 0 0 -1)
   :test #'=
   :documentation "A 3-dimensional vector representing a direction along the negative Z axis.")
 
-(u:define-constant +vector4/zero+ (make-vector/zero 4)
+(u:define-constant +v4-zero+ (vec/zero 4)
   :test #'=
   :documentation "A 4-dimensional zero vector.")
 
-(u:define-constant +vector4/ones+ (make-vector 1 1 1 1)
+(u:define-constant +v4-ones+ (vec 1 1 1 1)
   :test #'=
   :documentation "A 4-dimensional vector with each component set to 1.")
 
-(u:define-constant +vector4/positive-x+ (make-vector 1 0 0 0)
+(u:define-constant +v4+x+ (vec 1 0 0 0)
   :test #'=
   :documentation "A 4-dimensional vector representing a direction along the positive X axis.")
 
-(u:define-constant +vector4/negative-x+ (make-vector -1 0 0 0)
+(u:define-constant +v4-x+ (vec -1 0 0 0)
   :test #'=
   :documentation "A 4-dimensional vector representing a direction along the negative X axis.")
 
-(u:define-constant +vector4/positive-y+ (make-vector 0 1 0 0)
+(u:define-constant +v4+y+ (vec 0 1 0 0)
   :test #'=
   :documentation "A 4-dimensional vector representing a direction along the positive Y axis.")
 
-(u:define-constant +vector4/negative-y+ (make-vector 0 -1 0 0)
+(u:define-constant +v4-y+ (vec 0 -1 0 0)
   :test #'=
   :documentation "A 4-dimensional vector representing a direction along the negative Y axis.")
 
-(u:define-constant +vector4/positive-z+ (make-vector 0 0 1 0)
+(u:define-constant +v4+z+ (vec 0 0 1 0)
   :test #'=
   :documentation "A 4-dimensional vector representing a direction along the positive Z axis.")
 
-(u:define-constant +vector4/negative-z+ (make-vector 0 0 -1 0)
+(u:define-constant +v4-z+ (vec 0 0 -1 0)
   :test #'=
   :documentation "A 4-dimensional vector representing a direction along the negative Z axis.")
 
-(u:define-constant +vector4/positive-w+ (make-vector 0 0 0 1)
+(u:define-constant +v4+w+ (vec 0 0 0 1)
   :test #'=
   :documentation "A 4-dimensional vector representing a direction along the positive W axis.")
 
-(u:define-constant +vector4/negative-w+ (make-vector 0 0 0 -1)
+(u:define-constant +v4-w+ (vec 0 0 0 -1)
   :test #'=
   :documentation "A 4-dimensional vector representing a direction along the negative W axis.")

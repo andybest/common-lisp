@@ -31,7 +31,7 @@
 ;;; Constructors
 
 (u:eval-always
-  (defun make-quaternion (w x y z)
+  (defun quat (w x y z)
     "Construct a quaternion with its components set to the corresponding argument."
     (let ((quaternion (%make-quaternion)))
       (setf (ref quaternion 0) w
@@ -41,38 +41,38 @@
       quaternion)))
 
 (u:eval-always
-  (defun make-quaternion/identity ()
+  (defun quat/id ()
     "Construct an identity quaternion."
-    (identity! (%make-quaternion))))
+    (id! (%make-quaternion))))
 
-(defun make-quaternion/from-axis-angle (axis angle)
+(defun quat/from-axis-angle (axis angle)
   "Construct a quaternion from the ANGLE in radians around the axis denoted by the 3-dimensional ~
 vector AXIS. "
-  (from-axis-angle! axis angle (make-quaternion/identity)))
+  (from-axis-angle! axis angle (quat/id)))
 
-(defun make-quaternion/from-matrix (matrix)
+(defun quat/from-mat (matrix)
   "Construct a quaternion from the given matrix. MATRIX may be either a 3x3 or 4x4 matrix."
-  (from-matrix! matrix (make-quaternion/identity)))
+  (from-matrix! matrix (quat/id)))
 
-(defun make-quaternion/from-velocity (velocity delta)
+(defun quat/from-velocity (velocity delta)
   "Construct a unit quaternion representing an angular velocity rotation in DELTA units of time, ~
 from the 3-dimensional vector VELOCITY, a vector with its magnitude representing a radians per ~
 second rotation around its axis."
-  (from-velocity! velocity delta (make-quaternion/identity)))
+  (from-velocity! velocity delta (quat/id)))
 
-(defun make-quaternion/oriented (space &rest axes/angles)
+(defun quat/oriented (space &rest axes/angles)
   "Construct a quaternion representing a series of rotations around the axes and angles given. ~
 AXES/ANGLES are pairs of axes and angles, with an axis being either one of the symbols :X, :Y, or ~
 :Z, or a 3-dimensional vector representing an arbitrary axis, and angle being any real number ~
 representing the angle in radians around its paired axis."
-  (apply #'orient! space (make-quaternion/identity) axes/angles))
+  (apply #'orient! space (quat/id) axes/angles))
 
 ;;; Operations
 
 (define-op (* :extend t) ((object1 :*) (object2 :*)) (quaternion)
   "Multiply the {OBJECT1:DESC} OBJECT1 by the {OBJECT2:DESC} OBJECT2, storing the result in a new ~
 {OBJECT1:DESC}."
-  (*! object1 object2 (make-quaternion/identity)))
+  (*! object1 object2 (quat/id)))
 
 (define-op (*! :extend t) ((object1 :*) (object2 :*) (out :*)) (quaternion)
   "Multiply the {OBJECT1:DESC} OBJECT1 by the {OBJECT2:DESC} OBJECT2, storing the result in the ~
@@ -87,7 +87,7 @@ representing the angle in radians around its paired axis."
 (define-op conjugate ((quaternion :*)) (quaternion)
   "Compute the conjugate of the {QUATERNION:DESC} QUATERNION, storing the result in a new ~
 {QUATERNION:DESC}."
-  (conjugate! quaternion (make-quaternion/identity)))
+  (conjugate! quaternion (quat/id)))
 
 (define-op conjugate! ((quaternion :*) (out :*)) (quaternion)
   "Compute the conjugate of the {QUATERNION:DESC} QUATERNION, storing the result in the {OUT:DESC}."
@@ -99,7 +99,7 @@ representing the angle in radians around its paired axis."
 (define-op (default :extend t) ((object :*)) (quaternion)
   "Construct a default quaternion. Each math type has this method defined, and for quaternions ~
 this creates an identity quaternion."
-  (identity object))
+  (id object))
 
 (define-op from-axis-angle! ((axis vector3) (angle real) (out :*)) (quaternion)
   "Modify the quaternion OUT to be oriented around the axis denoted by the {AXIS:DESC} AXIS by ~
@@ -140,16 +140,16 @@ rotation around its axis, storing the result in the quaternion OUT."
   (from-axis-angle! (normalize velocity) (cl:* (magnitude velocity) delta) out)
   (normalize! out out))
 
-(define-op (identity :extend t) ((object :*)) (quaternion)
+(define-op (id :extend t) ((object :*)) (quaternion)
   "Construct an identity quaternion."
-  (identity! (copy object)))
+  (id! (copy object)))
 
-(define-op (identity! :extend t) ((object :*)) (quaternion)
+(define-op (id! :extend t) ((object :*)) (quaternion)
   "Modify the quaternion OBJECT to be an identity quaternion."
   (setf (w object) 1d0 (x object) 0d0 (y object) 0d0 (z object) 0d0)
   object)
 
-(define-op (identity? :extend t) ((object :*)) (quaternion)
+(define-op (id? :extend t) ((object :*)) (quaternion)
   "Check whether the quaternion OBJECT is an identity quaternion."
   (and (~= (w object) 1d0) (~= (x object) 0d0) (~= (y object) 0d0) (~= (z object) 0d0)))
 
@@ -170,7 +170,7 @@ objects."
 
 (define-op inverse ((quaternion :*)) (quaternion)
   "Compute the inverse of the quaternion QUATERNION, storing the result in a new quaternion."
-  (inverse! quaternion (make-quaternion/identity)))
+  (inverse! quaternion (quat/id)))
 
 (define-op inverse! ((quaternion :*) (out :*)) (quaternion)
   "Compute the inverse of the quaternion QUATERNION, storing the result in the quaternion OUT."
@@ -185,9 +185,9 @@ axis, and angle being any real number representing the angle in radians around i
   (loop :with orientation := (copy out)
         :for (axis angle) :on axes/angles :by #'cddr
         :for vector := (case axis
-                         (:x +vector3/positive-x+)
-                         (:y +vector3/positive-y+)
-                         (:z +vector3/positive-z+)
+                         (:x +v3+x+)
+                         (:y +v3+y+)
+                         (:z +v3+z+)
                          (t (normalize! axis axis)))
         :do (from-axis-angle! vector angle orientation)
             (ecase space
@@ -200,7 +200,7 @@ axis, and angle being any real number representing the angle in radians around i
   "Perform a quaternion rotation by multiplying the quaternion OBJECT1 by the quaternion OBJECT2, ~
 storing the result in a new quaternion. If SPACE is :WORLD instead of the default of :LOCAL, ~
 OBJECT2 is multiplied by OBJECT1."
-  (rotate! object1 object2 (make-quaternion/identity) :space space))
+  (rotate! object1 object2 (quat/id) :space space))
 
 (define-op (rotate! :extend t) ((object1 :*) (object2 :*) (out :*) &key (space :local))
     (quaternion)
@@ -218,7 +218,7 @@ OBJECT2 is multiplied by OBJECT1."
   "Rotate the quaternion OBJECT1 by the {OBJECT2:DESC} OBJECT2 denoting Euler angles in radians, ~
 storing the result in a new quaternion. If SPACE is :WORLD instead of the default of :LOCAL, the ~
 inverse rotation is performed."
-  (rotate! object1 object2 (make-quaternion/identity) :space space))
+  (rotate! object1 object2 (quat/id) :space space))
 
 (define-op (rotate! :extend t) ((object1 :*) (object2 vector3) (out :*) &key (space :local))
     (quaternion)
@@ -236,7 +236,7 @@ inverse rotation is performed."
 (define-op slerp ((quaternion1 :*) (quaternion2 :*) (parameter real)) (quaternion)
   "Perform a spherical linear interpolation between the quaternions QUATERNION1 and QUATERNION2 by ~
 the parameter PARAMETER, storing the result in a new quaternion."
-  (slerp! quaternion1 quaternion2 parameter (make-quaternion/identity)))
+  (slerp! quaternion1 quaternion2 parameter (quat/id)))
 
 (define-op slerp! ((quaternion1 :*) (quaternion2 :*) (parameter real) (out :*))
     (quaternion)
@@ -261,7 +261,7 @@ the parameter PARAMETER, storing the result in the quaternion OUT."
 (define-op to-euler-angles ((quaternion :*)) (quaternion)
   "Convert the quaternion QUATERNION to a 3-dimensional vector of Euler angles in radians, storing ~
 the result in a new 3-dimensional vector."
-  (to-euler-angles! quaternion (make-vector/zero 3)))
+  (to-euler-angles! quaternion (vec/zero 3)))
 
 (define-op to-euler-angles! ((quaternion :*) (out vector3)) (quaternion)
   "Convert the quaternion QUATERNION to a 3-dimensional vector of Euler angles in radians, storing ~
@@ -277,7 +277,7 @@ the result in the {OUT:DESC} OUT.."
 
 (define-op to-matrix3 ((quaternion :*)) (quaternion)
   "Convert the quaternion QUATERNION to a 3x3 matrix. storing the result in a new 3x3 matrix."
-  (to-matrix3! quaternion (make-matrix/identity 3)))
+  (to-matrix3! quaternion (mat/id 3)))
 
 (define-op to-matrix3! ((quaternion :*) (out matrix3)) (quaternion)
   "Convert the quaternion QUATERNION to a 3x3 matrix. storing the result in a the {OUT:DESC} OUT."
@@ -285,7 +285,7 @@ the result in the {OUT:DESC} OUT.."
 
 (define-op to-matrix4 ((quaternion :*)) (quaternion)
   "Convert the quaternion QUATERNION to a 4x4 matrix. storing the result in a new 4x4 matrix."
-  (to-matrix4! quaternion (make-matrix/identity 4)))
+  (to-matrix4! quaternion (mat/id 4)))
 
 (define-op to-matrix4! ((quaternion :*) (out matrix4)) (quaternion)
   "Convert the quaternion QUATERNION to a 4x4 matrix. storing the result in a the {OUT:DESC} OUT."
@@ -293,6 +293,6 @@ the result in the {OUT:DESC} OUT.."
 
 ;;; Constants
 
-(u:define-constant +quaternion/identity+ (make-quaternion/identity)
+(u:define-constant +q-id+ (quat/id)
   :test #'=
   :documentation "An identity quaternion.")

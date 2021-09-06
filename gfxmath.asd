@@ -3,7 +3,7 @@
   :author ("Michael Fiano <mail@mfiano.net>")
   :license "MIT"
   :homepage "https://github.com/mfiano/gfxmath"
-  :version "0.1.0"
+  :version "0.1.1"
   :encoding :utf-8
   :depends-on (#:mfiano-utils
                #:str)

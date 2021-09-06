@@ -1,25 +1,25 @@
 (in-package #:gfxmath.test)
 
 (defun v (&rest args)
-  (apply #'m:make-vector args))
+  (apply #'m:vec args))
 
 (defun v0 (size)
-  (m:make-vector/zero size))
+  (m:vec/zero size))
 
 (defun m (&rest args)
-  (apply #'m:make-matrix/from-vectors args))
+  (apply #'m:mat/from-vecs args))
 
 (defun m0 (size)
-  (m:make-matrix size))
+  (m:mat size))
 
 (defun mid (size)
-  (m:make-matrix/identity size))
+  (m:mat/id size))
 
 (defun q (w x y z)
-  (m:make-quaternion w x y z))
+  (m:quat w x y z))
 
 (defun qid ()
-  (m:make-quaternion/identity))
+  (m:quat/id))
 
 (defun ~= (key1 key2)
   (lambda (x y)

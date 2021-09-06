@@ -3,25 +3,25 @@
 (plan nil)
 
 (progn
-  (oa= (m:make-quaternion 1 2 3 4) #(1 2 3 4) "quaternion: make-quaternion")
-  (o= (m:make-quaternion/identity) (q 1 0 0 0) "quaternion: make-quaternion/identity")
-  (o= (m:make-quaternion/from-axis-angle (v 0 1 0) (/ pi 3))
+  (oa= (m:quat 1 2 3 4) #(1 2 3 4) "quaternion: quat")
+  (o= (m:quat/id) (q 1 0 0 0) "quaternion: quat/id")
+  (o= (m:quat/from-axis-angle (v 0 1 0) (/ pi 3))
       (q 0.86602545 0 0.5 0)
-      "quaternion: make-quaternion/from-axis-angle")
-  (o= (m:make-quaternion/from-matrix
+      "quaternion: quat/from-axis-angle")
+  (o= (m:quat/from-mat
        (m (v 1 0 0) (v 0 0.5 0.86602545) (v 0 -0.86602545 0.5)))
       (m:rotate (qid) (v (/ pi 3) 0 0))
-      "quaternion: make-quaternion/from-matrix: matrix3")
-  (o= (m:make-quaternion/from-matrix
+      "quaternion: quat/from-mat: matrix3")
+  (o= (m:quat/from-mat
        (m (v 1 0 0 0) (v 0 0.5 0.86602545 0) (v 0 -0.86602545 0.5 0) (v 0 0 0 1)))
       (m:rotate (qid) (v (/ pi 3) 0 0))
-      "quaternion: make-quaternion/from-matrix: matrix4")
-  (o= (m:make-quaternion/from-velocity (v 0 (/ pi 4) 0) 0.5)
+      "quaternion: quat/from-mat: matrix4")
+  (o= (m:quat/from-velocity (v 0 (/ pi 4) 0) 0.5)
       (q 0.9807852 0 0.1950903 0)
-      "quaternion: make-quaternion/from-velocity")
-  (o= (m:make-quaternion/oriented :local :x (/ pi 2) :y (/ pi 3) :z (/ pi 4))
+      "quaternion: quat/from-velocity")
+  (o= (m:quat/oriented :local :x (/ pi 2) :y (/ pi 3) :z (/ pi 4))
       (q 0.70105743 0.43045938 0.56098562 -0.09229595)
-      "quaternion: make-quaternion/oriented"))
+      "quaternion: quat/oriented"))
 
 (let ((q (q 1 2 3 4)))
   (s= (m:w q) 1 "quaternion: read w")
@@ -66,7 +66,7 @@
   (s= (m:mref q 0 3) 8 "quaternion: write row 0, column 3"))
 
 (progn
-  (o= m:+quaternion/identity+ (q 1 0 0 0) "quaternion: constant: identity"))
+  (o= m:+q-id+ (q 1 0 0 0) "quaternion: constant: identity"))
 
 (let ((a (q 0.4110496 -0.87680984 -0.62870455 0.6163341))
       (b (q 0.1166687 0.42538047 0.7360425 0.19508076))
@@ -150,10 +150,10 @@
   (o= out expected "quaternion: from-velocity (in-place)"))
 
 (let ((out (qid)))
-  (o= (m:identity (q 1 2 3 4)) (qid) "quaternion: identity (allocating)")
-  (m:identity! out)
-  (o= out (qid) "quaternion: identity (in-place)")
-  (ok (m:identity? (qid)) "quaternion: identity?"))
+  (o= (m:id (q 1 2 3 4)) (qid) "quaternion: id (allocating)")
+  (m:id! out)
+  (o= out (qid) "quaternion: id (in-place)")
+  (ok (m:id? (qid)) "quaternion: id?"))
 
 (let ((q (q 0.19171429 -0.8571534 0.4451759 0.39651704))
       (expected (q 0.17012934 0.76064724 -0.39505392 -0.35187355))

@@ -2,7 +2,7 @@
 
 ;;; Utilities
 
-(defun %make-matrix/from-vectors (matrix &rest vectors)
+(defun %mat/from-vecs (matrix &rest vectors)
   (loop :with components := (components matrix)
         :with rows := (row-count matrix)
         :for column :below (column-count matrix)
@@ -80,81 +80,79 @@
 ;;; Constructors
 
 (u:eval-always
-  (defun make-matrix (size)
+  (defun mat (size)
     "Construct a matrix of the given SIZE, with each component set to 0."
-    (let ((constructor (u:format-symbol (symbol-package 'make-matrix) "%MAKE-MATRIX~d" size)))
+    (let ((constructor (u:format-symbol (symbol-package 'mat) "%MAKE-MATRIX~d" size)))
       (if (fboundp constructor)
           (funcall constructor)
           (error "Invalid matrix size: ~dx~d." size size)))))
 
-(define-compiler-macro make-matrix (&whole whole size)
+(define-compiler-macro mat (&whole whole size)
   (if (constantp size)
-      (let ((constructor (u:format-symbol (symbol-package 'make-matrix)
-                                          "%MAKE-MATRIX~d"
-                                          (eval size))))
+      (let ((constructor (u:format-symbol (symbol-package 'mat) "%MAKE-MATRIX~d" (eval size))))
         (if (fboundp constructor)
             `(,constructor)
             (error "Invalid matrix size: ~dx~d." size size)))
       whole))
 
 (u:eval-always
-  (defun make-matrix/identity (size)
+  (defun mat/id (size)
     "Construct an identity matrix with a dimensionality equal to SIZE."
-    (identity! (make-matrix size))))
+    (id! (mat size))))
 
-(define-compiler-macro make-matrix/identity (&whole whole size)
+(define-compiler-macro mat/id (&whole whole size)
   (if (constantp size)
-      `(identity! (make-matrix ,(eval size)))
+      `(id! (mat ,(eval size)))
       whole))
 
-(defun make-matrix/from-vectors (&rest vectors)
+(defun mat/from-vecs (&rest vectors)
   "Construct a matrix from the given VECTORS. The vectors are written into the columns of the ~
 resulting matrix. The number of vectors given determines the number of rows and columns of the ~
 resulting matrix."
-  (let ((matrix (make-matrix/identity (length vectors))))
-    (apply #'%make-matrix/from-vectors matrix vectors)))
+  (let ((matrix (mat/id (length vectors))))
+    (apply #'%mat/from-vecs matrix vectors)))
 
-(define-compiler-macro make-matrix/from-vectors (&rest vectors)
-  `(%make-matrix/from-vectors (make-matrix/identity ,(length vectors)) ,@vectors))
+(define-compiler-macro mat/from-vecs (&rest vectors)
+  `(%mat/from-vecs (mat/id ,(length vectors)) ,@vectors))
 
-(defun make-matrix/from-matrix (size matrix)
+(defun mat/from-mat (size matrix)
   "Construct a matrix of the given SIZE, by copying the components of the given MATRIX of any size ~
 into it. If MATRIX has fewer rows or columns than SIZE, any remaining components along that axis ~
 are set to zero, unless that component falls along the main diagonal, in which case it is set to ~
 1. If MATRIX has more rows or columns than SIZE, any remaining components along that axis are ~
 dropped."
-  (let ((out (make-matrix/identity size)))
+  (let ((out (mat/id size)))
     (%with-each/2d (out x r c :row-limit (row-count matrix) :column-limit (column-count matrix))
       (setf (mref out r c) (mref matrix r c)))
     out))
 
-(define-compiler-macro make-matrix/from-matrix (&whole whole size matrix)
+(define-compiler-macro mat/from-mat (&whole whole size matrix)
   (u:with-gensyms (out)
     (if (constantp size)
-        `(let ((,out (make-matrix/identity ,(eval size))))
+        `(let ((,out (mat/id ,(eval size))))
            (%with-each/2d (,out x r c :row-limit (row-count ,matrix)
                                       :column-limit (column-count ,matrix))
              (setf (mref ,out r c) (mref matrix r c)))
            ,out)
         whole)))
 
-(defun make-matrix/random (size &key (min 0d0) (max 1d0))
+(defun mat/random (size &key (min 0d0) (max 1d0))
   "Construct a matrix of the given SIZE with each component set to a random value bounded by MIN ~
 and MAX."
-  (%make-random (make-matrix size) min max))
+  (%make-random (mat size) min max))
 
-(defun make-matrix/rotation (size axis angle)
+(defun mat/rotation (size axis angle)
   "Construct a rotation matrix of the given SIZE that represents a rotation of ANGLE radians ~
 around the given AXIS. AXIS may be :Z when SIZE is 2, or :X, :Y, or :Z when SIZE is 3 or 4."
   (ecase axis
-    (:x (rotation/x! (make-matrix size) angle))
-    (:y (rotation/y! (make-matrix size) angle))
-    (:z (rotation/z! (make-matrix size) angle))))
+    (:x (rotation/x! (mat size) angle))
+    (:y (rotation/y! (mat size) angle))
+    (:z (rotation/z! (mat size) angle))))
 
-(define-compiler-macro make-matrix/rotation (&whole whole size axis angle)
+(define-compiler-macro mat/rotation (&whole whole size axis angle)
   (if (and (constantp size) (constantp axis))
-      (let ((*package* (symbol-package 'make-matrix/rotation)))
-        `(,(u:symbolicate '#:rotation/ (eval axis) '#:!) (make-matrix ,(eval size)) ,angle))
+      (let ((*package* (symbol-package 'mat/rotation)))
+        `(,(u:symbolicate '#:rotation/ (eval axis) '#:!) (mat ,(eval size)) ,angle))
       whole))
 
 ;;; Operations
@@ -197,7 +195,7 @@ new {OBJECT2:DESC}."
 (define-op anti-diagonal ((matrix :*)) (matrix)
   "Compute the anti-diagonal of the {MATRIX:DESC} MATRIX, storing the result in a new ~
 {MATRIX:DESC}."
-  (anti-diagonal! matrix (make-vector/zero (row-count matrix))))
+  (anti-diagonal! matrix (vec/zero (row-count matrix))))
 
 (define-op anti-diagonal! ((matrix :*) (out :row-sized-vector)) (matrix)
   "Compute the anti-diagonal of the {MATRIX:DESC} MATRIX, storing the result in the {OUT:DESC} ~
@@ -210,7 +208,7 @@ OUT."
 (define-op (default :extend t) ((object :*)) (matrix)
   "Construct a default matrix of the same dimensions as OBJECT. Each math type has this method ~
 defined, and for matrices this creates an identity matrix."
-  (identity object))
+  (id object))
 
 (define-op determinant ((matrix :*)) (matrix4)
   "Compute the determinant of the {MATRIX:DESC} MATRIX, producing a scalar value."
@@ -234,12 +232,12 @@ defined, and for matrices this creates an identity matrix."
 (define-op get-axis ((matrix :*) (axis (eql :x :y))) (matrix)
   "Get the {AXIS:DESC} rotation axis of the {MATRIX:DESC} MATRIX, storing the result in a new ~
 {MATRIX:AXIS-DESC}."
-  (get-axis! matrix axis (make-vector/zero (cl:max (1- (row-count matrix)) 2))))
+  (get-axis! matrix axis (vec/zero (cl:max (1- (row-count matrix)) 2))))
 
 (define-op (get-axis :extend t) ((matrix :*) (axis (eql :z))) (matrix4)
   "Get the {AXIS:DESC} rotation axis of the {MATRIX:DESC} MATRIX, storing the result in a new ~
 {MATRIX:AXIS-DESC}."
-  (get-axis! matrix axis (make-vector/zero 3)))
+  (get-axis! matrix axis (vec/zero 3)))
 
 (define-op get-axis! ((matrix :*) (axis (eql :x :y)) (out :axis-sized-vector)) (matrix)
   "Get the {AXIS:DESC} rotation axis of the {MATRIX:DESC} MATRIX, storing the result in the ~
@@ -255,17 +253,17 @@ defined, and for matrices this creates an identity matrix."
 (define-op get-column ((matrix :*) (index (eql 0 1))) (matrix)
   "Get the {INDEX:ORD} column of the {MATRIX:DESC} MATRIX, storing the result in a new ~
 {MATRIX:COLUMN-DESC}."
-  (get-column! matrix index (make-vector/zero (row-count matrix))))
+  (get-column! matrix index (vec/zero (row-count matrix))))
 
 (define-op (get-column :extend t) ((matrix :*) (index (eql 2))) (matrix3 matrix4)
   "Get the {INDEX:ORD} column of the {MATRIX:DESC} MATRIX, storing the result in a new ~
 {MATRIX:COLUMN-DESC}."
-  (get-column! matrix index (make-vector/zero (row-count matrix))))
+  (get-column! matrix index (vec/zero (row-count matrix))))
 
 (define-op (get-column :extend t) ((matrix :*) (index (eql 3))) (matrix4)
   "Get the {INDEX:ORD} column of the {MATRIX:DESC} MATRIX, storing the result in a new ~
 {MATRIX:COLUMN-DESC}."
-  (get-column! matrix index (make-vector/zero 4)))
+  (get-column! matrix index (vec/zero 4)))
 
 (define-op get-column! ((matrix :*) (index (eql 0 1)) (out :column-sized-vector)) (matrix)
   "Get the {INDEX:ORD} column of the {MATRIX:DESC} MATRIX, storing the result in the ~
@@ -287,7 +285,7 @@ defined, and for matrices this creates an identity matrix."
   "Get the rotation sub-matrix of the {MATRIX:DESC} MATRIX, storing the result in a new ~
 {MATRIX:DESC}."
   (let ((size (1- (row-count matrix))))
-    (get-rotation! matrix (make-matrix size))))
+    (get-rotation! matrix (mat size))))
 
 (define-op get-rotation! ((matrix :*) (out :sub-matrix)) (matrix3 matrix4)
   "Get the rotation sub-matrix of the {MATRIX:DESC} MATRIX, storing the result in the {OUT:DESC} ~
@@ -302,21 +300,21 @@ OUT."
 {MATRIX:ROW-DESC}.
 
 Note: The resulting vector does not change its shape; vectors are always column vectors."
-  (get-row! matrix index (make-vector/zero (column-count matrix))))
+  (get-row! matrix index (vec/zero (column-count matrix))))
 
 (define-op (get-row :extend t) ((matrix :*) (index (eql 2))) (matrix3 matrix4)
   "Get the {INDEX:ORD} row of the {MATRIX:DESC} MATRIX, storing the result in a new ~
 {MATRIX:ROW-DESC}.
 
 Note: The resulting vector does not change its shape; vectors are always column vectors."
-  (get-row! matrix index (make-vector/zero (column-count matrix))))
+  (get-row! matrix index (vec/zero (column-count matrix))))
 
 (define-op (get-row :extend t) ((matrix :*) (index (eql 3))) (matrix4)
   "Get the {INDEX:ORD} row of the {MATRIX:DESC} MATRIX, storing the result in a new ~
 {MATRIX:ROW-DESC}.
 
 Note: The resulting vector does not change its shape; vectors are always column vectors."
-  (get-row! matrix index (make-vector/zero 4)))
+  (get-row! matrix index (vec/zero 4)))
 
 (define-op get-row! ((matrix :*) (index (eql 0 1)) (out :row-sized-vector)) (matrix)
   "Get the {INDEX:ORD} row of the {MATRIX:DESC} MATRIX, storing the result in the {OUT:DESC} OUT.
@@ -339,7 +337,7 @@ Note: The resulting vector does not change its shape; vectors are always column 
 
 (define-op get-scale ((matrix :*)) (matrix2 matrix4)
   "Get the scale of the {MATRIX:DESC} MATRIX, storing the result in a new {MATRIX:DESC}."
-  (get-scale! matrix (make-vector/zero (cl:max (1- (row-count matrix)) 2))))
+  (get-scale! matrix (vec/zero (cl:max (1- (row-count matrix)) 2))))
 
 (define-op get-scale! ((matrix :*) (out :axis-sized-vector)) (matrix2 matrix4)
   "Get the scale of the {MATRIX:DESC} MATRIX, storing the result in the {OUT:DESC} OUT."
@@ -349,7 +347,7 @@ Note: The resulting vector does not change its shape; vectors are always column 
 
 (define-op get-translation ((matrix :*)) (matrix3 matrix4)
   "Get the translation of the {MATRIX:DESC} MATRIX, storing the result in a new {MATRIX:DESC}."
-  (get-translation! matrix (make-vector/zero (1- (row-count matrix)))))
+  (get-translation! matrix (vec/zero (1- (row-count matrix)))))
 
 (define-op get-translation! ((matrix :*) (out :axis-sized-vector)) (matrix3 matrix4)
   "Get the translation of the {MATRIX:DESC} MATRIX, storing the result in the {OUT:DESC} OUT."
@@ -357,26 +355,26 @@ Note: The resulting vector does not change its shape; vectors are always column 
     (setf (ref out i) (mref matrix i (row-count out))))
   out)
 
-(define-op (identity :extend t) ((object :*)) (matrix)
+(define-op (id :extend t) ((object :*)) (matrix)
   "Construct a new identity matrix of the same dimensions as OBJECT."
-  (identity! (copy object)))
+  (id! (copy object)))
 
-(define-op (identity! :extend t) ((object :*)) (matrix)
+(define-op (id! :extend t) ((object :*)) (matrix)
   "Modify the {OBJECT:DESC} OBJECT to be an identity matrix."
   (%with-each/2d (object x r c)
     (setf (mref object r c) (if (cl:= r c) 1d0 0d0)))
   object)
 
-(define-op (identity? :extend t) ((object :*)) (matrix)
+(define-op (id? :extend t) ((object :*)) (matrix)
   "Check if the {OBJECT:DESC} OBJECT is an identity matrix."
   (%with-each/2d (object x r c)
     (unless (~= x (if (cl:= r c) 1d0 0d0))
-      (return-from identity? nil)))
+      (return-from id? nil)))
   t)
 
 (define-op (invert :extend t) ((object :*)) (matrix4)
   "Invert the {OBJECT:DESC} OBJECT, storing the result in a new {MATRIX:DESC}."
-  (invert! object (make-matrix 4)))
+  (invert! object (mat 4)))
 
 (define-op (invert! :extend t) ((object :*) (out :*)) (matrix4)
   "Invert the {OBJECT:DESC} OBJECT, storing the result in the {OUT:DESC} OUT."
@@ -391,8 +389,8 @@ Note: The resulting vector does not change its shape; vectors are always column 
       (with-matrix ((4 m object)) ()
         (with-matrix ((4 o out)) (:read-only nil)
           (zero! out)
-          (when (identity? object)
-            (return-from invert! (identity! out)))
+          (when (id? object)
+            (return-from invert! (id! out)))
           (unless (and (~= m30 0d0) (~= m31 0d0) (~= m32 0d0) (~= m33 1d0))
             (return-from invert! (%invert/generic object out)))
           (let ((det (sub-determinant object)))
@@ -420,7 +418,7 @@ Note: The resulting vector does not change its shape; vectors are always column 
   "Construct a view matrix where the camera is located in 3-dimensional space at EYE, and rotated ~
 to look at the target point TARGET, with the camera's up direction given as UP, storing the result ~
 in a new {MATRIX:DESC}."
-  (look-at! eye target up (make-matrix 4)))
+  (look-at! eye target up (mat 4)))
 
 (define-op look-at! ((eye vector3) (target vector3) (up vector3) (out :*)) (matrix4)
   "Modify the {OUT:DESC} OUT to be a view matrix where the camera is located in 3-dimensional ~
@@ -443,7 +441,7 @@ as UP."
 (define-op main-diagonal ((matrix :*)) (matrix)
   "Compute the main diagonal of the {MATRIX:DESC} MATRIX, storing the result in a new ~
 {MATRIX:DESC}."
-  (main-diagonal! matrix (make-vector/zero (row-count matrix))))
+  (main-diagonal! matrix (vec/zero (row-count matrix))))
 
 (define-op main-diagonal! ((matrix :*) (out :row-sized-vector)) (matrix)
   "Compute the main diagonal of the {MATRIX:DESC} MATRIX, storing the result in the {OUT:DESC} OUT."
@@ -461,7 +459,7 @@ the result in a new {MATRIX:DESC}."
   "Normalize each of the rotation axes of the {MATRIX:DESC} MATRIX to be of unit length, storing ~
 the result in the {OUT:DESC} OUT."
   (let* ((axis-size (cl:max (1- (row-count matrix)) 2))
-         (vector (make-vector/zero axis-size)))
+         (vector (vec/zero axis-size)))
     (copy! matrix out)
     (%with-columns (matrix i :limit axis-size)
       (let ((axis (%index->axis i)))
@@ -473,7 +471,7 @@ the result in the {OUT:DESC} OUT."
 (define-op ortho ((left real) (right real) (bottom real) (top real) (near real) (far real))
     (matrix4)
   "Construct an orthographic projection matrix, storing the result in a new 4x4 matrix."
-  (ortho! left right bottom top near far (make-matrix 4)))
+  (ortho! left right bottom top near far (mat 4)))
 
 (define-op ortho! ((left real) (right real) (bottom real) (top real) (near real) (far real)
                    (out :*))
@@ -482,7 +480,7 @@ the result in the {OUT:DESC} OUT."
   (let ((rl (cl:- right left))
         (tb (cl:- top bottom))
         (fn (cl:- far near)))
-    (identity! out)
+    (id! out)
     (setf (mref out 0 0) (cl:/ 2d0 rl)
           (mref out 0 3) (cl:- (cl:/ (cl:+ right left) rl))
           (mref out 1 1) (cl:/ 2d0 tb)
@@ -493,7 +491,7 @@ the result in the {OUT:DESC} OUT."
 
 (define-op orthogonal? ((matrix :*)) (matrix)
   "Check whether the {MATRIX:DESC} MATRIX is orthogonal."
-  (identity? (* matrix (transpose matrix))))
+  (id? (* matrix (transpose matrix))))
 
 (define-op orthonormalize ((matrix :*)) (matrix3 matrix4)
   "Normalize the rotation sub-matrix of the {MATRIX:DESC} MATRIX using the Gram-Schmidt process, ~
@@ -517,7 +515,7 @@ storing the result in the {OUT:DESC} OUT."
 
 (define-op perspective ((fov real) (aspect real) (near real) (far real)) (matrix4)
   "Construct a perspective projection matrix, storing the result in a new 4x4 matrix."
-  (perspective! fov aspect near far (make-matrix 4)))
+  (perspective! fov aspect near far (mat 4)))
 
 (define-op perspective! ((fov real) (aspect real) (near real) (far real) (out :*)) (matrix4)
   "Modify the {OUT:DESC} OUT to be a perspective projection matrix."
@@ -567,7 +565,7 @@ storing the result in the {OUT:DESC} OUT. If SPACE is :WORLD instead of the defa
 rotation matrices are multiplying by OBJECT1."
   (macrolet ((%rotate (space)
                (u:with-gensyms (r angle)
-                 `(let ((,r (make-matrix/identity 4)))
+                 `(let ((,r (mat/id 4)))
                     ,@(loop :for axis :in '(x z y)
                             :for axis-keyword := (u:make-keyword axis)
                             :collect `(let ((,angle (,axis object2)))
@@ -590,7 +588,7 @@ rotation matrices are multiplying by OBJECT1."
   "Modify the {OUT:DESC} OUT to represent a rotation around the X axis by ANGLE radians."
   (let ((s (cl:sin angle))
         (c (cl:cos angle)))
-    (identity! out)
+    (id! out)
     (with-matrix ((4 m out)) (:read-only nil)
       (setf m11 c m12 (cl:- s) m21 s m22 c))
     out))
@@ -599,7 +597,7 @@ rotation matrices are multiplying by OBJECT1."
   "Modify the {OUT:DESC} OUT to represent a rotation around the Y axis by ANGLE radians."
   (let ((s (cl:sin angle))
         (c (cl:cos angle)))
-    (identity! matrix)
+    (id! matrix)
     (with-matrix ((4 m matrix)) (:read-only nil)
       (setf m00 c m02 s m20 (cl:- s) m22 c))
     matrix))
@@ -608,7 +606,7 @@ rotation matrices are multiplying by OBJECT1."
   "Modify the {OUT:DESC} OUT to represent a rotation around the Z axis by ANGLE radians."
   (let ((s (cl:sin angle))
         (c (cl:cos angle)))
-    (identity! matrix)
+    (id! matrix)
     (with-matrix ((4 m matrix)) (:read-only nil)
       (setf m00 c m01 (cl:- s) m10 s m11 c))
     matrix))
@@ -670,7 +668,7 @@ rotation matrices are multiplying by OBJECT1."
   "Set the {INDEX:ORD} column of the {MATRIX:DESC} MATRIX, by copying the components of the ~
 {COLUMN:DESC} COLUMN into the corresponding locations of the matrix, storing the result in a new ~
 {MATRIX:DESC}."
-  (set-column! matrix column index (make-matrix/identity 4)))
+  (set-column! matrix column index (mat/id 4)))
 
 (define-op set-column! ((matrix :*) (column :column-sized-vector) (index (eql 0 1)) (out :*))
     (matrix)
@@ -760,26 +758,26 @@ result in the {OUT:DESC} OUT."
 
 ;;; Constants
 
-(u:define-constant +matrix2/zero+ (make-matrix 2)
+(u:define-constant +m2-zero+ (mat 2)
   :test #'=
   :documentation "A 2x2 matrix with each component set to 0.")
 
-(u:define-constant +matrix2/identity+ (make-matrix/identity 2)
+(u:define-constant +m2-id+ (mat/id 2)
   :test #'=
   :documentation "A 2x2 identity matrix.")
 
-(u:define-constant +matrix3/zero+ (make-matrix 3)
+(u:define-constant +m3-zero+ (mat 3)
   :test #'=
   :documentation "A 3x3 matrix with each component set to 0.")
 
-(u:define-constant +matrix3/identity+ (make-matrix/identity 3)
+(u:define-constant +m3-id+ (mat/id 3)
   :test #'=
   :documentation "A 3x3 identity matrix.")
 
-(u:define-constant +matrix4/zero+ (make-matrix 4)
+(u:define-constant +m4-zero+ (mat 4)
   :test #'=
   :documentation "A 4x4 matrix with each component set to 0.")
 
-(u:define-constant +matrix4/identity+ (make-matrix/identity 4)
+(u:define-constant +m4-id+ (mat/id 4)
   :test #'=
   :documentation "A 4x4 identity matrix.")

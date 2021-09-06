@@ -23,7 +23,6 @@
    #:cos
    #:expt
    #:floor
-   #:identity
    #:max
    #:min
    #:mod
@@ -34,60 +33,60 @@
    #:trace
    #:vector)
   (:export
-   #:+matrix2/identity+
-   #:+matrix2/zero+
-   #:+matrix3/identity+
-   #:+matrix3/zero+
-   #:+matrix4/identity+
-   #:+matrix4/zero+
-   #:+quaternion/identity+
-   #:+vector2/negative-x+
-   #:+vector2/negative-y+
-   #:+vector2/ones+
-   #:+vector2/positive-x+
-   #:+vector2/positive-y+
-   #:+vector2/zero+
-   #:+vector3/negative-x+
-   #:+vector3/negative-y+
-   #:+vector3/negative-z+
-   #:+vector3/ones+
-   #:+vector3/positive-x+
-   #:+vector3/positive-y+
-   #:+vector3/positive-z+
-   #:+vector3/zero+
-   #:+vector4/negative-x+
-   #:+vector4/negative-y+
-   #:+vector4/negative-z+
-   #:+vector4/negative-w+
-   #:+vector4/ones+
-   #:+vector4/positive-x+
-   #:+vector4/positive-y+
-   #:+vector4/positive-z+
-   #:+vector4/positive-w+
-   #:+vector4/zero+
-   #:make-matrix
-   #:make-matrix/from-matrix
-   #:make-matrix/from-vectors
-   #:make-matrix/identity
-   #:make-matrix/random
-   #:make-matrix/rotation
-   #:make-quaternion
-   #:make-quaternion/from-axis-angle
-   #:make-quaternion/from-matrix
-   #:make-quaternion/from-velocity
-   #:make-quaternion/identity
-   #:make-quaternion/oriented
-   #:make-vector
-   #:make-vector/from-vector
-   #:make-vector/random
-   #:make-vector/velocity
-   #:make-vector/zero
+   #:+m2-id+
+   #:+m2-zero+
+   #:+m3-id+
+   #:+m3-zero+
+   #:+m4-id+
+   #:+m4-zero+
+   #:+q-id+
+   #:+v2+x+
+   #:+v2-x+
+   #:+v2+y+
+   #:+v2-y+
+   #:+v2-ones+
+   #:+v2-zero+
+   #:+v3+x+
+   #:+v3-x+
+   #:+v3+y+
+   #:+v3-y+
+   #:+v3+z+
+   #:+v3-z+
+   #:+v3-ones+
+   #:+v3-zero+
+   #:+v4+x+
+   #:+v4-x+
+   #:+v4+y+
+   #:+v4-y+
+   #:+v4+z+
+   #:+v4-z+
+   #:+v4+w+
+   #:+v4-w+
+   #:+v4-ones+
+   #:+v4-zero+
+   #:mat
+   #:mat/from-mat
+   #:mat/from-vecs
+   #:mat/id
+   #:mat/random
+   #:mat/rotation
    #:math-object
    #:math-object?
    #:matrix
    #:matrix?
    #:mref
+   #:quat
+   #:quat/from-axis-angle
+   #:quat/from-mat
+   #:quat/from-velocity
+   #:quat/id
+   #:quat/oriented
    #:ref
+   #:vec
+   #:vec/from-vec
+   #:vec/random
+   #:vec/velocity
+   #:vec/zero
    #:vector
    #:vector?
    #:w
