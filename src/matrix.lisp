@@ -692,6 +692,19 @@ rotation matrices are multiplying by OBJECT1."
 {OUT:DESC} OUT."
   (%set-column matrix column out index 1))
 
+(define-op set-scale ((matrix :*) (vector :axis-sized-vector)) (matrix)
+  "Set the scale of the {MATRIX:DESC} MATRIX, by copying the components of the {VECTOR:DESC} ~
+VECTOR into the corresponding locations of the matrix, storing the result in a new {MATRIX:DESC}."
+  (set-scale! matrix vector (default matrix)))
+
+(define-op set-scale! ((matrix :*) (vector :axis-sized-vector) (out :*)) (matrix)
+  "Set the scale of the {MATRIX:DESC} MATRIX, by copying the components of the {VECTOR:DESC} ~
+VECTOR into the corresponding locations of the matrix, storing the result in the {OUT:DESC} OUT."
+  (copy! matrix out)
+  (%with-each (vector x i)
+    (setf (mref out i i) x))
+  out)
+
 (define-op set-translation ((matrix :*) (vector :axis-sized-vector)) (matrix3 matrix4)
   "Set the translation of the {MATRIX:DESC} MATRIX from the {VECTOR:DESC} VECTOR, storing the ~
 result in a new {MATRIX:DESC}."
