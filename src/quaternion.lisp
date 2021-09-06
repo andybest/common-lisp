@@ -153,6 +153,21 @@ rotation around its axis, storing the result in the quaternion OUT."
   "Check whether the quaternion OBJECT is an identity quaternion."
   (and (~= (w object) 1d0) (~= (x object) 0d0) (~= (y object) 0d0) (~= (z object) 0d0)))
 
+(define-op (interpolate :extend t) ((object1 :*) (object2 :*) (parameter real)) (quaternion)
+  "Perform a suitable interpolation between the {OBJECT1:DESC}s OBJECT1 and OBJECT2, storing the ~
+result in a new {OBJECT1:DESC}. This is the same as LERP for vectors and SLERP for quaternions. ~
+It exists to conveniently dispatch to the appropriate interpolation method given the types of the ~
+objects."
+  (slerp object1 object2 parameter))
+
+(define-op (interpolate! :extend t) ((object1 :*) (object2 :*) (parameter real) (out :*))
+    (quaternion)
+  "Perform a suitable interpolation between the {OBJECT1:DESC}s OBJECT1 and OBJECT2, storing the ~
+result in the {OUT:DESC} OUT. This is the same as LERP! for vectors and SLERP! for quaternions. ~
+It exists to conveniently dispatch to the appropriate interpolation method given the types of the ~
+objects."
+  (slerp! object1 object2 parameter out))
+
 (define-op inverse ((quaternion :*)) (quaternion)
   "Compute the inverse of the quaternion QUATERNION, storing the result in a new quaternion."
   (inverse! quaternion (make-quaternion/identity)))

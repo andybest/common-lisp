@@ -10,6 +10,8 @@
 (defgeneric identity (object))
 (defgeneric identity! (object))
 (defgeneric identity? (object))
+(defgeneric interpolate (object1 object2 parameter))
+(defgeneric interpolate! (object1 object2 parameter out))
 (defgeneric invert (object))
 (defgeneric invert! (object out))
 (defgeneric rotate (object1 object2 &key ((:space space))))

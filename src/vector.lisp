@@ -276,6 +276,20 @@ Note: This is computed as n - floor(n)."
     (setf (ref out i) (cl:- x (ffloor x))))
   out)
 
+(define-op (interpolate :extend t) ((object1 :*) (object2 :*) (parameter real)) (vector)
+  "Perform a suitable interpolation between the {OBJECT1:DESC}s OBJECT1 and OBJECT2, storing the ~
+result in a new {OBJECT1:DESC}. This is the same as LERP for vectors and SLERP for quaternions. ~
+It exists to conveniently dispatch to the appropriate interpolation method given the types of the ~
+objects."
+  (lerp object1 object2 parameter))
+
+(define-op (interpolate! :extend t) ((object1 :*) (object2 :*) (parameter real) (out :*)) (vector)
+  "Perform a suitable interpolation between the {OBJECT1:DESC}s OBJECT1 and OBJECT2, storing the ~
+result in the {OUT:DESC} OUT. This is the same as LERP! for vectors and SLERP! for quaternions. ~
+It exists to conveniently dispatch to the appropriate interpolation method given the types of the ~
+objects."
+  (lerp! object1 object2 parameter out))
+
 (define-op (invert :extend t) ((vector :*)) (vector)
   "Invert each component of the {VECTOR:DESC} VECTOR (1/n), storing the result in a new ~
 {VECTOR:DESC}."
