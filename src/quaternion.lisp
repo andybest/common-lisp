@@ -249,7 +249,7 @@ the parameter PARAMETER, storing the result in the quaternion OUT."
             dot (cl:- dot)))
     (if (cl:> (cl:abs dot) 0.9995d0)
         (%with-each/parallel (((quaternion1 x) (quaternion2 y)) :index i)
-          (setf (ref out i) (u:lerp x y parameter)))
+          (setf (ref out i) (u:lerp parameter x y)))
         (let* ((angle (cl:acos dot))
                (sin-angle (cl:sin angle))
                (scale1 (cl:/ (cl:sin (cl:* angle (cl:- 1 parameter))) sin-angle))
