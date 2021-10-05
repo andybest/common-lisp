@@ -6,8 +6,9 @@
   :encoding :utf-8
   :depends-on (#:cffi
                #:cl-opengl
+               #:gfxmath
                #:glsl-packing
-               #:golden-utils
+               #:mfiano-utils
                #:static-vectors
                #:varjo)
   :pathname "src"

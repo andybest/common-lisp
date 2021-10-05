@@ -1,5 +1,7 @@
 (in-package #:shadow)
 
+(defvar *current-program* nil)
+
 (defclass program ()
   ((%id :reader id
         :initform 0)
@@ -121,10 +123,10 @@ defined shader program using MAKE-SHADER-PROGRAM."
   "Specify a function to be called when shader programs need to be updated."
   (setf (meta :modify-hook) function))
 
-(defmacro with-shader (name &body body)
-  "Run a body of code which uses (as in glUseProgram) the program identified by NAME."
+(defmacro with-shader ((program-name) &body body)
+  "Run a body of code which uses (as in glUseProgram) the program identified by PROGRAM-NAME."
   `(unwind-protect
-        (progn
-          (gl:use-program (id (find-program ,name)))
+        (let ((*current-program* (find-program ,program-name)))
+          (gl:use-program (id *current-program*))
           ,@body)
      (gl:use-program 0)))

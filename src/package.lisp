@@ -2,7 +2,8 @@
 
 (defpackage #:shadow
   (:local-nicknames
-   (#:u #:golden-utils))
+   (#:math #:gfxmath)
+   (#:u #:mfiano-utils))
   (:use #:cl)
   (:export
    #:bind-block
@@ -27,28 +28,11 @@
    #:program
    #:read-buffer-path
    #:recompile-shaders
+   #:set-uniform
    #:unbind-block
    #:unbind-buffer
    #:unload-shaders
    #:uniforms
-   #:uniform-bool
-   #:uniform-bool-array
-   #:uniform-float
-   #:uniform-float-array
-   #:uniform-int
-   #:uniform-int-array
-   #:uniform-mat2
-   #:uniform-mat2-array
-   #:uniform-mat3
-   #:uniform-mat3-array
-   #:uniform-mat4
-   #:uniform-mat4-array
-   #:uniform-vec2
-   #:uniform-vec2-array
-   #:uniform-vec3
-   #:uniform-vec3-array
-   #:uniform-vec4
-   #:uniform-vec4-array
    #:view-source
    #:with-shader
    #:write-buffer-path))
@@ -56,7 +40,7 @@
 (defpackage #:shadow.glsl
   (:local-nicknames
    (#:s #:shadow)
-   (#:u #:golden-utils))
+   (#:u #:mfiano-utils))
   (:use #:cl #:vari)
   (:shadow
    #:defun
