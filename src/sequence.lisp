@@ -41,3 +41,9 @@ incrementing from `START` by `STEP`, and each cdr being the element of
   "Iterates over `SEQUENCE`, binding `VAR` to each element. Like DOLIST, but for
 all sequence types."
   `(map nil (lambda (,var) ,@body) ,sequence))
+
+(defun find-all (item sequence &rest args &key (test #'eql) test-not &allow-other-keys)
+  "Find all elements in `SEQUENCE` that match `ITEM`. Taken from PAIP."
+  (if test-not
+      (apply #'remove item sequence :test-not (complement test-not) args)
+      (apply #'remove item sequence :test (complement test) args)))

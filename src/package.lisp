@@ -102,6 +102,7 @@
   (:export
    #:do-seq
    #:enumerate
+   #:find-all
    #:flatten-tree
    #:flatten-numbers)
   ;; Lists
