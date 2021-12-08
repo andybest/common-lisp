@@ -1,0 +1,12 @@
+;;; -*- Mode: common-lisp; -*-
+
+(:api-version "0.3")
+
+(:source "quicklisp" :url "https://beta.quicklisp.org/dist/quicklisp.txt" :type :quicklisp)
+
+(:asd "mfiano.scripts.cpu-usage.asd")
+(:asd "../../include/mfiano.scripts.base.asd")
+
+(:system "cffi")
+
+(:github "mfiano-utils" :path "mfiano/mfiano-utils" :branch "master")
