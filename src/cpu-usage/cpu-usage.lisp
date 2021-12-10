@@ -10,44 +10,64 @@
             0d0
             (* (/ (+ user sys) total) 100d0))))))
 
-(defun print-report (usage &key precision suffix replace)
-  (write-string (string-right-trim '(#\.) (format nil "~,vf" precision usage)))
-  (when suffix
-    (write-char #\%))
-  (cond
-    (replace
-     (force-output)
-     (write-char #\return))
-    (t
-     (fresh-line)
-     (finish-output))))
+(defun print-progress-bar (percent)
+  (u:mvlet* ((blocks "▏▎▍▌▋▊▉█")
+             (covered (* (/ percent 100d0) *arg-bar-width*))
+             (full partial (floor covered))
+             (index (floor partial 1/8)))
+    (format t "~V,,,' <~>~C[ ~V,,,'█<~>~C"
+            *arg-bar-width*
+            #\return
+            full
+            (aref blocks index))
+    (if *arg-replace*
+        (write-char #\return))
+    (force-output)))
 
-(defun print-all-reports (&key precision suffix delay count replace)
+(defun print-report (usage)
+  (let ((percent (string-right-trim '(#\.) (format nil "~,vf" *arg-precision* usage))))
+    (if *arg-bars*
+        (progn
+          (print-progress-bar usage)
+          (write-string (format nil "~V,,,' <~>] ~a" (* 2 *arg-bar-width*) percent)))
+        (write-string percent))
+    (when *arg-suffix*
+      (write-char #\%))
+    (cond
+      (*arg-replace*
+       (force-output)
+       (write-char #\return))
+      (t
+       (fresh-line)
+       (finish-output)))))
+
+(defun print-all-reports ()
   (loop :for sample1 = nil :then sample2
         :for sample2 = (get-cpu-times)
         :for report-count :from 0
         :when (plusp report-count)
-          :do (print-report (get-cpu-usage sample1 sample2)
-                            :precision precision
-                            :suffix suffix
-                            :replace replace)
-              (when (eql report-count count)
+          :do (print-report (get-cpu-usage sample1 sample2))
+              (when (eql report-count *arg-count*)
                 (loop-finish))
-        :do (sleep delay)))
+        :do (sleep *arg-delay*)))
 
 (defun run (&rest options)
   (u:mvlet ((args options (base:parse-options *ui* options)))
     (unless (base:dispatch-terminating-options *ui* options)
-      (let ((precision (u:href options 'precision))
-            (suffix (u:href options 'suffix))
-            (replace (u:href options 'replace))
-            (delay (u:href options 'delay))
-            (count (u:href options 'count)))
-        (print-all-reports :precision precision
-                           :suffix suffix
-                           :delay delay
-                           :count count
-                           :replace replace)))))
+      (let ((*arg-precision* (u:href options 'precision))
+            (*arg-suffix* (u:href options 'suffix))
+            (*arg-replace* (u:href options 'replace))
+            (*arg-delay* (u:href options 'delay))
+            (*arg-count* (u:href options 'count))
+            (*arg-bars* (u:href options 'bars))
+            (*arg-bar-width* (u:href options 'bar-width)))
+        #++(loop :for i :from 0 :to 100
+                 :do (write-string #.(format nil "~C[1F~:*~C[2K" #\Escape) *standard-output*)
+                     (print-progress-bar1 i)
+                     (fresh-line)
+                     (print-progress-bar2 i)
+                     (sleep 0.01))
+        (print-all-reports)))))
 
 (defun toplevel ()
   (base:run-non-interactively #'run))

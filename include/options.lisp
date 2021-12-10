@@ -12,6 +12,7 @@
 (defmacro define-option (name &body body)
   (let ((long (string-downcase (symbol-name name))))
     `(progn
+       (defvar ,(u:symbolicate '#:*arg- name '#:*))
        (defparameter ,(u:symbolicate '#:*option- name '#:*)
          (ui:make-option
           ',name
@@ -28,12 +29,13 @@
                  (error 'user-error :message ,(generate-validity-error-message body long)))))))))
 
 (defmacro define-boolean-options (name &body body)
-  (let ((on (u:symbolicate '#:*option- name '#:*))
-        (off (u:symbolicate '#:*option-no- name '#:*)))
+  (let ((option-on (u:symbolicate '#:*option- name '#:*))
+        (option-off (u:symbolicate '#:*option-no- name '#:*)))
     `(progn
-       (defvar ,on)
-       (defvar ,off)
-       (setf (values ,on ,off)
+       (defvar ,option-on)
+       (defvar ,option-off)
+       (defvar ,(u:symbolicate '#:*arg- name '#:*))
+       (setf (values ,option-on ,option-off)
              (ui:make-boolean-options
               ',name
               ,@(u:plist-remove body :help :help-no :manual :manual-no)

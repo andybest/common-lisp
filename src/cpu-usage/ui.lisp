@@ -38,6 +38,24 @@
   :help "Display 'digits' number of digits for the fractional component of a percentage. ~
         (default: 1)")
 
+(base:define-boolean-options bars
+  :long "show-bars"
+  :long-no "hide-bars"
+  :short #\b
+  :help "Display progress bars in reports. This option is disabled by default."
+  :help-no "Do not display progress bars in reports. This is the default.")
+
+(base:define-option bar-width
+  :parameter "width"
+  :long "bar-width"
+  :short #\w
+  :initial-value 20
+  :key #'base:parse-integer
+  :reduce #'ui:last
+  :validity-check (base:in-range 1 255)
+  :validity-error "must be an integer between 1 and 255, inclusive."
+  :help "The width of progress bars to render when the '-b/--show-bars' is supplied. (default: 20)")
+
 (base:define-boolean-options replace
   :long "replace"
   :short #\r
@@ -52,7 +70,7 @@
   :initial-value t
   :help "Enable displaying of the suffix '%'. This is the default."
   :help-no "Disable displaying of the suffix '%'. The default is to display the suffix as if by ~
-            'show-suffix'.")
+            '--show-suffix'.")
 
 (ui:define-string *help-text*
   "Help text")
@@ -64,6 +82,9 @@
    :usage "[options]"
    :help *help-text*
    :contents (list *option-count*
+                   *option-bars*
+                   *option-no-bars*
+                   *option-bar-width*
                    *option-delay*
                    base:*option-help*
                    *option-precision*
