@@ -6,6 +6,7 @@
   :version "0.1.0"
   :encoding :utf-8
   :depends-on (#:alexandria
+               #:serapeum
                #:uiop)
   :pathname "src"
   :serial t

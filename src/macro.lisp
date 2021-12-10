@@ -108,10 +108,6 @@ GETHASH."
              (declare (ignorable ,@(hash-keys mapping)))
              ,@body))))))
 
-(defmacro eval-always (&body body)
-  `(eval-when (:compile-toplevel :load-toplevel :execute)
-     ,@body))
-
 (defmacro with-temp-package (&body body)
   (with-gensyms (package package-name)
     `(let ((,package (or (find-package ',package-name)

@@ -1,10 +1,5 @@
 (in-package #:mfiano-utils)
 
-(defun ascii-char-p (char)
-  "Check if the character `CHAR` is an ASCII character."
-  (and (characterp char)
-       (<= 0 (char-code char) 127)))
-
 (defun ascii-lowercase-p (char)
   "Check if the character `CHAR` is a lowercase ASCII character."
   (char<= #\a char #\z))

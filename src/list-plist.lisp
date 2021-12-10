@@ -25,20 +25,6 @@
 (define-modify-macro plist-removef (&rest keys) plist-remove
   "Place-modifying macro for PLIST-REMOVE.")
 
-(defun plist-keys (plist)
-  "Get a list of all keys in `PLIST`."
-  (if (plist-p plist)
-      (loop :for (key nil) :on plist :by #'cddr
-            :collect key)
-      (error "~a is not a property list." plist)))
-
-(defun plist-values (plist)
-  "Get a list of all values in `PLIST`."
-  (if (plist-p plist)
-      (loop :for (nil value) :on plist :by #'cddr
-            :collect value)
-      (error "~a is not a property list." plist)))
-
 (defun plist->alist (plist)
   "Convert `PLIST` to an association list."
   (if (plist-p plist)

@@ -1,10 +1,5 @@
 (in-package #:mfiano-utils)
 
-(deftype octet () '(unsigned-byte 8))
-
-(deftype octet-vector (&optional length)
-  `(simple-array octet ,(if (integerp length) `(,length) length)))
-
 (deftype fixnum-array (&optional length)
   `(simple-array fixnum ,(if (integerp length) `(,length) length)))
 

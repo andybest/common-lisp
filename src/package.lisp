@@ -2,14 +2,17 @@
 
 (uiop:define-package #:mfiano-utils
   (:use #:cl)
-  (:mix-reexport #:alexandria)
+  (:mix-reexport #:serapeum #:alexandria)
   (:shadow
-   #:make-keyword)
+   #:dict
+   #:href
+   #:make-keyword
+   #:mvlet
+   #:mvlet*)
   ;; Macros
   (:export
    #:define-printer
    #:defun-inline
-   #:eval-always
    #:fn->
    #:if-found
    #:mvlet
@@ -45,8 +48,6 @@
    #:f64
    #:f64a
    #:fixnum-array
-   #:octet
-   #:octet-vector
    #:ub8
    #:ub8a
    #:ub16
@@ -68,7 +69,6 @@
   ;; Characters
   (:export
    #:ascii-alphanumeric-p
-   #:ascii-char-p
    #:ascii-control-p
    #:ascii-letter-p
    #:ascii-lowercase-p
@@ -140,10 +140,8 @@
    #:plist
    #:plist-p
    #:plist-get
-   #:plist-keys
    #:plist-remove
    #:plist-removef
-   #:plist-values
    #:plist->alist
    #:plist->hash)
   ;; Hash tables
@@ -152,12 +150,12 @@
    #:do-hash
    #:do-hash-keys
    #:do-hash-values
-   #:href
    #:hash-keys
    #:hash-merge
    #:hash-values
    #:hash->alist
-   #:hash->plist)
+   #:hash->plist
+   #:href)
   ;; Filesystem
   (:export
    #:file->string

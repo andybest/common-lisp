@@ -6,4 +6,6 @@
 
 (:asd "mfiano-utils.asd")
 
-(:github "alexandria" :host "gitlab.common-lisp.net" :path "alexandria/alexandria" :branch "master")
+(:git "alexandria" :host "gitlab.common-lisp.net" :path "alexandria/alexandria" :branch "master")
+
+(serapeum:plist-keys)
