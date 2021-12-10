@@ -14,7 +14,7 @@ bin/%: $(files)
 	@sbcl --noinform \
 		--disable-debugger \
 		--eval "(handler-bind ((asdf:bad-system-name #'muffle-warning)) \
-		          (:load-bundle :$(project)))" \
+		          (ql:quickload :$(project)))" \
 		--eval "(sb-ext:save-lisp-and-die \"bin/$(@F)\" \
 		  :executable t \
 		  :save-runtime-options t \
@@ -27,7 +27,7 @@ man/man1/%.1: $(files)
 	@sbcl --noinform \
 		--disable-debugger \
 		--eval "(handler-bind ((asdf:bad-system-name #'muffle-warning)) \
-		          (:load-bundle :$(project)))" \
+		          (ql:quickload :$(project)))" \
 		--eval "(with-open-file (out \"man/man1/$(@F)\" :direction :output :if-exists :supersede) \
 		          (adopt:print-manual $(project):*ui* :stream out))" \
 		--quit > /dev/null

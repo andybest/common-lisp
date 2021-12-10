@@ -19,12 +19,13 @@
    #:*version*
    #:define-boolean-options
    #:define-option
+   #:dispatch-terminating-options
    #:in-range
    #:parse-float
    #:parse-integer
    #:parse-options
    #:run-non-interactively
-   #:dispatch-terminating-options
+   #:string-match
    #:user-error
    #:user-error-message
    #:validate-option))

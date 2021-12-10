@@ -10,19 +10,27 @@
             0d0
             (* (/ (+ user sys) total) 100d0))))))
 
-(defun print-report (usage &key precision suffix)
+(defun print-report (usage &key precision suffix replace)
   (write-string (string-right-trim '(#\.) (format nil "~,vf" precision usage)))
   (when suffix
     (write-char #\%))
-  (fresh-line)
-  (finish-output))
+  (cond
+    (replace
+     (force-output)
+     (write-char #\return))
+    (t
+     (fresh-line)
+     (finish-output))))
 
-(defun print-all-reports (&key precision suffix delay count)
+(defun print-all-reports (&key precision suffix delay count replace)
   (loop :for sample1 = nil :then sample2
         :for sample2 = (get-cpu-times)
         :for report-count :from 0
         :when (plusp report-count)
-          :do (print-report (get-cpu-usage sample1 sample2) :precision precision :suffix suffix)
+          :do (print-report (get-cpu-usage sample1 sample2)
+                            :precision precision
+                            :suffix suffix
+                            :replace replace)
               (when (eql report-count count)
                 (loop-finish))
         :do (sleep delay)))
@@ -32,9 +40,14 @@
     (unless (base:dispatch-terminating-options *ui* options)
       (let ((precision (u:href options 'precision))
             (suffix (u:href options 'suffix))
-            (delay (or (u:href options 'delay) 0.25))
+            (replace (u:href options 'replace))
+            (delay (u:href options 'delay))
             (count (u:href options 'count)))
-        (print-all-reports :precision precision :suffix suffix :delay delay :count count)))))
+        (print-all-reports :precision precision
+                           :suffix suffix
+                           :delay delay
+                           :count count
+                           :replace replace)))))
 
 (defun toplevel ()
   (base:run-non-interactively #'run))

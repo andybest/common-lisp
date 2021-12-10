@@ -27,6 +27,9 @@
 (defun in-range (low high)
   (lambda (x) (and (realp x) (<= low x high))))
 
+(defun string-match (string)
+  (lambda (x) (string= (string-downcase x) string)))
+
 (defun print-help (ui &key (padding 20))
   (let ((printer (if *interactive* #'ui:print-help #'ui:print-help-and-exit)))
     (funcall printer ui :program-name *program-name* :option-width padding)

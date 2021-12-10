@@ -6,27 +6,30 @@
 (setf base:*initial-year* 2021)
 
 (base:define-option count
-  :short #\c
   :parameter "count"
+  :short #\c
+  :initial-value 1
   :key #'base:parse-integer
   :reduce #'ui:last
-  :validity-check (u:disjoin #'null #'u:positive-integer-p)
-  :validity-error "must be a positive integer."
-  :help "Repeat printing of the report 'count' times.~%~
-         The default value is 1 if -d/--delay is not specified, or infinity if it is.")
+  :validity-check (u:disjoin #'u:non-negative-integer-p)
+  :validity-error "must be a non-negative integer."
+  :help "Repeat printing a report 'count' times.~%~
+         'count' can be either a positive integer, or 0 to repeat infinitely. (default: 1)")
 
 (base:define-option delay
-  :short #\d
   :parameter "seconds"
+  :short #\d
+  :initial-value 0.25
   :key #'base:parse-float
   :reduce #'ui:last
   :validity-check (u:disjoin #'null #'u:positive-real-p)
   :validity-error "must be a positive floating-point number."
-  :help "Wait 'delay' seconds between each report printed. (default: 0.2)")
+  :help "Wait 'delay' seconds between each pair of samples taken to produce a report.~%~
+         (default: 0.25)")
 
 (base:define-option precision
-  :short #\p
   :parameter "digits"
+  :short #\p
   :initial-value 1
   :key #'base:parse-integer
   :reduce #'ui:last
@@ -35,13 +38,21 @@
   :help "Display 'digits' number of digits for the fractional component of a percentage. ~
         (default: 1)")
 
+(base:define-boolean-options replace
+  :long "replace"
+  :short #\r
+  :help "Enable replacing the old report with each subsequent report, instead of appending new ~
+         output lines. The default is to append as if by '--no-replace'."
+  :help-no "Disable replacing the old report with each subsequent report. This is the default.")
+
 (base:define-boolean-options suffix
   :long "show-suffix"
   :long-no "hide-suffix"
   :short #\s
   :initial-value t
-  :help "Enable displaying of the suffix '%'. This is enabled by default."
-  :help-no "Disable displaying of the suffix '%'. The default is to display the suffix.")
+  :help "Enable displaying of the suffix '%'. This is the default."
+  :help-no "Disable displaying of the suffix '%'. The default is to display the suffix as if by ~
+            'show-suffix'.")
 
 (ui:define-string *help-text*
   "Help text")
@@ -56,6 +67,8 @@
                    *option-delay*
                    base:*option-help*
                    *option-precision*
+                   *option-replace*
+                   *option-no-replace*
                    *option-suffix*
                    *option-no-suffix*
                    base:*option-version*)))
