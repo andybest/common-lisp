@@ -1,0 +1,21 @@
+(in-package #:cl-freebsd)
+
+(defmacro with-open ((var path &key flags mode) &body body)
+  `(let ((,var (open ,path :flags ,flags ,@(when mode `(:mode ,mode)))))
+     (unwind-protect (progn ,@body)
+       (close ,var))))
+
+(defmacro with-open-at ((var file-descriptor path &key flags mode) &body body)
+  `(let ((,var (open-at ,file-descriptor ,path :flags ,flags ,@(when mode `(:mode ,mode)))))
+     (unwind-protect (progn ,@body)
+       (close ,var))))
+
+(defmacro with-sysctl-by-name ((ptr name) &body body)
+  (u:with-gensyms (str null size)
+    `(let ((,null (c:null-pointer)))
+       (c:with-foreign-string (,str ,name)
+         (c:with-foreign-pointer (,size ,(c:foreign-type-size :size))
+           (sysctl-by-name ,str ,null ,size ,null 0)
+           (c:with-foreign-object (,ptr :char (c:mem-ref ,size :size))
+             (sysctl-by-name ,str ,ptr ,size ,null 0)
+             ,@body))))))
