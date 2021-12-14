@@ -10,37 +10,6 @@
             0d0
             (* (/ (+ user sys) total) 100d0))))))
 
-(defun print-progress-bar (percent)
-  (u:mvlet* ((blocks "▏▎▍▌▋▊▉█")
-             (covered (* (/ percent 100d0) *arg-bar-width*))
-             (full partial (floor covered))
-             (index (floor partial 1/8)))
-    (format t "~V,,,' <~>~C[ ~V,,,'█<~>~C"
-            *arg-bar-width*
-            #\return
-            full
-            (aref blocks index))
-    (if *arg-replace*
-        (write-char #\return))
-    (force-output)))
-
-(defun print-report (usage)
-  (let ((percent (string-right-trim '(#\.) (format nil "~,vf" *arg-precision* usage))))
-    (if *arg-bars*
-        (progn
-          (print-progress-bar usage)
-          (write-string (format nil "~V,,,' <~>] ~a" (* 2 *arg-bar-width*) percent)))
-        (write-string percent))
-    (when *arg-suffix*
-      (write-char #\%))
-    (cond
-      (*arg-replace*
-       (force-output)
-       (write-char #\return))
-      (t
-       (fresh-line)
-       (finish-output)))))
-
 (defun print-all-reports ()
   (loop :for sample1 = nil :then sample2
         :for sample2 = (get-cpu-times)
@@ -61,12 +30,6 @@
             (*arg-count* (u:href options 'count))
             (*arg-bars* (u:href options 'bars))
             (*arg-bar-width* (u:href options 'bar-width)))
-        #++(loop :for i :from 0 :to 100
-                 :do (write-string #.(format nil "~C[1F~:*~C[2K" #\Escape) *standard-output*)
-                     (print-progress-bar1 i)
-                     (fresh-line)
-                     (print-progress-bar2 i)
-                     (sleep 0.01))
         (print-all-reports)))))
 
 (defun toplevel ()

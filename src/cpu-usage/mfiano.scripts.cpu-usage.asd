@@ -6,11 +6,13 @@
   :version "0.1.0"
   :encoding :utf-8
   :depends-on (#:cffi
+               #:cl-freebsd
                #:mfiano.scripts.base
                #:mfiano-utils)
   :serial t
   :components
   ((:file "package")
+   (:file "ffi")
    (:file "ui")
-   (:file "sysctl")
+   (:file "report")
    (:file "cpu-usage")))

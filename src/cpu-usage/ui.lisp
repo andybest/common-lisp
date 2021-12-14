@@ -17,7 +17,7 @@
          'count' can be either a positive integer, or 0 to repeat infinitely. (default: 1)")
 
 (base:define-option delay
-  :parameter "seconds"
+  :parameter "delay"
   :short #\d
   :initial-value 0.25
   :key #'base:parse-float
@@ -54,7 +54,8 @@
   :reduce #'ui:last
   :validity-check (base:in-range 1 255)
   :validity-error "must be an integer between 1 and 255, inclusive."
-  :help "The width of progress bars to render when the '-b/--show-bars' is supplied. (default: 20)")
+  :help "The width of progress bars to render when the '-b/--show-bars' option is specified. ~
+         (default: 20)")
 
 (base:define-boolean-options replace
   :long "replace"
