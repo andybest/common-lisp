@@ -17,7 +17,7 @@
   (let* (;; If progress bar is enabled, add some leading padding to account for the variable width
          ;; of a percentage (up to 3 digits to the left of the decimal point). This ensures that the
          ;; percentage is a fixed width, which is important if displaying multiple reports per line.
-         (padding (if *arg-bars* (+ *arg-precision* 4) 0))
+         (padding (+ (if *arg-bars* *arg-precision* 0) 4))
          ;; Continue processing the percentage string by integrating the above leading padding along
          ;; with the user-specified precision for the digits to the right of the decimal point.
          (percent (format nil "~v,vf" padding *arg-precision* usage)))
