@@ -11,16 +11,16 @@
 (c:defcfun ("close" %close) :int
   (file-descriptor :int))
 
-(c:defcfun ("feof" %file-eof-p) :int
+(c:defcfun ("feof" file-eof-p) :boolean
   (stream :pointer))
 
-(c:defcfun ("feof_unlocked" %file-eof-unlocked-p) :int
+(c:defcfun ("feof_unlocked" file-eof-unlocked-p) :boolean
   (stream :pointer))
 
-(c:defcfun ("ferror" %file-error-p) :int
+(c:defcfun ("ferror" file-error-p) :boolean
   (stream :pointer))
 
-(c:defcfun ("ferror_unlocked" %file-error-unlocked-p) :int
+(c:defcfun ("ferror_unlocked" file-error-unlocked-p) :boolean
   (stream :pointer))
 
 (c:defcfun ("fileno" file-number) :int
@@ -34,7 +34,7 @@
   (request ioctl-request)
   &rest)
 
-(c:defcfun ("isatty" %tty-p) :int
+(c:defcfun ("isatty" tty-p) :boolean
   (file-descriptor :int))
 
 (c:defcfun ("open" %open) :int
