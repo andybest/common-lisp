@@ -7,3 +7,10 @@
 (defun get-stat-hz ()
   (bsd:with-sysctl-by-name (ptr "kern.clockrate")
     (c:foreign-slot-value ptr '(:struct bsd:clock-info) :stat-hz)))
+
+(defun get-column-count ()
+  (let ((tty-name (bsd:tty-name (bsd:file-number bsd:+stdin+))))
+    (bsd:with-open (file-descriptor tty-name :flags '(:read-only))
+      (c:with-foreign-object (ptr '(:struct bsd:window-size))
+        (bsd:ioctl file-descriptor :tiocgwinsz :pointer ptr)
+        (cffi:foreign-slot-value ptr '(:struct bsd:window-size) :columns)))))
