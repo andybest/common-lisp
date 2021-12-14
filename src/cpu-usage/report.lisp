@@ -27,12 +27,12 @@
 ;; NOTE: This function is currently un-used, but seems like it'd be useful to have at some point.
 (defun calculate-report-length ()
   (+ (if *arg-bars* (+ +static-length/bar+ *arg-bar-width*) 0)
-      +static-length/percentage+
-      (if *arg-suffix* 1 0)
-      *arg-precision*
-      ;; This part might not be so obvious; this adds 1 more to the sum if a decimal point needs to
-      ;; be displayed.
-      (if (plusp *arg-precision*) 1 0)))
+     +static-length/percentage+
+     (if *arg-suffix* 1 0)
+     *arg-precision*
+     ;; This part might not be so obvious; this adds 1 more to the sum if a decimal point needs to
+     ;; be displayed.
+     (if (plusp *arg-precision*) 1 0)))
 
 ;; This prints a progress bar using varying widths of unicode vertical bars, to give a smoother
 ;; animating appearance, instead of the choppy look you get with full-width character 'frames'.
