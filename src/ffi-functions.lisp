@@ -64,7 +64,7 @@
   (length :size))
 
 (c:defcfun ("sysctlbyname" %sysctl-by-name) :int
-  (name (:pointer :char))
+  (name :string)
   (old-ptr (:pointer :void))
   (old-length-ptr (:pointer :size))
   (new-ptr (:pointer :void))
