@@ -42,4 +42,6 @@
   (:export
    #:with-open
    #:with-open-at
-   #:with-sysctl-by-name))
+   #:with-sysctl
+   #:with-sysctl-by-name
+   #:with-sysctl-mib-from-name))
