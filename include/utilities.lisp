@@ -15,14 +15,13 @@
   (u:mvlet* ((value (or string ""))
              (parsed position (cl:parse-integer value :junk-allowed t)))
     (or (and (= position (length string)) parsed)
-        (error 'user-error :message (format nil "Integer expected but got ~s." value)))))
+        (user-error "Integer expected but got ~s." value))))
 
 (defun parse-float (&optional string)
   (u:mvlet* ((value (or string ""))
              (parsed position (pf:parse-float value :junk-allowed t)))
     (or (and (= position (length string)) parsed)
-        (error 'user-error
-               :message (format nil "Floating-point number expected but got ~s." value)))))
+        (user-error "Floating-point number expected but got ~s." value))))
 
 (defun in-range (low high)
   (lambda (x) (and (realp x) (<= low x high))))

@@ -1,10 +1,11 @@
 (in-package #:mfiano.scripts.base)
 
-(define-condition user-error (error)
-  ((%message :reader user-error-message
-             :initarg :message))
-  (:report (lambda (condition stream)
-             (format stream "~a" (user-error-message condition)))))
+(define-condition user-error (simple-error) ())
+
+(defun user-error (message &rest args)
+  (error 'user-error
+         :format-control message
+         :format-arguments args))
 
 (defmacro with-ctrl-c ((&optional cleanup-func) &body body)
   `(handler-case (wua:with-user-abort (progn ,@body))

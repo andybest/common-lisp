@@ -26,7 +26,7 @@
        ,@(u:when-let ((check (u:plist-get body :validity-check)))
            `((defmethod validate-option ((key (eql ',name)) value)
                (unless (funcall ,check value)
-                 (error 'user-error :message ,(generate-validity-error-message body long)))))))))
+                 (user-error ,(generate-validity-error-message body long)))))))))
 
 (defmacro define-boolean-options (name &body body)
   (let ((option-on (u:symbolicate '#:*option- name '#:*))
