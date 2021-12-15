@@ -29,7 +29,12 @@
             (*arg-delay* (u:href options 'delay))
             (*arg-count* (u:href options 'count))
             (*arg-bars* (u:href options 'bars))
-            (*arg-bar-width* (u:href options 'bar-width)))
+            (*arg-bar-width* (u:href options 'bar-width))
+            (*arg-color* (u:href options 'color))
+            (*arg-bar-color-base* (u:href options 'bar-color-base))
+            (*arg-bar-color-low* (u:href options 'bar-color-low))
+            (*arg-bar-color-medium* (u:href options 'bar-color-medium))
+            (*arg-bar-color-high* (u:href options 'bar-color-high)))
         (print-all-reports)))))
 
 (defun toplevel ()

@@ -16,6 +16,12 @@
   :help "Repeat printing a report 'count' times.~%~
          'count' can be either a positive integer, or 0 to repeat infinitely. (default: 1)")
 
+(base:define-boolean-options color
+  :long "enable-color"
+  :long-no "disable-color"
+  :help "Enable colored progress bars. This option is disabled by default."
+  :help-no "Disable colored progress bars. This is the default.")
+
 (base:define-option delay
   :parameter "delay"
   :short #\d
@@ -57,6 +63,46 @@
   :help "The width of progress bars to render when the '-b/--show-bars' option is specified. ~
          (default: 20)")
 
+(base:define-option bar-color-base
+  :parameter "fg[,bg]"
+  :initial-value '(90 49)
+  :key #'parse-color-pair
+  :reduce #'ui:last
+  :help "The foreground, and optionally background color to use for the trim of progress bars. ~
+         Both '--enable-color' and '--show-bars' must be supplied to have any effect. Valid colors ~
+         are integers between 0 and 15, which map to the ANSI 16-color pallete (8-15 are bright ~
+         variants of 0-7). (default: 8)")
+
+(base:define-option bar-color-low
+  :parameter "fg[,bg]"
+  :initial-value '(32 49)
+  :key #'parse-color-pair
+  :reduce #'ui:last
+  :help "The foreground, and optionally background color to use for the trim of progress bars when ~
+         their fill is low. Both '--enable-color' and '--show-bars' must be supplied to have any ~
+         effect. Valid colors are integers between 0 and 15, which map to the ANSI 16-color ~
+         pallete (8-15 are bright variants of 0-7). (default: 2)")
+
+(base:define-option bar-color-medium
+  :parameter "fg[,bg]"
+  :initial-value '(33 49)
+  :key #'parse-color-pair
+  :reduce #'ui:last
+  :help "The foreground, and optionally background color to use for the trim of progress bars when ~
+         their fill is medium. Both '--enable-color' and '--show-bars' must be supplied to have ~
+         any effect. Valid colors are integers between 0 and 15, which map to the ANSI 16-color ~
+         pallete (8-15 are bright variants of 0-7). (default: 3)")
+
+(base:define-option bar-color-high
+  :parameter "fg[,bg]"
+  :initial-value '(31 49)
+  :key #'parse-color-pair
+  :reduce #'ui:last
+  :help "The foreground, and optionally background color to use for the trim of progress bars when ~
+         their fill is high. Both '--enable-color' and '--show-bars' must be supplied to have any ~
+         effect. Valid colors are integers between 0 and 15, which map to the ANSI 16-color ~
+         pallete (8-15 are bright variants of 0-7). (default: 1)")
+
 (base:define-boolean-options replace
   :long "replace"
   :short #\r
@@ -82,15 +128,20 @@
    :summary "Display the current CPU usage."
    :usage "[options]"
    :help *help-text*
-   :contents (list *option-count*
-                   *option-bars*
+   :contents (list *option-bars*
                    *option-no-bars*
                    *option-bar-width*
+                   *option-bar-color-base*
+                   *option-bar-color-low*
+                   *option-bar-color-medium*
+                   *option-bar-color-high*
+                   *option-color*
+                   *option-count*
                    *option-delay*
-                   base:*option-help*
                    *option-precision*
                    *option-replace*
                    *option-no-replace*
                    *option-suffix*
                    *option-no-suffix*
+                   base:*option-help*
                    base:*option-version*)))

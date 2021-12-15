@@ -34,10 +34,28 @@
      ;; be displayed.
      (if (plusp *arg-precision*) 1 0)))
 
+(defun generate-progress-bar/head (percent)
+  (if *arg-color*
+      (format nil "[~{~a~^;~}m[ [~{~a~^;~}m"
+              *arg-bar-color-base*
+              (cond
+                ((>= percent 200/3)
+                 *arg-bar-color-high*)
+                ((>= percent 100/3)
+                 *arg-bar-color-medium*)
+                (t
+                 *arg-bar-color-low*)))
+      (format nil "[ ")))
+
+(defun generate-progress-bar/tail ()
+  (if *arg-color*
+      (format nil "[~{~a~^;~}m][0m " *arg-bar-color-base*)
+      (format nil "] ")))
+
 ;; This prints a progress bar using varying widths of unicode vertical bars, to give a smoother
 ;; animating appearance, instead of the choppy look you get with full-width character 'frames'.
 ;; This tends to look better when the '--delay/-d' argument is low, as there could be a lot of
-;; variance between larger delays. On the flip, side, a smaller delay means less time between two
+;; variance between larger delays. On the flip side, a smaller delay means less time between two
 ;; samples used to calculate the percentage, which means more noisy/less accurate percentage
 ;; results. As such, the delay option needs to be manually balanced for the best user experience.
 (defun print-progress-bar (percent)
@@ -45,10 +63,12 @@
              (covered (* (/ percent 100d0) *arg-bar-width*))
              (full partial (floor covered))
              (index (floor partial 1/8)))
-    (format t "[ ~v,,,'█<~>~c~v,,,' <~>] "
+    (format t "~a~v,,,'█<~>~c~v,,,' <~>~a"
+            (generate-progress-bar/head percent)
             full
             (aref blocks index)
-            (- *arg-bar-width* full))))
+            (- *arg-bar-width* full)
+            (generate-progress-bar/tail))))
 
 (defun format-percentage (usage)
   (let* (;; If progress bars are enabled, add some leading padding to account for the variable width

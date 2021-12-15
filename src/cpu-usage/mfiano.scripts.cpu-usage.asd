@@ -13,6 +13,7 @@
   :components
   ((:file "package")
    (:file "ffi")
+   (:file "util")
    (:file "ui")
    (:file "report")
    (:file "cpu-usage")))
