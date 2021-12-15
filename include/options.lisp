@@ -1,5 +1,10 @@
 (in-package #:mfiano.scripts.base)
 
+(defvar *options*)
+
+(defun get-option (key)
+  (u:href *options* key))
+
 (defun generate-validity-error-message (body long)
   (let ((short-name (u:plist-get body :short))
         (long-name (format nil "-~a" (or (u:plist-get body :long) long)))
@@ -12,7 +17,6 @@
 (defmacro define-option (name &body body)
   (let ((long (string-downcase (symbol-name name))))
     `(progn
-       (defvar ,(u:symbolicate '#:*arg- name '#:*))
        (defparameter ,(u:symbolicate '#:*option- name '#:*)
          (ui:make-option
           ',name
@@ -34,7 +38,6 @@
     `(progn
        (defvar ,option-on)
        (defvar ,option-off)
-       (defvar ,(u:symbolicate '#:*arg- name '#:*))
        (setf (values ,option-on ,option-off)
              (ui:make-boolean-options
               ',name
@@ -48,6 +51,13 @@
               ,@(u:when-let ((manual-no (u:plist-get body :manual-no)))
                   `(:manual-no ,(format nil manual-no)))
               :long ,(string-downcase (symbol-name name)))))))
+
+(defmacro with-options ((ui options) &body body)
+  (u:with-gensyms (args)
+    `(u:mvlet* ((,args ,options (parse-options ,ui ,options))
+                (*options* ,options))
+       (unless (dispatch-terminating-options ,ui ,options)
+         ,@body))))
 
 (define-option help
   :short #\h

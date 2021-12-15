@@ -19,7 +19,7 @@
    #:*version*
    #:define-boolean-options
    #:define-option
-   #:dispatch-terminating-options
+   #:get-option
    #:in-range
    #:parse-float
    #:parse-integer
@@ -28,4 +28,5 @@
    #:string-match
    #:user-error
    #:user-error-message
-   #:validate-option))
+   #:validate-option
+   #:with-options))

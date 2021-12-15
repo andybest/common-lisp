@@ -26,31 +26,31 @@
 ;; Calculate the total length of a report by summing all static and dynamic character counts.
 ;; NOTE: This function is currently un-used, but seems like it'd be useful to have at some point.
 (defun calculate-report-length ()
-  (+ (if *arg-bars* (+ +static-length/bar+ *arg-bar-width*) 0)
-     +static-length/percentage+
-     (if *arg-suffix* 1 0)
-     *arg-precision*
-     ;; This part might not be so obvious; this adds 1 more to the sum if a decimal point needs to
-     ;; be displayed.
-     (if (plusp *arg-precision*) 1 0)))
+  (let ((precision (b:get-option 'precision)))
+    (+ (if (b:get-option 'bars)
+           (+ +static-length/bar+ (b:get-option 'bar-width))
+           0)
+       +static-length/percentage+
+       (if (b:get-option 'suffix) 1 0)
+       (if (plusp precision) (1+ precision) 0))))
 
-(defun generate-progress-bar/head (percent)
-  (if *arg-color*
-      (format nil "[~{~a~^;~}m[ [~{~a~^;~}m"
-              *arg-bar-color-base*
+(defun print-progress-bar/head (percent)
+  (if (b:get-option 'color)
+      (format t "[~{~a~^;~}m[ [0m[~{~a~^;~}m"
+              (b:get-option 'bar-color-base)
               (cond
                 ((>= percent 200/3)
-                 *arg-bar-color-high*)
+                 (b:get-option 'bar-color-high))
                 ((>= percent 100/3)
-                 *arg-bar-color-medium*)
+                 (b:get-option 'bar-color-medium))
                 (t
-                 *arg-bar-color-low*)))
-      (format nil "[ ")))
+                 (b:get-option 'bar-color-low))))
+      (write-string "[ ")))
 
-(defun generate-progress-bar/tail ()
-  (if *arg-color*
-      (format nil "[~{~a~^;~}m][0m " *arg-bar-color-base*)
-      (format nil "] ")))
+(defun print-progress-bar/tail ()
+  (if (b:get-option 'color)
+      (format t "[0m[~{~a~^;~}m][0m " (b:get-option 'bar-color-base))
+      (write-string "] ")))
 
 ;; This prints a progress bar using varying widths of unicode vertical bars, to give a smoother
 ;; animating appearance, instead of the choppy look you get with full-width character 'frames'.
@@ -59,27 +59,26 @@
 ;; samples used to calculate the percentage, which means more noisy/less accurate percentage
 ;; results. As such, the delay option needs to be manually balanced for the best user experience.
 (defun print-progress-bar (percent)
-  (u:mvlet* ((blocks "▏▎▍▌▋▊▉█")
-             (covered (* (/ percent 100d0) *arg-bar-width*))
+  (u:mvlet* ((width (b:get-option 'bar-width))
+             (covered (* (/ percent 100d0) width))
              (full partial (floor covered))
-             (index (floor partial 1/8)))
-    (format t "~a~v,,,'█<~>~c~v,,,' <~>~a"
-            (generate-progress-bar/head percent)
-            full
-            (aref blocks index)
-            (- *arg-bar-width* full)
-            (generate-progress-bar/tail))))
+             (remaining (- width full))
+             (char (aref "▏▎▍▌▋▊▉█" (floor partial 1/8))))
+    (print-progress-bar/head percent)
+    (format t "~v,,,'█<~>~c~v,,,' <~>" full char remaining)
+    (print-progress-bar/tail)))
 
 (defun format-percentage (usage)
-  (let* (;; If progress bars are enabled, add some leading padding to account for the variable width
+  (let* ((precision (b:get-option 'precision))
+         ;; If progress bars are enabled, add some leading padding to account for the variable width
          ;; of a percentage (up to 3 digits to the left of the decimal point). This ensures that the
          ;; percentage is a fixed width, which is important if displaying multiple reports per line.
          ;; If progress bars are not enabled, this padding ensures that any numbers before the
          ;; decimal point are not left-truncated.
-         (padding (+ (if *arg-bars* *arg-precision* 0) *arg-precision* 2))
+         (padding (+ (if (b:get-option 'bars) precision 0) precision 2))
          ;; Continue processing the percentage string by integrating the above leading padding along
          ;; with the user-specified precision for the digits to the right of the decimal point.
-         (percent (format nil "~v,vf" padding *arg-precision* usage)))
+         (percent (format nil "~v,vf" padding precision usage)))
     ;; When precision is 0, this removes the trailing decimal point.
     (string-right-trim '(#\.) percent)))
 
@@ -87,12 +86,12 @@
   ;; Format the percentage number and write it to the stream.
   (write-string (format-percentage usage))
   ;; Emite the '%' suffix character if it should be shown.
-  (when *arg-suffix*
+  (when (b:get-option 'suffix)
     (write-char #\%)))
 
 (defun print-report (usage)
   ;; If progress bars are to be shown, do so first.
-  (when *arg-bars*
+  (when (b:get-option 'bars)
     (print-progress-bar usage))
   ;; Print the percentage after the progress bar, if any.
   (print-percentage usage)
@@ -100,7 +99,7 @@
   ;; TODO: We might want to use #'finish-output which waits for a sync first.
   (force-output)
   ;; Prepare the next line of output, depending on if replace mode is enabled or not.
-  (if *arg-replace*
+  (if (b:get-option 'replace)
       ;; If replace mode is enabled, return the cursor to BOL, emit a number of spaces equal to the
       ;; terminal width in characters, and then return the cursor back to BOL. This effectively
       ;; clears the entire line so we don't end up with any artifacts on the next frame.
