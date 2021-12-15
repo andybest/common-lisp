@@ -63,12 +63,25 @@
   (buffer :string)
   (length :size))
 
+(c:defcfun ("sysctl" %sysctl) :int
+  (name (:pointer :int))
+  (name-length :uint)
+  (old-ptr (:pointer :void))
+  (old-length-ptr (:pointer :size))
+  (new-ptr (:pointer :void))
+  (new-length :size))
+
 (c:defcfun ("sysctlbyname" %sysctl-by-name) :int
   (name :string)
   (old-ptr (:pointer :void))
   (old-length-ptr (:pointer :size))
   (new-ptr (:pointer :void))
   (new-length :size))
+
+(c:defcfun ("sysctlnametomib" %sysctl-name-to-mib) :int
+  (name :string)
+  (mib-ptr (:pointer :int))
+  (size-ptr (:pointer :size)))
 
 (c:defcfun ("ttyname" %tty-name) :string
   (file-descriptor :int))
