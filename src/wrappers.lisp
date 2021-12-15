@@ -16,9 +16,17 @@
   (with-error-check (= -1)
     (%open-at file-descriptor path flags :uint16 mode)))
 
+(defun sysctl (name name-length old-ptr old-length-ptr new-ptr new-length)
+  (with-error-check (/= 0)
+    (%sysctl name name-length old-ptr old-length-ptr new-ptr new-length)))
+
 (defun sysctl-by-name (name old-ptr old-length-ptr new-ptr new-length)
   (with-error-check (/= 0)
     (%sysctl-by-name name old-ptr old-length-ptr new-ptr new-length)))
+
+(defun sysctl-name-to-mib (name mib-ptr size-ptr)
+  (with-error-check (/= 0)
+    (%sysctl-name-to-mib name mib-ptr size-ptr)))
 
 (defun tty-name (file-descriptor)
   (or (%tty-name file-descriptor)
