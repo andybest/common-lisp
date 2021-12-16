@@ -24,10 +24,14 @@
 (u:define-constant +static-length/percentage+ 3)
 
 ;; Calculate the length in characters of a percentage.
+;; The length returned only includes the numeric portion (everything except for the '%' suffix).
+;; A second return value indicating whether the additional '%' suffix character is enabled.
 (defun calculate-percentage-length ()
-  (let ((precision (b:get-option 'precision)))
-    (+ (if (b:get-option 'bars) +static-length/percentage+ 1)
-       (if (plusp precision) (1+ precision) 0))))
+  (let* ((precision (b:get-option 'precision))
+         (padding (+ (if (b:get-option 'bars) +static-length/percentage+ 1)
+                     (if (plusp precision) (1+ precision) 0))))
+    (values padding
+            (b:get-option 'suffix))))
 
 ;; Calculate the length in characters of a progress bar.
 (defun calculate-progress-bar-length ()
@@ -41,24 +45,6 @@
   (+ (calculate-progress-bar-length)
      (calculate-percentage-length)))
 
-(defun print-progress-bar/head (percent)
-  (if (b:get-option 'color)
-      (format t "[~{~a~^;~}m[ [0m[~{~a~^;~}m"
-              (b:get-option 'bar-color-base)
-              (cond
-                ((>= percent 200/3)
-                 (b:get-option 'bar-color-high))
-                ((>= percent 100/3)
-                 (b:get-option 'bar-color-medium))
-                (t
-                 (b:get-option 'bar-color-low))))
-      (write-string "[ ")))
-
-(defun print-progress-bar/tail ()
-  (if (b:get-option 'color)
-      (format t "[0m[~{~a~^;~}m][0m " (b:get-option 'bar-color-base))
-      (write-string "] ")))
-
 ;; This prints a progress bar using varying widths of unicode vertical bars, to give a smoother
 ;; animating appearance, instead of the choppy look you get with full-width character 'frames'.
 ;; This tends to look better when the '--delay/-d' argument is low, as there could be a lot of
@@ -66,35 +52,40 @@
 ;; samples used to calculate the percentage, which means more noisy/less accurate percentage
 ;; results. As such, the delay option needs to be manually balanced for the best user experience.
 (defun print-progress-bar (percent)
-  (u:mvlet* ((width (b:get-option 'bar-width))
-             (covered (* (/ percent 100d0) width))
-             (full partial (floor covered))
-             (remaining (- width full))
+  (u:mvlet* ((color (b:get-option 'color-enabled))
+             (base-color (b:get-option 'bar-color-base))
+             (width (b:get-option 'bar-width))
+             (full partial (floor (* (/ percent 100d0) width)))
              (char (aref "▏▎▍▌▋▊▉█" (floor partial 1/8))))
-    (print-progress-bar/head percent)
-    (format t "~v,,,'█<~>~c~v,,,' <~>" full char remaining)
-    (print-progress-bar/tail)))
-
-(defun format-percentage (usage)
-  (let* ((precision (b:get-option 'precision))
-         ;; If progress bars are enabled, add some leading padding to account for the variable width
-         ;; of a percentage (up to 3 digits to the left of the decimal point). This ensures that the
-         ;; percentage is a fixed width, which is important if displaying multiple reports per line.
-         ;; If progress bars are not enabled, this padding ensures that any numbers before the
-         ;; decimal point are not left-truncated.
-         (padding (calculate-percentage-length))
-         ;; Continue processing the percentage string by integrating the above leading padding along
-         ;; with the user-specified precision for the digits to the right of the decimal point.
-         (percent (format nil "~v,vf" padding precision usage)))
-    ;; When precision is 0, this removes the trailing decimal point.
-    (string-right-trim '(#\.) percent)))
+    (flet ((print-progress-bar/head ()
+             (if color
+                 (format t "[~{~a~^;~}m[ [0m[~{~a~^;~}m"
+                         base-color
+                         (cond
+                           ((<= 0 percent 100/3)
+                            (b:get-option 'bar-color-low))
+                           ((<= 100/3 percent 200/3)
+                            (b:get-option 'bar-color-medium))
+                           ((<= 200/3 percent)
+                            (b:get-option 'bar-color-high))))
+                 (write-string "[ ")))
+           (print-progress-bar/tail ()
+             (if color
+                 (format t "[0m[~{~a~^;~}m][0m " base-color)
+                 (write-string "] "))))
+      (print-progress-bar/head)
+      (format t "~v,,,'█<~>~c~v,,,' <~>" full char (- width full))
+      (print-progress-bar/tail))))
 
 (defun print-percentage (usage)
-  ;; Format the percentage number and write it to the stream.
-  (write-string (format-percentage usage))
-  ;; Emite the '%' suffix character if it should be shown.
-  (when (b:get-option 'suffix)
-    (write-char #\%)))
+  (u:mvlet* ((padding suffix? (calculate-percentage-length))
+             (precision (b:get-option 'precision))
+             (percentage (string-right-trim '(#\.) (format nil "~v,vf" padding precision usage))))
+    ;; Write the formatted percentage value to the stream.
+    (write-string percentage)
+    ;; Emite the '%' suffix character if it should be shown.
+    (when suffix?
+      (write-char #\%))))
 
 (defun print-report (usage)
   ;; If progress bars are to be shown, do so first.

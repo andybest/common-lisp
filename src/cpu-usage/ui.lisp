@@ -16,7 +16,7 @@
   :help "Repeat printing a report 'count' times.~%~
          'count' can be either a positive integer, or 0 to repeat infinitely. (default: 1)")
 
-(b:define-boolean-options color
+(b:define-boolean-options color-enabled
   :long "enable-color"
   :long-no "disable-color"
   :help "Enable colored progress bars. This option is disabled by default."
@@ -135,7 +135,7 @@
                    *option-bar-color-low*
                    *option-bar-color-medium*
                    *option-bar-color-high*
-                   *option-color*
+                   *option-color-enabled*
                    *option-count*
                    *option-delay*
                    *option-precision*
