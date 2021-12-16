@@ -1,4 +1,4 @@
-files := include/*.asd include/*.lisp src/%/*.asd src/%/*.lisp Makefile
+files := lib/*.asd lib/src/*.lisp src/%/*.asd src/%/src/*.lisp Makefile
 names := $(notdir $(wildcard src/*))
 
 .PHONY: all clean $(names)
@@ -8,29 +8,29 @@ all: $(names)
 $(names): %: bin/% man/man1/%.1
 
 bin/%: $(files)
-	$(eval project := mfiano.scripts.$(@F))
+	$(eval project := freebsd-tools.$(@F))
 	@mkdir -p bin
-	@echo "Compiling script: $@"
+	@echo "Compiling binary: $@"
 	@sbcl --noinform \
-		--disable-debugger \
-		--eval "(handler-bind ((asdf:bad-system-name #'muffle-warning)) \
-		          (ql:quickload :$(project)))" \
-		--eval "(sb-ext:save-lisp-and-die \"bin/$(@F)\" \
-		  :executable t \
-		  :save-runtime-options t \
-		  :toplevel '$(project):toplevel)" > /dev/null
+	  --disable-debugger \
+	  --eval "(handler-bind ((asdf:bad-system-name #'muffle-warning)) \
+                (ql:quickload :$(project)))" \
+	  --eval "(sb-ext:save-lisp-and-die \"bin/$(@F)\" \
+                :executable t \
+                :save-runtime-options t \
+                :toplevel '$(project):toplevel)" > /dev/null
 
 man/man1/%.1: $(files)
-	$(eval project := mfiano.scripts.$(basename $(@F)))
+	$(eval project := freebsd-tools.$(basename $(@F)))
 	@mkdir -p man/man1
-	@echo "Generating manpage: $@"
+	@echo "Generating manual: $@"
 	@sbcl --noinform \
-		--disable-debugger \
-		--eval "(handler-bind ((asdf:bad-system-name #'muffle-warning)) \
-		          (ql:quickload :$(project)))" \
-		--eval "(with-open-file (out \"man/man1/$(@F)\" :direction :output :if-exists :supersede) \
-		          (adopt:print-manual $(project):*ui* :stream out))" \
-		--quit > /dev/null
+	  --disable-debugger \
+	  --eval "(handler-bind ((asdf:bad-system-name #'muffle-warning)) \
+                (ql:quickload :$(project)))" \
+	  --eval "(with-open-file (out \"man/man1/$(@F)\" :direction :output :if-exists :supersede) \
+                (adopt:print-manual $(project):*ui* :stream out))" \
+	  --quit > /dev/null
 
 clean:
 	rm -rf bin man

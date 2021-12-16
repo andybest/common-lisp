@@ -1,4 +1,4 @@
-(in-package #:mfiano.scripts.cpu-usage)
+(in-package #:freebsd-tools.cpu)
 
 (defun fg-color->ansi (color)
   (cond

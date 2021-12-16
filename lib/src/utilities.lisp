@@ -1,4 +1,4 @@
-(in-package #:mfiano.scripts.base)
+(in-package #:freebsd-tools-base)
 
 (defgeneric validate-option (key value)
   (:method (key value)))

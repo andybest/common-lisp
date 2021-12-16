@@ -1,6 +1,6 @@
-(in-package #:mfiano.scripts.cpu-usage)
+(in-package #:freebsd-tools.cpu)
 
-(setf b:*program-name* "cpu-usage")
+(setf b:*program-name* "cpu")
 (setf b:*version* "0.1.0")
 (setf b:*authors* '("Michael Fiano"))
 (setf b:*initial-year* 2021)

@@ -1,4 +1,4 @@
-(in-package #:mfiano.scripts.cpu-usage)
+(in-package #:freebsd-tools.cpu)
 
 ;; The number of static characters a progress bar is composed of.
 ;;
@@ -77,22 +77,22 @@
       (format t "~v,,,'█<~>~c~v,,,' <~>" full char (- width full))
       (print-progress-bar/tail))))
 
-(defun print-percentage (usage)
+(defun print-percentage (percentage)
   (u:mvlet* ((padding suffix? (calculate-percentage-length))
              (precision (b:get-option 'precision))
-             (percentage (string-right-trim '(#\.) (format nil "~v,vf" padding precision usage))))
+             (string (string-right-trim '(#\.) (format nil "~v,vf" padding precision percentage))))
     ;; Write the formatted percentage value to the stream.
-    (write-string percentage)
+    (write-string string)
     ;; Emite the '%' suffix character if it should be shown.
     (when suffix?
       (write-char #\%))))
 
-(defun print-report (usage)
+(defun print-report (percentage)
   ;; If progress bars are to be shown, do so first.
   (when (b:get-option 'bars)
-    (print-progress-bar usage))
+    (print-progress-bar percentage))
   ;; Print the percentage after the progress bar, if any.
-  (print-percentage usage)
+  (print-percentage percentage)
   ;; Force displaying the stream.
   ;; TODO: We might want to use #'finish-output which waits for a sync first.
   (force-output)

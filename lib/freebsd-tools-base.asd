@@ -1,8 +1,8 @@
-(asdf:defsystem #:mfiano.scripts.base
-  :description "Helper library housing commonalities amoung all scripts."
+(asdf:defsystem #:freebsd-tools-base
+  :description "Helper library housing commonalities among all freebsd-tools applications."
   :author ("Michael Fiano <mail@mfiano.net>")
   :license "BSD2"
-  :homepage "https://github.com/mfiano/lisp-scripts"
+  :homepage "https://github.com/mfiano/freebsd-tools"
   :version "0.1.0"
   :encoding :utf-8
   :depends-on (#:adopt
@@ -10,6 +10,7 @@
                #:mfiano-utils
                #:parse-float
                #:with-user-abort)
+  :pathname "src"
   :serial t
   :components
   ((:file "package")

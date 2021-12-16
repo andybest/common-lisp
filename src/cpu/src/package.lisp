@@ -1,8 +1,8 @@
 (in-package #:cl-user)
 
-(defpackage #:mfiano.scripts.cpu-usage
+(defpackage #:freebsd-tools.cpu
   (:local-nicknames
-   (#:b #:mfiano.scripts.base)
+   (#:b #:freebsd-tools-base)
    (#:bsd #:cl-freebsd)
    (#:c #:cffi)
    (#:u #:mfiano-utils)
