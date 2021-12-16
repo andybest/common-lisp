@@ -13,4 +13,4 @@
     (bsd:with-open (file-descriptor tty-name :flags '(:read-only))
       (c:with-foreign-object (ptr '(:struct bsd:window-size))
         (bsd:ioctl file-descriptor :tiocgwinsz :pointer ptr)
-        (cffi:foreign-slot-value ptr '(:struct bsd:window-size) :columns)))))
+        (c:foreign-slot-value ptr '(:struct bsd:window-size) :columns)))))
