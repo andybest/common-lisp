@@ -23,16 +23,23 @@
 ;; displayed.
 (u:define-constant +static-length/percentage+ 3)
 
+;; Calculate the length in characters of a percentage.
+(defun calculate-percentage-length ()
+  (let ((precision (b:get-option 'precision)))
+    (+ (if (b:get-option 'bars) +static-length/percentage+ 1)
+       (if (plusp precision) (1+ precision) 0))))
+
+;; Calculate the length in characters of a progress bar.
+(defun calculate-progress-bar-length ()
+  (if (b:get-option 'bars)
+      (+ +static-length/bar+ (b:get-option 'bar-width))
+      0))
+
 ;; Calculate the total length of a report by summing all static and dynamic character counts.
 ;; NOTE: This function is currently un-used, but seems like it'd be useful to have at some point.
 (defun calculate-report-length ()
-  (let ((precision (b:get-option 'precision)))
-    (+ (if (b:get-option 'bars)
-           (+ +static-length/bar+ (b:get-option 'bar-width))
-           0)
-       +static-length/percentage+
-       (if (b:get-option 'suffix) 1 0)
-       (if (plusp precision) (1+ precision) 0))))
+  (+ (calculate-progress-bar-length)
+     (calculate-percentage-length)))
 
 (defun print-progress-bar/head (percent)
   (if (b:get-option 'color)
@@ -75,7 +82,7 @@
          ;; percentage is a fixed width, which is important if displaying multiple reports per line.
          ;; If progress bars are not enabled, this padding ensures that any numbers before the
          ;; decimal point are not left-truncated.
-         (padding (+ (if (b:get-option 'bars) precision 0) precision 2))
+         (padding (calculate-percentage-length))
          ;; Continue processing the percentage string by integrating the above leading padding along
          ;; with the user-specified precision for the digits to the right of the decimal point.
          (percent (format nil "~v,vf" padding precision usage)))
