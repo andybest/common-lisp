@@ -12,7 +12,7 @@
 
 (defun print-all-reports ()
   (loop :for sample1 = nil :then sample2
-        :for sample2 = (get-cpu-times)
+        :for sample2 = (get-total-cpu-times)
         :for report-count :from 0
         :when (plusp report-count)
           :do (print-report (get-cpu-usage sample1 sample2))

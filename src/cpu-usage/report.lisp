@@ -101,6 +101,6 @@
       ;; If replace mode is enabled, return the cursor to BOL, emit a number of spaces equal to the
       ;; terminal width in characters, and then return the cursor back to BOL. This effectively
       ;; clears the entire line so we don't end up with any artifacts on the next frame.
-      (format t "~c~v,,,' <~>~c" #\return (get-column-count) #\return)
+      (format t "~c~v,,,' <~>~c" #\return (get-terminal-column-count) #\return)
       ;; If replace mode is not enabled, emit a newline character if needed.
       (fresh-line)))
