@@ -8,4 +8,4 @@
    (#:u #:mfiano-utils)
    (#:ui #:adopt))
   (:use #:cl)
-  (:export #:toplevel #:*ui*))
+  (:export #:app #:*ui*))

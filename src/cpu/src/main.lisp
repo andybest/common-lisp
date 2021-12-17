@@ -25,5 +25,5 @@
   (lib:with-options (*ui* options)
     (print-all-reports)))
 
-(defun toplevel ()
+(defun app ()
   (lib:run-non-interactively #'run))

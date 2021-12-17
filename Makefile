@@ -18,7 +18,7 @@ bin/%: $(files)
 	  --eval "(sb-ext:save-lisp-and-die \"bin/$(@F)\" \
                 :executable t \
                 :save-runtime-options t \
-                :toplevel '$(project):toplevel)" > /dev/null
+                :toplevel '$(project):app)" > /dev/null
 
 man/man1/%.1: $(files)
 	$(eval project := freebsd-tools.$(basename $(@F)))
