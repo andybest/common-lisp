@@ -42,8 +42,9 @@
 ;; Calculate the maximum allowed progress bar length that will fit on a terminal line.
 (defun calculate-progress-bar-length/maximum ()
   (u:mvlet ((percentage-length suffix? (calculate-percentage-length)))
-    (- (calculate-progress-bar-length)
-       percentage-length
+    (- (get-terminal-column-count)
+       +static-length/bar+
+       (calculate-percentage-length)
        (if suffix? 1 0))))
 
 ;; Calculate the total length of a report by summing all static and dynamic character counts.
