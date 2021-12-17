@@ -1,4 +1,4 @@
-(in-package #:freebsd-tools-base)
+(in-package #:freebsd-tools.lib)
 
 (defgeneric validate-option (key value)
   (:method (key value)))

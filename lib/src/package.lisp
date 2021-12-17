@@ -1,6 +1,6 @@
 (in-package #:cl-user)
 
-(defpackage #:freebsd-tools-base
+(defpackage #:freebsd-tools.lib
   (:local-nicknames
    (#:lt #:local-time)
    (#:pf #:parse-float)

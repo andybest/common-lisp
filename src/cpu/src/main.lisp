@@ -17,13 +17,13 @@
         :when (plusp report-count)
           :do (let ((percentage (calculate-cpu-percentage sample1 sample2)))
                 (print-report percentage)
-                (when (eql report-count (b:get-option 'count))
+                (when (eql report-count (lib:get-option 'count))
                   (loop-finish)))
-        :do (sleep (b:get-option 'delay))))
+        :do (sleep (lib:get-option 'delay))))
 
 (defun run (&rest options)
-  (b::with-options (*ui* options)
+  (lib:with-options (*ui* options)
     (print-all-reports)))
 
 (defun toplevel ()
-  (b:run-non-interactively #'run))
+  (lib:run-non-interactively #'run))

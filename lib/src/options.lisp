@@ -1,4 +1,4 @@
-(in-package #:freebsd-tools-base)
+(in-package #:freebsd-tools.lib)
 
 (defvar *options*)
 

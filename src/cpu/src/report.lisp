@@ -27,16 +27,16 @@
 ;; The length returned only includes the numeric portion (everything except for the '%' suffix).
 ;; A second return value indicating whether the additional '%' suffix character is enabled.
 (defun calculate-percentage-length ()
-  (let* ((precision (b:get-option 'precision))
-         (padding (+ (if (b:get-option 'bars) +static-length/percentage+ 1)
+  (let* ((precision (lib:get-option 'precision))
+         (padding (+ (if (lib:get-option 'bars) +static-length/percentage+ 1)
                      (if (plusp precision) (1+ precision) 0))))
     (values padding
-            (b:get-option 'suffix))))
+            (lib:get-option 'suffix))))
 
 ;; Calculate the length in characters of a progress bar.
 (defun calculate-progress-bar-length ()
-  (if (b:get-option 'bars)
-      (+ +static-length/bar+ (b:get-option 'bar-width))
+  (if (lib:get-option 'bars)
+      (+ +static-length/bar+ (lib:get-option 'bar-width))
       0))
 
 ;; Calculate the total length of a report by summing all static and dynamic character counts.
@@ -52,9 +52,9 @@
 ;; samples used to calculate the percentage, which means more noisy/less accurate percentage
 ;; results. As such, the delay option needs to be manually balanced for the best user experience.
 (defun print-progress-bar (percent)
-  (u:mvlet* ((color (b:get-option 'color-enabled))
-             (base-color (b:get-option 'bar-color-base))
-             (width (b:get-option 'bar-width))
+  (u:mvlet* ((color (lib:get-option 'color-enabled))
+             (base-color (lib:get-option 'bar-color-base))
+             (width (lib:get-option 'bar-width))
              (full partial (floor (* (/ percent 100d0) width)))
              (char (aref "▏▎▍▌▋▊▉█" (floor partial 1/8))))
     (flet ((print-progress-bar/head ()
@@ -63,11 +63,11 @@
                          base-color
                          (cond
                            ((<= 0 percent 100/3)
-                            (b:get-option 'bar-color-low))
+                            (lib:get-option 'bar-color-low))
                            ((<= 100/3 percent 200/3)
-                            (b:get-option 'bar-color-medium))
+                            (lib:get-option 'bar-color-medium))
                            ((<= 200/3 percent)
-                            (b:get-option 'bar-color-high))))
+                            (lib:get-option 'bar-color-high))))
                  (write-string "[ ")))
            (print-progress-bar/tail ()
              (if color
@@ -79,7 +79,7 @@
 
 (defun print-percentage (percentage)
   (u:mvlet* ((padding suffix? (calculate-percentage-length))
-             (precision (b:get-option 'precision))
+             (precision (lib:get-option 'precision))
              (string (string-right-trim '(#\.) (format nil "~v,vf" padding precision percentage))))
     ;; Write the formatted percentage value to the stream.
     (write-string string)
@@ -89,7 +89,7 @@
 
 (defun print-report (percentage)
   ;; If progress bars are to be shown, do so first.
-  (when (b:get-option 'bars)
+  (when (lib:get-option 'bars)
     (print-progress-bar percentage))
   ;; Print the percentage after the progress bar, if any.
   (print-percentage percentage)
@@ -97,10 +97,10 @@
   ;; TODO: We might want to use #'finish-output which waits for a sync first.
   (force-output)
   ;; Prepare the next line of output, depending on if replace mode is enabled or not.
-  (if (b:get-option 'replace)
       ;; If replace mode is enabled, return the cursor to BOL, emit a number of spaces equal to the
       ;; terminal width in characters, and then return the cursor back to BOL. This effectively
       ;; clears the entire line so we don't end up with any artifacts on the next frame.
       (format t "~c~v,,,' <~>~c" #\return (get-terminal-column-count) #\return)
+  (if (lib:get-option 'replace)
       ;; If replace mode is not enabled, emit a newline character if needed.
       (fresh-line)))

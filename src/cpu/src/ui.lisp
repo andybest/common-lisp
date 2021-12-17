@@ -1,69 +1,69 @@
 (in-package #:freebsd-tools.cpu)
 
-(setf b:*program-name* "cpu")
-(setf b:*version* "0.1.0")
-(setf b:*authors* '("Michael Fiano"))
-(setf b:*initial-year* 2021)
+(setf lib:*program-name* "cpu")
+(setf lib:*version* "0.1.0")
+(setf lib:*authors* '("Michael Fiano"))
+(setf lib:*initial-year* 2021)
 
-(b:define-option count
+(lib:define-option count
   :parameter "count"
   :short #\c
   :initial-value 1
-  :key #'b:parse-integer
+  :key #'lib:parse-integer
   :reduce #'ui:last
   :validity-check (u:disjoin #'u:non-negative-integer-p)
   :validity-error "must be a non-negative integer."
   :help "Repeat printing a report 'count' times.~%~
          'count' can be either a positive integer, or 0 to repeat infinitely. (default: 1)")
 
-(b:define-boolean-options color-enabled
+(lib:define-boolean-options color-enabled
   :long "enable-color"
   :long-no "disable-color"
   :help "Enable colored progress bars. This option is disabled by default."
   :help-no "Disable colored progress bars. This is the default.")
 
-(b:define-option delay
+(lib:define-option delay
   :parameter "delay"
   :short #\d
   :initial-value 0.25
-  :key #'b:parse-float
+  :key #'lib:parse-float
   :reduce #'ui:last
   :validity-check (u:disjoin #'null #'u:positive-real-p)
   :validity-error "must be a positive floating-point number."
   :help "Wait 'delay' seconds between each pair of samples taken to produce a report.~%~
          (default: 0.25)")
 
-(b:define-option precision
+(lib:define-option precision
   :parameter "digits"
   :short #\p
   :initial-value 1
-  :key #'b:parse-integer
+  :key #'lib:parse-integer
   :reduce #'ui:last
-  :validity-check (b:in-range 0 8)
+  :validity-check (lib:in-range 0 8)
   :validity-error "must be an integer between 0 and 8, inclusive."
   :help "Display 'digits' number of digits for the fractional component of a percentage. ~
         (default: 1)")
 
-(b:define-boolean-options bars
+(lib:define-boolean-options bars
   :long "show-bars"
   :long-no "hide-bars"
   :short #\b
   :help "Display progress bars in reports. This option is disabled by default."
   :help-no "Do not display progress bars in reports. This is the default.")
 
-(b:define-option bar-width
+(lib:define-option bar-width
   :parameter "width"
   :long "bar-width"
   :short #\w
   :initial-value 20
-  :key #'b:parse-integer
+  :key #'lib:parse-integer
   :reduce #'ui:last
-  :validity-check (b:in-range 1 255)
+  :validity-check (lib:in-range 1 255)
   :validity-error "must be an integer between 1 and 255, inclusive."
   :help "The width of progress bars to render when the '-b/--show-bars' option is specified. ~
          (default: 20)")
 
-(b:define-option bar-color-base
+(lib:define-option bar-color-base
   :parameter "fg[,bg]"
   :initial-value '(90 49)
   :key #'parse-color-pair
@@ -73,7 +73,7 @@
          are integers between 0 and 15, which map to the ANSI 16-color pallete (8-15 are bright ~
          variants of 0-7). (default: 8)")
 
-(b:define-option bar-color-low
+(lib:define-option bar-color-low
   :parameter "fg[,bg]"
   :initial-value '(32 49)
   :key #'parse-color-pair
@@ -83,7 +83,7 @@
          effect. Valid colors are integers between 0 and 15, which map to the ANSI 16-color ~
          pallete (8-15 are bright variants of 0-7). (default: 2)")
 
-(b:define-option bar-color-medium
+(lib:define-option bar-color-medium
   :parameter "fg[,bg]"
   :initial-value '(33 49)
   :key #'parse-color-pair
@@ -93,7 +93,7 @@
          any effect. Valid colors are integers between 0 and 15, which map to the ANSI 16-color ~
          pallete (8-15 are bright variants of 0-7). (default: 3)")
 
-(b:define-option bar-color-high
+(lib:define-option bar-color-high
   :parameter "fg[,bg]"
   :initial-value '(31 49)
   :key #'parse-color-pair
@@ -103,14 +103,14 @@
          effect. Valid colors are integers between 0 and 15, which map to the ANSI 16-color ~
          pallete (8-15 are bright variants of 0-7). (default: 1)")
 
-(b:define-boolean-options replace
+(lib:define-boolean-options replace
   :long "replace"
   :short #\r
   :help "Enable replacing the old report with each subsequent report, instead of appending new ~
          output lines. The default is to append as if by '--no-replace'."
   :help-no "Disable replacing the old report with each subsequent report. This is the default.")
 
-(b:define-boolean-options suffix
+(lib:define-boolean-options suffix
   :long "show-suffix"
   :long-no "hide-suffix"
   :short #\s
@@ -124,7 +124,7 @@
 
 (defparameter *ui*
   (ui:make-interface
-   :name b:*program-name*
+   :name lib:*program-name*
    :summary "Display the current CPU usage."
    :usage "[options]"
    :help *help-text*
@@ -143,5 +143,5 @@
                    *option-no-replace*
                    *option-suffix*
                    *option-no-suffix*
-                   b:*option-help*
-                   b:*option-version*)))
+                   lib:*option-help*
+                   lib:*option-version*)))

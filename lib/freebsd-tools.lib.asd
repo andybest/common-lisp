@@ -1,4 +1,4 @@
-(asdf:defsystem #:freebsd-tools-base
+(asdf:defsystem #:freebsd-tools.lib
   :description "Helper library housing commonalities among all freebsd-tools applications."
   :author ("Michael Fiano <mail@mfiano.net>")
   :license "BSD2"

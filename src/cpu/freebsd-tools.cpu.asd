@@ -7,7 +7,7 @@
   :encoding :utf-8
   :depends-on (#:cffi
                #:cl-freebsd
-               #:freebsd-tools-base
+               #:freebsd-tools.lib
                #:mfiano-utils)
   :pathname "src"
   :serial t

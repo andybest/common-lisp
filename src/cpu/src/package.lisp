@@ -2,7 +2,7 @@
 
 (defpackage #:freebsd-tools.cpu
   (:local-nicknames
-   (#:b #:freebsd-tools-base)
+   (#:lib #:freebsd-tools.lib)
    (#:bsd #:cl-freebsd)
    (#:c #:cffi)
    (#:u #:mfiano-utils)
