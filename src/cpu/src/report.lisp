@@ -107,10 +107,9 @@
   ;; TODO: We might want to use #'finish-output which waits for a sync first.
   (force-output)
   ;; Prepare the next line of output, depending on if replace mode is enabled or not.
-      ;; If replace mode is enabled, return the cursor to BOL, emit a number of spaces equal to the
-      ;; terminal width in characters, and then return the cursor back to BOL. This effectively
-      ;; clears the entire line so we don't end up with any artifacts on the next frame.
-      (format t "~c~v,,,' <~>~c" #\return (get-terminal-column-count) #\return)
   (if (lib:get-option 'replace)
+      ;; If replace mode is enabled, clear the entire line so we don't end up with any artifacts on
+      ;; the next frame.
+      (format t "8[J")
       ;; If replace mode is not enabled, emit a newline character if needed.
       (fresh-line)))

@@ -21,8 +21,32 @@
                   (loop-finish)))
         :do (sleep (lib:get-option 'delay))))
 
+(defun check-progress-bar-length ()
+  (when (lib:get-option 'bars)
+    (if lib:*interactive*
+        (warn "Not checking progress bar length in interactive development environment.")
+        (let ((column-count (get-terminal-column-count))
+              (report-length (calculate-report-length))
+              (max-bar-length (calculate-progress-bar-length/maximum)))
+          (when (> report-length column-count)
+            (lib:user-error "The value of '--bar-width/-w' (~d) is too wide to fit on the terminal ~
+                             (maximum allowed: ~d)"
+                            (lib:get-option 'bar-width)
+                            max-bar-length))))))
+
+(defun prepare-terminal-output ()
+  (let ((line-count 0))
+    (format t "~v@{~c~:*~}[~dA7" line-count #\newline line-count)))
+
+(defun initialize-terminal ()
+  (when (lib:get-option 'bars)
+    (check-progress-bar-length))
+  (unless lib:*interactive*
+    (prepare-terminal-output)))
+
 (defun run (&rest options)
   (lib:with-options (*ui* options)
+    (initialize-terminal)
     (print-all-reports)))
 
 (defun app ()
