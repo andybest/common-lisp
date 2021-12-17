@@ -16,5 +16,6 @@
    (:file "ffi")
    (:file "util")
    (:file "ui")
+   (:file "terminal")
    (:file "report")
    (:file "main")))

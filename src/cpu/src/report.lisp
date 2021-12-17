@@ -62,30 +62,33 @@
 ;; samples used to calculate the percentage, which means more noisy/less accurate percentage
 ;; results. As such, the delay option needs to be manually balanced for the best user experience.
 (defun print-progress-bar (percent)
-  (u:mvlet* ((color (lib:get-option 'color-enabled))
-             (base-color (lib:get-option 'bar-color-base))
-             (width (lib:get-option 'bar-width))
+  (u:mvlet* ((width (lib:get-option 'bar-width))
              (full partial (floor (* (/ percent 100d0) width)))
-             (char (aref "▏▎▍▌▋▊▉█" (floor partial 1/8))))
-    (flet ((print-progress-bar/head ()
-             (if color
-                 (format t "[~{~a~^;~}m[ [0m[~{~a~^;~}m"
-                         base-color
-                         (cond
-                           ((<= 0 percent 100/3)
+             (char (aref "▏▎▍▌▋▊▉█" (floor partial 1/8)))
+             (color-enabled (lib:get-option 'color-enabled))
+             (base-color (lib:get-option 'bar-color-base))
+             (fill-color (cond
+                           ((< 0 percent 100/3)
                             (lib:get-option 'bar-color-low))
-                           ((<= 100/3 percent 200/3)
+                           ((< 100/3 percent 200/3)
                             (lib:get-option 'bar-color-medium))
-                           ((<= 200/3 percent)
-                            (lib:get-option 'bar-color-high))))
-                 (write-string "[ ")))
-           (print-progress-bar/tail ()
-             (if color
-                 (format t "[0m[~{~a~^;~}m][0m " base-color)
-                 (write-string "] "))))
-      (print-progress-bar/head)
-      (format t "~v,,,'█<~>~c~v,,,' <~>" full char (- width full))
-      (print-progress-bar/tail))))
+                           ((< 200/3 percent)
+                            (lib:get-option 'bar-color-high)))))
+    (when color-enabled
+      (print-color-code base-color))
+    (write-string "[ ")
+    (when color-enabled
+      (reset-display-attributes)
+      (print-color-code fill-color))
+    (repeat-character #\full_block full)
+    (write-char char)
+    (repeat-character #\space (- width full))
+    (when color-enabled
+      (reset-display-attributes)
+      (print-color-code base-color))
+    (write-string "] ")
+    (when color-enabled
+      (reset-display-attributes))))
 
 (defun print-percentage (percentage)
   (u:mvlet* ((padding suffix? (calculate-percentage-length))
@@ -103,12 +106,5 @@
     (print-progress-bar percentage))
   ;; Print the percentage after the progress bar, if any.
   (print-percentage percentage)
-  ;; Force displaying the stream.
-  (finish-output)
-  ;; Prepare the next line of output, depending on if replace mode is enabled or not.
-  (if (lib:get-option 'replace)
-      ;; If replace mode is enabled, clear the entire line so we don't end up with any artifacts on
-      ;; the next frame.
-      (format t "8[J")
-      ;; If replace mode is not enabled, emit a newline character if needed.
-      (fresh-line)))
+  ;; Finish the output for this frame.
+  (finish-terminal-output))

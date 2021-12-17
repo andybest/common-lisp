@@ -14,10 +14,3 @@
            (foreign-type `(:array :long ,(* cpu-count 5)))
            (times (c:foreign-array-to-lisp ptr foreign-type :element-type 'u:b64)))
       (u:batches (map 'list #'identity times) 5))))
-
-(defun get-terminal-column-count ()
-  (let ((tty-name (bsd:tty-name (bsd:file-number bsd:+stdin+))))
-    (bsd:with-open (file-descriptor tty-name :flags '(:read-only))
-      (c:with-foreign-object (ptr '(:struct bsd:window-size))
-        (bsd:ioctl file-descriptor :tiocgwinsz :pointer ptr)
-        (c:foreign-slot-value ptr '(:struct bsd:window-size) :columns)))))
