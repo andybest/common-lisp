@@ -42,8 +42,10 @@
 ;; Calculate the total length of a report by summing all static and dynamic character counts.
 ;; NOTE: This function is currently un-used, but seems like it'd be useful to have at some point.
 (defun calculate-report-length ()
-  (+ (calculate-progress-bar-length)
-     (calculate-percentage-length)))
+  (u:mvlet ((percentage-length suffix? (calculate-percentage-length)))
+    (+ (calculate-progress-bar-length)
+       percentage-length
+       (if suffix? 1 0))))
 
 ;; This prints a progress bar using varying widths of unicode vertical bars, to give a smoother
 ;; animating appearance, instead of the choppy look you get with full-width character 'frames'.
