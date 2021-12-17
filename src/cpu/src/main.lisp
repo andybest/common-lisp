@@ -48,6 +48,7 @@
     (check-progress-bar-length))
   (when (and (lib:get-option 'replace)
              (null lib:*interactive*))
+    ;; TODO: line-count should not be hard-coded as 0 when we integrated multiple reports.
     (prepare-terminal-output 0)))
 
 (defun run (&rest options)
