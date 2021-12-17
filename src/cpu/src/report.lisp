@@ -104,8 +104,7 @@
   ;; Print the percentage after the progress bar, if any.
   (print-percentage percentage)
   ;; Force displaying the stream.
-  ;; TODO: We might want to use #'finish-output which waits for a sync first.
-  (force-output)
+  (finish-output)
   ;; Prepare the next line of output, depending on if replace mode is enabled or not.
   (if (lib:get-option 'replace)
       ;; If replace mode is enabled, clear the entire line so we don't end up with any artifacts on
