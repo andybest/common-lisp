@@ -11,6 +11,8 @@
             (* (/ (+ user sys) total) 100d0))))))
 
 (defun print-all-reports ()
+  (when (zerop (lib:get-option 'count))
+    (print-report 0))
   (loop :for sample1 = nil :then sample2
         :for sample2 = (get-cpu-ticks/total)
         :for report-count :from 0
@@ -34,15 +36,19 @@
                             (lib:get-option 'bar-width)
                             max-bar-length))))))
 
-(defun prepare-terminal-output ()
-  (let ((line-count 0))
-    (format t "~v@{~c~:*~}[~dA7" line-count #\newline line-count)))
+(defun prepare-terminal-output (line-count)
+  (when (plusp line-count)
+    (dotimes (i line-count)
+      (write-char #\newline))
+    (format t "[~dA" line-count))
+  (write-string "7"))
 
 (defun initialize-terminal ()
   (when (lib:get-option 'bars)
     (check-progress-bar-length))
-  (unless lib:*interactive*
-    (prepare-terminal-output)))
+  (when (and (lib:get-option 'replace)
+             (null lib:*interactive*))
+    (prepare-terminal-output 0)))
 
 (defun run (&rest options)
   (lib:with-options (*ui* options)
