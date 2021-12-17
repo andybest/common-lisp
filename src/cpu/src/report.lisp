@@ -7,7 +7,7 @@
 ;;
 ;; NOTE: The bar itself does not contribute, as it varies based on the '--bar-width/-w' argument.
 ;; displayed.
-(u:define-constant +static-length/bar+ 5)
+(u:define-constant +static-length/progress-bar+ 5)
 
 ;; The number of static characters a percentage is composed of, when rendered with '--show-bars/-b'
 ;; enabled.
@@ -36,14 +36,14 @@
 ;; Calculate the length in characters of a progress bar.
 (defun calculate-progress-bar-length ()
   (if (lib:get-option 'bars)
-      (+ +static-length/bar+ (lib:get-option 'bar-width))
+      (+ +static-length/progress-bar+ (lib:get-option 'bar-width))
       0))
 
 ;; Calculate the maximum allowed progress bar length that will fit on a terminal line.
 (defun calculate-progress-bar-length/maximum ()
   (u:mvlet ((percentage-length suffix? (calculate-percentage-length)))
     (- (get-terminal-column-count)
-       +static-length/bar+
+       +static-length/progress-bar+
        (calculate-percentage-length)
        (if suffix? 1 0))))
 
