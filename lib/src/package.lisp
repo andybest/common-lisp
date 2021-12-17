@@ -13,6 +13,7 @@
   (:export
    #:*authors*
    #:*initial-year*
+   #:*interactive*
    #:*option-help*
    #:*option-version*
    #:*program-name*
