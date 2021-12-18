@@ -16,6 +16,14 @@
   (with-error-check (= -1)
     (%open-at file-descriptor path flags :uint16 mode)))
 
+(defun write (file-descriptor buffer n-bytes)
+  (with-error-check (= -1)
+    (%write file-descriptor buffer n-bytes)))
+
+(defun read (file-descriptor buffer n-bytes)
+  (with-error-check (= -1)
+    (%read file-descriptor buffer n-bytes)))
+
 (defun sysctl (name name-length old-ptr old-length-ptr new-ptr new-length)
   (with-error-check (/= 0)
     (%sysctl name name-length old-ptr old-length-ptr new-ptr new-length)))

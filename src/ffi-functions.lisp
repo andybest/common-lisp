@@ -48,6 +48,16 @@
   (flags open-flags)
   &rest)
 
+(c:defcfun ("write" %write) :ssize
+  (file-descriptor :int)
+  (buffer (:pointer :void))
+  (n-bytes :size))
+
+(c:defcfun ("read" %read) :ssize
+  (file-descriptor :int)
+  (buffer (:pointer :void))
+  (n-bytes :size))
+
 (c:defcfun ("perror" print-error) :void
   (string :string))
 

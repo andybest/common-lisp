@@ -7,7 +7,9 @@
   (:use #:cl)
   (:shadow
    #:close
-   #:open)
+   #:open
+   #:write
+   #:read)
   ;; constants
   (:export
    #:+stderr+
