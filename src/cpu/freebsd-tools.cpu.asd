@@ -13,9 +13,10 @@
   :serial t
   :components
   ((:file "package")
-   (:file "ffi")
    (:file "util")
    (:file "ui")
    (:file "terminal")
+   (:file "progress-bar")
+   (:file "percentage")
    (:file "report")
    (:file "main")))

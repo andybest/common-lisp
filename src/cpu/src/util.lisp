@@ -1,5 +1,8 @@
 (in-package #:freebsd-tools.cpu)
 
+(deftype b60 () '(signed-byte 60))
+(deftype b60a () '(simple-array b60 (*)))
+
 (defun fg-color->ansi (color)
   (cond
     ((<= 0 color 7)
