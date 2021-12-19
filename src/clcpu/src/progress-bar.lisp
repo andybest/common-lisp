@@ -1,4 +1,4 @@
-(in-package #:freebsd-tools.cpu)
+(in-package #:freebsd-tools.clcpu)
 
 ;; The number of static characters a progress bar is composed of.
 ;;
@@ -10,17 +10,16 @@
 (u:define-constant +static-length/progress-bar+ 5)
 
 (defun check-progress-bar-length ()
-  (when (lib:get-option 'bars)
-    (if lib:*interactive*
-        (warn "Not checking progress bar length in interactive development environment.")
-        (let ((column-count (get-terminal-column-count))
-              (report-length (calculate-report-length))
-              (max-bar-length (calculate-progress-bar-length/maximum)))
-          (when (> report-length column-count)
-            (lib:user-error "The value of '--bar-width/-w' (~d) is too wide to fit on the terminal ~
+  (when (and (lib:get-option 'bars)
+             (null lib:*interactive*))
+    (let ((column-count (get-terminal-column-count))
+          (report-length (calculate-report-length))
+          (max-bar-length (calculate-progress-bar-length/maximum)))
+      (when (> report-length column-count)
+        (lib:user-error "The value of '--bar-width/-w' (~d) is too wide to fit on the terminal ~
                              (maximum allowed: ~d)"
-                            (lib:get-option 'bar-width)
-                            max-bar-length))))))
+                        (lib:get-option 'bar-width)
+                        max-bar-length)))))
 
 ;; Calculate the length in characters of a progress bar.
 (defun calculate-progress-bar-length ()

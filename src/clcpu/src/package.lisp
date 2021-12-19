@@ -1,6 +1,6 @@
 (in-package #:cl-user)
 
-(defpackage #:freebsd-tools.cpu
+(defpackage #:freebsd-tools.clcpu
   (:local-nicknames
    (#:lib #:freebsd-tools.lib)
    (#:bsd #:cl-freebsd)

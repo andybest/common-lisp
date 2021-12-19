@@ -1,4 +1,4 @@
-(in-package #:freebsd-tools.cpu)
+(in-package #:freebsd-tools.clcpu)
 
 ;; The number of static characters a percentage is composed of, when rendered with '--show-bars/-b'
 ;; enabled.
@@ -24,7 +24,6 @@
     (values padding
             (lib:get-option 'suffix))))
 
-(u:fn-> split-sample (b60a) (values b60 b60 b60 b60 b60))
 (declaim (inline split-sample))
 (defun split-sample (sample)
   (values (aref sample 0)
@@ -33,9 +32,7 @@
           (aref sample 3)
           (aref sample 4)))
 
-(u:fn-> calculate-cpu-percentage (b60a b60a) u:f32)
 (defun calculate-cpu-percentage (sample1 sample2)
-  (declare (optimize speed))
   (u:mvlet* ((user1 nice1 sys1 intr1 idle1 (split-sample sample1))
              (user2 nice2 sys2 intr2 idle2 (split-sample sample2))
              (user+sys (+ (- user2 user1) (- nice2 nice1) (- sys2 sys1) (- intr2 intr1)))

@@ -1,4 +1,4 @@
-(in-package #:freebsd-tools.cpu)
+(in-package #:freebsd-tools.clcpu)
 
 (declaim (inline save-cursor))
 (defun save-cursor ()

@@ -1,4 +1,4 @@
-(asdf:defsystem #:freebsd-tools.cpu
+(asdf:defsystem #:freebsd-tools.clcpu
   :description "A CPU usage monitor for FreeBSD."
   :author ("Michael Fiano <mail@mfiano.net>")
   :license "BSD2"

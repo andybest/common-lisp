@@ -1,4 +1,4 @@
-(in-package #:freebsd-tools.cpu)
+(in-package #:freebsd-tools.clcpu)
 
 (defun run (&rest options)
   (lib:with-options (*ui* options)

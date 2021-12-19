@@ -1,6 +1,6 @@
-(in-package #:freebsd-tools.cpu)
+(in-package #:freebsd-tools.clcpu)
 
-(setf lib:*program-name* "cpu")
+(setf lib:*program-name* "clcpu")
 (setf lib:*version* "0.1.0")
 (setf lib:*authors* '("Michael Fiano"))
 (setf lib:*initial-year* 2021)
@@ -65,43 +65,43 @@
 
 (lib:define-option bar-color-base
   :parameter "fg[,bg]"
-  :initial-value '(90 49)
+  :initial-value '(37 40)
   :key #'parse-color-pair
   :reduce #'ui:last
   :help "The foreground, and optionally background color to use for the trim of progress bars. ~
          Both '--enable-color' and '--show-bars' must be supplied to have any effect. Valid colors ~
          are integers between 0 and 15, which map to the ANSI 16-color pallete (8-15 are bright ~
-         variants of 0-7). (default: 8)")
+         variants of 0-7). (default: 8,0)")
 
 (lib:define-option bar-color-low
   :parameter "fg[,bg]"
-  :initial-value '(32 49)
+  :initial-value '(32 40)
   :key #'parse-color-pair
   :reduce #'ui:last
   :help "The foreground, and optionally background color to use for the trim of progress bars when ~
          their fill is low. Both '--enable-color' and '--show-bars' must be supplied to have any ~
          effect. Valid colors are integers between 0 and 15, which map to the ANSI 16-color ~
-         pallete (8-15 are bright variants of 0-7). (default: 2)")
+         pallete (8-15 are bright variants of 0-7). (default: 2,0)")
 
 (lib:define-option bar-color-medium
   :parameter "fg[,bg]"
-  :initial-value '(33 49)
+  :initial-value '(33 40)
   :key #'parse-color-pair
   :reduce #'ui:last
   :help "The foreground, and optionally background color to use for the trim of progress bars when ~
          their fill is medium. Both '--enable-color' and '--show-bars' must be supplied to have ~
          any effect. Valid colors are integers between 0 and 15, which map to the ANSI 16-color ~
-         pallete (8-15 are bright variants of 0-7). (default: 3)")
+         pallete (8-15 are bright variants of 0-7). (default: 3,0)")
 
 (lib:define-option bar-color-high
   :parameter "fg[,bg]"
-  :initial-value '(31 49)
+  :initial-value '(31 40)
   :key #'parse-color-pair
   :reduce #'ui:last
   :help "The foreground, and optionally background color to use for the trim of progress bars when ~
          their fill is high. Both '--enable-color' and '--show-bars' must be supplied to have any ~
          effect. Valid colors are integers between 0 and 15, which map to the ANSI 16-color ~
-         pallete (8-15 are bright variants of 0-7). (default: 1)")
+         pallete (8-15 are bright variants of 0-7). (default: 1,0)")
 
 (lib:define-boolean-options replace
   :long "replace"
@@ -120,7 +120,7 @@
             '--show-suffix'.")
 
 (ui:define-string *help-text*
-  "Help text")
+  "The clcpu utility retrieves the current total CPU usage of all cores as a percentage.")
 
 (defparameter *ui*
   (ui:make-interface

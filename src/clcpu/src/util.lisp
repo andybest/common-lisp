@@ -1,7 +1,4 @@
-(in-package #:freebsd-tools.cpu)
-
-(deftype b60 () '(signed-byte 60))
-(deftype b60a () '(simple-array b60 (*)))
+(in-package #:freebsd-tools.clcpu)
 
 (defun fg-color->ansi (color)
   (cond
@@ -24,8 +21,8 @@
 (defun parse-color-pair (color)
   (destructuring-bind (fg &optional bg) (u:split-sequence #\, color :count 2)
     (list (if (u:emptyp fg)
-              39
+              37
               (fg-color->ansi (lib:parse-integer fg)))
           (if (u:emptyp bg)
-              49
+              40
               (bg-color->ansi (lib:parse-integer bg))))))
