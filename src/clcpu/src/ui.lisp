@@ -65,7 +65,7 @@
 
 (lib:define-option bar-color-base
   :parameter "fg[,bg]"
-  :initial-value '(37 40)
+  :initial-value '(90 40)
   :key #'parse-color-pair
   :reduce #'ui:last
   :help "The foreground, and optionally background color to use for the trim of progress bars. ~

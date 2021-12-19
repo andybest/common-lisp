@@ -21,7 +21,7 @@
 (defun parse-color-pair (color)
   (destructuring-bind (fg &optional bg) (u:split-sequence #\, color :count 2)
     (list (if (u:emptyp fg)
-              37
+              90
               (fg-color->ansi (lib:parse-integer fg)))
           (if (u:emptyp bg)
               40
