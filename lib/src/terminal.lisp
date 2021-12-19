@@ -1,4 +1,4 @@
-(in-package #:freebsd-tools.clcpu)
+(in-package #:freebsd-tools.lib)
 
 (declaim (inline save-cursor))
 (defun save-cursor ()
@@ -30,17 +30,16 @@
 (defun print-color-code (color)
   (format t "[~{~a~^;~}m" color))
 
-(defun prepare-terminal-output (line-count)
-  (when (and (lib:get-option 'replace)
-             (null lib:*interactive*))
+(defun prepare-terminal-output (line-count &key replace)
+  (when (and replace (null *interactive*))
     (repeat-character #\newline line-count)
     (move-cursor-up line-count)
     (save-cursor)))
 
-(defun finish-terminal-output ()
+(defun finish-terminal-output (&key replace)
   (finish-output)
   (cond
-    ((lib:get-option 'replace)
+    (replace
      (restore-cursor)
      (erase-down))
     (t

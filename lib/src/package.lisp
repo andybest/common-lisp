@@ -2,6 +2,8 @@
 
 (defpackage #:freebsd-tools.lib
   (:local-nicknames
+   (#:bsd #:cl-freebsd)
+   (#:c #:cffi)
    (#:lt #:local-time)
    (#:pf #:parse-float)
    (#:u #:mfiano-utils)
@@ -10,6 +12,7 @@
   (:use #:cl)
   (:shadow
    #:parse-integer)
+  ;; program interface
   (:export
    #:*authors*
    #:*initial-year*
@@ -30,4 +33,16 @@
    #:user-error
    #:user-error-message
    #:validate-option
-   #:with-options))
+   #:with-options)
+  ;; terminal api
+  (:export
+   #:erase-down
+   #:finish-terminal-output
+   #:get-terminal-column-count
+   #:move-cursor-up
+   #:prepare-terminal-output
+   #:print-color-code
+   #:repeat-character
+   #:reset-display-attributes
+   #:restore-cursor
+   #:save-cursor))

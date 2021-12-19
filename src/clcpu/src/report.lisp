@@ -19,7 +19,7 @@
   ;; Print the percentage after the progress bar, if any.
   (print-percentage percentage)
   ;; Finish the output for this frame.
-  (finish-terminal-output))
+  (lib:finish-terminal-output :replace (lib:get-option 'replace)))
 
 (defun print-all-reports ()
   (when (zerop (lib:get-option 'count))

@@ -4,7 +4,7 @@
   (lib:with-options (*ui* options)
     (when (lib:get-option 'bars)
       (check-progress-bar-length))
-    (prepare-terminal-output 0)
+    (lib:prepare-terminal-output 0 :replace (lib:get-option 'replace))
     (print-all-reports)))
 
 (defun app ()

@@ -6,6 +6,8 @@
   :version "0.1.0"
   :encoding :utf-8
   :depends-on (#:adopt
+               #:cffi
+               #:cl-freebsd
                #:local-time
                #:mfiano-utils
                #:parse-float
@@ -17,4 +19,5 @@
    (:file "variables")
    (:file "utilities")
    (:file "options")
-   (:file "common")))
+   (:file "common")
+   (:file "terminal")))

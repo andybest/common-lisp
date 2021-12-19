@@ -12,7 +12,7 @@
 (defun check-progress-bar-length ()
   (when (and (lib:get-option 'bars)
              (null lib:*interactive*))
-    (let ((column-count (get-terminal-column-count))
+    (let ((column-count (lib:get-terminal-column-count))
           (report-length (calculate-report-length))
           (max-bar-length (calculate-progress-bar-length/maximum)))
       (when (> report-length column-count)
@@ -30,7 +30,7 @@
 ;; Calculate the maximum allowed progress bar length that will fit on a terminal line.
 (defun calculate-progress-bar-length/maximum ()
   (u:mvlet ((percentage-length suffix? (calculate-percentage-length)))
-    (- (get-terminal-column-count)
+    (- (lib:get-terminal-column-count)
        +static-length/progress-bar+
        (calculate-percentage-length)
        (if suffix? 1 0))))
@@ -55,17 +55,17 @@
                            ((< 200/3 percent)
                             (lib:get-option 'bar-color-high)))))
     (when color-enabled
-      (print-color-code base-color))
+      (lib:print-color-code base-color))
     (write-string "[ ")
     (when color-enabled
-      (reset-display-attributes)
-      (print-color-code fill-color))
-    (repeat-character #\full_block full)
+      (lib:reset-display-attributes)
+      (lib:print-color-code fill-color))
+    (lib:repeat-character #\full_block full)
     (write-char char)
-    (repeat-character #\space (- width full))
+    (lib:repeat-character #\space (- width full))
     (when color-enabled
-      (reset-display-attributes)
-      (print-color-code base-color))
+      (lib:reset-display-attributes)
+      (lib:print-color-code base-color))
     (write-string "] ")
     (when color-enabled
-      (reset-display-attributes))))
+      (lib:reset-display-attributes))))
