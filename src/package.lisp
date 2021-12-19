@@ -8,8 +8,8 @@
   (:shadow
    #:close
    #:open
-   #:write
-   #:read)
+   #:read
+   #:write)
   ;; constants
   (:export
    #:+stderr+
@@ -34,12 +34,15 @@
    #:open
    #:open-at
    #:print-error
+   #:read
    #:string-error
    #:string-error-locale
    #:string-error-reentrant
    #:sysctl-by-name
    #:tty-name
-   #:tty-name-reentrant)
+   #:tty-name-reentrant
+   #:write
+   #:write-all)
   ;; convenience macros
   (:export
    #:with-open

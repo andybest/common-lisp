@@ -16,13 +16,9 @@
   (with-error-check (= -1)
     (%open-at file-descriptor path flags :uint16 mode)))
 
-(defun write (file-descriptor buffer n-bytes)
+(defun read (file-descriptor buffer byte-count)
   (with-error-check (= -1)
-    (%write file-descriptor buffer n-bytes)))
-
-(defun read (file-descriptor buffer n-bytes)
-  (with-error-check (= -1)
-    (%read file-descriptor buffer n-bytes)))
+    (%read file-descriptor buffer byte-count)))
 
 (defun sysctl (name name-length old-ptr old-length-ptr new-ptr new-length)
   (with-error-check (/= 0)
@@ -43,3 +39,18 @@
 (defun tty-name-reentrant (file-descriptor buffer length)
   (with-error-check (/= 0)
     (%tty-name-reentrant file-descriptor buffer length)))
+
+(defun write (file-descriptor buffer byte-count)
+  (with-error-check (= -1)
+    (%write file-descriptor buffer byte-count)))
+
+;; This is a high-level convenience function that wraps WRITE.
+(defun write-all (file-descriptor array)
+  "Writes the data stored in ARRAY to the file designated by FILE-DESCRIPTOR. ARRAY should be a
+  vector with ELEMENT-TYPE (UNSIGNED-BYTE (CFFI:FOREIGN-TYPE-SIZE :CHAR)). It's almost always going
+  to be (UNSIGNED-BYTE 8), but that's not strictly guaranteed."
+  (let ((length (length array)))
+    (c:with-foreign-array (buffer array `(:array :char ,length))
+      (u:until (zerop length)
+        (let ((written (write file-descriptor buffer length)))
+          (decf length written))))))
