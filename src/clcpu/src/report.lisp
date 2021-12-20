@@ -72,7 +72,7 @@
 (defun print-report (percentage)
   (print-progress-bar percentage)
   (print-percentage percentage)
-  (lib:finish-terminal-output :replace (lib:get-option 'replace)))
+  (lib:finish-terminal-output :replace (lib:get-option 'replace-enabled)))
 
 (defun print-all-reports ()
   (let ((count (lib:get-option 'count))

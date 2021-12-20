@@ -42,7 +42,7 @@
   :validity-check (lib:in-range 0 8)
   :validity-error "must be an integer between 0 and 8, inclusive."
   :help "Display 'digits' number of digits for the fractional component of a percentage. ~
-        (default: 1)")
+         (default: 1)")
 
 (lib:define-boolean-options bar-enabled
   :long "show-bar"
@@ -53,7 +53,6 @@
 
 (lib:define-option bar-width
   :parameter "width"
-  :long "bar-width"
   :short #\w
   :initial-value 20
   :key #'lib:parse-integer
@@ -79,8 +78,8 @@
   :key #'parse-color-pair
   :reduce #'ui:last
   :help "The foreground, and optionally background color to use for the trim of the progress bar ~
-         when their fill is low. Both '--enable-color' and '--show-bar' must be supplied to have ~
-         any effect. Valid colors are integers between 0 and 15, which map to the ANSI 16-color ~
+         when its fill is low. Both '--enable-color' and '--show-bar' must be supplied to have any ~
+         effect. Valid colors are integers between 0 and 15, which map to the ANSI 16-color ~
          pallete (8-15 are bright variants of 0-7). (default: 2,0)")
 
 (lib:define-option bar-color-medium
@@ -89,9 +88,9 @@
   :key #'parse-color-pair
   :reduce #'ui:last
   :help "The foreground, and optionally background color to use for the trim of the progress bar ~
-         when their fill is medium. Both '--enable-color' and '--show-bar' must be supplied to ~
-         have any effect. Valid colors are integers between 0 and 15, which map to the ANSI ~
-         16-color pallete (8-15 are bright variants of 0-7). (default: 3,0)")
+         when its fill is medium. Both '--enable-color' and '--show-bar' must be supplied to have ~
+         any effect. Valid colors are integers between 0 and 15, which map to the ANSI 16-color ~
+         pallete (8-15 are bright variants of 0-7). (default: 3,0)")
 
 (lib:define-option bar-color-high
   :parameter "fg[,bg]"
@@ -99,12 +98,13 @@
   :key #'parse-color-pair
   :reduce #'ui:last
   :help "The foreground, and optionally background color to use for the trim of the progress bar ~
-         when their fill is high. Both '--enable-color' and '--show-bar' must be supplied to have ~
+         when its fill is high. Both '--enable-color' and '--show-bar' must be supplied to have ~
          any effect. Valid colors are integers between 0 and 15, which map to the ANSI 16-color ~
          pallete (8-15 are bright variants of 0-7). (default: 1,0)")
 
-(lib:define-boolean-options replace
+(lib:define-boolean-options replace-enabled
   :long "replace"
+  :long-no "no-replace"
   :short #\r
   :help "Enable replacing the old report with each subsequent report, instead of appending new ~
          output lines. The default is to append as if by '--no-replace'."
@@ -115,9 +115,9 @@
   :long-no "hide-suffix"
   :short #\s
   :initial-value t
-  :help "Enable displaying of the suffix '%'. This is the default."
-  :help-no "Disable displaying of the suffix '%'. The default is to display the suffix as if by ~
-            '--show-suffix'.")
+  :help "Enable displaying of the percentage suffix '%'. This is the default."
+  :help-no "Disable displaying of the percentage suffix '%'. The default is to display the suffix ~
+            as if by '--show-suffix'.")
 
 (ui:define-string *help-text*
   "The clcpu utility retrieves the current total CPU usage of all cores as a percentage.")
@@ -140,8 +140,8 @@
                    *option-count*
                    *option-delay*
                    *option-precision*
-                   *option-replace*
-                   *option-no-replace*
+                   *option-replace-enabled*
+                   *option-no-replace-enabled*
                    *option-suffix*
                    *option-no-suffix*
                    lib:*option-help*
