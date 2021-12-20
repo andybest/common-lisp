@@ -20,4 +20,5 @@
    (:file "utilities")
    (:file "options")
    (:file "common")
-   (:file "terminal")))
+   (:file "terminal")
+   (:file "progress-bar")))

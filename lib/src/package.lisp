@@ -45,4 +45,9 @@
    #:repeat-character
    #:reset-display-attributes
    #:restore-cursor
-   #:save-cursor))
+   #:save-cursor)
+  ;; progress bar api
+  (:export
+   #:get-max-progress-bar-length
+   #:get-progress-bar-length
+   #:print-progress-bar))

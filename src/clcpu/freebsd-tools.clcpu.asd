@@ -15,7 +15,5 @@
   ((:file "package")
    (:file "util")
    (:file "ui")
-   (:file "progress-bar")
-   (:file "percentage")
    (:file "report")
    (:file "main")))
