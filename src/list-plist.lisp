@@ -1,7 +1,7 @@
 ;;;; Property lists
 ;;;; Various functions dealing with property lists.
 
-(in-package #:mfiano-utils)
+(in-package #:mfiano.misc.utils)
 
 (deftype plist () '(satisfies plist-p))
 

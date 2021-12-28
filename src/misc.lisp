@@ -1,4 +1,4 @@
-(in-package #:mfiano-utils)
+(in-package #:mfiano.misc.utils)
 
 (defun doc (string)
   "Convenience function for writing docstrings; intended to be read-evaluation with `#.`."

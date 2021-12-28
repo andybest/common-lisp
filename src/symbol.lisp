@@ -1,4 +1,4 @@
-(in-package #:mfiano-utils)
+(in-package #:mfiano.misc.utils)
 
 (defun collect-symbols (&optional (package *package*))
   "Collect a list of all symbols of `PACKAGE`."

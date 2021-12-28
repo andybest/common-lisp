@@ -1,4 +1,4 @@
-(in-package #:mfiano-utils)
+(in-package #:mfiano.misc.utils)
 
 (defun interleave (&rest lists)
   "Interleave the elements of `LISTS`."

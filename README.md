@@ -1,15 +1,15 @@
-# mfiano-utils
+# mfiano.misc.utils
 
-mfiano's personal utility library.
+My personal utilities library.
 
 ## Overview
 
-A collection of personal utilities that I have been found useful.
+A collection of personal utilities that I have found useful.
 
 ## Install
 
 ```lisp
-(ql:quickload :mfiano-utils)
+(ql:quickload :mfiano.misc.utils)
 ```
 
 ## License

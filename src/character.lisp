@@ -1,4 +1,4 @@
-(in-package #:mfiano-utils)
+(in-package #:mfiano.misc.utils)
 
 (defun ascii-lowercase-p (char)
   "Check if the character `CHAR` is a lowercase ASCII character."

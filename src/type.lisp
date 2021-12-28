@@ -1,4 +1,4 @@
-(in-package #:mfiano-utils)
+(in-package #:mfiano.misc.utils)
 
 (deftype fixnum-array (&optional length)
   `(simple-array fixnum ,(if (integerp length) `(,length) length)))

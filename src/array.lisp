@@ -1,4 +1,4 @@
-(in-package #:mfiano-utils)
+(in-package #:mfiano.misc.utils)
 
 (declaim (inline make-b8-array))
 (defun make-b8-array (size &optional (initial-element 0))

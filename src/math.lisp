@@ -1,4 +1,4 @@
-(in-package #:mfiano-utils)
+(in-package #:mfiano.misc.utils)
 
 (declaim (inline degrees->radians))
 (defun degrees->radians (degrees)

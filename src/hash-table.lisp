@@ -1,4 +1,4 @@
-(in-package #:mfiano-utils)
+(in-package #:mfiano.misc.utils)
 
 (defmacro do-hash ((key value table &optional result) &body body)
   "Iterates over hash table `TABLE`, binding each key to `KEY`, and its value to

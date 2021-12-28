@@ -1,4 +1,4 @@
-(in-package #:mfiano-utils)
+(in-package #:mfiano.misc.utils)
 
 (defun flatten-tree (sequence)
   "Traverses a sequence in order, collecting non-nil values into a list. This is
