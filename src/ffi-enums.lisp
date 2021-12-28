@@ -1,4 +1,4 @@
-(in-package #:cl-freebsd)
+(in-package #:mfiano.ffi.freebsd)
 
 ;; Flags that are passed to OPEN() and OPENAT().
 ;; We also define some additional Lispy synonyms for the user.

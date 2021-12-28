@@ -1,4 +1,4 @@
-(in-package #:cl-freebsd)
+(in-package #:mfiano.ffi.freebsd)
 
 (defgeneric %get-error-code (errnum)
   (:method ((errnum (eql 1)))

@@ -1,4 +1,4 @@
-(in-package #:cl-freebsd)
+(in-package #:mfiano.ffi.freebsd)
 
 (defmacro with-error-check ((func error-value) &body body)
   (u:with-gensyms (result)

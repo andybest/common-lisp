@@ -1,4 +1,4 @@
-(in-package #:cl-freebsd)
+(in-package #:mfiano.ffi.freebsd)
 
 (c:defcstruct clock-info
   (:hz :int)

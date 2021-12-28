@@ -1,4 +1,4 @@
-(in-package #:cl-freebsd)
+(in-package #:mfiano.ffi.freebsd)
 
 (c:defcfun ("__error" error-number) (:pointer :int))
 

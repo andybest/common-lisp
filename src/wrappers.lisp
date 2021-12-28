@@ -1,4 +1,4 @@
-(in-package #:cl-freebsd)
+(in-package #:mfiano.ffi.freebsd)
 
 (defun close (file-descriptor)
   (with-error-check (= -1)

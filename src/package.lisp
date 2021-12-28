@@ -1,9 +1,9 @@
 (in-package #:cl-user)
 
-(defpackage #:cl-freebsd
+(defpackage #:mfiano.ffi.freebsd
   (:local-nicknames
    (#:c #:cffi)
-   (#:u #:mfiano-utils))
+   (#:u #:mfiano.misc.utils))
   (:use #:cl)
   (:shadow
    #:close

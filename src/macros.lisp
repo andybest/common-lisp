@@ -1,4 +1,4 @@
-(in-package #:cl-freebsd)
+(in-package #:mfiano.ffi.freebsd)
 
 (defmacro with-open ((var path &key flags mode) &body body)
   `(let ((,var (open ,path :flags ,flags ,@(when mode `(:mode ,mode)))))

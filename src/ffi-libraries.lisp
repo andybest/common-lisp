@@ -1,4 +1,4 @@
-(in-package #:cl-freebsd)
+(in-package #:mfiano.ffi.freebsd)
 
 (c:define-foreign-library libc
   (:freebsd "libc.so.7"))
