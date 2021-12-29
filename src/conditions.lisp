@@ -1,10 +1,10 @@
-(in-package #:seedable-rng)
+(in-package #:mfiano.misc.rng)
 
-(define-condition seedable-rng-error (error)
+(define-condition rng-error (error)
   ((%generator :reader generator
                :initarg :generator)))
 
-(define-condition invalid-range (seedable-rng-error)
+(define-condition invalid-range (rng-error)
   ((%lower-bound :reader lower-bound
                  :initarg :min)
    (%upper-bound :reader upper-bound
@@ -18,7 +18,7 @@
              (upper-bound condition)
              (seed (generator condition))))))
 
-(define-condition empty-sequence (seedable-rng-error) ()
+(define-condition empty-sequence (rng-error) ()
   (:report
    (lambda (condition stream)
      (format stream "Unable to choose a random element because sequence is empty.~%~

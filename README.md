@@ -1,4 +1,4 @@
-# seedable-rng
+# mfiano.misc.rng
 
 Provides a convenient means of generating random numbers that are seedable with deterministic
 results across hardware and Common Lisp implementations.
@@ -25,7 +25,7 @@ can have distinct nested generators giving independently deterministic results.
 ## Install
 
 ```lisp
-(ql:quickload :seedable-rng)
+(ql:quickload :mfiano.misc.rng)
 ```
 
 ## Usage

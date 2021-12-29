@@ -1,4 +1,4 @@
-(in-package #:seedable-rng)
+(in-package #:mfiano.misc.rng)
 
 (defstruct (generator
             (:constructor %%make-generator)

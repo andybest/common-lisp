@@ -1,13 +1,13 @@
-(asdf:defsystem #:seedable-rng
+(asdf:defsystem #:mfiano.misc.rng
   :description "A seedable random number generator."
-  :author ("Michael Fiano <mail@mfiano.net>")
+  :author "Michael Fiano <mail@mfiano.net>"
   :license "MIT"
-  :homepage "https://github.com/mfiano/seedable-rng"
+  :homepage "https://github.com/mfiano/common-lisp/tree/master/misc/rng"
   :version "0.1.0"
   :encoding :utf-8
   :depends-on (#:cl-pcg
-               #:mfiano-utils
-               #:ironclad)
+               #:ironclad
+               #:mfiano.misc.utils)
   :pathname "src"
   :serial t
   :components

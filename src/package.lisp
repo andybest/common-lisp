@@ -1,8 +1,8 @@
 (in-package #:cl-user)
 
-(defpackage #:seedable-rng
+(defpackage #:mfiano.misc.rng
   (:local-nicknames
-   (#:u #:mfiano-utils))
+   (#:u #:mfiano.misc.utils))
   (:use #:cl)
   (:shadow
    #:float)

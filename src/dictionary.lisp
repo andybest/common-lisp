@@ -1,4 +1,4 @@
-(in-package #:seedable-rng)
+(in-package #:mfiano.misc.rng)
 
 (u:define-constant +dictionary+
     #("gaming" "shopper" "moistness" "truth" "renounce" "retry" "compound" "arson" "comply" "defame"
