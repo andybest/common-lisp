@@ -1,23 +1,23 @@
-# pngload
+# mfiano.file-formats.png
 
 A PNG (Portable Network Graphics) image format decoder.
 
 ## Overview
 
-pngload can be used to load images in the PNG image format, both from files on disk, or streams in
-memory. This library was written out of frustration with png-read, which was the only native Common
-Lisp code that supports PNG.
+mfiano.file-formats.png can be used to load images in the PNG image format, both from files on disk,
+or streams in memory. This library was written out of frustration with png-read, which was the only
+native Common Lisp code that supports PNG.
 
-What makes pngload different than png-read?
+What makes mfiano.file-formats.png different than png-read?
 
 ### Speed
 
-pngload is optimized for speed and portability across many different Common Lisp implementation and
-architecture combinations. On 64-bit SBCL it is more than 3x faster than the png-read library when
-decoding a particular large 4096x4096 RGBA image. Rough benchmarking in our particular environment
-at the time of writing shows:
+mfiano.file-formats.png is optimized for speed and portability across many different Common Lisp
+implementation and architecture combinations. On 64-bit SBCL it is more than 3x faster than the
+png-read library when decoding a particular large 4096x4096 RGBA image. Rough benchmarking in our
+particular environment at the time of writing shows:
 
-- pngload: 0.901s
+- mfiano.file-formats.png: 0.901s
 - png-read: 3.058s
 
 To overcome some performance bottlenecks, we wrote [our own](https://github.com/3b/3bz)
@@ -28,9 +28,9 @@ it, with a fallback path when not supported.
 
 ### Cleaner code
 
-pngload should be a lot more hackable, and have more of an educational value than png-read, even
-after adding lots of type declarations and restructuring the code away from its original cleanliness
-in favor of performance.
+mfiano.file-formats.png should be a lot more hackable, and have more of an educational value than
+png-read, even after adding lots of type declarations and restructuring the code away from its
+original cleanliness in favor of performance.
 
 ### Full support for all chunks
 
@@ -43,43 +43,44 @@ slot of the returned object, should you ever need more.
 
 ### Fully conforming with the PNG specification
 
-pngload is able to load all images in [PNGSuite](http://www.schaik.com/pngsuite/) correctly.
-png-read claims that it can load them all, but they were not checked for validity.
+mfiano.file-formats.png is able to load all images in [PNGSuite](http://www.schaik.com/pngsuite/)
+correctly. png-read claims that it can load them all, but they were not checked for validity.
 
 ### Stores data in a format that is expected by [opticl](https://github.com/slyrus/opticl)
 
-opticl has supported pngload since its first release, which gives you faster PNG loading
-automatically if you were already using opticl.
+opticl has supported mfiano.file-formats.png since its first release, which gives you faster PNG
+loading automatically if you were already using opticl.
 
 ### Support for PNG extensions
 
-pngload supports [additional extension chunk
+mfiano.file-formats.png supports [additional extension chunk
 types](http://ftp-osl.osuosl.org/pub/libpng/documents/pngextensions.html), such as EXIF information.
 
 ### Optionally parse metadata only
 
-pngload can optionally parse only the metadata, skipping decoding completely, in order to quickly
-retrieve information about an image.
+mfiano.file-formats.png can optionally parse only the metadata, skipping decoding completely, in
+order to quickly retrieve information about an image.
 
 ### Optionally decode as a 1-dimensional array
 
-Instead of decoding to a format which is compatible with opticl, pngload can now decode to a flat
-1-D array. This is useful for OpenGL texture uploading and some other applications.
+Instead of decoding to a format which is compatible with opticl, mfiano.file-formats.png can now
+decode to a flat 1-D array. This is useful for OpenGL texture uploading and some other applications.
 
 ### Optionally flip the Y axis
 
-pngload can optionally flip the Y axis when decoding, for when the origin is expected to be at the
-bottom left instead of the top left, as with OpenGL texture rendering.
+mfiano.file-formats.png can optionally flip the Y axis when decoding, for when the origin is
+expected to be at the bottom left instead of the top left, as with OpenGL texture rendering.
 
 ### Optionally write to foreign memory
 
-pngload can optionally write to foreign memory using static-vectors. This is useful when needing to
-efficiently pass a pointer to the image data with a foreign library, such as with OpenGL.
+mfiano.file-formats.png can optionally write to foreign memory using static-vectors. This is useful
+when needing to efficiently pass a pointer to the image data with a foreign library, such as with
+OpenGL.
 
 ## Install
 
 ``` lisp
-(ql:quickload :pngload)
+(ql:quickload :mfiano.file-formats.png)
 ```
 
 ## Usage
@@ -87,7 +88,7 @@ efficiently pass a pointer to the image data with a foreign library, such as wit
 Usage is quite simple:
 
 ```lisp
-(pngload:load-file #p"/path/to/file.png")
+(mfiano.file-formats.png:load-file #p"/path/to/file.png")
 ```
 
 This will return an object which includes everything you would need to render the image data, or
@@ -96,7 +97,7 @@ query it for other useful data.
 Additionally, you may load a PNG datastream from a Common Lisp stream with:
 
 ```lisp
-(pngload:load-stream stream)
+(mfiano.file-formats.png:load-stream stream)
 ```
 
 Both `LOAD-FILE` and `LOAD-STREAM` accept an optional keyword argument, which can be used to disable
@@ -106,13 +107,13 @@ information. Image data will be unavailable with this option, obviously. To use 
 method:
 
 ```lisp
-(pngload:load-file #p"/path/to/file.png" :decode nil)
+(mfiano.file-formats.png:load-file #p"/path/to/file.png" :decode nil)
 ```
 
 or:
 
 ```lisp
-(pngload:load-stream stream :decode nil)
+(mfiano.file-formats.png:load-stream stream :decode nil)
 ```
 
 Additionally, both `LOAD-FILE` and `LOAD-STREAM` may take the following keyword arguments:
@@ -129,11 +130,11 @@ automatically free the memory for you.
 
 ### Querying Metadata
 
-pngload has a unified API for querying different metadata that may be stored in a PNG datastream.
-The `get-metadata` method can be used to query any metadata available. It accepts a PNG object,
-which is returned by `load-file` or `load-stream` as per the above, as well as a key identifying the
-type of metadata you want to query. If a PNG datastream does not have the metadata requested, NIL
-will be returned. The following keys are recognized:
+mfiano.file-formats.png has a unified API for querying different metadata that may be stored in a
+PNG datastream. The `get-metadata` method can be used to query any metadata available. It accepts a
+PNG object, which is returned by `load-file` or `load-stream` as per the above, as well as a key
+identifying the type of metadata you want to query. If a PNG datastream does not have the metadata
+requested, NIL will be returned. The following keys are recognized:
 
 #### `:width`
 The image width in pixels. This is the same as `(width png)` and is only for convenience.
@@ -237,6 +238,6 @@ Arbitrary textual metadata stored in the PNG datastream. Returns a list of prope
 
 ## License
 
-Copyright © 2017-2021 Michael Fiano <mail@mfiano.net>, Bart Botta <00003b@gmail.com>.
+Copyright © 2017-2021 Michael Fiano <mail@mfiano.net>.
 
 Licensed under the MIT License.

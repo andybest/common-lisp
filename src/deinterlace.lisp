@@ -1,4 +1,4 @@
-(in-package #:pngload)
+(in-package #:mfiano.file-formats.png)
 
 (alexandria:define-constant +adam7-pattern+
   #2a((1 6 4 6 2 6 4 6)

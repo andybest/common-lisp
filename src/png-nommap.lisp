@@ -1,4 +1,4 @@
-(in-package #:pngload)
+(in-package #:mfiano.file-formats.png)
 
 (defun load-file (path &key (decode t) flatten flip-y static-vector
                          unknown-chunk-warnings)

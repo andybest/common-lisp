@@ -1,4 +1,4 @@
-(in-package #:pngload)
+(in-package #:mfiano.file-formats.png)
 
 (defun find-chunks (png &rest chunk-types)
   (remove-if-not

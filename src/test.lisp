@@ -1,13 +1,13 @@
 (in-package #:cl-user)
 
-(defpackage #:pngload.test
+(defpackage #:mfiano.file-formats.png.test
   (:use #:cl
-        #:pngload)
+        #:mfiano.file-formats.png)
   (:export #:test-images
            #:test-read-times
            #:run-tests-for-ci))
 
-(in-package #:pngload.test)
+(in-package #:mfiano.file-formats.png.test)
 
 (defvar *failed* nil)
 (defparameter *ref* :png-read)
@@ -16,7 +16,7 @@
 
 (defun get-path ()
   (uiop:ensure-directory-pathname
-   (asdf:system-relative-pathname :pngload "test")))
+   (asdf:system-relative-pathname :mfiano.file-formats.png "test")))
 
 (defun get-image-name (file)
   (namestring
@@ -134,7 +134,7 @@
 
 (defun test-read-times (file &key (count 1))
   (load-file file) ; warmup
-  (test-read-time "pngload" #'load-file file count)
+  (test-read-time "mfiano.file-formats.png" #'load-file file count)
   (test-read-time "png-read" #'png-read:read-png-file file count)
   (test-read-time "opticl" #'opticl:read-image-file file count))
 

@@ -1,4 +1,4 @@
-(in-package #:pngload)
+(in-package #:mfiano.file-formats.png)
 
 (deftype ub8 () '(unsigned-byte 8))
 (deftype ub16 () '(unsigned-byte 16))

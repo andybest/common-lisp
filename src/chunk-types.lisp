@@ -1,4 +1,4 @@
-(in-package #:pngload)
+(in-package #:mfiano.file-formats.png)
 
 (defmacro define-chunk (type (png &key (buffer t)) &body body)
   (alexandria:with-gensyms (source chunk chunk-data)

@@ -1,4 +1,4 @@
-(in-package #:pngload)
+(in-package #:mfiano.file-formats.png)
 
 (defun get-channel-count (png)
   (ecase (color-type png)

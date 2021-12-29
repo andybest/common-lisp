@@ -1,6 +1,6 @@
 (in-package #:cl-user)
 
-(defpackage #:pngload
+(defpackage #:mfiano.file-formats.png
   (:use #:cl)
   (:export
    #:png

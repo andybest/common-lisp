@@ -1,4 +1,4 @@
-(in-package :pngload)
+(in-package #:mfiano.file-formats.png)
 
 (declaim (inline ub32->sb32))
 (defun ub32->sb32 (s)

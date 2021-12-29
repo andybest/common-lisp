@@ -1,9 +1,8 @@
-(in-package :pngload)
+(in-package #:mfiano.file-formats.png)
 
 (defmacro with-octet-pointer-source ((source &key end) &body body)
   (declare (ignore source end body))
   `(error "can't load from pointers on this platform"))
-
 
 (defmacro with-source ((source &key buffer end) &body body)
   `(etypecase ,source

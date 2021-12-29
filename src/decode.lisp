@@ -1,4 +1,4 @@
-(in-package #:pngload)
+(in-package #:mfiano.file-formats.png)
 
 (eval-when (:compile-toplevel :load-toplevel :execute)
   (alexandria:define-constant +filter-type-none+ 0)

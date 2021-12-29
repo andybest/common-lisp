@@ -1,4 +1,4 @@
-(in-package #:pngload)
+(in-package #:mfiano.file-formats.png)
 
 (defun load-stream (stream &key (decode t) flatten flip-y static-vector
                              unknown-chunk-warnings)
@@ -87,7 +87,7 @@ See LOAD-FILE"
 (defmacro with-profiling (&body body)
   (let ((packages (remove-if-not
                    (lambda (x)
-                     (find x '("PNGLOAD" "3BZ" "MMAP" "STATIC-VECTORS")
+                     (find x '("MFIANO.FILE-FORMATS.PNG" "3BZ" "MMAP" "STATIC-VECTORS")
                            :test #'string=))
                    (mapcar #'package-name (list-all-packages)))))
     `(unwind-protect

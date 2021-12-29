@@ -1,4 +1,4 @@
-(in-package :pngload)
+(in-package #:mfiano.file-formats.png)
 
 (defclass source ()
   ((%start :reader start :initform 0 :initarg :start)

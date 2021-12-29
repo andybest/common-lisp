@@ -1,9 +1,8 @@
-(asdf:defsystem #:pngload
+(asdf:defsystem #:mfiano.file-formats.png
   :description "A reader for the PNG image format."
-  :author ("Michael Fiano <mail@mfiano.net>"
-           "Bart Botta <00003b@gmail.com>")
+  :author "Michael Fiano <mail@mfiano.net>"
   :license "MIT"
-  :homepage "https://github.com/mfiano/pngload"
+  :homepage "https://github.com/mfiano/common-lisp/tree/master/file-formats/png"
   :version "0.1.0"
   :encoding :utf-8
   :depends-on (#:3bz
