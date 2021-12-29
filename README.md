@@ -1,11 +1,11 @@
-# cubic-bezier
+# mfiano.math.cubic-bezier
 
 A library for constructing and evaluating cubic Bézier curve paths.
 
 ## Install
 
 ```lisp
-(ql:quickload :cubic-bezier)
+(ql:quickload :mfiano.math.cubic-bezier)
 ```
 
 ## Usage
@@ -70,6 +70,6 @@ for `#'evaluate` for more information.
 
 ## License
 
-Copyright © Michael Fiano <mail@mfiano.net>.
+Copyright © 2021 Michael Fiano <mail@mfiano.net>.
 
 Licensed under the MIT License.

@@ -1,4 +1,4 @@
-(in-package #:cubic-bezier)
+(in-package #:mfiano.math.cubic-bezier)
 
 (u:define-constant +matrix+ (dm4:mat -1 3 -3 1 3 -6 3 0 -3 3 0 0 1 0 0 0) :test #'equalp)
 
