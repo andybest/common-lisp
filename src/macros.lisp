@@ -1,4 +1,4 @@
-(in-package #:gfxmath)
+(in-package #:mfiano.math.gfxmath)
 
 ;;; Metadata for macro expansions
 

@@ -1,4 +1,4 @@
-(in-package #:gfxmath)
+(in-package #:mfiano.math.gfxmath)
 
 (defstruct (math-object
             (:constructor nil)
@@ -10,6 +10,9 @@
   (components/single (u:make-f32-array 0) :type (u:f32a (cl:*)))
   (row-count 1 :type (integer 1 4))
   (column-count 1 :type (integer 1 4)))
+
+(defmethod make-load-form ((object math-object) &optional environment)
+  (make-load-form-saving-slots object :environment environment))
 
 ;;; Vector types
 

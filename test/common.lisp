@@ -1,4 +1,4 @@
-(in-package #:gfxmath.test)
+(in-package #:mfiano.math.gfxmath.test)
 
 (defun v (&rest args)
   (apply #'m:vec args))

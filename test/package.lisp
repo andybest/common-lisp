@@ -1,13 +1,13 @@
 (in-package #:cl-user)
 
-(defpackage #:gfxmath.test
+(defpackage #:mfiano.math.gfxmath.test
   (:local-nicknames
-   (#:m #:gfxmath)
-   (#:u #:mfiano-utils))
+   (#:m #:mfiano.math.gfxmath)
+   (#:u #:mfiano.misc.utils))
   (:use #:cl
         #:prove))
 
-(in-package #:gfxmath.test)
+(in-package #:mfiano.math.gfxmath.test)
 
 (setf *enable-colors* nil)
 
@@ -15,4 +15,4 @@
 ;; the middle of tests, so wrap test calling to hide the annoyance for now.
 (defun run-tests (object)
   (handler-bind ((asdf/operate:recursive-operate #'muffle-warning))
-    (prove:run object)))
+    (run object)))

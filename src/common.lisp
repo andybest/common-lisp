@@ -1,4 +1,4 @@
-(in-package #:gfxmath)
+(in-package #:mfiano.math.gfxmath)
 
 (u:fn-> ref (math-object u:array-index) u:f64)
 (declaim (inline ref))

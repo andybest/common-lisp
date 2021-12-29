@@ -1,4 +1,4 @@
-(in-package #:gfxmath)
+(in-package #:mfiano.math.gfxmath)
 
 ;;; Protocol for operations that have different semantics across types
 

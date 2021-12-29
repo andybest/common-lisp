@@ -1,8 +1,8 @@
 (in-package #:cl-user)
 
-(defpackage #:gfxmath
+(defpackage #:mfiano.math.gfxmath
   (:local-nicknames
-   (#:u #:mfiano-utils))
+   (#:u #:mfiano.misc.utils))
   (:use #:cl)
   (:shadow
    #:+
