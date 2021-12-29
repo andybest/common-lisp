@@ -1,23 +1,15 @@
-# glsl-metadata
+# mfiano.spec.glsl
 
-TODO
-
-## Overview
-
-TODO
+A computer-readable representation of all versions of the OpenGL Shader Language specifications.
 
 ## Install
 
 ```lisp
-(ql:quickload :glsl-metadata)
+(ql:quickload :mfiano.spec.glsl)
 ```
-
-## Usage
-
-TODO
 
 ## License
 
-Copyright © Michael Fiano <mail@mfiano.net>.
+Copyright © 2020-2021 Michael Fiano <mail@mfiano.net>.
 
 Licensed under the MIT License.

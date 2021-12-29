@@ -1,5 +1,5 @@
 (in-package #:cl-user)
 
-(defpackage #:glsl-metadata
+(defpackage #:mfiano.spec.glsl
   (:use #:cl)
   (:export))
