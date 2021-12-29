@@ -1,4 +1,4 @@
-# shadow
+# mfiano.gamedev.shadow
 
 A lispy system for defining OpenGL shader programs and associated buffer objects.
 
@@ -16,7 +16,7 @@ programs and associated buffers.
 ## Install
 
 ``` lisp
-(ql:quickload :shadow)
+(ql:quickload :mfiano.gamedev.shadow)
 ```
 
 ## Usage
@@ -25,18 +25,18 @@ programs and associated buffers.
 
 Using Shadow is not very straightforward, mostly due to the borrowing of the "Vari" language used to
 write shader programs, which does not have much documentation. It does however try to stay familiar
-and resembles Common Lisp.  Additionally, there are [several
+and resembles Common Lisp. Additionally, there are [several
 videos](https://www.youtube.com/watch?v=82o5NeyZtvw&list=PL2VAYZE_4wRITJBv6saaKouj4sWSG1FcS) of
 Vari's usage created by its author.
 
 Shader programs are written using a series of `DEFUN` and `DEFSTRUCT` forms representing GPU
 functions and structures respectively. `DEFUN` and `DEFSTRUCT` are special CL-like macros that live
 in the `SHADOW.GLSL` package. As mentioned, their bodies follow the language rules of "Vari", which
-is not documented here.  All shaders written should be in a dedicated package you create that
-`:USE`s `:SHADOW.GLSL`. This is a special package that takes care of shadowing the CL symbols and
-exporting all the required symbols for writing shaders. It is not recommended to mix CL code and
+is not documented here. All shaders written should be in a dedicated package you create that `:USE`s
+`:MFIANO.GAMEDEV.SHADOW.GLSL`. This is a special package that takes care of shadowing the CL symbols
+and exporting all the required symbols for writing shaders. It is not recommended to mix CL code and
 shader code in the same package, to prevent having to fully-qualify `CL:DEFUN` everywhere. Please
-use a dedicated package for writing your shaders which `:USE`s `:SHADOW.GLSL`.
+use a dedicated package for writing your shaders which `:USE`s `:MFIANO.GAMEDEV.SHADOW.GLSL`.
 
 Each `DEFUN` defines a shader stage or auxillary function thereof. It takes in input arguments and
 uniform variables, and sends its return values to the next stage of the shader pipeline as input
@@ -203,9 +203,9 @@ rendering. This is done by issuing calls to the various `UNIFORM-*` functions wi
 
 Here, we specify that we want to use `EXAMPLE-PROGRAM` during rendering, modifying a single 4x4
 matrix uniform value. Here `*matrix*` refers to an imaginary matrix that you should have created for
-the object you wish to render.  There are quite a few `UNIFORM-*` functions, and the full list can
-be viewed in the [package's exported symbols](src/package.lisp). Note that each uniform function
-takes a program object, the name of a uniform variable as a keyword symbol, followed by the value to
+the object you wish to render. There are quite a few `UNIFORM-*` functions, and the full list can be
+viewed in the [package's exported symbols](src/package.lisp). Note that each uniform function takes
+a program object, the name of a uniform variable as a keyword symbol, followed by the value to
 modify it with.
 
 ### UBO/SSBO Support
@@ -252,8 +252,7 @@ to the struct.
 
 #### Deleting block aliases
 
-It may be useful to delete a block alias. You can do so using
-`DELETE-BLOCK-ALIAS`:
+It may be useful to delete a block alias. You can do so using `DELETE-BLOCK-ALIAS`:
 
 ```lisp
 (delete-block-alias <block-alias> &key unbind-block)
@@ -310,11 +309,10 @@ then create a buffer which uses the layout of a particular block, using `CREATE-
 (create-buffer <buffer-name> <block-alias>)
 ```
 
-* `<buffer-name>`: A symbol that can later be used as a reference to the created
-  buffer.
+* `<buffer-name>`: A symbol that can later be used as a reference to the created buffer.
 
-* `<block-alias>`: A symbol, keyword symbol, or case-sensitive string denoting
-  an alias previously defined with `CREATE-BLOCK-ALIAS`.
+* `<block-alias>`: A symbol, keyword symbol, or case-sensitive string denoting an alias previously
+  defined with `CREATE-BLOCK-ALIAS`.
 
 #### Binding Buffers
 

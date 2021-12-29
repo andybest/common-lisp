@@ -1,4 +1,4 @@
-(in-package #:shadow)
+(in-package #:mfiano.gamedev.shadow)
 
 (defvar *metadata* (u:dict #'eq))
 

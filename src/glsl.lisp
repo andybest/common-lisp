@@ -1,4 +1,4 @@
-(in-package #:shadow.glsl)
+(in-package #:mfiano.gamedev.shadow.glsl)
 
 (cl:defmacro defun (name args &body body)
   "Define a GPU function."
@@ -26,8 +26,7 @@
   "Define a GPU macro."
   `(varjo:define-vari-macro ,name ,lambda-list ,@body))
 
-(cl:defmacro define-shader (name (&key (version :430) (primitive :triangles))
-                            &body body)
+(cl:defmacro define-shader (name (&key (version :430) (primitive :triangles)) &body body)
   "Create a new shader program using the stage-specs defined in BODY.
 
 VERSION: The default version shader stages use, and can be overridden on a per-function basis.

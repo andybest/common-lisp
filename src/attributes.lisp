@@ -1,4 +1,4 @@
-(in-package #:shadow)
+(in-package #:mfiano.gamedev.shadow)
 
 (defun store-attributes (program)
   (dolist (stage (translated-stages program))

@@ -1,14 +1,14 @@
-(asdf:defsystem #:shadow
+(asdf:defsystem #:mfiano.gamedev.shadow
   :description "A management system for OpenGL shader programs and associated buffer objects."
   :author "Michael Fiano <mail@mfiano.net>"
   :license "MIT"
-  :homepage "https://git.mfiano.net/mfiano/shadow"
+  :homepage "https://github.com/mfiano/common-lisp/tree/master/gamedev/shadow"
   :encoding :utf-8
   :depends-on (#:cffi
                #:cl-opengl
-               #:gfxmath
                #:glsl-packing
-               #:mfiano-utils
+               #:mfiano.math.gfxmath
+               #:mfiano.misc.utils
                #:static-vectors
                #:varjo)
   :pathname "src"

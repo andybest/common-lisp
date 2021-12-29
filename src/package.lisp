@@ -1,9 +1,9 @@
 (in-package #:cl-user)
 
-(defpackage #:shadow
+(defpackage #:mfiano.gamedev.shadow
   (:local-nicknames
-   (#:math #:gfxmath)
-   (#:u #:mfiano-utils))
+   (#:math #:mfiano.math.gfxmath)
+   (#:u #:mfiano.misc.utils))
   (:use #:cl)
   (:export
    #:bind-block
@@ -37,10 +37,10 @@
    #:with-shader
    #:write-buffer-path))
 
-(defpackage #:shadow.glsl
+(defpackage #:mfiano.gamedev.shadow.glsl
   (:local-nicknames
-   (#:s #:shadow)
-   (#:u #:mfiano-utils))
+   (#:s #:mfiano.gamedev.shadow)
+   (#:u #:mfiano.misc.utils))
   (:use #:cl #:vari)
   (:shadow
    #:defun
