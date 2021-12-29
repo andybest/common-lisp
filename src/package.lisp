@@ -1,9 +1,9 @@
 (in-package #:cl-user)
 
-(defpackage #:flac-metadata
+(defpackage #:mfiano.file-formats.flac
   (:local-nicknames
-   (#:parse #:parsley)
-   (#:u #:golden-utils))
+   (#:parse #:mfiano.misc.binary-parser)
+   (#:u #:mfiano.misc.utils))
   (:use #:cl)
   (:export
    #:load-file

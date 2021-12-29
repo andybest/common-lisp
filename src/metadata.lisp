@@ -1,4 +1,4 @@
-(in-package #:flac-metadata)
+(in-package #:mfiano.file-formats.flac)
 
 (defvar *metadata-block*)
 
