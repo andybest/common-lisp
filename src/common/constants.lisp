@@ -1,8 +1,8 @@
 (in-package #:cl-user)
 
-(defpackage #:origin.constants
+(defpackage #:mfiano.math.origin.constants
   (:local-nicknames
-   (#:u #:mfiano-utils))
+   (#:u #:mfiano.misc.utils))
   (:use #:cl)
   (:shadow
    #:pi)
@@ -52,7 +52,7 @@
    #:pi/6
    #:pi/12))
 
-(in-package #:origin.constants)
+(in-package #:mfiano.math.origin.constants)
 
 (u:define-constant pi/12 (float (/ cl:pi 12) 1f0))
 (u:define-constant pi/6 (float (/ cl:pi 6) 1f0))

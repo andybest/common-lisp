@@ -1,13 +1,13 @@
 (in-package #:cl-user)
 
-(defpackage #:origin.dvec3
+(defpackage #:mfiano.math.origin.dvec3
   (:local-nicknames
-   (#:com #:origin.common)
-   (#:const #:origin.constants)
-   (#:dv2 #:origin.dvec2)
+   (#:com #:mfiano.math.origin.common)
+   (#:const #:mfiano.math.origin.constants)
+   (#:dv2 #:mfiano.math.origin.dvec2)
    (#:ss #:specialization-store)
-   (#:u #:mfiano-utils)
-   (#:v3 #:origin.vec3))
+   (#:u #:mfiano.misc.utils)
+   (#:v3 #:mfiano.math.origin.vec3))
   (:use #:cl)
   (:shadow
    #:=
@@ -137,7 +137,7 @@
    #:velocity!
    #:velocity))
 
-(in-package #:origin.dvec3)
+(in-package #:mfiano.math.origin.dvec3)
 
 (deftype vec () '(u:f64a 3))
 

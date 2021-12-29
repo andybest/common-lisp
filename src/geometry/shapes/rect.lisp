@@ -4,11 +4,11 @@
 ;;;; ways. This package allows constructing a rect from two different representations: an origin and
 ;;;; size with RECT, and a minimum and maximum point with RECT-FROM-MIN/MAX.
 
-(defpackage #:origin.geometry.rect
+(defpackage #:mfiano.math.origin.geometry.rect
   (:local-nicknames
-   (#:point2d #:origin.geometry.point2d)
-   (#:u #:mfiano-utils)
-   (#:v2 #:origin.vec2))
+   (#:point2d #:mfiano.math.origin.geometry.point2d)
+   (#:u #:mfiano.misc.utils)
+   (#:v2 #:mfiano.math.origin.vec2))
   (:use #:cl)
   (:shadow
    #:max
@@ -23,7 +23,7 @@
    #:rect-p
    #:size))
 
-(in-package #:origin.geometry.rect)
+(in-package #:mfiano.math.origin.geometry.rect)
 
 (declaim (inline %rect))
 (defstruct (rect

@@ -2,12 +2,12 @@
 
 ;;;; A 3D axis-aligned box primitive.
 
-(defpackage #:origin.geometry.aabb
+(defpackage #:mfiano.math.origin.geometry.aabb
   (:local-nicknames
-   (#:point3d #:origin.geometry.point3d)
-   (#:u #:mfiano-utils)
-   (#:v2 #:origin.vec2)
-   (#:v3 #:origin.vec3))
+   (#:point3d #:mfiano.math.origin.geometry.point3d)
+   (#:u #:mfiano.misc.utils)
+   (#:v2 #:mfiano.math.origin.vec2)
+   (#:v3 #:mfiano.math.origin.vec3))
   (:use #:cl)
   (:shadow
    #:max
@@ -21,7 +21,7 @@
    #:origin
    #:size))
 
-(in-package #:origin.geometry.aabb)
+(in-package #:mfiano.math.origin.geometry.aabb)
 
 (declaim (inline %aabb))
 (defstruct (aabb

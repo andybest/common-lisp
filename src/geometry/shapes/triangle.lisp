@@ -1,16 +1,16 @@
 (in-package #:cl-user)
 
-(defpackage #:origin.geometry.triangle
+(defpackage #:mfiano.math.origin.geometry.triangle
   (:local-nicknames
-   (#:point3d #:origin.geometry.point3d)
-   (#:u #:mfiano-utils)
-   (#:v3 #:origin.vec3))
+   (#:point3d #:mfiano.math.origin.geometry.point3d)
+   (#:u #:mfiano.misc.utils)
+   (#:v3 #:mfiano.math.origin.vec3))
   (:use #:cl)
   (:export
    #:triangle
    #:triangle-p))
 
-(in-package #:origin.geometry.triangle)
+(in-package #:mfiano.math.origin.geometry.triangle)
 
 (declaim (inline %triangle))
 (defstruct (triangle

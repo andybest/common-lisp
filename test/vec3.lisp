@@ -1,4 +1,4 @@
-(in-package #:origin.test)
+(in-package #:mfiano.math.origin.test)
 
 (define-test v3/sign
   (let ((o (v3:zero)))

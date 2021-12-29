@@ -1,4 +1,4 @@
-(in-package #:origin.test)
+(in-package #:mfiano.math.origin.test)
 
 (define-test q/identity
   (let ((q (q:id))

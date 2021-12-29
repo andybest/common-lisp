@@ -1,14 +1,14 @@
 (in-package #:cl-user)
 
-(defpackage #:origin.test
+(defpackage #:mfiano.math.origin.test
   (:local-nicknames
-   (#:const #:origin.constants)
-   (#:m2 #:origin.mat2)
-   (#:m3 #:origin.mat3)
-   (#:m4 #:origin.mat4)
-   (#:q #:origin.quat)
-   (#:v2 #:origin.vec2)
-   (#:v3 #:origin.vec3)
-   (#:v4 #:origin.vec4))
+   (#:const #:mfiano.math.origin.constants)
+   (#:m2 #:mfiano.math.origin.mat2)
+   (#:m3 #:mfiano.math.origin.mat3)
+   (#:m4 #:mfiano.math.origin.mat4)
+   (#:q #:mfiano.math.origin.quat)
+   (#:v2 #:mfiano.math.origin.vec2)
+   (#:v3 #:mfiano.math.origin.vec3)
+   (#:v4 #:mfiano.math.origin.vec4))
   (:use #:cl
         #:parachute))

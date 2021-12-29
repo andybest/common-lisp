@@ -12,16 +12,16 @@
 ;;;; geometry. This single shape set can be tested against other shape sets, points, lines, and
 ;;;; other primitives with a single function call.
 
-(defpackage #:origin.geometry.shape-set-3d
+(defpackage #:mfiano.math.origin.geometry.shape-set-3d
   (:local-nicknames
-   (#:u #:mfiano-utils))
+   (#:u #:mfiano.misc.utils))
   (:use #:cl)
   (:export
    #:aabbs
    #:shape-set
    #:spheres))
 
-(in-package #:origin.geometry.shape-set-3d)
+(in-package #:mfiano.math.origin.geometry.shape-set-3d)
 
 (declaim (inline %shape-set))
 (defstruct (shape-set

@@ -2,15 +2,15 @@
 
 ;;; 3D points are just type aliased to be vec3, with a convenience constructor function.
 
-(defpackage #:origin.geometry.point3d
+(defpackage #:mfiano.math.origin.geometry.point3d
   (:local-nicknames
-   (#:u #:mfiano-utils)
-   (#:v3 #:origin.vec3)
-   (#:v4 #:origin.vec4)
-   (#:m4 #:origin.mat4))
+   (#:u #:mfiano.misc.utils)
+   (#:v3 #:mfiano.math.origin.vec3)
+   (#:v4 #:mfiano.math.origin.vec4)
+   (#:m4 #:mfiano.math.origin.mat4))
   (:use #:cl)
   (:import-from
-   #:origin.vec3
+   #:mfiano.math.origin.vec3
    #:x
    #:y
    #:z)
@@ -25,7 +25,7 @@
    #:y
    #:z))
 
-(in-package #:origin.geometry.point3d)
+(in-package #:mfiano.math.origin.geometry.point3d)
 
 (deftype point () 'v3:vec)
 

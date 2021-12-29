@@ -1,13 +1,13 @@
-(asdf:defsystem #:origin.test
+(asdf:defsystem #:mfiano.math.origin.test
   :description "Tests for origin."
   :author "Michael Fiano <mail@mfiano.net>"
   :license "MIT"
-  :depends-on (#:origin
+  :homepage "https://github.com/mfiano/common-lisp/tree/master/math/origin"
+  :depends-on (#:mfiano.math.origin
                #:parachute)
   :pathname "test"
   :serial t
-  :perform (asdf:test-op (o c)
-                         (uiop:symbol-call '#:parachute '#:test '#:origin.test))
+  :perform (asdf:test-op (o c) (uiop:symbol-call '#:parachute '#:test '#:mfiano.math.origin.test))
   :components
   ((:file "package")
    (:file "vec2")

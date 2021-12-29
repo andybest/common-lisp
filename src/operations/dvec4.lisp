@@ -1,4 +1,4 @@
-(in-package #:origin.dvec4)
+(in-package #:mfiano.math.origin.dvec4)
 
 (u:fn-> = (vec vec &key (:rel u:f64) (:abs u:f64)) boolean)
 (declaim (inline =))

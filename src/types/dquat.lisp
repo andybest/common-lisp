@@ -1,15 +1,15 @@
 (in-package #:cl-user)
 
-(defpackage #:origin.dquat
+(defpackage #:mfiano.math.origin.dquat
   (:local-nicknames
-   (#:com #:origin.common)
-   (#:dm3 #:origin.dmat3)
-   (#:dm4 #:origin.dmat4)
-   (#:dv3 #:origin.dvec3)
-   (#:dv4 #:origin.dvec4)
-   (#:q #:origin.quat)
+   (#:com #:mfiano.math.origin.common)
+   (#:dm3 #:mfiano.math.origin.dmat3)
+   (#:dm4 #:mfiano.math.origin.dmat4)
+   (#:dv3 #:mfiano.math.origin.dvec3)
+   (#:dv4 #:mfiano.math.origin.dvec4)
+   (#:q #:mfiano.math.origin.quat)
    (#:ss #:specialization-store)
-   (#:u #:mfiano-utils))
+   (#:u #:mfiano.misc.utils))
   (:use #:cl)
   (:shadow
    #:=
@@ -79,7 +79,7 @@
    #:from-velocity!
    #:from-velocity))
 
-(in-package #:origin.dquat)
+(in-package #:mfiano.math.origin.dquat)
 
 (deftype quat () '(u:f64a 4))
 

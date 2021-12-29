@@ -1,4 +1,4 @@
-(in-package #:origin.quat)
+(in-package #:mfiano.math.origin.quat)
 
 (u:fn-> = (quat quat &key (:rel u:f32) (:abs u:f32)) boolean)
 (declaim (inline =))

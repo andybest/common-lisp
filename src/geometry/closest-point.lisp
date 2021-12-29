@@ -1,4 +1,4 @@
-(in-package #:origin.geometry)
+(in-package #:mfiano.math.origin.geometry)
 
 (u:fn-> %closest-point-sphere (sphere:sphere point3d:point) point3d:point)
 (defun closest-point-sphere (sphere point)

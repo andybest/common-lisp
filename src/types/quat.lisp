@@ -1,15 +1,15 @@
 (in-package #:cl-user)
 
-(defpackage #:origin.quat
+(defpackage #:mfiano.math.origin.quat
   (:local-nicknames
-   (#:com #:origin.common)
-   (#:const #:origin.constants)
-   (#:m3 #:origin.mat3)
-   (#:m4 #:origin.mat4)
+   (#:com #:mfiano.math.origin.common)
+   (#:const #:mfiano.math.origin.constants)
+   (#:m3 #:mfiano.math.origin.mat3)
+   (#:m4 #:mfiano.math.origin.mat4)
    (#:ss #:specialization-store)
-   (#:u #:mfiano-utils)
-   (#:v3 #:origin.vec3)
-   (#:v4 #:origin.vec4))
+   (#:u #:mfiano.misc.utils)
+   (#:v3 #:mfiano.math.origin.vec3)
+   (#:v4 #:mfiano.math.origin.vec4))
   (:use #:cl)
   (:shadow
    #:=
@@ -79,7 +79,7 @@
    #:from-velocity!
    #:from-velocity))
 
-(in-package #:origin.quat)
+(in-package #:mfiano.math.origin.quat)
 
 (deftype quat () '(u:f32a 4))
 

@@ -2,13 +2,13 @@
 
 ;;; 2D points are just type aliased to be vec2, with a convenience constructor function.
 
-(defpackage #:origin.geometry.point2d
+(defpackage #:mfiano.math.origin.geometry.point2d
   (:local-nicknames
-   (#:u #:mfiano-utils)
-   (#:v2 #:origin.vec2))
+   (#:u #:mfiano.misc.utils)
+   (#:v2 #:mfiano.math.origin.vec2))
   (:use #:cl)
   (:import-from
-   #:origin.vec2
+   #:mfiano.math.origin.vec2
    #:x
    #:y)
   (:export
@@ -20,7 +20,7 @@
    #:x
    #:y))
 
-(in-package #:origin.geometry.point2d)
+(in-package #:mfiano.math.origin.geometry.point2d)
 
 (deftype point () 'v2:vec)
 

@@ -2,10 +2,10 @@
 
 ;;;; A 2D circle primitive.
 
-(defpackage #:origin.geometry.circle
+(defpackage #:mfiano.math.origin.geometry.circle
   (:local-nicknames
-   (#:point2d #:origin.geometry.point2d)
-   (#:u #:mfiano-utils))
+   (#:point2d #:mfiano.math.origin.geometry.point2d)
+   (#:u #:mfiano.misc.utils))
   (:use #:cl)
   (:export
    #:circle
@@ -13,7 +13,7 @@
    #:origin
    #:radius))
 
-(in-package #:origin.geometry.circle)
+(in-package #:mfiano.math.origin.geometry.circle)
 
 (declaim (inline %circle))
 (defstruct (circle

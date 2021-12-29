@@ -4,11 +4,11 @@
 ;;; line segments are so common in physics, we have chosen to use this convention (as many other
 ;;; game physics libraries do).
 
-(defpackage #:origin.geometry.line3d
+(defpackage #:mfiano.math.origin.geometry.line3d
   (:local-nicknames
-   (#:point3d #:origin.geometry.point3d)
-   (#:u #:mfiano-utils)
-   (#:v3 #:origin.vec3))
+   (#:point3d #:mfiano.math.origin.geometry.point3d)
+   (#:u #:mfiano.misc.utils)
+   (#:v3 #:mfiano.math.origin.vec3))
   (:use #:cl)
   (:shadow
    #:length)
@@ -21,7 +21,7 @@
    #:midpoint
    #:start))
 
-(in-package #:origin.geometry.line3d)
+(in-package #:mfiano.math.origin.geometry.line3d)
 
 (declaim (inline %line))
 (defstruct (line

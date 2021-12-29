@@ -13,12 +13,12 @@
 ;;;; complex piece of geometry. This single shape set can be tested against other shape sets,
 ;;;; points, lines, and other primitives with a single function call.
 
-(defpackage #:origin.geometry.shape-set-2d
+(defpackage #:mfiano.math.origin.geometry.shape-set-2d
   (:local-nicknames
-   (#:circle #:origin.geometry.circle)
-   (#:orect #:origin.geometry.oriented-rect)
-   (#:rect #:origin.geometry.rect)
-   (#:u #:mfiano-utils))
+   (#:circle #:mfiano.math.origin.geometry.circle)
+   (#:orect #:mfiano.math.origin.geometry.oriented-rect)
+   (#:rect #:mfiano.math.origin.geometry.rect)
+   (#:u #:mfiano.misc.utils))
   (:use #:cl)
   (:export
    #:circles
@@ -26,7 +26,7 @@
    #:rects
    #:shape-set))
 
-(in-package #:origin.geometry.shape-set-2d)
+(in-package #:mfiano.math.origin.geometry.shape-set-2d)
 
 (declaim (inline %shape-set))
 (defstruct (shape-set

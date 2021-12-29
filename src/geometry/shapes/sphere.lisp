@@ -2,17 +2,17 @@
 
 ;;;; A 3D sphere primitive.
 
-(defpackage #:origin.geometry.sphere
+(defpackage #:mfiano.math.origin.geometry.sphere
   (:local-nicknames
-   (#:point3d #:origin.geometry.point3d)
-   (#:u #:mfiano-utils))
+   (#:point3d #:mfiano.math.origin.geometry.point3d)
+   (#:u #:mfiano.misc.utils))
   (:use #:cl)
   (:export
    #:origin
    #:radius
    #:sphere))
 
-(in-package #:origin.geometry.sphere)
+(in-package #:mfiano.math.origin.geometry.sphere)
 
 (declaim (inline %sphere))
 (defstruct (sphere

@@ -1,14 +1,14 @@
 (in-package #:cl-user)
 
-(defpackage #:origin.dvec4
+(defpackage #:mfiano.math.origin.dvec4
   (:local-nicknames
-   (#:com #:origin.common)
-   (#:const #:origin.constants)
-   (#:dv2 #:origin.dvec2)
-   (#:dv3 #:origin.dvec3)
+   (#:com #:mfiano.math.origin.common)
+   (#:const #:mfiano.math.origin.constants)
+   (#:dv2 #:mfiano.math.origin.dvec2)
+   (#:dv3 #:mfiano.math.origin.dvec3)
    (#:ss #:specialization-store)
-   (#:u #:mfiano-utils)
-   (#:v4 #:origin.vec4))
+   (#:u #:mfiano.misc.utils)
+   (#:v4 #:mfiano.math.origin.vec4))
   (:use #:cl)
   (:shadow
    #:=
@@ -129,7 +129,7 @@
    #:atan!
    #:atan))
 
-(in-package #:origin.dvec4)
+(in-package #:mfiano.math.origin.dvec4)
 
 (deftype vec () '(u:f64a 4))
 

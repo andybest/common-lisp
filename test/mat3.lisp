@@ -1,4 +1,4 @@
-(in-package #:origin.test)
+(in-package #:mfiano.math.origin.test)
 
 (define-test m3/identity
   (let ((m (m3:zero))

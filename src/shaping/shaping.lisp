@@ -1,9 +1,9 @@
 (in-package #:cl-user)
 
-(defpackage #:origin.shaping
+(defpackage #:mfiano.math.origin.shaping
   (:local-nicknames
-   (#:const #:origin.constants)
-   (#:u #:mfiano-utils))
+   (#:const #:mfiano.math.origin.constants)
+   (#:u #:mfiano.misc.utils))
   (:use #:cl)
   ;; shaping
   (:export
@@ -41,7 +41,7 @@
    #:hermite-curve
    #:quintic-curve))
 
-(in-package #:origin.shaping)
+(in-package #:mfiano.math.origin.shaping)
 
 (u:fn-> linear (u:f32) u:f32)
 (declaim (inline linear))

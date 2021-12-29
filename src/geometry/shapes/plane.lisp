@@ -1,10 +1,10 @@
 (in-package #:cl-user)
 
-(defpackage #:origin.geometry.plane
+(defpackage #:mfiano.math.origin.geometry.plane
   (:local-nicknames
-   (#:point3d #:origin.geometry.point3d)
-   (#:u #:mfiano-utils)
-   (#:v3 #:origin.vec3))
+   (#:point3d #:mfiano.math.origin.geometry.point3d)
+   (#:u #:mfiano.misc.utils)
+   (#:v3 #:mfiano.math.origin.vec3))
   (:use #:cl)
   (:export
    #:distance
@@ -12,7 +12,7 @@
    #:plane
    #:plane-p))
 
-(in-package #:origin.geometry.plane)
+(in-package #:mfiano.math.origin.geometry.plane)
 
 (declaim (inline %plane))
 (defstruct (plane

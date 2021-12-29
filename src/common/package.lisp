@@ -1,8 +1,8 @@
 (in-package #:cl-user)
 
-(defpackage #:origin.common
+(defpackage #:mfiano.math.origin.common
   (:local-nicknames
-   (#:u #:mfiano-utils))
+   (#:u #:mfiano.misc.utils))
   (:use #:cl)
   (:shadow
    #:=)

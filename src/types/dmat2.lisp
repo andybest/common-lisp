@@ -1,12 +1,12 @@
 (in-package #:cl-user)
 
-(defpackage #:origin.dmat2
+(defpackage #:mfiano.math.origin.dmat2
   (:local-nicknames
-   (#:dv2 #:origin.dvec2)
-   (#:com #:origin.common)
+   (#:dv2 #:mfiano.math.origin.dvec2)
+   (#:com #:mfiano.math.origin.common)
    (#:ss #:specialization-store)
-   (#:m2 #:origin.mat2)
-   (#:u #:mfiano-utils))
+   (#:m2 #:mfiano.math.origin.mat2)
+   (#:u #:mfiano.misc.utils))
   (:use #:cl)
   (:shadow
    #:=
@@ -71,7 +71,7 @@
    #:anti-diagonal!
    #:anti-diagonal))
 
-(in-package #:origin.dmat2)
+(in-package #:mfiano.math.origin.dmat2)
 
 (deftype mat () '(u:f64a 4))
 

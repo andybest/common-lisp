@@ -1,4 +1,4 @@
-(in-package #:origin.mat2)
+(in-package #:mfiano.math.origin.mat2)
 
 (u:fn-> = (mat mat &key (:rel u:f32) (:abs u:f32)) boolean)
 (declaim (inline =))

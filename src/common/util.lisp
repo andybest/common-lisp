@@ -1,4 +1,4 @@
-(in-package #:origin.common)
+(in-package #:mfiano.math.origin.common)
 
 (defun make-accessor-symbol (prefix &rest args)
   (u:format-symbol (symbol-package prefix) "~@:(~{~a~}~)" (cons prefix args)))
