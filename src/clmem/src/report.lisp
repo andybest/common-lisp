@@ -1,4 +1,4 @@
-(in-package #:freebsd-tools.clmem)
+(in-package #:mfiano.cmd.freebsd.clmem)
 
 (defun get-page-size ()
   (bsd:with-sysctl-by-name (ptr "hw.pagesize")

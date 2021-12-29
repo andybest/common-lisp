@@ -1,4 +1,4 @@
-(in-package #:freebsd-tools.clmem)
+(in-package #:mfiano.cmd.freebsd.clmem)
 
 (setf lib:*program-name* "clmem")
 (setf lib:*version* "0.1.0")

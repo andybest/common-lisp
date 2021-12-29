@@ -1,4 +1,4 @@
-(in-package #:freebsd-tools.clcpu)
+(in-package #:mfiano.cmd.freebsd.clcpu)
 
 (defun color->ansi (color &key (type :fg))
   (let ((modifier (if (eq type :bg) 10 0)))

@@ -1,4 +1,4 @@
-(in-package #:freebsd-tools.clcpu)
+(in-package #:mfiano.cmd.freebsd.clcpu)
 
 (u:define-constant +static-length/percentage+ 3)
 

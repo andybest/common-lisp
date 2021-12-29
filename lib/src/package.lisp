@@ -1,12 +1,12 @@
 (in-package #:cl-user)
 
-(defpackage #:freebsd-tools.lib
+(defpackage #:mfiano.cmd.freebsd.lib
   (:local-nicknames
-   (#:bsd #:cl-freebsd)
+   (#:bsd #:mfiano.ffi.freebsd)
    (#:c #:cffi)
    (#:lt #:local-time)
    (#:pf #:parse-float)
-   (#:u #:mfiano-utils)
+   (#:u #:mfiano.misc.utils)
    (#:ui #:adopt)
    (#:wua #:with-user-abort))
   (:use #:cl)

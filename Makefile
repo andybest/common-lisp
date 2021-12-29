@@ -8,7 +8,7 @@ all: $(names)
 $(names): %: bin/% man/man1/%.1
 
 bin/%: $(files)
-	$(eval project := freebsd-tools.$(@F))
+	$(eval project := mfiano.cmd.freebsd.$(@F))
 	@mkdir -p bin
 	@echo "Compiling binary: $@"
 	@sbcl --noinform \
@@ -21,7 +21,7 @@ bin/%: $(files)
                 :toplevel '$(project):app)" > /dev/null
 
 man/man1/%.1: $(files)
-	$(eval project := freebsd-tools.$(basename $(@F)))
+	$(eval project := mfiano.cmd.freebsd.$(basename $(@F)))
 	@mkdir -p man/man1
 	@echo "Generating manual: $@"
 	@sbcl --noinform \

@@ -1,4 +1,4 @@
-(in-package #:freebsd-tools.lib)
+(in-package #:mfiano.cmd.freebsd.lib)
 
 (declaim (inline save-cursor))
 (defun save-cursor ()

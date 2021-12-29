@@ -1,4 +1,4 @@
-(in-package #:freebsd-tools.clcpu)
+(in-package #:mfiano.cmd.freebsd.clcpu)
 
 (defun run (&rest options)
   (lib:with-options (*ui* options)

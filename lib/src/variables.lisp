@@ -1,4 +1,4 @@
-(in-package #:freebsd-tools.lib)
+(in-package #:mfiano.cmd.freebsd.lib)
 
 (defvar *program-name*)
 

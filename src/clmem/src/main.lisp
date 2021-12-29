@@ -1,4 +1,4 @@
-(in-package #:freebsd-tools.clmem)
+(in-package #:mfiano.cmd.freebsd.clmem)
 
 (defun run (&rest options)
   (lib:with-options (*ui* options)

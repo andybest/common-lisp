@@ -1,4 +1,4 @@
-(in-package #:freebsd-tools.clcpu)
+(in-package #:mfiano.cmd.freebsd.clcpu)
 
 (setf lib:*program-name* "clcpu")
 (setf lib:*version* "0.1.0")

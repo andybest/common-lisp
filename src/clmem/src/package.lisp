@@ -1,11 +1,11 @@
 (in-package #:cl-user)
 
-(defpackage #:freebsd-tools.clmem
+(defpackage #:mfiano.cmd.freebsd.clmem
   (:local-nicknames
-   (#:lib #:freebsd-tools.lib)
-   (#:bsd #:cl-freebsd)
+   (#:lib #:mfiano.cmd.freebsd.lib)
+   (#:bsd #:mfiano.ffi.freebsd)
    (#:c #:cffi)
-   (#:u #:mfiano-utils)
+   (#:u #:mfiano.misc.utils)
    (#:ui #:adopt))
   (:use #:cl)
   (:export #:app #:*ui*))
