@@ -1,4 +1,4 @@
-(in-package #:umbra.noise)
+(in-package #:mfiano.gamedev.umbra.noise)
 
 ;;;; Value noise
 

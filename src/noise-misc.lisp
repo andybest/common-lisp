@@ -1,7 +1,7 @@
-(in-package #:umbra.noise)
+(in-package #:mfiano.gamedev.umbra.noise)
 
 ;;;; Miscellaneous noise functions
-;;; Brian Sharpe https://github.com/BrianSharpe/GPU-Noise-Lib
+;;;; Brian Sharpe https://github.com/BrianSharpe/GPU-Noise-Lib
 
 ;;; 2D Cubist noise
 

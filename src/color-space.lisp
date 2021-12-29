@@ -1,4 +1,4 @@
-(in-package #:umbra.color)
+(in-package #:mfiano.gamedev.umbra.color)
 
 ;;;; Color space conversion
 ;;;; Credits:

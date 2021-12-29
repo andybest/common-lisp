@@ -1,26 +1,26 @@
-# umbra
+# mfiano.gamedev.umbra
 
 A library of reusable GPU shader functions.
 
 ## Overview
 
 This is a library consisting of a collection of useful GPU shader functions, written with
-[Shadow](https://git.mfiano.net/mfiano/shadow).
+[Shadow](https://github.com/mfiano/lisp.gamedev.shadow).
 
 ## Install
 
 ```lisp
-(ql:quickload :umbra)
+(ql:quickload :mfiano.gamedev.umbra)
 ```
 
 ## Usage
 
 The functions contained in this library are meant to be compiled by your GPU, using
-[Shadow](https://git.mfiano.net/mfiano/shadow). On their own, they don't do anything, Please consult
-the Shadow documentation for usage instructions for inclusion in a shader program.
+[Shadow](https://github.com/mfiano/lisp.gamedev.shadow). On their own, they don't do anything,
+Please consult the Shadow documentation for usage instructions for inclusion in a shader program.
 
 ## License
 
-Copyright © Michael Fiano <mail@mfiano.net>.
+Copyright © 2017-2021 Michael Fiano <mail@mfiano.net>.
 
 Licensed under the MIT License.

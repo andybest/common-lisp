@@ -1,4 +1,4 @@
-(in-package #:umbra.sdf)
+(in-package #:mfiano.gamedev.umbra.sdf)
 
 ;;; Operations functions
 

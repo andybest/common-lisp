@@ -1,11 +1,11 @@
-(asdf:defsystem #:umbra
+(asdf:defsystem #:mfiano.gamedev.umbra
   :description "A library of reusable GPU shader functions."
-  :author ("Michael Fiano <mail@mfiano.net>")
+  :author "Michael Fiano <mail@mfiano.net>"
   :license "MIT"
-  :homepage "https://git.mfiano.net/mfiano/umbra"
+  :homepage "https://github.com/mfiano/common-lisp/tree/master/gamedev/umbra"
   :encoding :utf-8
-  :depends-on (#:golden-utils
-               #:shadow
+  :depends-on (#:mfiano.gamedev.shadow
+               #:mfiano.misc.utils
                #:varjo)
   :pathname "src"
   :serial t

@@ -1,9 +1,9 @@
 (in-package #:cl-user)
 
-(defpackage #:umbra.common
+(defpackage #:mfiano.gamedev.umbra.common
   (:local-nicknames
-   (#:u #:golden-utils))
-  (:use #:shadow.glsl)
+   (#:u #:mfiano.misc.utils))
+  (:use #:mfiano.gamedev.shadow.glsl)
   ;; structs
   (:export
    #:mesh-attrs
@@ -27,10 +27,10 @@
    #:saturate
    #:map-domain))
 
-(defpackage #:umbra.shaping
+(defpackage #:mfiano.gamedev.umbra.shaping
   (:use
-   #:shadow.glsl
-   #:umbra.common)
+   #:mfiano.gamedev.shadow.glsl
+   #:mfiano.gamedev.umbra.common)
   ;; penner
   (:export
    #:linear
@@ -101,10 +101,10 @@
    #:falloff-squared-c1
    #:falloff-squared-c2))
 
-(defpackage #:umbra.color
+(defpackage #:mfiano.gamedev.umbra.color
   (:use
-   #:shadow.glsl
-   #:umbra.common)
+   #:mfiano.gamedev.shadow.glsl
+   #:mfiano.gamedev.umbra.common)
   ;; color space conversion
   (:export
    #:rgb->grayscale
@@ -141,23 +141,23 @@
    #:tone-map/uncharted2
    #:tone-map/aces))
 
-(defpackage #:umbra.effects
-  (:use #:shadow.glsl
-        #:umbra.common)
+(defpackage #:mfiano.gamedev.umbra.effects
+  (:use #:mfiano.gamedev.shadow.glsl
+        #:mfiano.gamedev.umbra.common)
   (:export
    #:window-rain))
 
-(defpackage #:umbra.graphing
+(defpackage #:mfiano.gamedev.umbra.graphing
   (:use
-   #:shadow.glsl
-   #:umbra.common)
+   #:mfiano.gamedev.shadow.glsl
+   #:mfiano.gamedev.umbra.common)
   (:export
    #:graph))
 
-(defpackage #:umbra.hashing
+(defpackage #:mfiano.gamedev.umbra.hashing
   (:use
-   #:shadow.glsl
-   #:umbra.common)
+   #:mfiano.gamedev.shadow.glsl
+   #:mfiano.gamedev.umbra.common)
   (:export
    #:blum-blum-shub
    #:blum-blum-shub/hq
@@ -172,13 +172,13 @@
    #:fast32-2
    #:fast32-2/4-per-corner))
 
-(defpackage #:umbra.noise
+(defpackage #:mfiano.gamedev.umbra.noise
   (:local-nicknames
-   (#:hash #:umbra.hashing)
-   (#:shape #:umbra.shaping))
+   (#:hash #:mfiano.gamedev.umbra.hashing)
+   (#:shape #:mfiano.gamedev.umbra.shaping))
   (:use
-   #:shadow.glsl
-   #:umbra.common)
+   #:mfiano.gamedev.shadow.glsl
+   #:mfiano.gamedev.umbra.common)
   (:export
    #:billow/cellular
    #:billow/perlin
@@ -212,10 +212,10 @@
    #:cubist
    #:stars))
 
-(defpackage #:umbra.sdf
+(defpackage #:mfiano.gamedev.umbra.sdf
   (:use
-   #:shadow.glsl
-   #:umbra.common)
+   #:mfiano.gamedev.shadow.glsl
+   #:mfiano.gamedev.umbra.common)
   (:export
    #:difference
    #:difference/smooth
@@ -250,9 +250,9 @@
    #:union
    #:union/smooth))
 
-(defpackage #:umbra.sprite
+(defpackage #:mfiano.gamedev.umbra.sprite
   (:use
-   #:shadow.glsl
-   #:umbra.common)
+   #:mfiano.gamedev.shadow.glsl
+   #:mfiano.gamedev.umbra.common)
   (:export
    #:sprite))

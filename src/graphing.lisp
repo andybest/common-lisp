@@ -1,4 +1,4 @@
-(in-package #:umbra.graphing)
+(in-package #:mfiano.gamedev.umbra.graphing)
 
 ;;;; Graphing
 ;;;; Credits:

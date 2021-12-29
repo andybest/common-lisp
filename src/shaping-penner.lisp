@@ -1,4 +1,4 @@
-(in-package #:umbra.shaping)
+(in-package #:mfiano.gamedev.umbra.shaping)
 
 ;;;; Shaping functions
 ;;;; Various functions to modify a signal or interpolate a value non-linearly.

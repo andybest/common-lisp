@@ -1,10 +1,10 @@
-(in-package #:umbra.noise)
+(in-package #:mfiano.gamedev.umbra.noise)
 
 ;;;; Noise utility functions
 
 ;;; fBm (Fractional Brownian motion)
-;;; We have separate Perlin and Simplex variants, because varjo sometimes
-;;;  generates wrong code with higher order functions.
+;;; We have separate Perlin and Simplex variants, because varjo sometimes generates wrong code with
+;;; higher order functions.
 
 (defun fbm/perlin ((point :vec2)
                    (octaves :uint)
@@ -85,8 +85,8 @@
     value))
 
 ;;; Ridges
-;;; We have separate Perlin and Simplex variants, because varjo sometimes
-;;;  generates wrong code with higher order functions.
+;;; We have separate Perlin and Simplex variants, because varjo sometimes generates wrong code with
+;;; higher order functions.
 
 (defun ridges/perlin ((point :vec2)
                       (octaves :uint)
@@ -209,8 +209,8 @@
     value))
 
 ;;; Billow
-;;; We have separate Perlin and Simplex variants, because varjo sometimes
-;;;  generates wrong code with higher order functions.
+;;; We have separate Perlin and Simplex variants, because varjo sometimes generates wrong code with
+;;; higher order functions.
 
 (defun billow/perlin ((point :vec2)
                       (octaves :uint)

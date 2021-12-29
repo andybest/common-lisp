@@ -1,4 +1,4 @@
-(in-package #:umbra.hashing)
+(in-package #:mfiano.gamedev.umbra.hashing)
 
 ;;;; Hashing functions
 ;;;; Blum Blum Shub

@@ -1,4 +1,4 @@
-(in-package #:umbra.noise)
+(in-package #:mfiano.gamedev.umbra.noise)
 
 ;;;; Cellular noise
 ;;;; Brian Sharpe https://github.com/BrianSharpe/GPU-Noise-Lib

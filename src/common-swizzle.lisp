@@ -1,4 +1,4 @@
-(in-package #:umbra.common)
+(in-package #:mfiano.gamedev.umbra.common)
 
 (u:eval-always
   (cl:defun %swizzle/combinations (n items)

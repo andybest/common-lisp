@@ -1,4 +1,4 @@
-(in-package #:umbra.common)
+(in-package #:mfiano.gamedev.umbra.common)
 
 (locally (declare #+sbcl (sb-ext:muffle-conditions style-warning))
   (cl:defmacro emit ((&key point-size) &body data)
