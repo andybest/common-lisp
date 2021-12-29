@@ -1,4 +1,4 @@
-(in-package #:random-uuid)
+(in-package #:mfiano.misc.uuid)
 
 (defstruct (uuid
             (:constructor %make-uuid)

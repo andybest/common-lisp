@@ -1,4 +1,4 @@
-(in-package #:random-uuid)
+(in-package #:mfiano.misc.uuid)
 
 (define-condition invalid-string ()
   ((%uuid-string :reader uuid-string

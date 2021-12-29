@@ -1,9 +1,9 @@
 (in-package #:cl-user)
 
-(defpackage #:random-uuid
+(defpackage #:mfiano.misc.uuid
   (:local-nicknames
-   (#:rng #:seedable-rng)
-   (#:u #:golden-utils))
+   (#:rng #:mfiano.misc.rng)
+   (#:u #:mfiano.misc.utils))
   (:use #:cl)
   (:export
    #:from-string

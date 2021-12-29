@@ -1,4 +1,4 @@
-# random-uuid
+# mfiano.misc.uuid
 
 Provides an efficient implementation of RFC-4122 UUID version 4.
 
@@ -10,7 +10,7 @@ objects.
 ## Install
 
 ```lisp
-(ql:quickload :random-uuid)
+(ql:quickload :mfiano.misc.uuid)
 ```
 
 ## Usage
@@ -19,7 +19,7 @@ objects.
 (make-uuid (&optional generator))
 ```
 Construct a new RFC-4122 v4 UUID. `generator` if supplied is a generator object created with the
-seedable-rng library. This allows generating a deterministic sequence of random UUID's.
+mfiano.misc.rng library. This allows generating a deterministic sequence of random UUID's.
 
 ```lisp
 (from-string string)
@@ -38,6 +38,6 @@ Check whether the given string is a valid representation of a UUID.
 
 ## License
 
-Copyright © Michael Fiano <mail@mfiano.net>.
+Copyright © 2019-2021 Michael Fiano <mail@mfiano.net>.
 
 Licensed under the MIT License.
