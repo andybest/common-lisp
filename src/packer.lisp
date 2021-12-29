@@ -1,4 +1,4 @@
-(in-package #:patchwork)
+(in-package #:mfiano.graphics.tools.patchwork)
 
 (defclass rect (bin:rect)
   ((%file :reader file

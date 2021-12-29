@@ -1,9 +1,9 @@
 (in-package #:cl-user)
 
-(defpackage #:patchwork
+(defpackage #:mfiano.graphics.tools.patchwork
   (:local-nicknames
    (#:bin #:binpack)
-   (#:u #:golden-utils))
+   (#:u #:mfiano.misc.utils))
   (:use #:cl)
   (:export
    #:make-atlas

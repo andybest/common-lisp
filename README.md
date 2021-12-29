@@ -1,4 +1,4 @@
-# patchwork
+# mfiano.graphics.tools.patchwork
 
 A spritesheet packer for games.
 
@@ -10,7 +10,7 @@ uses the 'maxrects' algorithm as described [here](http://clb.demon.fi/files/Rect
 ## Install
 
 ```lisp
-(ql:quickload :patchwork)
+(ql:quickload :mfiano.graphics.tools.patchwork)
 ```
 
 ## Usage

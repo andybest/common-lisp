@@ -1,13 +1,13 @@
-(asdf:defsystem #:patchwork
+(asdf:defsystem #:mfiano.graphics.tools.patchwork
   :description "A spritesheet packer for games."
   :author "Michael Fiano <mail@mfiano.net>"
   :license "MIT"
-  :homepage "https://git.mfiano.net/mfiano/patchwork"
+  :homepage "https://github.com/mfiano/common-lisp/tree/master/graphics/tools/patchwork"
   :encoding :utf-8
   :depends-on (#:binpack
-               #:golden-utils
+               #:mfiano.file-formats.png
+               #:mfiano.misc.utils
                #:opticl
-               #:pngload
                #:uiop)
   :pathname "src"
   :serial t

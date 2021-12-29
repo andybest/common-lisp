@@ -1,4 +1,4 @@
-(in-package #:patchwork)
+(in-package #:mfiano.graphics.tools.patchwork)
 
 (defun make-sprite-path (directory id)
   (uiop/pathname:merge-pathnames*
