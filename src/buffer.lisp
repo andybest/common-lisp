@@ -1,4 +1,4 @@
-(in-package #:parsley)
+(in-package #:mfiano.misc.binary-parser)
 
 (defvar *buffer*)
 
@@ -28,13 +28,10 @@
 
 (defmacro with-buffer-read ((&key sequence stream) &body body)
   `(let* ((bytes (fast-io:make-input-buffer :vector ,sequence :stream ,stream))
-          (bits (bitio:make-bitio bytes
-                                  #'fast-io:fast-read-byte
-                                  #'%bitio-read-sequence))
-          (*buffer* (make-instance
-                     'buffer
-                     :bytes bytes
-                     :bits bits
-                     :sequence (fast-io:input-buffer-vector bytes)
-                     :stream (fast-io:input-buffer-stream bytes))))
+          (bits (bitio:make-bitio bytes #'fast-io:fast-read-byte #'%bitio-read-sequence))
+          (*buffer* (make-instance 'buffer
+                                   :bytes bytes
+                                   :bits bits
+                                   :sequence (fast-io:input-buffer-vector bytes)
+                                   :stream (fast-io:input-buffer-stream bytes))))
      ,@body))

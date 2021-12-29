@@ -1,8 +1,7 @@
-(in-package #:parsley)
+(in-package #:mfiano.misc.binary-parser)
 
 (defun %uncompress-octets (octet-vector compression-scheme)
-  (chipz:decompress nil compression-scheme octet-vector
-                    :buffer-size (* (length octet-vector) 2)))
+  (chipz:decompress nil compression-scheme octet-vector :buffer-size (* (length octet-vector) 2)))
 
 (defun %string-length (bytes null-terminated-p)
   (let* ((sequence (fast-io:input-buffer-vector (buffer-bytes)))
