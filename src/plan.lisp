@@ -1,4 +1,4 @@
-(in-package #:stripe)
+(in-package #:mfiano.webapi.stripe)
 
 (define-object plan ()
   id
@@ -14,12 +14,9 @@
   trial-period-days
   usage-type)
 
-(defmethod initialize-instance :after ((instance plan) &key data
-                                       &allow-other-keys)
+(defmethod initialize-instance :after ((instance plan) &key data &allow-other-keys)
   (destructuring-bind (&key created &allow-other-keys) data
-    (reinitialize-instance
-     instance
-     :created (decode-timestamp created))))
+    (reinitialize-instance instance :created (decode-timestamp created))))
 
 (define-query create-plan (:type plan)
   (:post "plans")

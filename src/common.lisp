@@ -1,4 +1,4 @@
-(in-package #:stripe)
+(in-package #:mfiano.webapi.stripe)
 
 (defvar *base-url* "https://api.stripe.com/v1")
 
@@ -17,7 +17,7 @@
     (values
      (mapcar
       (lambda (x)
-        (let ((type (find-symbol (normalize-string (getf x :object)) :stripe)))
+        (let ((type (find-symbol (normalize-string (getf x :object)) :mfiano.webapi.stripe)))
           (make-instance type :data x)))
       data)
      has-more)))

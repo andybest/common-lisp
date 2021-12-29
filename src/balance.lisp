@@ -1,4 +1,4 @@
-(in-package #:stripe)
+(in-package #:mfiano.webapi.stripe)
 
 (define-object balance ()
   available
@@ -10,17 +10,12 @@
   bank-account
   card)
 
-(defmethod initialize-instance :after ((instance balance-funds) &key data
-                                       &allow-other-keys)
+(defmethod initialize-instance :after ((instance balance-funds) &key data &allow-other-keys)
   (destructuring-bind (&key source-types &allow-other-keys) data
     (destructuring-bind (&key bank-account card) source-types
-      (reinitialize-instance
-       instance
-       :bank-account (or bank-account 0)
-       :card (or card 0)))))
+      (reinitialize-instance instance :bank-account (or bank-account 0) :card (or card 0)))))
 
-(defmethod initialize-instance :after ((instance balance) &key data
-                                       &allow-other-keys)
+(defmethod initialize-instance :after ((instance balance) &key data &allow-other-keys)
   (destructuring-bind (&key available pending &allow-other-keys) data
     (reinitialize-instance
      instance

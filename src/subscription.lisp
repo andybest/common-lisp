@@ -1,4 +1,4 @@
-(in-package #:stripe)
+(in-package #:mfiano.webapi.stripe)
 
 (define-object subscription ()
   billing-cycle-anchor
@@ -26,8 +26,7 @@
   trial-end
   trial-start)
 
-(defmethod initialize-instance :after ((instance subscription) &key data
-                                       &allow-other-keys)
+(defmethod initialize-instance :after ((instance subscription) &key data &allow-other-keys)
   (destructuring-bind (&key billing-cycle-anchor cancel-at
                          canceled-at created current-period-end
                          current-period-start discount ended-at items plan start

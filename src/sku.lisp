@@ -1,4 +1,4 @@
-(in-package #:stripe)
+(in-package #:mfiano.webapi.stripe)
 
 (define-object sku ()
   id
@@ -18,8 +18,7 @@
   (type :reader inventory-type)
   value)
 
-(defmethod initialize-instance :after ((instance sku) &key data
-                                       &allow-other-keys)
+(defmethod initialize-instance :after ((instance sku) &key data &allow-other-keys)
   (destructuring-bind (&key attributes created inventory
                          package-dimensions updated &allow-other-keys)
       data
@@ -28,8 +27,7 @@
      :attributes (u:plist->hash attributes :test #'equal)
      :created (decode-timestamp created)
      :inventory (make-instance 'sku-inventory :data inventory)
-     :package-dimensions (make-instance 'package-dimensions
-                                        :data package-dimensions)
+     :package-dimensions (make-instance 'package-dimensions :data package-dimensions)
      :updated (decode-timestamp updated))))
 
 (define-query create-sku (:type sku)

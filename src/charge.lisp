@@ -1,4 +1,4 @@
-(in-package #:stripe)
+(in-package #:mfiano.webapi.stripe)
 
 (define-object charge ()
   id
@@ -68,8 +68,7 @@
   stripe-report
   user-report)
 
-(defmethod initialize-instance :after ((instance charge) &key data
-                                       &allow-other-keys)
+(defmethod initialize-instance :after ((instance charge) &key data &allow-other-keys)
   (destructuring-bind (&key billing-details created fraud-details outcome
                          payment-method-details refunds &allow-other-keys)
       data

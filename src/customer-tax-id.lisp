@@ -1,4 +1,4 @@
-(in-package #:stripe)
+(in-package #:mfiano.webapi.stripe)
 
 (define-object customer-tax-id ()
   id
@@ -14,8 +14,7 @@
   verified-address
   verified-name)
 
-(defmethod initialize-instance :after ((instance customer-tax-id) &key data
-                                       &allow-other-keys)
+(defmethod initialize-instance :after ((instance customer-tax-id) &key data &allow-other-keys)
   (destructuring-bind (&key created verification &allow-other-keys) data
     (reinitialize-instance
      instance

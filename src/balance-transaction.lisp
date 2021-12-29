@@ -1,4 +1,4 @@
-(in-package #:stripe)
+(in-package #:mfiano.webapi.stripe)
 
 (define-object balance-transaction ()
   id
@@ -22,10 +22,8 @@
   description
   (type :reader fee-type))
 
-(defmethod initialize-instance :after ((instance balance-transaction) &key data
-                                       &allow-other-keys)
-  (destructuring-bind (&key available-on created fee-details &allow-other-keys)
-      data
+(defmethod initialize-instance :after ((instance balance-transaction) &key data &allow-other-keys)
+  (destructuring-bind (&key available-on created fee-details &allow-other-keys) data
     (reinitialize-instance
      instance
      :available-on (decode-timestamp available-on)

@@ -1,12 +1,12 @@
-(asdf:defsystem #:stripe
+(asdf:defsystem #:mfiano.webapi.stripe
   :description "A client for the Stripe payment API."
-  :author ("Michael Fiano <mail@mfiano.net>")
+  :author "Michael Fiano <mail@mfiano.net>"
   :license "MIT"
-  :homepage "https://git.mfiano.net/mfiano/stripe"
+  :homepage "https://github.com/mfiano/common-lisp/tree/master/webapi/stripe"
   :encoding :utf-8
   :depends-on (#:dexador
-               #:golden-utils
                #:local-time
+               #:mfiano.misc.utils
                #:yason)
   :pathname "src"
   :serial t

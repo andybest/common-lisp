@@ -1,4 +1,4 @@
-(in-package #:stripe)
+(in-package #:mfiano.webapi.stripe)
 
 (define-object card ()
   id
@@ -15,11 +15,8 @@
   name
   tokenization-method)
 
-(defmethod initialize-instance :after ((instance card) &key data
-                                       &allow-other-keys)
-  (reinitialize-instance
-   instance
-   :address (apply #'make-instance 'address data)))
+(defmethod initialize-instance :after ((instance card) &key data &allow-other-keys)
+  (reinitialize-instance instance :address (apply #'make-instance 'address data)))
 
 (define-query create-card (:type card)
   (:post "customers/~a/sources" customer)

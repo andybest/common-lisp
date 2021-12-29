@@ -1,4 +1,4 @@
-(in-package #:stripe)
+(in-package #:mfiano.webapi.stripe)
 
 (define-object refund ()
   id
@@ -13,13 +13,9 @@
   receipt-number
   status)
 
-(defmethod initialize-instance :after ((instance refund) &key data
-                                       &allow-other-keys)
-  (destructuring-bind (&key created &allow-other-keys)
-      data
-    (reinitialize-instance
-     instance
-     :created (decode-timestamp created))))
+(defmethod initialize-instance :after ((instance refund) &key data &allow-other-keys)
+  (destructuring-bind (&key created &allow-other-keys) data
+    (reinitialize-instance instance :created (decode-timestamp created))))
 
 (define-query create-refund (:type refund)
   (:post "refunds")

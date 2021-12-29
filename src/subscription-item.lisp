@@ -1,4 +1,4 @@
-(in-package #:stripe)
+(in-package #:mfiano.webapi.stripe)
 
 (define-object subscription-item ()
   id
@@ -7,12 +7,9 @@
   quantity
   subscription)
 
-(defmethod initialize-instance :after ((instance subscription-item) &key data
-                                       &allow-other-keys)
+(defmethod initialize-instance :after ((instance subscription-item) &key data &allow-other-keys)
   (destructuring-bind (&key plan &allow-other-keys) data
-    (reinitialize-instance
-     instance
-     :plan (make-instance 'plan :data plan))))
+    (reinitialize-instance instance :plan (make-instance 'plan :data plan))))
 
 (define-query create-subscription-item (:type subscription-item)
   (:post "subscription-items")

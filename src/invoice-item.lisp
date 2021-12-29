@@ -1,4 +1,4 @@
-(in-package #:stripe)
+(in-package #:mfiano.webapi.stripe)
 
 (define-object invoice-item ()
   id
@@ -19,8 +19,7 @@
   unified-proration
   unit-amount)
 
-(defmethod initialize-instance :after ((instance invoice-item) &key data
-                                       &allow-other-keys)
+(defmethod initialize-instance :after ((instance invoice-item) &key data &allow-other-keys)
   (destructuring-bind (&key date period plan &allow-other-keys) data
     (destructuring-bind (&key end start) period
       (reinitialize-instance

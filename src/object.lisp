@@ -1,13 +1,11 @@
-(in-package #:stripe)
+(in-package #:mfiano.webapi.stripe)
 
 (defmacro define-object (name super-classes &body fields)
   (u:with-gensyms (stream)
     (let ((slots (mapcar
                   (lambda (x)
                     (let ((name (u:ensure-list x)))
-                      (destructuring-bind (name
-                                           &key (reader name) extra-initargs)
-                          name
+                      (destructuring-bind (name &key (reader name) extra-initargs) name
                         `(,(u:symbolicate '#:% name)
                           :reader ,reader
                           :initarg ,(u:make-keyword name)
@@ -31,12 +29,8 @@
 
 (defclass stripe-object () ())
 
-(defmethod initialize-instance :after ((instance stripe-object) &key data
-                                       &allow-other-keys)
-  (apply #'reinitialize-instance
-         instance
-         :allow-other-keys t
-         data))
+(defmethod initialize-instance :after ((instance stripe-object) &key data &allow-other-keys)
+  (apply #'reinitialize-instance instance :allow-other-keys t data))
 
 (define-object address ()
   (line1 :extra-initargs (:address-line1))
@@ -51,12 +45,9 @@
   name
   phone)
 
-(defmethod initialize-instance :after ((instance shipping) &key data
-                                       &allow-other-keys)
+(defmethod initialize-instance :after ((instance shipping) &key data &allow-other-keys)
   (destructuring-bind (&key address &allow-other-keys) data
-    (reinitialize-instance
-     instance
-     :address (make-instance 'address :data address))))
+    (reinitialize-instance instance :address (make-instance 'address :data address))))
 
 (define-object billing-details (shipping)
   email)

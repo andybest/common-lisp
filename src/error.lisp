@@ -1,11 +1,10 @@
-(in-package #:stripe)
+(in-package #:mfiano.webapi.stripe)
 
 (defun decode-error (condition)
   (let ((response (yason:parse (dex:response-body condition))))
     (destructuring-bind (&key error &allow-other-keys) response
       (destructuring-bind (&key code message &allow-other-keys) error
-        (values (or (when code
-                      (find-symbol (normalize-string code) :stripe))
+        (values (or (when code (find-symbol (normalize-string code) :mfiano.webapi.stripe))
                     'stripe-error)
                 message)))))
 

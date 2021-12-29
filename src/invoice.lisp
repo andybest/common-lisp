@@ -1,4 +1,4 @@
-(in-package #:stripe)
+(in-package #:mfiano.webapi.stripe)
 
 (define-object invoice ()
   id
@@ -49,8 +49,7 @@
   total
   webhooks-delivered-at)
 
-(defmethod initialize-instance :after ((instance invoice) &key data
-                                       &allow-other-keys)
+(defmethod initialize-instance :after ((instance invoice) &key data &allow-other-keys)
   (destructuring-bind (&key created customer-address customer-shipping
                          discount due-date next-payment-attempt period-end
                          period-start status-transitions
@@ -66,8 +65,7 @@
      :next-payment-attempt (decode-timestamp next-payment-attempt)
      :period-end (decode-timestamp period-end)
      :period-start (decode-timestamp period-start)
-     :status-transitions (make-instance 'invoice-status-transitions
-                                        :data status-transitions))))
+     :status-transitions (make-instance 'invoice-status-transitions :data status-transitions))))
 
 (define-object invoice-status-transition ()
   finalized-at
@@ -77,9 +75,7 @@
 
 (defmethod initialize-instance :after ((instance invoice-status-transition)
                                        &key data &allow-other-keys)
-  (destructuring-bind (&key finalized-at marked-uncollectible-at paid-at
-                         voided-at)
-      data
+  (destructuring-bind (&key finalized-at marked-uncollectible-at paid-at voided-at) data
     (reinitialize-instance
      instance
      :finalized-at (decode-timestamp finalized-at)

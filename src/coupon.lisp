@@ -1,4 +1,4 @@
-(in-package #:stripe)
+(in-package #:mfiano.webapi.stripe)
 
 (define-object coupon ()
   id
@@ -14,8 +14,7 @@
   times-redeemed
   valid)
 
-(defmethod initialize-instance :after ((instance coupon) &key data
-                                       &allow-other-keys)
+(defmethod initialize-instance :after ((instance coupon) &key data &allow-other-keys)
   (destructuring-bind (&key created redeem-by &allow-other-keys) data
     (reinitialize-instance
      instance

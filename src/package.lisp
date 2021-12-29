@@ -1,8 +1,8 @@
 (in-package #:cl-user)
 
-(defpackage #:stripe
+(defpackage #:mfiano.webapi.stripe
   (:local-nicknames
-   (#:u #:golden-utils))
+   (#:u #:mfiano.misc.utils))
   (:use #:cl)
   ;; common
   (:export

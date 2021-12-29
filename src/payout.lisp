@@ -1,4 +1,4 @@
-(in-package #:stripe)
+(in-package #:mfiano.webapi.stripe)
 
 (define-object payout ()
   id
@@ -19,8 +19,7 @@
   status
   (type :reader payout-type))
 
-(defmethod initialize-instance :after ((instance payout) &key data
-                                       &allow-other-keys)
+(defmethod initialize-instance :after ((instance payout) &key data &allow-other-keys)
   (destructuring-bind (&key arrival-date created &allow-other-keys) data
     (reinitialize-instance
      instance

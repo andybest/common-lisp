@@ -1,4 +1,4 @@
-(in-package #:stripe)
+(in-package #:mfiano.webapi.stripe)
 
 (define-object customer-balance-transaction ()
   id
@@ -15,9 +15,7 @@
 (defmethod initialize-instance :after ((instance customer-balance-transaction)
                                        &key data &allow-other-keys)
   (destructuring-bind (&key created &allow-other-keys) data
-    (reinitialize-instance
-     instance
-     :created (decode-timestamp created))))
+    (reinitialize-instance instance :created (decode-timestamp created))))
 
 (define-query create-customer-balance-transaction
     (:type customer-balance-transaction)

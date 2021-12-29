@@ -1,4 +1,4 @@
-(in-package #:stripe)
+(in-package #:mfiano.webapi.stripe)
 
 (define-object product ()
   id
@@ -23,16 +23,12 @@
   weight
   width)
 
-(defmethod initialize-instance :after ((instance product) &key data
-                                       &allow-other-keys)
-  (destructuring-bind (&key created package-dimensions updated
-                       &allow-other-keys)
-      data
+(defmethod initialize-instance :after ((instance product) &key data &allow-other-keys)
+  (destructuring-bind (&key created package-dimensions updated &allow-other-keys) data
     (reinitialize-instance
      instance
      :created (decode-timestamp created)
-     :package-dimensions (make-instance 'package-dimensions
-                                        :data package-dimensions)
+     :package-dimensions (make-instance 'package-dimensions :data package-dimensions)
      :updated (decode-timestamp updated))))
 
 (define-query create-product (:type product)

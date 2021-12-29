@@ -1,4 +1,4 @@
-(in-package #:stripe)
+(in-package #:mfiano.webapi.stripe)
 
 (define-object customer ()
   id
@@ -17,11 +17,8 @@
   sources
   subscriptions)
 
-(defmethod initialize-instance :after ((instance customer) &key data
-                                       &allow-other-keys)
-  (destructuring-bind (&key created address shipping sources
-                         subscriptions &allow-other-keys)
-      data
+(defmethod initialize-instance :after ((instance customer) &key data &allow-other-keys)
+  (destructuring-bind (&key created address shipping sources subscriptions &allow-other-keys) data
     (reinitialize-instance
      instance
      :created (decode-timestamp created)

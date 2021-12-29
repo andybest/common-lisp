@@ -1,4 +1,4 @@
-(in-package #:stripe)
+(in-package #:mfiano.webapi.stripe)
 
 (defun json-boolean-p (x)
   (or (eq x t)
@@ -99,9 +99,7 @@
 
 (defun generate-url (template url-args query-args)
   (let* ((query (u:alist->plist (apply #'post-parameters query-args)))
-         (query-char (and query (if (find #\? template :test #'char=)
-                                    #\&
-                                    #\?))))
+         (query-char (and query (if (find #\? template :test #'char=) #\& #\?))))
     (format nil "~?~@[~c~{~a=~a~^&~}~]"
             template
             (mapcar #'encode-value url-args)
@@ -118,16 +116,14 @@
            (declare (ignorable args ,@fields))
            (let* (,@(when (or get-p post-p)
                       `((,query-args (u:plist-remove args ,@url-keys))))
-                  ,@(when post-p
-                      `((,content (apply #'post-parameters ,query-args))))
+                  ,@(when post-p `((,content (apply #'post-parameters ,query-args))))
                   (,response (query (generate-url ,url-template
                                                   ,(when url-args
                                                      `(list ,@url-args))
                                                   ,(when get-p
                                                      query-args))
                                     ,method
-                                    ,@(when post-p
-                                        `(,content)))))
+                                    ,@(when post-p `(,content)))))
              ,@(case type
                  (list `((decode-list ,response)))
                  ((nil) `(,response))

@@ -1,4 +1,4 @@
-(in-package #:stripe)
+(in-package #:mfiano.webapi.stripe)
 
 (define-object order-return ()
   id
@@ -9,8 +9,7 @@
   order
   refund)
 
-(defmethod initialize-instance :after ((instance order-return) &key data
-                                       &allow-other-keys)
+(defmethod initialize-instance :after ((instance order-return) &key data &allow-other-keys)
   (destructuring-bind (&key created items &allow-other-keys) data
     (reinitialize-instance
      instance

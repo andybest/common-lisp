@@ -1,4 +1,4 @@
-(in-package #:stripe)
+(in-package #:mfiano.webapi.stripe)
 
 (define-object credit-note ()
   id
@@ -16,13 +16,10 @@
   status
   (type :reader credit-note-type))
 
-(defmethod initialize-instance :after ((instance credit-note) &key data
-                                       &allow-other-keys)
+(defmethod initialize-instance :after ((instance credit-note) &key data &allow-other-keys)
   (destructuring-bind (&key created &allow-other-keys)
       data
-    (reinitialize-instance
-     instance
-     :created (decode-timestamp created))))
+    (reinitialize-instance instance :created (decode-timestamp created))))
 
 (define-query create-credit-note (:type credit-note)
   (:post "credit-notes")
