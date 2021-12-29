@@ -1,4 +1,4 @@
-(in-package #:%syntex.wfc)
+(in-package #:%mfiano.graphics.procgen.syntex.wfc)
 
 (u:fn-> enqueue-initial-tile (core) null)
 (defun enqueue-initial-tile (core)

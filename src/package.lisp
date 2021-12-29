@@ -1,6 +1,6 @@
 (in-package #:cl-user)
 
-(defpackage #:%syntex.conditions
+(defpackage #:%mfiano.graphics.procgen.syntex.conditions
   (:use #:cl)
   (:export
    #:file-not-found
@@ -19,10 +19,10 @@
    #:wfc-contradiction-warning
    #:wfc-max-backtrack-retries-exceeded))
 
-(defpackage #:%syntex.image
+(defpackage #:%mfiano.graphics.procgen.syntex.image
   (:local-nicknames
-   (#:png #:pngload)
-   (#:u #:golden-utils))
+   (#:png #:mfiano.file-formats.png)
+   (#:u #:mfiano.misc.utils))
   (:use #:cl)
   (:shadow
    #:write)
@@ -35,9 +35,9 @@
    #:width
    #:write))
 
-(defpackage #:%syntex.priority-queue
+(defpackage #:%mfiano.graphics.procgen.syntex.priority-queue
   (:local-nicknames
-   (#:u #:golden-utils))
+   (#:u #:mfiano.misc.utils))
   (:use #:cl)
   (:export
    #:copy
@@ -47,9 +47,9 @@
    #:peek
    #:queue))
 
-(defpackage #:%syntex.common
+(defpackage #:%mfiano.graphics.procgen.syntex.common
   (:local-nicknames
-   (#:cond #:%syntex.conditions))
+   (#:cond #:%mfiano.graphics.procgen.syntex.conditions))
   (:use #:cl)
   (:export
    #:check-file-exists
@@ -57,33 +57,33 @@
    #:check-output-path
    #:check-seed))
 
-(defpackage #:%syntex.harrison
+(defpackage #:%mfiano.graphics.procgen.syntex.harrison
   (:local-nicknames
-   (#:com #:%syntex.common)
-   (#:cond #:%syntex.conditions)
+   (#:com #:%mfiano.graphics.procgen.syntex.common)
+   (#:cond #:%mfiano.graphics.procgen.syntex.conditions)
    (#:lp #:lparallel)
-   (#:img #:%syntex.image)
-   (#:rng #:seedable-rng)
-   (#:u #:golden-utils))
+   (#:img #:%mfiano.graphics.procgen.syntex.image)
+   (#:rng #:mfiano.misc.rng)
+   (#:u #:mfiano.misc.utils))
   (:use #:cl)
   (:export
    #:harrison))
 
-(defpackage #:%syntex.wfc
+(defpackage #:%mfiano.graphics.procgen.syntex.wfc
   (:local-nicknames
-   (#:com #:%syntex.common)
-   (#:cond #:%syntex.conditions)
-   (#:img #:%syntex.image)
-   (#:pq #:%syntex.priority-queue)
-   (#:rng #:seedable-rng)
-   (#:u #:golden-utils))
+   (#:com #:%mfiano.graphics.procgen.syntex.common)
+   (#:cond #:%mfiano.graphics.procgen.syntex.conditions)
+   (#:img #:%mfiano.graphics.procgen.syntex.image)
+   (#:pq #:%mfiano.graphics.procgen.syntex.priority-queue)
+   (#:rng #:mfiano.misc.rng)
+   (#:u #:mfiano.misc.utils))
   (:use #:cl)
   (:export
    #:wfc))
 
-(uiop:define-package #:syntex
+(uiop:define-package #:mfiano.graphics.procgen.syntex
   (:use #:cl)
   (:mix-reexport
-   #:%syntex.conditions
-   #:%syntex.harrison
-   #:%syntex.wfc))
+   #:%mfiano.graphics.procgen.syntex.conditions
+   #:%mfiano.graphics.procgen.syntex.harrison
+   #:%mfiano.graphics.procgen.syntex.wfc))

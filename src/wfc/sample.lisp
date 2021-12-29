@@ -1,4 +1,4 @@
-(in-package #:%syntex.wfc)
+(in-package #:%mfiano.graphics.procgen.syntex.wfc)
 
 (u:fn-> load-sample ((or pathname string)) grid)
 (defun load-sample (file-path)

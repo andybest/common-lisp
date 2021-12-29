@@ -1,14 +1,14 @@
-(asdf:defsystem #:syntex
-  :description ""
-  :author ("Michael Fiano <mail@mfiano.net>")
+(asdf:defsystem #:mfiano.graphics.procgen.syntex
+  :description "Various texture synthesis algorithms."
+  :author "Michael Fiano <mail@mfiano.net>"
   :license "MIT"
-  :homepage "https://git.mfiano.net/mfiano/syntex"
+  :homepage "https://github.com/mfiano/common-lisp/tree/master/graphics/procgen/syntex"
   :encoding :utf-8
   :depends-on (#:cl-cpus
-               #:golden-utils
                #:lparallel
-               #:pngload
-               #:seedable-rng
+               #:mfiano.file-formats.png
+               #:mfiano.misc.rng
+               #:mfiano.misc.utils
                #:trivial-garbage
                #:uiop
                #:zpng)

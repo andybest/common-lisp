@@ -1,4 +1,4 @@
-(in-package #:%syntex.common)
+(in-package #:%mfiano.graphics.procgen.syntex.common)
 
 (defun check-seed (seed)
   (unless (typep seed '(or string null))

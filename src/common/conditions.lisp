@@ -1,4 +1,4 @@
-(in-package #:%syntex.conditions)
+(in-package #:%mfiano.graphics.procgen.syntex.conditions)
 
 (define-condition syntex-error (error) ())
 

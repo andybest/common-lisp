@@ -1,4 +1,4 @@
-(in-package #:%syntex.wfc)
+(in-package #:%mfiano.graphics.procgen.syntex.wfc)
 
 (defvar *rng* nil)
 

@@ -1,23 +1,15 @@
-# new-project
+# mfiano.graphics.procgen.syntex
 
-TODO
-
-## Overview
-
-TODO
+Various texture synthesis algorithms.
 
 ## Install
 
 ```lisp
-(ql:quickload :new-project)
+(ql:quickload :mfiano.graphics.procgen.syntex)
 ```
-
-## Usage
-
-TODO
 
 ## License
 
-Copyright © Michael Fiano <mail@mfiano.net>.
+Copyright © 2021 Michael Fiano <mail@mfiano.net>.
 
 Licensed under the MIT License.

@@ -1,4 +1,4 @@
-(in-package #:%syntex.priority-queue)
+(in-package #:%mfiano.graphics.procgen.syntex.priority-queue)
 
 (deftype data () '(simple-array t))
 

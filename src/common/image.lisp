@@ -1,4 +1,4 @@
-(in-package #:%syntex.image)
+(in-package #:%mfiano.graphics.procgen.syntex.image)
 
 (defclass image ()
   ((%width :reader width

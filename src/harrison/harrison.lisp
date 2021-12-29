@@ -1,4 +1,4 @@
-(in-package #:%syntex.harrison)
+(in-package #:%mfiano.graphics.procgen.syntex.harrison)
 
 (defstruct (state
             (:constructor %make-state)

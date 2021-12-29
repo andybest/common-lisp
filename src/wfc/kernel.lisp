@@ -1,4 +1,4 @@
-(in-package #:%syntex.wfc)
+(in-package #:%mfiano.graphics.procgen.syntex.wfc)
 
 (deftype kernel-dimension () '(and u:ub8 (integer 1)))
 
