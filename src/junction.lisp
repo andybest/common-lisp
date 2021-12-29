@@ -1,4 +1,4 @@
-(in-package #:dungen)
+(in-package #:mfiano.graphics.procgen.dungen)
 
 (defun filter-connectable (kernel)
   (and (not (carved-p (select kernel 0 0)))

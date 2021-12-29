@@ -1,12 +1,12 @@
-(asdf:defsystem #:dungen
-  :description "A procedural game map generator."
-  :author ("Michael Fiano <mail@mfiano.net>")
+(asdf:defsystem #:mfiano.graphics.procgen.dungen
+  :description "A procedural dungeon generator."
+  :author "Michael Fiano <mail@mfiano.net>"
   :license "MIT"
-  :homepage "https://git.mfiano.net/mfiano/dungen"
+  :homepage "https://github.com/mfiano/common-lisp/tree/master/graphics/procgen/dungen"
   :encoding :utf-8
   :depends-on (#:cl-pcg
-               #:golden-utils
-               #:graph)
+               #:graph
+               #:mfiano.misc.utils)
   :pathname "src"
   :serial t
   :components

@@ -1,10 +1,11 @@
-(in-package #:dungen)
+(in-package #:mfiano.graphics.procgen.dungen)
 
 (defvar *state*)
 
-(defstruct (state (:constructor %make-state)
-                  (:copier nil)
-                  (:predicate nil))
+(defstruct (state
+            (:constructor %make-state)
+            (:copier nil)
+            (:predicate nil))
   rng
   (current-region 0)
   (regions (u:dict #'eql))

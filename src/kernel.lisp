@@ -1,14 +1,16 @@
-(in-package #:dungen)
+(in-package #:mfiano.graphics.procgen.dungen)
 
-(defstruct (extent (:copier nil)
-                   (:predicate nil))
+(defstruct (extent
+            (:copier nil)
+            (:predicate nil))
   (min-x 0)
   (min-y 0)
   (max-x 1)
   (max-y 1))
 
-(defstruct (kernel (:copier nil)
-                   (:predicate nil))
+(defstruct (kernel
+            (:copier nil)
+            (:predicate nil))
   stage
   origin-x
   origin-y

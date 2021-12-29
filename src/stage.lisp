@@ -1,8 +1,9 @@
-(in-package #:dungen)
+(in-package #:mfiano.graphics.procgen.dungen)
 
-(defstruct (stage (:constructor %make-stage)
-                  (:copier nil)
-                  (:predicate nil))
+(defstruct (stage
+            (:constructor %make-stage)
+            (:copier nil)
+            (:predicate nil))
   (width 49)
   (height 49)
   (seed (make-seed))

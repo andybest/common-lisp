@@ -1,8 +1,9 @@
-(in-package #:dungen)
+(in-package #:mfiano.graphics.procgen.dungen)
 
-(defstruct (cell (:constructor %make-cell)
-                 (:copier nil)
-                 (:predicate nil))
+(defstruct (cell
+            (:constructor %make-cell)
+            (:copier nil)
+            (:predicate nil))
   x
   y
   (features (list :wall))

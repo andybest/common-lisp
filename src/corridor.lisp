@@ -1,4 +1,4 @@
-(in-package #:dungen)
+(in-package #:mfiano.graphics.procgen.dungen)
 
 (defun filter-carvable (kernel)
   (not (kernel-detect kernel #'carved-p)))

@@ -1,8 +1,8 @@
 (in-package #:cl-user)
 
-(defpackage #:dungen
+(defpackage #:mfiano.graphics.procgen.dungen
   (:local-nicknames
-   (#:u #:golden-utils))
+   (#:u #:mfiano.misc.utils))
   (:use #:cl)
   (:export
    #:carved-p

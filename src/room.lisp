@@ -1,4 +1,4 @@
-(in-package #:dungen)
+(in-package #:mfiano.graphics.procgen.dungen)
 
 (defun estimate-room-count (stage)
   (let* ((room-extent (stage-room-extent stage))

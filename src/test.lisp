@@ -1,4 +1,4 @@
-(in-package #:dungen)
+(in-package #:mfiano.graphics.procgen.dungen)
 
 (defun test (&rest attrs)
   (let ((stage (apply #'make-stage attrs)))

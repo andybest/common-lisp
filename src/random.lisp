@@ -1,4 +1,4 @@
-(in-package #:dungen)
+(in-package #:mfiano.graphics.procgen.dungen)
 
 (defun make-seed ()
   (values

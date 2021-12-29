@@ -1,15 +1,15 @@
-# dungen
+# mfiano.graphics.procgen.dungen
 
 A procedural dungeon generator.
 
 ## Install
 
 ```lisp
-(ql:quickload :dungen)
+(ql:quickload :mfiano.graphics.procgen.dungen)
 ```
 
 ## License
 
-Copyright © 2016-2020 Michael Fiano <mail@mfiano.net>.
+Copyright © 2016-2021 Michael Fiano <mail@mfiano.net>.
 
 Licensed under the MIT License.
