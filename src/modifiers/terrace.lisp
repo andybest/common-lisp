@@ -3,14 +3,14 @@
 ;;;; Terrace modifier
 ;;;; This noise modifier maps the output of its input sampler onto a terrace-forming curve.
 
-(defpackage #:%cricket.modifiers.terrace
+(defpackage #:%mfiano.graphics.procgen.cricket.modifiers.terrace
   (:local-nicknames
-   (#:int #:%cricket.internal)
-   (#:mod #:%cricket.modifiers)
-   (#:u #:mfiano-utils))
+   (#:int #:%mfiano.graphics.procgen.cricket.internal)
+   (#:mod #:%mfiano.graphics.procgen.cricket.modifiers)
+   (#:u #:mfiano.misc.utils))
   (:use #:cl))
 
-(in-package #:%cricket.modifiers.terrace)
+(in-package #:%mfiano.graphics.procgen.cricket.modifiers.terrace)
 
 (defstruct (mod:terrace
             (:include int:sampler)

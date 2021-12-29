@@ -4,15 +4,15 @@
 ;;;; This noise modifier outputs one of its two input samplers, decided based upon the output of a
 ;;;; control sampler.
 
-(defpackage #:%cricket.modifiers.select
+(defpackage #:%mfiano.graphics.procgen.cricket.modifiers.select
   (:local-nicknames
-   (#:int #:%cricket.internal)
-   (#:mod #:%cricket.modifiers)
-   (#:u #:mfiano-utils))
+   (#:int #:%mfiano.graphics.procgen.cricket.internal)
+   (#:mod #:%mfiano.graphics.procgen.cricket.modifiers)
+   (#:u #:mfiano.misc.utils))
   (:use #:cl)
   (:shadow #:min #:max))
 
-(in-package #:%cricket.modifiers.select)
+(in-package #:%mfiano.graphics.procgen.cricket.modifiers.select)
 
 (defstruct (mod:select
             (:include int:sampler)

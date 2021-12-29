@@ -4,14 +4,14 @@
 ;;;; This noise modifier raises the the output of its first input sampler to the power of the output
 ;;;; of its second input sampler.
 
-(defpackage #:%cricket.modifiers.power
+(defpackage #:%mfiano.graphics.procgen.cricket.modifiers.power
   (:local-nicknames
-   (#:int #:%cricket.internal)
-   (#:mod #:%cricket.modifiers)
-   (#:u #:mfiano-utils))
+   (#:int #:%mfiano.graphics.procgen.cricket.internal)
+   (#:mod #:%mfiano.graphics.procgen.cricket.modifiers)
+   (#:u #:mfiano.misc.utils))
   (:use #:cl))
 
-(in-package #:%cricket.modifiers.power)
+(in-package #:%mfiano.graphics.procgen.cricket.modifiers.power)
 
 (defstruct (mod:power
             (:include int:sampler)

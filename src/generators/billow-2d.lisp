@@ -2,15 +2,15 @@
 
 ;;;; 2-dimensional "billow" fractal noise generator
 
-(defpackage #:%cricket.generators.billow-2d
+(defpackage #:%mfiano.graphics.procgen.cricket.generators.billow-2d
   (:local-nicknames
-   (#:gen #:%cricket.generators)
-   (#:int #:%cricket.internal)
-   (#:rng #:seedable-rng)
-   (#:u #:mfiano-utils))
+   (#:gen #:%mfiano.graphics.procgen.cricket.generators)
+   (#:int #:%mfiano.graphics.procgen.cricket.internal)
+   (#:rng #:mfiano.misc.rng)
+   (#:u #:mfiano.misc.utils))
   (:use #:cl))
 
-(in-package #:%cricket.generators.billow-2d)
+(in-package #:%mfiano.graphics.procgen.cricket.generators.billow-2d)
 
 (defstruct (gen:billow-2d
             (:include int:sampler)

@@ -3,14 +3,14 @@
 ;;;; Scale modifier
 ;;;; This noise modifier scales the input coordinates of its input sampler.
 
-(defpackage #:%cricket.modifiers.scale
+(defpackage #:%mfiano.graphics.procgen.cricket.modifiers.scale
   (:local-nicknames
-   (#:int #:%cricket.internal)
-   (#:mod #:%cricket.modifiers)
-   (#:u #:mfiano-utils))
+   (#:int #:%mfiano.graphics.procgen.cricket.internal)
+   (#:mod #:%mfiano.graphics.procgen.cricket.modifiers)
+   (#:u #:mfiano.misc.utils))
   (:use #:cl))
 
-(in-package #:%cricket.modifiers.scale)
+(in-package #:%mfiano.graphics.procgen.cricket.modifiers.scale)
 
 (defstruct (mod:scale
             (:include int:sampler)

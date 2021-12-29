@@ -3,15 +3,15 @@
 ;;;; Fractalize modifier
 ;;;; This noise modifier outputs a fractal of its input sampler's output.
 
-(defpackage #:%cricket.modifiers.fractalize
+(defpackage #:%mfiano.graphics.procgen.cricket.modifiers.fractalize
   (:local-nicknames
-   (#:gen #:%cricket.generators)
-   (#:int #:%cricket.internal)
-   (#:rng #:seedable-rng)
-   (#:mod #:%cricket.modifiers))
+   (#:gen #:%mfiano.graphics.procgen.cricket.generators)
+   (#:int #:%mfiano.graphics.procgen.cricket.internal)
+   (#:rng #:mfiano.misc.rng)
+   (#:mod #:%mfiano.graphics.procgen.cricket.modifiers))
   (:use #:cl))
 
-(in-package #:%cricket.modifiers.fractalize)
+(in-package #:%mfiano.graphics.procgen.cricket.modifiers.fractalize)
 
 (defun mod:fractalize (source type &rest args
                        &key (octaves 4) (frequency 1.0) (lacunarity 2.0) (persistence 0.5)

@@ -2,15 +2,15 @@
 
 ;;;; 2-dimensional cellular noise generator
 
-(defpackage #:%cricket.generators.cellular-2d
+(defpackage #:%mfiano.graphics.procgen.cricket.generators.cellular-2d
   (:local-nicknames
-   (#:gen #:%cricket.generators)
-   (#:int #:%cricket.internal)
-   (#:rng #:seedable-rng)
-   (#:u #:mfiano-utils))
+   (#:gen #:%mfiano.graphics.procgen.cricket.generators)
+   (#:int #:%mfiano.graphics.procgen.cricket.internal)
+   (#:rng #:mfiano.misc.rng)
+   (#:u #:mfiano.misc.utils))
   (:use #:cl))
 
-(in-package #:%cricket.generators.cellular-2d)
+(in-package #:%mfiano.graphics.procgen.cricket.generators.cellular-2d)
 
 (u:define-constant +table+
     (let ((data #(-0.2700222198d0 -0.9628540911d0 0.3863092627d0 -0.9223693152d0 0.04444859006d0

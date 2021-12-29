@@ -3,14 +3,14 @@
 ;;;; Curve modifier
 ;;;; This noise modifier maps the output of the input sampler onto a curve.
 
-(defpackage #:%cricket.modifiers.curve
+(defpackage #:%mfiano.graphics.procgen.cricket.modifiers.curve
   (:local-nicknames
-   (#:int #:%cricket.internal)
-   (#:mod #:%cricket.modifiers)
-   (#:u #:mfiano-utils))
+   (#:int #:%mfiano.graphics.procgen.cricket.internal)
+   (#:mod #:%mfiano.graphics.procgen.cricket.modifiers)
+   (#:u #:mfiano.misc.utils))
   (:use #:cl))
 
-(in-package #:%cricket.modifiers.curve)
+(in-package #:%mfiano.graphics.procgen.cricket.modifiers.curve)
 
 (defstruct (mod:curve
             (:include int:sampler)

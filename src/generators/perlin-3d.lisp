@@ -2,15 +2,15 @@
 
 ;;;; 3-dimensional Perlin ("Improved") noise generator
 
-(defpackage #:%cricket.generators.perlin-3d
+(defpackage #:%mfiano.graphics.procgen.cricket.generators.perlin-3d
   (:local-nicknames
-   (#:gen #:%cricket.generators)
-   (#:int #:%cricket.internal)
-   (#:rng #:seedable-rng)
-   (#:u #:mfiano-utils))
+   (#:gen #:%mfiano.graphics.procgen.cricket.generators)
+   (#:int #:%mfiano.graphics.procgen.cricket.internal)
+   (#:rng #:mfiano.misc.rng)
+   (#:u #:mfiano.misc.utils))
   (:use #:cl))
 
-(in-package #:%cricket.generators.perlin-3d)
+(in-package #:%mfiano.graphics.procgen.cricket.generators.perlin-3d)
 
 (defstruct (gen:perlin-3d
             (:include int:sampler)

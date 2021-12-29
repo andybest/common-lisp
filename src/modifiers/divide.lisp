@@ -4,14 +4,14 @@
 ;;;; This noise modifier outputs the result of dividing the output of its first input sampler by its
 ;;;; second input sampler.
 
-(defpackage #:%cricket.modifiers.divide
+(defpackage #:%mfiano.graphics.procgen.cricket.modifiers.divide
   (:local-nicknames
-   (#:int #:%cricket.internal)
-   (#:mod #:%cricket.modifiers)
-   (#:u #:mfiano-utils))
+   (#:int #:%mfiano.graphics.procgen.cricket.internal)
+   (#:mod #:%mfiano.graphics.procgen.cricket.modifiers)
+   (#:u #:mfiano.misc.utils))
   (:use #:cl))
 
-(in-package #:%cricket.modifiers.divide)
+(in-package #:%mfiano.graphics.procgen.cricket.modifiers.divide)
 
 (defstruct (mod:/
             (:constructor make-divide)

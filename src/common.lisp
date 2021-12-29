@@ -1,4 +1,4 @@
-(in-package #:%cricket.internal)
+(in-package #:%mfiano.graphics.procgen.cricket.internal)
 
 (deftype f50 () '(u:f64 #.(- (expt 2d0 50)) #.(expt 2d0 50)))
 

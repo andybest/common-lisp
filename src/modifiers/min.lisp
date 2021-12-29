@@ -3,15 +3,15 @@
 ;;;; Minimum modifier
 ;;;; This noise modifier takes the minimum output value of its two input samplers.
 
-(defpackage #:%cricket.modifiers.min
+(defpackage #:%mfiano.graphics.procgen.cricket.modifiers.min
   (:local-nicknames
-   (#:int #:%cricket.internal)
-   (#:mod #:%cricket.modifiers)
-   (#:u #:mfiano-utils))
+   (#:int #:%mfiano.graphics.procgen.cricket.internal)
+   (#:mod #:%mfiano.graphics.procgen.cricket.modifiers)
+   (#:u #:mfiano.misc.utils))
   (:use #:cl)
   (:shadow #:min))
 
-(in-package #:%cricket.modifiers.min)
+(in-package #:%mfiano.graphics.procgen.cricket.modifiers.min)
 
 (defstruct (mod:min
             (:include int:sampler)

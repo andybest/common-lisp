@@ -4,14 +4,14 @@
 ;;;; This noise modifier outputs the result of subtracting the output of its second input sampler
 ;;;; from its first input sampler.
 
-(defpackage #:%cricket.modifiers.subtract
+(defpackage #:%mfiano.graphics.procgen.cricket.modifiers.subtract
   (:local-nicknames
-   (#:int #:%cricket.internal)
-   (#:mod #:%cricket.modifiers)
-   (#:u #:mfiano-utils))
+   (#:int #:%mfiano.graphics.procgen.cricket.internal)
+   (#:mod #:%mfiano.graphics.procgen.cricket.modifiers)
+   (#:u #:mfiano.misc.utils))
   (:use #:cl))
 
-(in-package #:%cricket.modifiers.subtract)
+(in-package #:%mfiano.graphics.procgen.cricket.modifiers.subtract)
 
 (defstruct (mod:-
             (:constructor make-subtract)

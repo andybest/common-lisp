@@ -3,14 +3,14 @@
 ;;;; Rotate modifier
 ;;;; This noise modifier rotates the input coordinates of its input sampler.
 
-(defpackage #:%cricket.modifiers.rotate
+(defpackage #:%mfiano.graphics.procgen.cricket.modifiers.rotate
   (:local-nicknames
-   (#:int #:%cricket.internal)
-   (#:mod #:%cricket.modifiers)
-   (#:u #:mfiano-utils))
+   (#:int #:%mfiano.graphics.procgen.cricket.internal)
+   (#:mod #:%mfiano.graphics.procgen.cricket.modifiers)
+   (#:u #:mfiano.misc.utils))
   (:use #:cl))
 
-(in-package #:%cricket.modifiers.rotate)
+(in-package #:%mfiano.graphics.procgen.cricket.modifiers.rotate)
 
 (defstruct (mod:rotate
             (:include int:sampler)

@@ -3,14 +3,14 @@
 ;;;; Cache modifier
 ;;;; This noise modifier caches the last output of its input sampler.
 
-(defpackage #:%cricket.modifiers.cache
+(defpackage #:%mfiano.graphics.procgen.cricket.modifiers.cache
   (:local-nicknames
-   (#:int #:%cricket.internal)
-   (#:mod #:%cricket.modifiers)
-   (#:u #:mfiano-utils))
+   (#:int #:%mfiano.graphics.procgen.cricket.internal)
+   (#:mod #:%mfiano.graphics.procgen.cricket.modifiers)
+   (#:u #:mfiano.misc.utils))
   (:use #:cl))
 
-(in-package #:%cricket.modifiers.cache)
+(in-package #:%mfiano.graphics.procgen.cricket.modifiers.cache)
 
 (defstruct (mod:cache
             (:include int:sampler)

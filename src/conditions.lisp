@@ -1,4 +1,4 @@
-(in-package #:%cricket.internal)
+(in-package #:%mfiano.graphics.procgen.cricket.internal)
 
 (define-condition cricket-error (error)
   ((%sampler-type :reader sampler-type

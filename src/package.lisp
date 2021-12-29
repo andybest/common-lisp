@@ -1,10 +1,10 @@
 (in-package #:cl-user)
 
-(defpackage #:%cricket.internal
+(defpackage #:%mfiano.graphics.procgen.cricket.internal
   (:local-nicknames
    (#:lp #:lparallel)
-   (#:rng #:seedable-rng)
-   (#:u #:mfiano-utils))
+   (#:rng #:mfiano.misc.rng)
+   (#:u #:mfiano.misc.utils))
   (:use #:cl)
   ;; API
   (:export
@@ -22,7 +22,7 @@
    #:invalid-sampler-argument
    #:invalid-seed))
 
-(defpackage #:%cricket.generators
+(defpackage #:%mfiano.graphics.procgen.cricket.generators
   (:export
    #:perlin-1d
    #:perlin-2d
@@ -65,7 +65,7 @@
    #:ridged-multifractal-3d
    #:ridged-multifractal-4d))
 
-(defpackage #:%cricket.modifiers
+(defpackage #:%mfiano.graphics.procgen.cricket.modifiers
   (:shadow #:+ #:- #:* #:/ #:abs #:expt #:max #:min)
   (:export
    #:+
@@ -93,11 +93,11 @@
    #:turbulence
    #:uniform-scale))
 
-(defpackage #:%cricket.map
+(defpackage #:%mfiano.graphics.procgen.cricket.map
   (:local-nicknames
-   (#:int #:%cricket.internal)
+   (#:int #:%mfiano.graphics.procgen.cricket.internal)
    (#:lp #:lparallel)
-   (#:u #:mfiano-utils))
+   (#:u #:mfiano.misc.utils))
   (:use #:cl)
   (:shadow #:map)
   (:export
@@ -116,9 +116,15 @@
    #:render-map
    #:write-image))
 
-(uiop:define-package #:cricket
+(uiop:define-package #:mfiano.graphics.procgen.cricket
+  (:mix
+   #:%mfiano.graphics.procgen.cricket.modifiers
+   #:%mfiano.graphics.procgen.cricket.map #:cl)
+  (:reexport
+   #:%mfiano.graphics.procgen.cricket.modifiers
+   #:%mfiano.graphics.procgen.cricket.map)
+  (:mix-reexport
+   #:%mfiano.graphics.procgen.cricket.generators
+   #:%mfiano.graphics.procgen.cricket.internal)
   (:import-from #:arrow-macros #:->)
-  (:mix #:%cricket.modifiers #:%cricket.map #:cl)
-  (:reexport #:%cricket.modifiers #:%cricket.map)
-  (:mix-reexport #:%cricket.generators #:%cricket.internal)
   (:export #:->))

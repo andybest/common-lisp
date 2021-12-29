@@ -2,15 +2,15 @@
 
 ;;;; 3-dimensional value noise generator
 
-(defpackage #:%cricket.generators.value-3d
+(defpackage #:%mfiano.graphics.procgen.cricket.generators.value-3d
   (:local-nicknames
-   (#:gen #:%cricket.generators)
-   (#:int #:%cricket.internal)
-   (#:rng #:seedable-rng)
-   (#:u #:mfiano-utils))
+   (#:gen #:%mfiano.graphics.procgen.cricket.generators)
+   (#:int #:%mfiano.graphics.procgen.cricket.internal)
+   (#:rng #:mfiano.misc.rng)
+   (#:u #:mfiano.misc.utils))
   (:use #:cl))
 
-(in-package #:%cricket.generators.value-3d)
+(in-package #:%mfiano.graphics.procgen.cricket.generators.value-3d)
 
 (defstruct (gen:value-3d
             (:include int:sampler)

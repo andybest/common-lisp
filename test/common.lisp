@@ -1,4 +1,4 @@
-(in-package #:cricket.test)
+(in-package #:mfiano.graphics.procgen.cricket.test)
 
 (defun make-image (sampler)
   (let* ((width 128)
@@ -22,11 +22,11 @@
   (let ((path (make-pathname :defaults (string-downcase (symbol-name name))
                              :directory '(:relative "test" "data")
                              :type "png")))
-    (asdf:system-relative-pathname :cricket.test path)))
+    (asdf:system-relative-pathname :mfiano.graphics.procgen.cricket.test path)))
 
 (defun read-file (file)
   (when (uiop:file-exists-p file)
-    (pngload:data (pngload:load-file file :flatten t))))
+    (png:data (png:load-file file :flatten t))))
 
 (defun write-file (sampler name)
   (let ((file (find-file name))
@@ -34,7 +34,7 @@
     (zpng:write-png png file)))
 
 (defun compare (name sampler)
-  (u:when-let ((file (read-file (find-file name)))
+  (u:when-let ((file (read-file (:printv (find-file name))))
                (test-data (zpng:image-data (make-image sampler))))
-    (values (equalp file test-data)
-            t)))
+              (values (equalp file test-data)
+                      t)))

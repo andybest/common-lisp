@@ -2,15 +2,15 @@
 
 ;;;; 4-dimensional multifractal fractal noise generator
 
-(defpackage #:%cricket.generators.multifractal-4d
+(defpackage #:%mfiano.graphics.procgen.cricket.generators.multifractal-4d
   (:local-nicknames
-   (#:gen #:%cricket.generators)
-   (#:int #:%cricket.internal)
-   (#:rng #:seedable-rng)
-   (#:u #:mfiano-utils))
+   (#:gen #:%mfiano.graphics.procgen.cricket.generators)
+   (#:int #:%mfiano.graphics.procgen.cricket.internal)
+   (#:rng #:mfiano.misc.rng)
+   (#:u #:mfiano.misc.utils))
   (:use #:cl))
 
-(in-package #:%cricket.generators.multifractal-4d)
+(in-package #:%mfiano.graphics.procgen.cricket.generators.multifractal-4d)
 
 (defstruct (gen:multifractal-4d
             (:include int:sampler)

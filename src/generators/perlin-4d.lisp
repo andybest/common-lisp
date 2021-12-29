@@ -2,15 +2,15 @@
 
 ;;;; 4-dimensional Perlin ("Improved") noise generator
 
-(defpackage #:%cricket.generators.perlin-4d
+(defpackage #:%mfiano.graphics.procgen.cricket.generators.perlin-4d
   (:local-nicknames
-   (#:gen #:%cricket.generators)
-   (#:int #:%cricket.internal)
-   (#:rng #:seedable-rng)
-   (#:u #:mfiano-utils))
+   (#:gen #:%mfiano.graphics.procgen.cricket.generators)
+   (#:int #:%mfiano.graphics.procgen.cricket.internal)
+   (#:rng #:mfiano.misc.rng)
+   (#:u #:mfiano.misc.utils))
   (:use #:cl))
 
-(in-package #:%cricket.generators.perlin-4d)
+(in-package #:%mfiano.graphics.procgen.cricket.generators.perlin-4d)
 
 (defstruct (gen:perlin-4d
             (:include int:sampler)

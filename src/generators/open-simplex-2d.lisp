@@ -2,15 +2,15 @@
 
 ;;;; 2-dimensional OpenSimplex noise generator
 
-(defpackage #:%cricket.generators.open-simplex-2d
+(defpackage #:%mfiano.graphics.procgen.cricket.generators.open-simplex-2d
   (:local-nicknames
-   (#:gen #:%cricket.generators)
-   (#:int #:%cricket.internal)
-   (#:rng #:seedable-rng)
-   (#:u #:mfiano-utils))
+   (#:gen #:%mfiano.graphics.procgen.cricket.generators)
+   (#:int #:%mfiano.graphics.procgen.cricket.internal)
+   (#:rng #:mfiano.misc.rng)
+   (#:u #:mfiano.misc.utils))
   (:use #:cl))
 
-(in-package #:%cricket.generators.open-simplex-2d)
+(in-package #:%mfiano.graphics.procgen.cricket.generators.open-simplex-2d)
 
 (u:eval-always
   (u:define-constant +stretch+ (/ (1- (/ (sqrt 3d0))) 2))

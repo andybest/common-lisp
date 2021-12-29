@@ -4,14 +4,14 @@
 ;;;; This noise modifier outputs the result of multiplying the outputs of both of its input
 ;;;; samplers.
 
-(defpackage #:%cricket.modifiers.multiply
+(defpackage #:%mfiano.graphics.procgen.cricket.modifiers.multiply
   (:local-nicknames
-   (#:int #:%cricket.internal)
-   (#:mod #:%cricket.modifiers)
-   (#:u #:mfiano-utils))
+   (#:int #:%mfiano.graphics.procgen.cricket.internal)
+   (#:mod #:%mfiano.graphics.procgen.cricket.modifiers)
+   (#:u #:mfiano.misc.utils))
   (:use #:cl))
 
-(in-package #:%cricket.modifiers.multiply)
+(in-package #:%mfiano.graphics.procgen.cricket.modifiers.multiply)
 
 (defstruct (mod:*
             (:constructor make-multiply)

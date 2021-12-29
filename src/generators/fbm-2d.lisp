@@ -2,15 +2,15 @@
 
 ;;;; 2-dimensional fractional Brownian motion noise generator
 
-(defpackage #:%cricket.generators.fbm-2d
+(defpackage #:%mfiano.graphics.procgen.cricket.generators.fbm-2d
   (:local-nicknames
-   (#:gen #:%cricket.generators)
-   (#:int #:%cricket.internal)
-   (#:rng #:seedable-rng)
-   (#:u #:mfiano-utils))
+   (#:gen #:%mfiano.graphics.procgen.cricket.generators)
+   (#:int #:%mfiano.graphics.procgen.cricket.internal)
+   (#:rng #:mfiano.misc.rng)
+   (#:u #:mfiano.misc.utils))
   (:use #:cl))
 
-(in-package #:%cricket.generators.fbm-2d)
+(in-package #:%mfiano.graphics.procgen.cricket.generators.fbm-2d)
 
 (defstruct (gen:fbm-2d
             (:include int:sampler)

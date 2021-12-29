@@ -3,14 +3,14 @@
 ;;;; Negate modifier
 ;;;; This noise modifier negates the output of its input sampler.
 
-(defpackage #:%cricket.modifiers.negate
+(defpackage #:%mfiano.graphics.procgen.cricket.modifiers.negate
   (:local-nicknames
-   (#:int #:%cricket.internal)
-   (#:mod #:%cricket.modifiers)
-   (#:u #:mfiano-utils))
+   (#:int #:%mfiano.graphics.procgen.cricket.internal)
+   (#:mod #:%mfiano.graphics.procgen.cricket.modifiers)
+   (#:u #:mfiano.misc.utils))
   (:use #:cl))
 
-(in-package #:%cricket.modifiers.negate)
+(in-package #:%mfiano.graphics.procgen.cricket.modifiers.negate)
 
 (defstruct (mod:negate
             (:include int:sampler)

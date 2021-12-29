@@ -3,14 +3,14 @@
 ;;;; Strengthen modifier
 ;;;; This noise modifier applies a scaling factor and a bias to the output of its input sampler.
 
-(defpackage #:%cricket.modifiers.strengthen
+(defpackage #:%mfiano.graphics.procgen.cricket.modifiers.strengthen
   (:local-nicknames
-   (#:int #:%cricket.internal)
-   (#:mod #:%cricket.modifiers)
-   (#:u #:mfiano-utils))
+   (#:int #:%mfiano.graphics.procgen.cricket.internal)
+   (#:mod #:%mfiano.graphics.procgen.cricket.modifiers)
+   (#:u #:mfiano.misc.utils))
   (:use #:cl))
 
-(in-package #:%cricket.modifiers.strengthen)
+(in-package #:%mfiano.graphics.procgen.cricket.modifiers.strengthen)
 
 (defstruct (mod:strengthen
             (:include int:sampler)

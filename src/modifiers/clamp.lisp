@@ -3,15 +3,15 @@
 ;;;; Clamp modifier
 ;;;; This noise modifier clamps the output of its input sampler to the specified range.
 
-(defpackage #:%cricket.modifiers.clamp
+(defpackage #:%mfiano.graphics.procgen.cricket.modifiers.clamp
   (:local-nicknames
-   (#:int #:%cricket.internal)
-   (#:mod #:%cricket.modifiers)
-   (#:u #:mfiano-utils))
+   (#:int #:%mfiano.graphics.procgen.cricket.internal)
+   (#:mod #:%mfiano.graphics.procgen.cricket.modifiers)
+   (#:u #:mfiano.misc.utils))
   (:use #:cl)
   (:shadow #:min #:max))
 
-(in-package #:%cricket.modifiers.clamp)
+(in-package #:%mfiano.graphics.procgen.cricket.modifiers.clamp)
 
 (defstruct (mod:clamp
             (:include int:sampler)

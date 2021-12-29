@@ -1,13 +1,14 @@
 (in-package #:cl-user)
 
-(defpackage #:cricket.test
+(defpackage #:mfiano.graphics.procgen.cricket.test
   (:local-nicknames
-   (#:c #:cricket)
-   (#:u #:mfiano-utils))
+   (#:c #:mfiano.graphics.procgen.cricket)
+   (#:png #:mfiano.file-formats.png)
+   (#:u #:mfiano.misc.utils))
   (:use #:cl
         #:prove))
 
-(in-package #:cricket.test)
+(in-package #:mfiano.graphics.procgen.cricket.test)
 
 (setf *enable-colors* nil)
 
@@ -16,4 +17,4 @@
 ;; the annoyance for now.
 (defun run-tests (object)
   (handler-bind ((asdf/operate:recursive-operate #'muffle-warning))
-    (prove:run object)))
+    (run object)))

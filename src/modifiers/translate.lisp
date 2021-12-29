@@ -4,14 +4,14 @@
 ;;;; This noise modifier translates the input coordinates of its input sampler before sampling from
 ;;;; it.
 
-(defpackage #:%cricket.modifiers.translate
+(defpackage #:%mfiano.graphics.procgen.cricket.modifiers.translate
   (:local-nicknames
-   (#:int #:%cricket.internal)
-   (#:mod #:%cricket.modifiers)
-   (#:u #:mfiano-utils))
+   (#:int #:%mfiano.graphics.procgen.cricket.internal)
+   (#:mod #:%mfiano.graphics.procgen.cricket.modifiers)
+   (#:u #:mfiano.misc.utils))
   (:use #:cl))
 
-(in-package #:%cricket.modifiers.translate)
+(in-package #:%mfiano.graphics.procgen.cricket.modifiers.translate)
 
 (defstruct (mod:translate
             (:include int:sampler)

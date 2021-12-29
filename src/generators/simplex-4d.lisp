@@ -2,15 +2,15 @@
 
 ;;;; 4-dimensional Simplex noise generator
 
-(defpackage #:%cricket.generators.simplex-4d
+(defpackage #:%mfiano.graphics.procgen.cricket.generators.simplex-4d
   (:local-nicknames
-   (#:gen #:%cricket.generators)
-   (#:int #:%cricket.internal)
-   (#:rng #:seedable-rng)
-   (#:u #:mfiano-utils))
+   (#:gen #:%mfiano.graphics.procgen.cricket.generators)
+   (#:int #:%mfiano.graphics.procgen.cricket.internal)
+   (#:rng #:mfiano.misc.rng)
+   (#:u #:mfiano.misc.utils))
   (:use #:cl))
 
-(in-package #:%cricket.generators.simplex-4d)
+(in-package #:%mfiano.graphics.procgen.cricket.generators.simplex-4d)
 
 (u:eval-always
   (u:define-constant +skew-factor+ (/ (1- (sqrt 5d0)) 4))

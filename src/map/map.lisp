@@ -1,4 +1,4 @@
-(in-package #:%cricket.map)
+(in-package #:%mfiano.graphics.procgen.cricket.map)
 
 (declaim (inline %make-map))
 (defstruct (map

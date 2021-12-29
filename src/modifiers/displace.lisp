@@ -4,14 +4,14 @@
 ;;;; This noise modifier modifies the input coordinates of its input sampler using up to four
 ;;;; displacement samplers corresponding to each axis of the source that should be offset.
 
-(defpackage #:%cricket.modifiers.displace
+(defpackage #:%mfiano.graphics.procgen.cricket.modifiers.displace
   (:local-nicknames
-   (#:int #:%cricket.internal)
-   (#:mod #:%cricket.modifiers)
-   (#:u #:mfiano-utils))
+   (#:int #:%mfiano.graphics.procgen.cricket.internal)
+   (#:mod #:%mfiano.graphics.procgen.cricket.modifiers)
+   (#:u #:mfiano.misc.utils))
   (:use #:cl))
 
-(in-package #:%cricket.modifiers.displace)
+(in-package #:%mfiano.graphics.procgen.cricket.modifiers.displace)
 
 (defstruct (mod:displace
             (:include int:sampler)

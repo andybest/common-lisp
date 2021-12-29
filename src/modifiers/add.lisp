@@ -3,14 +3,14 @@
 ;;;; Addition (+) modifier
 ;;;; This noise modifier outputs the adding the outputs of both of its input samplers.
 
-(defpackage #:%cricket.modifiers.add
+(defpackage #:%mfiano.graphics.procgen.cricket.modifiers.add
   (:local-nicknames
-   (#:int #:%cricket.internal)
-   (#:mod #:%cricket.modifiers)
-   (#:u #:mfiano-utils))
+   (#:int #:%mfiano.graphics.procgen.cricket.internal)
+   (#:mod #:%mfiano.graphics.procgen.cricket.modifiers)
+   (#:u #:mfiano.misc.utils))
   (:use #:cl))
 
-(in-package #:%cricket.modifiers.add)
+(in-package #:%mfiano.graphics.procgen.cricket.modifiers.add)
 
 (defstruct (mod:+
             (:constructor make-add)

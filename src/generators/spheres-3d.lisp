@@ -2,15 +2,15 @@
 
 ;;;; 3-dimensional concentric spheres generator
 
-(defpackage #:%cricket.generators.spheres-3d
+(defpackage #:%mfiano.graphics.procgen.cricket.generators.spheres-3d
   (:local-nicknames
-   (#:gen #:%cricket.generators)
-   (#:int #:%cricket.internal)
-   (#:rng #:seedable-rng)
-   (#:u #:mfiano-utils))
+   (#:gen #:%mfiano.graphics.procgen.cricket.generators)
+   (#:int #:%mfiano.graphics.procgen.cricket.internal)
+   (#:rng #:mfiano.misc.rng)
+   (#:u #:mfiano.misc.utils))
   (:use #:cl))
 
-(in-package #:%cricket.generators.spheres-3d)
+(in-package #:%mfiano.graphics.procgen.cricket.generators.spheres-3d)
 
 (defstruct (gen:spheres-3d
             (:include int:sampler)

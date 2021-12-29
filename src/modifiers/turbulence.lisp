@@ -4,15 +4,15 @@
 ;;;; This noise modifier randomly displaces the input coordinates of its input sampler before
 ;;;; sampling from it.
 
-(defpackage #:%cricket.modifiers.turbulence
+(defpackage #:%mfiano.graphics.procgen.cricket.modifiers.turbulence
   (:local-nicknames
-   (#:int #:%cricket.internal)
-   (#:mod #:%cricket.modifiers)
-   (#:rng #:seedable-rng)
-   (#:u #:mfiano-utils))
+   (#:int #:%mfiano.graphics.procgen.cricket.internal)
+   (#:mod #:%mfiano.graphics.procgen.cricket.modifiers)
+   (#:rng #:mfiano.misc.rng)
+   (#:u #:mfiano.misc.utils))
   (:use #:cl))
 
-(in-package #:%cricket.modifiers.turbulence)
+(in-package #:%mfiano.graphics.procgen.cricket.modifiers.turbulence)
 
 (defstruct (mod:turbulence
             (:include int:sampler)

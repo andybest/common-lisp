@@ -1,4 +1,4 @@
-(in-package #:%cricket.map)
+(in-package #:%mfiano.graphics.procgen.cricket.map)
 
 (deftype color () '(u:ub8a 4))
 

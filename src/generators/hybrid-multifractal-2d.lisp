@@ -2,15 +2,15 @@
 
 ;;;; 2-dimensional "hybrid" multifractal fractal noise generator
 
-(defpackage #:%cricket.generators.hybrid-multifractal-2d
+(defpackage #:%mfiano.graphics.procgen.cricket.generators.hybrid-multifractal-2d
   (:local-nicknames
-   (#:gen #:%cricket.generators)
-   (#:int #:%cricket.internal)
-   (#:rng #:seedable-rng)
-   (#:u #:mfiano-utils))
+   (#:gen #:%mfiano.graphics.procgen.cricket.generators)
+   (#:int #:%mfiano.graphics.procgen.cricket.internal)
+   (#:rng #:mfiano.misc.rng)
+   (#:u #:mfiano.misc.utils))
   (:use #:cl))
 
-(in-package #:%cricket.generators.hybrid-multifractal-2d)
+(in-package #:%mfiano.graphics.procgen.cricket.generators.hybrid-multifractal-2d)
 
 (defstruct (gen:hybrid-multifractal-2d
             (:include int:sampler)

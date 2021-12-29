@@ -4,14 +4,14 @@
 ;;;; This noise modifier blends the outputs of its two input samplers together using linear
 ;;;; interpolation by the output value of its control sampler.
 
-(defpackage #:%cricket.modifiers.blend
+(defpackage #:%mfiano.graphics.procgen.cricket.modifiers.blend
   (:local-nicknames
-   (#:int #:%cricket.internal)
-   (#:mod #:%cricket.modifiers)
-   (#:u #:mfiano-utils))
+   (#:int #:%mfiano.graphics.procgen.cricket.internal)
+   (#:mod #:%mfiano.graphics.procgen.cricket.modifiers)
+   (#:u #:mfiano.misc.utils))
   (:use #:cl))
 
-(in-package #:%cricket.modifiers.blend)
+(in-package #:%mfiano.graphics.procgen.cricket.modifiers.blend)
 
 (defstruct (mod:blend
             (:include int:sampler)

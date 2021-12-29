@@ -3,15 +3,15 @@
 ;;;; Exponent modifier
 ;;;; This noise modifier raises the power of the output of its input sampler to the given scalar.
 
-(defpackage #:%cricket.modifiers.expt
+(defpackage #:%mfiano.graphics.procgen.cricket.modifiers.expt
   (:local-nicknames
-   (#:int #:%cricket.internal)
-   (#:mod #:%cricket.modifiers)
-   (#:u #:mfiano-utils))
+   (#:int #:%mfiano.graphics.procgen.cricket.internal)
+   (#:mod #:%mfiano.graphics.procgen.cricket.modifiers)
+   (#:u #:mfiano.misc.utils))
   (:use #:cl)
   (:shadow #:expt))
 
-(in-package #:%cricket.modifiers.expt)
+(in-package #:%mfiano.graphics.procgen.cricket.modifiers.expt)
 
 (defstruct (mod:expt
             (:include int:sampler)

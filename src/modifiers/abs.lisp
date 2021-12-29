@@ -3,15 +3,15 @@
 ;;;; ABS modifier
 ;;;; This noise modifier outputs the absolute value of its input sampler's output.
 
-(defpackage #:%cricket.modifiers.abs
+(defpackage #:%mfiano.graphics.procgen.cricket.modifiers.abs
   (:local-nicknames
-   (#:int #:%cricket.internal)
-   (#:mod #:%cricket.modifiers)
-   (#:u #:mfiano-utils))
+   (#:int #:%mfiano.graphics.procgen.cricket.internal)
+   (#:mod #:%mfiano.graphics.procgen.cricket.modifiers)
+   (#:u #:mfiano.misc.utils))
   (:use #:cl)
   (:shadow #:abs))
 
-(in-package #:%cricket.modifiers.abs)
+(in-package #:%mfiano.graphics.procgen.cricket.modifiers.abs)
 
 (defstruct (mod:abs
             (:include int:sampler)

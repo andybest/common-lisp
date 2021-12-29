@@ -1,4 +1,4 @@
-# Cricket
+# mfiano.graphics.procgen.ricket
 
 Cricket is a comprehensive suite of coherent noise algorithms and composable tools for manipulating
 them to create interesting procedurally-generated imagery and other creative applications.
@@ -88,7 +88,7 @@ Currently, Cricket supports the following:
 ## Install
 
 ```lisp
-(ql:quickload :cricket)
+(ql:quickload :mfiano.graphics.procgen.cricket)
 ```
 
 ## Running Unit Tests
@@ -102,7 +102,7 @@ To run the unit tests, first ensure you have [prove](https://github.com/fukamach
 Then run the tests:
 
 ```lisp
-(asdf:test-system :cricket)
+(asdf:test-system :mfiano.graphics.procgen.cricket)
 ```
 
 ## Usage

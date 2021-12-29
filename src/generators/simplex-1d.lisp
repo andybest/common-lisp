@@ -2,15 +2,15 @@
 
 ;;;; 1-dimensional Simplex noise generator
 
-(defpackage #:%cricket.generators.simplex-1d
+(defpackage #:%mfiano.graphics.procgen.cricket.generators.simplex-1d
   (:local-nicknames
-   (#:gen #:%cricket.generators)
-   (#:int #:%cricket.internal)
-   (#:rng #:seedable-rng)
-   (#:u #:mfiano-utils))
+   (#:gen #:%mfiano.graphics.procgen.cricket.generators)
+   (#:int #:%mfiano.graphics.procgen.cricket.internal)
+   (#:rng #:mfiano.misc.rng)
+   (#:u #:mfiano.misc.utils))
   (:use #:cl))
 
-(in-package #:%cricket.generators.simplex-1d)
+(in-package #:%mfiano.graphics.procgen.cricket.generators.simplex-1d)
 
 (u:define-constant +scale+ 0.395d0)
 

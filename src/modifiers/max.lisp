@@ -3,15 +3,15 @@
 ;;;; Maximum modifier
 ;;;; This noise modifier takes the maximum output value of its two input samplers.
 
-(defpackage #:%cricket.modifiers.max
+(defpackage #:%mfiano.graphics.procgen.cricket.modifiers.max
   (:local-nicknames
-   (#:int #:%cricket.internal)
-   (#:mod #:%cricket.modifiers)
-   (#:u #:mfiano-utils))
+   (#:int #:%mfiano.graphics.procgen.cricket.internal)
+   (#:mod #:%mfiano.graphics.procgen.cricket.modifiers)
+   (#:u #:mfiano.misc.utils))
   (:use #:cl)
   (:shadow #:max))
 
-(in-package #:%cricket.modifiers.max)
+(in-package #:%mfiano.graphics.procgen.cricket.modifiers.max)
 
 (defstruct (mod:max
             (:include int:sampler)
