@@ -16,5 +16,8 @@
 
 ;; Load some systems that should always be available
 #+quicklisp
-(let ((systems '(:printv)))
-  (apply #':load systems))
+(let ((systems '(:mfiano.misc.utils
+                 :printv)))
+  (apply #':load systems)
+  #+sbcl
+  (sb-ext:add-package-local-nickname '#:u '#:mfiano.misc.utils '#:cl-user))
