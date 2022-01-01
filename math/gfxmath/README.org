@@ -168,8 +168,7 @@ favor extensibility and simplicity over performance, while still retaining the c
 
 - [[https://github.com/cbaggers/rtg-math][rtg-math]]
 
-- [[https://github.com/Shinmera/3d-vectors][3d-vectors]] and
-[[https://github.com/Shinmera/3d-matrices][3d-matrices]]
+- [[https://github.com/Shinmera/3d-vectors][3d-vectors]] and [[https://github.com/Shinmera/3d-matrices][3d-matrices]]
 
 ** License
 
