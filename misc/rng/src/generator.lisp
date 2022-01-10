@@ -75,6 +75,15 @@ secondary return value."
     (error 'invalid-range :generator generator :min min :max max))
   (values (pcg:pcg-random (kernel generator) min max inclusive-p)))
 
+(u:fn-> int/parity (generator fixnum fixnum) fixnum)
+(defun int/parity (generator min max)
+  "Randomly generate an integer (fixnum) to be within the lower bound and upper bound denoted by
+`min` and `max`. The parity (even or odd) of `min` determines the parity of the result."
+  (declare (optimize speed))
+  (when (> min max)
+    (error 'invalid-range :generator generator :min min :max max))
+  (values (+ min (* 2 (pcg:pcg-random-bounded% (kernel generator) (1+ (floor (- max min) 2)))))))
+
 (u:fn-> float (generator u:f32 u:f32) u:f32)
 (defun float (generator min max)
   "Randomly generate a single-precision floating point number to be within the lower bound and upper

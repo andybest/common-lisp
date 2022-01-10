@@ -14,6 +14,7 @@
    #:generator
    #:get-seed
    #:int
+   #:int/parity
    #:invalid-range
    #:make-generator
    #:shuffle))
