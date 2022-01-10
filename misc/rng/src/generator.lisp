@@ -93,13 +93,14 @@ bound denoted by `min` and `max`."
     (error 'invalid-range :generator generator :min min :max max))
   (values (pcg:pcg-random (kernel generator) min max)))
 
-(u:fn-> element (generator sequence) t)
-(defun element (generator sequence)
+(u:fn-> element (generator sequence &optional boolean) t)
+(defun element (generator sequence &optional (empty-error-p t))
   "Randomly choose a single element from the given sequence."
   (let ((length (length sequence)))
-    (when (zerop length)
-      (error 'empty-sequence :generator generator))
-    (elt sequence (pcg:pcg-random (kernel generator) length))))
+    (if (zerop length)
+        (when empty-error-p
+          (error 'empty-sequence :generator generator))
+        (elt sequence (pcg:pcg-random (kernel generator) length)))))
 
 (u:fn-> shuffle (generator sequence) sequence)
 (defun shuffle (generator sequence)
