@@ -5,8 +5,8 @@
 
 (defun choose-corridor-cell (stage cells)
   (let ((rng (state-rng *state*)))
-    (if (> (random-float rng) (stage-wild-factor stage))
-        (random-element rng cells)
+    (if (> (rng:float rng 0.0 1.0) (stage-wild-factor stage))
+        (rng:element rng cells nil)
         (first cells))))
 
 (defun choose-corridor-direction (kernel)
@@ -16,7 +16,7 @@
                    (cell2 (apply #'select kernel (mapcar #'+ dir dir))))
         (unless (carved-p cell2)
           (push (list cell1 cell2) results))))
-    (random-element (state-rng *state*) results)))
+    (rng:element (state-rng *state*) results nil)))
 
 (defun carve-direction (kernel cells)
   (let ((origin (select kernel 0 0)))

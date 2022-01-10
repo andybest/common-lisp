@@ -2,6 +2,7 @@
 
 (defpackage #:mfiano.graphics.procgen.dungen
   (:local-nicknames
+   (#:rng #:mfiano.misc.rng)
    (#:u #:mfiano.misc.utils))
   (:use #:cl)
   (:export

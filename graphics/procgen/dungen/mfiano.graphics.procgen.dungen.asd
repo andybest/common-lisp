@@ -4,14 +4,13 @@
   :license "MIT"
   :homepage "https://github.com/mfiano/common-lisp/tree/master/graphics/procgen/dungen"
   :encoding :utf-8
-  :depends-on (#:cl-pcg
-               #:graph
+  :depends-on (#:graph
+               #:mfiano.misc.rng
                #:mfiano.misc.utils)
   :pathname "src"
   :serial t
   :components
   ((:file "package")
-   (:file "random")
    (:file "state")
    (:file "stage")
    (:file "cell")

@@ -34,7 +34,7 @@
   (kernel-detect kernel (lambda (x) (feature-intersect x :junction :door))))
 
 (defun generate-junction-feature (stage)
-  (if (random-boolean (state-rng *state*) (stage-door-rate stage))
+  (if (rng:bool (state-rng *state*) (stage-door-rate stage))
       :door
       :junction))
 
@@ -52,12 +52,11 @@
              (add-feature cell :door/vertical))))))
 
 (defun get-random-edge-connector (edge)
-  (random-element (state-rng *state*)
-                  (u:href (state-connections *state*) edge)))
+  (rng:element (state-rng *state*) (u:href (state-connections *state*) edge) nil))
 
 (defun carve-junctions (stage)
   (loop :with graph = (make-tree)
         :for edge :in (graph:edges graph)
         :do (maybe-make-junction stage (get-random-edge-connector edge))
-        :when (random-boolean (state-rng *state*) (stage-cycle-factor stage))
+        :when (rng:bool (state-rng *state*) (stage-cycle-factor stage))
           :do (maybe-make-junction stage (get-random-edge-connector edge))))

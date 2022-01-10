@@ -13,4 +13,4 @@
   dead-ends)
 
 (defun make-state (seed)
-  (%make-state :rng (pcg:make-pcg :seed seed)))
+  (%make-state :rng (rng:make-generator seed)))
