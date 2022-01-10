@@ -17,4 +17,5 @@
    #:int/parity
    #:invalid-range
    #:make-generator
+   #:make-seed
    #:shuffle))
